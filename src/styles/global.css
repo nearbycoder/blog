@@ -135,7 +135,7 @@ a {
 .article-content {
   display: grid;
   gap: 1.25rem;
-  font-size: 1rem;
+  font-size: 20px;
   line-height: 1.75;
   color: var(--mist-200);
 }
