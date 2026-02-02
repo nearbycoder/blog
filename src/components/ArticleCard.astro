@@ -1,0 +1,51 @@
+---
+const entry = Astro.props.entry as any;
+const index = (Astro.props.index as number | undefined) ?? 0;
+const accentMap: Record<string, string> = {
+  pink: "from-pink-400/25 via-transparent",
+  teal: "from-teal-400/25 via-transparent",
+  zinc: "from-zinc-400/20 via-transparent",
+  amber: "from-amber-500/30 via-transparent",
+  cyan: "from-cyan-400/20 via-transparent",
+  rose: "from-rose-400/30 via-transparent",
+  mist: "from-white/15 via-transparent",
+  emerald: "from-emerald-400/25 via-transparent",
+  sky: "from-sky-400/25 via-transparent",
+  violet: "from-violet-400/25 via-transparent",
+  lime: "from-lime-400/25 via-transparent",
+  indigo: "from-indigo-400/25 via-transparent",
+  fuchsia: "from-fuchsia-400/25 via-transparent",
+  orange: "from-orange-400/25 via-transparent",
+  red: "from-red-400/25 via-transparent",
+  yellow: "from-yellow-400/25 via-transparent",
+  blue: "from-blue-400/25 via-transparent",
+  slate: "from-slate-400/20 via-transparent",
+  stone: "from-stone-400/20 via-transparent",
+  neutral: "from-neutral-400/20 via-transparent",
+  purple: "from-purple-400/25 via-transparent",
+  green: "from-green-400/25 via-transparent",
+  indigoDeep: "from-indigo-500/25 via-transparent",
+};
+const accents = Object.values(accentMap);
+const accent = accents[index % accents.length] ?? accentMap.mist;
+---
+
+<a href={`/articles/${entry.slug}`} class="card group block overflow-hidden">
+  <div class={`h-44 bg-gradient-to-br ${accent} to-transparent`}></div>
+  <div class="space-y-4 p-6">
+    <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)]">
+      <span>{entry.data.date}</span>
+      <span class="h-1 w-1 rounded-full bg-white/30"></span>
+      <span>{entry.data.readTime ?? ""}</span>
+    </div>
+    <div class="space-y-2">
+      <h3 class="text-xl font-semibold text-white transition group-hover:text-white">{entry.data.title}</h3>
+      <p class="text-sm text-[color:var(--mist-200)]">{entry.data.description}</p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      {entry.data.tags.map((tag: string) => (
+        <span class="chip">{tag}</span>
+      ))}
+    </div>
+  </div>
+</a>

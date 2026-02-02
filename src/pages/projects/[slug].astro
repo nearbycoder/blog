@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = (await getCollection("projects")) as any[];
+  return entries.filter((entry: any) => !entry.data.draft).map((entry: any) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props as { entry: any };
+const { Content } = await entry.render();
+---
+
+<BaseLayout title={entry.data.title}>
+  <article class="mx-auto mt-10 max-w-3xl space-y-10">
+    <header class="space-y-4">
+      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Project</p>
+      <h1 class="text-4xl font-semibold text-white md:text-5xl">{entry.data.title}</h1>
+      <p class="text-base text-[color:var(--mist-200)]">{entry.data.summary}</p>
+      <div class="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] whitespace-nowrap">
+        <span>{entry.data.year}</span>
+        <span class="h-4 w-px bg-white/30"></span>
+        <span>{entry.data.role}</span>
+      </div>
+      {entry.data.link ? (
+        <a
+          href={entry.data.link}
+          target="_blank"
+          rel="noreferrer"
+          class="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/15 px-4 py-2 text-xs uppercase tracking-[0.18em] text-white"
+        >
+          Visit project
+        </a>
+      ) : null}
+    </header>
+    <div class="flex flex-wrap gap-2">
+      {entry.data.stack.map((item: string) => (
+        <span class="chip">{item}</span>
+      ))}
+    </div>
+    {entry.data.impact ? (
+      <div class="card rounded-2xl p-6 text-sm text-[color:var(--mist-200)]">
+        <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Impact</p>
+        <p class="mt-3 text-base text-white">{entry.data.impact}</p>
+      </div>
+    ) : null}
+    <div class="article-content">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,32 @@
+---
+import "../styles/global.css";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import { site } from "../data/site";
+
+const { title, description } = site;
+const pageTitle = Astro.props.title ? `${Astro.props.title} · ${title}` : title;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    />
+    <link rel="icon" type="image/jpeg" href="/logo.jpeg" />
+    <title>{pageTitle}</title>
+  </head>
+  <body class="bg-grid text-white min-h-screen flex flex-col">
+    <div class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_45%),radial-gradient(circle_at_70%_10%,rgba(111,209,215,0.16),transparent_50%),radial-gradient(circle_at_90%_90%,rgba(245,181,74,0.16),transparent_60%)] opacity-70"></div>
+    <SiteHeader />
+    <main class="relative z-10 mx-auto w-full max-w-6xl flex-1 px-6 pb-24">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

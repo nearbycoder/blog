@@ -1,0 +1,65 @@
+---
+const project = Astro.props.project as any;
+const index = (Astro.props.index as number | undefined) ?? 0;
+const accentMap: Record<string, string> = {
+  amber: "from-amber-500/30 via-transparent",
+  purple: "from-purple-400/25 via-transparent",
+  cyan: "from-cyan-400/30 via-transparent",
+  rose: "from-rose-400/30 via-transparent",
+  mist: "from-white/15 via-transparent",
+  emerald: "from-emerald-400/25 via-transparent",
+  sky: "from-sky-400/25 via-transparent",
+  violet: "from-violet-400/25 via-transparent",
+  lime: "from-lime-400/25 via-transparent",
+  teal: "from-teal-400/25 via-transparent",
+  indigo: "from-indigo-400/25 via-transparent",
+  fuchsia: "from-fuchsia-400/25 via-transparent",
+  pink: "from-pink-400/25 via-transparent",
+  orange: "from-orange-400/25 via-transparent",
+  red: "from-red-400/25 via-transparent",
+  yellow: "from-yellow-400/25 via-transparent",
+  blue: "from-blue-400/25 via-transparent",
+  slate: "from-slate-400/20 via-transparent",
+  stone: "from-stone-400/20 via-transparent",
+  zinc: "from-zinc-400/20 via-transparent",
+  neutral: "from-neutral-400/20 via-transparent",
+  green: "from-green-400/25 via-transparent",
+  indigoDeep: "from-indigo-500/25 via-transparent",
+};
+const accents = Object.values(accentMap);
+const accent = accents[index % accents.length] ?? accentMap.mist;
+---
+
+<article class="card group overflow-hidden">
+  <div class={`h-36 bg-gradient-to-br ${accent} to-transparent`}></div>
+  <div class="space-y-4 p-6">
+    <div class="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] whitespace-nowrap leading-none">
+      <span class="leading-none">{project.data.year}</span>
+      <span class="h-4 w-px bg-white/30"></span>
+      <span class="leading-none">{project.data.role}</span>
+    </div>
+    <div class="space-y-2">
+      <a href={`/projects/${project.slug}`} class="block text-xl font-semibold text-white">
+        {project.data.title}
+      </a>
+      <p class="text-sm text-[color:var(--mist-200)]">{project.data.summary}</p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      {project.data.stack.map((item: string) => (
+        <span class="chip">{item}</span>
+      ))}
+    </div>
+    {project.data.link ? (
+      <div class="pt-2">
+        <a
+          href={project.data.link}
+          target="_blank"
+          rel="noreferrer"
+          class="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/15 px-4 py-2 text-xs uppercase tracking-[0.18em] text-white"
+        >
+          Visit project
+        </a>
+      </div>
+    ) : null}
+  </div>
+</article>

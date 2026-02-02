@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { getCollection } from "astro:content";
+
+const projects = (await getCollection("projects")) as any[];
+const sortedProjects = projects
+  .filter((entry: any) => !entry.data.draft)
+  .sort((a: any, b: any) => b.data.year.localeCompare(a.data.year));
+---
+
+<BaseLayout title="Projects">
+  <section class="mt-10 space-y-8">
+    <div class="space-y-4">
+      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Projects</p>
+      <h1 class="text-4xl font-semibold text-white md:text-5xl">Systems, tools, and product execution.</h1>
+      <p class="text-base text-[color:var(--mist-200)]">
+        A selection of platforms and features focused on reliability, clarity, and operator confidence.
+      </p>
+    </div>
+    <div class="grid gap-6 md:grid-cols-2">
+      {sortedProjects.map((project: any, index: number) => (
+        <ProjectCard project={project} index={index} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

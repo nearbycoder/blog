@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const entries = (await getCollection("articles")) as any[];
+  return entries.filter((entry: any) => !entry.data.draft).map((entry: any) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props as { entry: any };
+const { Content } = await entry.render();
+---
+
+<BaseLayout title={entry.data.title}>
+  <article class="mx-auto mt-10 max-w-3xl space-y-10">
+    <header class="space-y-4">
+      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Article</p>
+      <h1 class="text-4xl font-semibold text-white md:text-5xl">{entry.data.title}</h1>
+      <p class="text-base text-[color:var(--mist-200)]">{entry.data.description}</p>
+      <div class="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)]">
+        <span>{entry.data.date}</span>
+        <span class="h-1 w-1 rounded-full bg-white/40"></span>
+        <span>{entry.data.readTime ?? ""}</span>
+      </div>
+    </header>
+    <div class="article-content">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

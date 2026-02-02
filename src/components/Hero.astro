@@ -1,0 +1,95 @@
+---
+import { site } from "../data/site";
+---
+
+<section class="grid gap-10 pt-8 md:grid-cols-[1.05fr_0.95fr] md:items-center reveal" style="--delay: 20ms">
+  <div class="space-y-8">
+    <div class="flex flex-wrap gap-3">
+      <span class="chip">Staff Engineer</span>
+      <span class="chip">Calm Under Fire</span>
+      <span class="chip">Curious Builder</span>
+    </div>
+    <div class="space-y-6">
+      <h1 class="text-4xl font-semibold leading-tight text-white md:text-6xl">
+        {site.hero.title}
+      </h1>
+      <p class="text-lg text-[color:var(--mist-200)] md:text-xl">
+        {site.hero.subtitle}
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-4">
+      <a
+        href={site.hero.ctaPrimary.href}
+        class="rounded-full border border-white/10 bg-white/10 px-6 py-3 text-sm uppercase tracking-[0.2em] text-white transition hover:border-white/30"
+      >
+        {site.hero.ctaPrimary.label}
+      </a>
+      <a
+        href={site.hero.ctaSecondary.href}
+        class="rounded-full border border-white/10 px-6 py-3 text-sm uppercase tracking-[0.2em] text-[color:var(--mist-200)] transition hover:border-white/30 hover:text-white"
+      >
+        {site.hero.ctaSecondary.label}
+      </a>
+    </div>
+    <div class="space-y-3">
+      <div class="flex flex-wrap items-center gap-3 text-sm text-[color:var(--mist-200)]">
+        <span class="font-serif text-lg text-white">{site.name}</span>
+        <span class="h-1 w-1 rounded-full bg-white/40"></span>
+        <span class="text-[color:var(--mist-200)]">{site.location}</span>
+        <span class="h-1 w-1 rounded-full bg-white/40"></span>
+        <a href={site.company.url} class="text-white/80 transition hover:text-white">
+          {site.company.name}
+        </a>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        {site.socials.map((social: { label: string; url: string }) => (
+          <a
+            href={social.url}
+            class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-[color:var(--mist-200)] transition hover:border-white/30 hover:text-white"
+          >
+            {social.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+  <div class="relative opacity-95">
+    <div class="card absolute inset-0 rounded-[32px] bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_45%),radial-gradient(circle_at_70%_10%,rgba(111,209,215,0.16),transparent_50%),radial-gradient(circle_at_90%_90%,rgba(245,181,74,0.16),transparent_60%)]"></div>
+    <div class="relative grid gap-4 rounded-[32px] p-5 md:p-6 overflow-hidden">
+      <div class="grid grid-cols-2 gap-4 relative z-10">
+        <div class="card glass h-36 rounded-3xl p-4 overflow-hidden relative">
+          <div class="h-44 bg-gradient-to-br from-yellow-400/20 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
+          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Focus</p>
+          <p class="mt-3 text-lg font-semibold text-white relative z-10">Steady Systems</p>
+        </div>
+        <div class="card glass h-36 rounded-3xl p-4 overflow-hidden relative">
+          <div class="h-44 bg-gradient-to-br from-orange-400/25 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
+          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Practice</p>
+          <p class="mt-3 text-lg font-semibold text-white relative z-10">Clear On Purpose</p>
+        </div>
+      </div>
+      <div class="card glass h-40 rounded-3xl p-5 relative z-10 overflow-hidden">
+        <div class="h-44 bg-gradient-to-br from-rose-400/25 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
+        <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Signal</p>
+        <p class="mt-3 text-2xl font-semibold text-white relative z-10">Ready for the weird stuff</p>
+      </div>
+      <div class="grid grid-cols-3 gap-4 relative z-10">
+        <div class="card glass h-20 rounded-2xl p-3 overflow-hidden relative">
+          <div class="h-44 bg-gradient-to-br from-emerald-400/20 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
+          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Speed</p>
+          <p class="mt-2 text-sm text-white relative z-10">Ship Often</p>
+        </div>
+        <div class="card glass h-20 rounded-2xl p-3 overflow-hidden relative">
+          <div class="h-44 bg-gradient-to-br from-sky-400/20 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
+          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Signal</p>
+          <p class="mt-2 text-sm text-white relative z-10">Signal > Noise</p>
+        </div>
+        <div class="card glass h-20 rounded-2xl p-3 overflow-hidden relative">
+          <div class="h-44 bg-gradient-to-br from-violet-400/20 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
+          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Teams</p>
+          <p class="mt-2 text-sm text-white relative z-10">Calm Crew</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

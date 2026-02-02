@@ -1,0 +1,20 @@
+---
+import { site } from "../data/site";
+---
+
+<footer class="relative z-10 bg-transparent">
+  <div class="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10 md:flex-row md:items-center md:justify-between">
+    <div>
+      <p class="text-sm text-[color:var(--mist-200)]">© 2026 {site.name}. All rights reserved.</p>
+      <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--fog-500)]">Nearbycoder.com</p>
+    </div>
+    <div class="flex flex-wrap gap-4 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)]">
+      {site.nav.map((item: { label: string; href: string }) => (
+        <a href={item.href} class="transition hover:text-white">
+          {item.label}
+        </a>
+      ))}
+      <a href="/resume.pdf" class="transition hover:text-white">Resume</a>
+    </div>
+  </div>
+</footer>

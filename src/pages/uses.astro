@@ -1,0 +1,102 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { uses } from "../data/uses";
+
+const data = uses as unknown as {
+  workstation: { name: string; description: string }[];
+  development: { name: string; description: string }[];
+  design: { name: string; description: string }[];
+  productivity: { name: string; description: string }[];
+  ai: { name: string; description: string }[];
+};
+---
+
+<BaseLayout title="Uses">
+  <section class="mt-10 space-y-10">
+    <div class="space-y-4">
+      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Uses</p>
+      <h1 class="text-4xl font-semibold text-white md:text-5xl">
+        Software I use, gadgets I love, and other things I recommend.
+      </h1>
+      <p class="text-base text-[color:var(--mist-200)]">
+        I get asked a lot about the things I use to build software, stay productive, or buy to fool myself
+        into thinking I'm being productive when I'm really just procrastinating. Here's a big list of all
+        of my favorite stuff.
+      </p>
+    </div>
+    <div class="grid gap-6">
+      <div class="card rounded-[28px] p-6 overflow-hidden relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-cyan-400/20 via-transparent to-transparent opacity-50"></div>
+        <div class="relative z-10 space-y-4">
+          <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Workstation</p>
+          <div class="grid gap-4">
+            {data.workstation.map((item: { name: string; description: string }) => (
+              <div class="space-y-2">
+                <h3 class="text-base font-semibold text-white">{item.name}</h3>
+                <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div class="grid gap-6 md:grid-cols-2">
+        <div class="card rounded-[28px] p-6 overflow-hidden relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-amber-400/20 via-transparent to-transparent opacity-50"></div>
+          <div class="relative z-10 space-y-4">
+            <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Development tools</p>
+            <div class="grid gap-4">
+              {data.development.map((item: { name: string; description: string }) => (
+                <div class="space-y-2">
+                  <h3 class="text-base font-semibold text-white">{item.name}</h3>
+                  <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div class="card rounded-[28px] p-6 overflow-hidden relative">
+          <div class="absolute inset-0 bg-gradient-to-br from-rose-400/20 via-transparent to-transparent opacity-50"></div>
+          <div class="relative z-10 space-y-4">
+            <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Design</p>
+            <div class="grid gap-4">
+              {data.design.map((item: { name: string; description: string }) => (
+                <div class="space-y-2">
+                  <h3 class="text-base font-semibold text-white">{item.name}</h3>
+                  <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card rounded-[28px] p-6 overflow-hidden relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-400/20 via-transparent to-transparent opacity-50"></div>
+        <div class="relative z-10 space-y-4">
+          <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Productivity</p>
+          <div class="grid gap-4 md:grid-cols-2">
+            {data.productivity.map((item: { name: string; description: string }) => (
+              <div class="space-y-2">
+                <h3 class="text-base font-semibold text-white">{item.name}</h3>
+                <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div class="card rounded-[28px] p-6 overflow-hidden relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-violet-400/20 via-transparent to-transparent opacity-50"></div>
+        <div class="relative z-10 space-y-4">
+          <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">AI</p>
+          <div class="grid gap-4 md:grid-cols-2">
+            {data.ai.map((item: { name: string; description: string }) => (
+              <div class="space-y-2">
+                <h3 class="text-base font-semibold text-white">{item.name}</h3>
+                <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

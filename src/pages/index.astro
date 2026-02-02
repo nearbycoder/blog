@@ -1,0 +1,88 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import ArticleCard from "../components/ArticleCard.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import WorkTimeline from "../components/WorkTimeline.astro";
+import { getCollection } from "astro:content";
+import { site } from "../data/site";
+
+const articles = (await getCollection("articles")) as any[];
+const sortedArticles = articles
+  .filter((entry: any) => !entry.data.draft)
+  .sort((a: any, b: any) => b.data.date.localeCompare(a.data.date));
+const featuredArticles = sortedArticles.slice(0, 3);
+
+const projects = (await getCollection("projects")) as any[];
+const sortedProjects = projects
+  .filter((entry: any) => !entry.data.draft)
+  .sort((a: any, b: any) => b.data.year.localeCompare(a.data.year));
+const featuredProjects = sortedProjects.filter((entry: any) => entry.data.featured).slice(0, 2);
+---
+
+<BaseLayout>
+  <Hero />
+
+  <section class="mt-20 space-y-10 reveal" style="--delay: 80ms">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Writing</p>
+        <h2 class="text-3xl font-semibold text-white md:text-4xl">Latest articles</h2>
+      </div>
+      <a href="/articles" class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] hover:text-white">
+        View all
+      </a>
+    </div>
+    <div class="grid gap-6 md:grid-cols-3">
+      {featuredArticles.map((entry: any, index: number) => (
+        <ArticleCard entry={entry} index={index} />
+      ))}
+    </div>
+  </section>
+
+  <section class="mt-20 space-y-10 reveal" style="--delay: 160ms">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Projects</p>
+        <h2 class="text-3xl font-semibold text-white md:text-4xl">Selected builds</h2>
+      </div>
+      <a href="/projects" class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] hover:text-white">
+        View all
+      </a>
+    </div>
+    <div class="grid gap-6 md:grid-cols-2">
+      {featuredProjects.map((project: any, index: number) => (
+        <ProjectCard project={project} index={index} />
+      ))}
+    </div>
+  </section>
+
+  <section class="mt-20 space-y-10 reveal" style="--delay: 240ms">
+    <div>
+      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Experience</p>
+      <h2 class="text-3xl font-semibold text-white md:text-4xl">Where I've built</h2>
+    </div>
+    <WorkTimeline />
+  </section>
+
+  <section class="mt-20 reveal" style="--delay: 320ms">
+    <div class="card grid gap-6 rounded-[32px] p-8 md:grid-cols-[1.2fr_0.8fr] md:items-center md:p-10 bg-grid">
+      <div class="space-y-4">
+        <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">{site.newsletter.title}</p>
+        <h2 class="text-3xl font-semibold text-white">Writing + leadership notes</h2>
+        <p class="text-sm text-[color:var(--mist-200)]">{site.newsletter.description}</p>
+      </div>
+      <div class="grid gap-3">
+        <input
+          type="email"
+          placeholder="Email address"
+          class="w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40"
+        />
+        <button class="rounded-full border border-white/10 bg-white/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-white">
+          Join the list
+        </button>
+        <p class="text-xs text-[color:var(--fog-500)]">Coming soon. No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

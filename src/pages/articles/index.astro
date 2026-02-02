@@ -1,0 +1,27 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+import { getCollection } from "astro:content";
+
+const articles = (await getCollection("articles")) as any[];
+const sortedArticles = articles
+  .filter((entry: any) => !entry.data.draft)
+  .sort((a: any, b: any) => b.data.date.localeCompare(a.data.date));
+---
+
+<BaseLayout title="Articles">
+  <section class="mt-10 space-y-8">
+    <div class="space-y-4">
+      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Articles</p>
+      <h1 class="text-4xl font-semibold text-white md:text-5xl">Writing on systems and leadership.</h1>
+      <p class="text-base text-[color:var(--mist-200)]">
+        Practical notes on reliability, incident response, and building software that keeps teams calm.
+      </p>
+    </div>
+    <div class="grid gap-6 md:grid-cols-3">
+      {sortedArticles.map((entry: any, index: number) => (
+        <ArticleCard entry={entry} index={index} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>
