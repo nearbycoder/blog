@@ -30,6 +30,27 @@ const searchItems = [
     url: item.href,
     subtitle: "Navigation",
   })),
+  {
+    type: "Theme",
+    title: "Light mode",
+    url: "theme:light",
+    subtitle: "Appearance",
+    keywords: "theme appearance light mode",
+  },
+  {
+    type: "Theme",
+    title: "Dark mode",
+    url: "theme:dark",
+    subtitle: "Appearance",
+    keywords: "theme appearance dark mode",
+  },
+  {
+    type: "Theme",
+    title: "System theme",
+    url: "theme:system",
+    subtitle: "Appearance",
+    keywords: "theme appearance system mode",
+  },
   ...articles
     .filter((entry) => !entry.data.draft)
     .map((entry) => ({

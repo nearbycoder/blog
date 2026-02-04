@@ -1,6 +1,6 @@
 ---
 type SearchItem = {
-  type: "Page" | "Article" | "Project";
+  type: "Page" | "Article" | "Project" | "Theme";
   title: string;
   url: string;
   subtitle?: string;
@@ -42,6 +42,8 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
     const input = document.getElementById("command-input");
     const list = document.getElementById("command-results");
     const data = document.getElementById("command-data");
+    const root = document.documentElement;
+    const STORAGE_KEY = "theme-preference";
 
     let items = [];
     let activeIndex = 0;
@@ -80,7 +82,7 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
 
     const buildResults = (query) => {
       const normalized = normalize(query);
-      const defaultTypes = new Set(["Page", "Article"]);
+      const defaultTypes = new Set(["Page", "Article", "Theme"]);
       const pool = normalized.length === 0
         ? items.filter((item) => defaultTypes.has(item.type))
         : items;
@@ -111,6 +113,7 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
         const isActive = idx === activeIndex;
         node.classList.toggle("bg-white/15", isActive);
         node.classList.toggle("border-white/30", isActive);
+        node.classList.toggle("is-active", isActive);
         node.setAttribute("aria-selected", isActive ? "true" : "false");
       });
 
@@ -135,7 +138,7 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
         link.href = entry.item.url;
         const displayIndex = registerIndex(entry.item);
         link.className =
-          "group flex items-center justify-between gap-4 rounded-2xl border border-white/15 bg-black/40 px-4 py-3 transition";
+          "command-option group flex items-center justify-between gap-4 rounded-2xl border border-white/15 bg-black/40 px-4 py-3 transition";
         link.setAttribute("data-index", String(displayIndex));
         link.setAttribute("role", "option");
 
@@ -181,6 +184,7 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
         Page: [],
         Article: [],
         Project: [],
+        Theme: [],
       };
 
       results.forEach((item, index) => {
@@ -196,6 +200,7 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
       renderGroup("Pages", grouped.Page, registerIndex);
       renderGroup("Articles", grouped.Article, registerIndex);
       renderGroup("Projects", grouped.Project, registerIndex);
+      renderGroup("Theme", grouped.Theme, registerIndex);
 
       currentResults = displayResults;
       setActive(0);
@@ -259,8 +264,23 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
 
       if (event.key === "Enter" && currentResults[activeIndex]) {
         event.preventDefault();
-        window.location.href = currentResults[activeIndex].url;
+        handleSelect(currentResults[activeIndex]);
       }
+    };
+
+    const handleSelect = (item) => {
+      if (!item?.url) return;
+      if (item.url.startsWith("theme:")) {
+        const value = item.url.split(":")[1] || "system";
+        root.setAttribute("data-theme", value);
+        try {
+          localStorage.setItem(STORAGE_KEY, value);
+        } catch {}
+        closePalette();
+        return;
+      }
+
+      window.location.href = item.url;
     };
 
     const handleClick = (event) => {
@@ -270,12 +290,25 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
       }
     };
 
+    const handleResultClick = (event) => {
+      const target = event.target;
+      const entry = target?.closest?.("[data-index]");
+      if (!entry) return;
+      event.preventDefault();
+      const index = Number(entry.getAttribute("data-index"));
+      const item = currentResults[index];
+      if (item) {
+        handleSelect(item);
+      }
+    };
+
     const init = () => {
       items = parseData();
       document.addEventListener("keydown", handleGlobalKey);
       input?.addEventListener("input", handleInput);
       input?.addEventListener("keydown", handleInputKeys);
       overlay?.addEventListener("click", handleClick);
+      list?.addEventListener("click", handleResultClick);
     };
 
     init();

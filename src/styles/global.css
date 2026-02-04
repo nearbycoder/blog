@@ -276,6 +276,7 @@ a {
   box-shadow: var(--shadow-raise);
 }
 
+
 .card:hover {
   transform: translateY(-6px);
   border-color: var(--border-strong);
@@ -449,6 +450,12 @@ a {
   background-color: rgba(15, 23, 42, 0.06);
 }
 
+:root[data-theme="light"] .command-option.is-active {
+  background-color: rgba(59, 130, 246, 0.2);
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.18);
+}
+
 :root[data-theme="light"] .hover\:text-white:hover {
   color: #0f172a;
 }
@@ -547,6 +554,12 @@ a {
 
   :root[data-theme="system"] .bg-black\/40 {
     background-color: rgba(15, 23, 42, 0.06);
+  }
+
+  :root[data-theme="system"] .command-option.is-active {
+    background-color: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 10px 24px rgba(59, 130, 246, 0.18);
   }
 
   :root[data-theme="system"] .hover\:text-white:hover {
