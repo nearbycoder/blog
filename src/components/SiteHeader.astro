@@ -1,8 +1,9 @@
 ---
 import { site } from "../data/site";
+import ThemeToggle from "./ThemeToggle.astro";
 ---
 
-<header class="relative z-10">
+<header class="relative z-30">
   <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-6">
     <a href="/" class="flex items-center gap-3">
       <img
@@ -25,12 +26,15 @@ import { site } from "../data/site";
         </a>
       ))}
     </nav>
-    <a
-      href="/articles"
-      class="hidden rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:border-white/20 md:inline-flex"
-    >
-      Read
-    </a>
+    <div class="flex items-center gap-3">
+      <ThemeToggle />
+      <a
+        href="/articles"
+        class="hidden rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:border-white/20 md:inline-flex"
+      >
+        Read
+      </a>
+    </div>
   </div>
   <nav class="mx-auto flex w-full max-w-6xl flex-wrap gap-4 px-6 pb-4 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] md:hidden">
     {site.nav.map((item: { label: string; href: string }) => (

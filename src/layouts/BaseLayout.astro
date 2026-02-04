@@ -52,10 +52,20 @@ const searchItems = [
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="system">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem("theme-preference");
+          const theme =
+            stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch {}
+      })();
+    </script>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonicalUrl} />
     <meta property="og:site_name" content={title} />
@@ -82,8 +92,8 @@ const searchItems = [
     <script defer data-domain="nearbycoder.com" src="https://tic.nrby.xyz/js/script.js"></script>
     <title>{pageTitle}</title>
   </head>
-  <body class="bg-grid text-white min-h-screen flex flex-col">
-    <div class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_45%),radial-gradient(circle_at_70%_10%,rgba(111,209,215,0.16),transparent_50%),radial-gradient(circle_at_90%_90%,rgba(245,181,74,0.16),transparent_60%)] opacity-70"></div>
+  <body class="bg-grid min-h-screen flex flex-col">
+    <div class="pointer-events-none fixed inset-0 page-glow opacity-70"></div>
     <SiteHeader />
     <main class="relative z-10 mx-auto w-full max-w-6xl flex-1 px-6 pb-24">
       <slot />

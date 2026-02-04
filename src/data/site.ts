@@ -7,8 +7,8 @@ export const site = {
   location: "Tulsa, Oklahoma",
   role: "Staff Software Engineer",
   company: {
-    name: "FireHydrant",
-    url: "https://firehydrant.com",
+    name: "Token Terminal",
+    url: "https://tokenterminal.com",
   },
   socials: [
     { label: "X", url: "https://twitter.com/nearbycoder" },
