@@ -14,7 +14,13 @@ const { entry } = Astro.props as { entry: any };
 const { Content } = await entry.render();
 ---
 
-<BaseLayout title={entry.data.title}>
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  type="article"
+  image={`/og/${entry.slug}.svg`}
+  imageAlt={entry.data.title}
+>
   <article class="mx-auto mt-10 max-w-3xl space-y-10">
     <header class="space-y-4">
       <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Article</p>

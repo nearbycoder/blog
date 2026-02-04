@@ -4,8 +4,16 @@ import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import { site } from "../data/site";
 
-const { title, description } = site;
+const { title, description, handle } = site;
 const pageTitle = Astro.props.title ? `${Astro.props.title} · ${title}` : title;
+const pageDescription = Astro.props.description ?? description;
+const ogType = Astro.props.type ?? "website";
+const imagePath = Astro.props.image ?? "/og/site.svg";
+const imageAlt = Astro.props.imageAlt ?? pageTitle;
+const siteUrl = Astro.site ?? new URL("https://nearbycoder.com");
+const canonicalUrl = Astro.url?.toString() ?? new URL("/", siteUrl).toString();
+const ogImageUrl = new URL(imagePath, siteUrl).toString();
+const twitterHandle = handle ? `@${handle}` : undefined;
 ---
 
 <!doctype html>
@@ -13,7 +21,24 @@ const pageTitle = Astro.props.title ? `${Astro.props.title} · ${title}` : title
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:site_name" content={title} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {twitterHandle && <meta name="twitter:site" content={twitterHandle} />}
+    {twitterHandle && <meta name="twitter:creator" content={twitterHandle} />}
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
