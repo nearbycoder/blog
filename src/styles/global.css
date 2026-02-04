@@ -105,6 +105,12 @@ a {
     box-shadow 240ms ease;
 }
 
+.command-panel {
+  background: linear-gradient(135deg, rgba(8, 10, 14, 0.96), rgba(16, 20, 28, 0.92));
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-raise);
+}
+
 .card:hover {
   transform: translateY(-6px);
   border-color: var(--border-strong);

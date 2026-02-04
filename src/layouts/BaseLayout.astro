@@ -2,7 +2,9 @@
 import "../styles/global.css";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import CommandPalette from "../components/CommandPalette.astro";
 import { site } from "../data/site";
+import { getCollection } from "astro:content";
 
 const { title, description, handle } = site;
 const pageTitle = Astro.props.title ? `${Astro.props.title} · ${title}` : title;
@@ -14,6 +16,39 @@ const siteUrl = Astro.site ?? new URL("https://nearbycoder.com");
 const canonicalUrl = Astro.url?.toString() ?? new URL("/", siteUrl).toString();
 const ogImageUrl = new URL(imagePath, siteUrl).toString();
 const twitterHandle = handle ? `@${handle}` : undefined;
+
+const articles = ((await getCollection("articles")) as any[]).sort((a: any, b: any) =>
+  b.data.date.localeCompare(a.data.date)
+);
+const projects = (await getCollection("projects")) as any[];
+
+const searchItems = [
+  { type: "Page", title: "Home", url: "/", subtitle: "Navigation" },
+  ...site.nav.map((item) => ({
+    type: "Page",
+    title: item.label,
+    url: item.href,
+    subtitle: "Navigation",
+  })),
+  ...articles
+    .filter((entry) => !entry.data.draft)
+    .map((entry) => ({
+      type: "Article",
+      title: entry.data.title,
+      url: `/articles/${entry.slug}`,
+      subtitle: [entry.data.date, entry.data.readTime].filter(Boolean).join(" · "),
+      keywords: [entry.data.description, ...(entry.data.tags ?? [])].join(" "),
+    })),
+  ...projects
+    .filter((entry) => !entry.data.draft)
+    .map((entry) => ({
+      type: "Project",
+      title: entry.data.title,
+      url: `/projects/${entry.slug}`,
+      subtitle: [entry.data.year, entry.data.role].filter(Boolean).join(" · "),
+      keywords: [entry.data.summary, ...(entry.data.stack ?? [])].join(" "),
+    })),
+];
 ---
 
 <!doctype html>
@@ -54,5 +89,6 @@ const twitterHandle = handle ? `@${handle}` : undefined;
       <slot />
     </main>
     <SiteFooter />
+    <CommandPalette items={searchItems} />
   </body>
 </html>

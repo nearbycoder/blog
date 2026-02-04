@@ -1,0 +1,283 @@
+---
+type SearchItem = {
+  type: "Page" | "Article" | "Project";
+  title: string;
+  url: string;
+  subtitle?: string;
+  keywords?: string;
+};
+
+const { items } = Astro.props as { items: SearchItem[] };
+const json = JSON.stringify(items).replace(/</g, "\\u003c");
+---
+
+<div id="command-palette" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" data-overlay></div>
+  <div class="relative mx-auto mt-20 w-[min(760px,92vw)]">
+    <div class="card command-panel rounded-[28px] p-5">
+      <div class="flex flex-col gap-3 md:flex-row md:items-center">
+        <span class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Command</span>
+        <input
+          id="command-input"
+          type="search"
+          placeholder="Search articles, projects, or pages"
+          class="w-full bg-transparent text-lg text-white placeholder:text-[color:var(--fog-500)] outline-none"
+        />
+        <span class="hidden text-xs uppercase tracking-[0.2em] text-[color:var(--fog-500)] md:inline">⌘K</span>
+      </div>
+      <div class="mt-4 max-h-[360px] overflow-y-auto">
+        <div id="command-results" class="grid gap-4"></div>
+      </div>
+      <div class="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-[color:var(--mist-200)]">
+        <span>Arrows to navigate</span>
+        <span>Enter to open</span>
+        <span>Esc to close</span>
+      </div>
+    </div>
+  </div>
+  <script id="command-data" type="application/json" set:html={json}></script>
+  <script is:inline>
+    const palette = document.getElementById("command-palette");
+    const overlay = palette?.querySelector("[data-overlay]");
+    const input = document.getElementById("command-input");
+    const list = document.getElementById("command-results");
+    const data = document.getElementById("command-data");
+
+    let items = [];
+    let activeIndex = 0;
+    let currentResults = [];
+
+    const parseData = () => {
+      if (!data) return [];
+      try {
+        return JSON.parse(data.textContent || "[]");
+      } catch {
+        return [];
+      }
+    };
+
+    const normalize = (value) => (value || "").toLowerCase();
+
+    const scoreMatch = (query, text) => {
+      if (!query) return 1;
+      if (!text) return 0;
+      const haystack = normalize(text);
+      const needle = normalize(query);
+      const idx = haystack.indexOf(needle);
+      if (idx !== -1) return 200 - idx;
+
+      let score = 0;
+      let q = 0;
+      for (let i = 0; i < haystack.length && q < needle.length; i += 1) {
+        if (haystack[i] === needle[q]) {
+          score += 1;
+          q += 1;
+        }
+      }
+      if (q < needle.length) return 0;
+      return score;
+    };
+
+    const buildResults = (query) => {
+      const normalized = normalize(query);
+      const defaultTypes = new Set(["Page", "Article"]);
+      const pool = normalized.length === 0
+        ? items.filter((item) => defaultTypes.has(item.type))
+        : items;
+      if (normalized.length === 0) {
+        return pool.slice(0, 12);
+      }
+
+      const results = pool
+        .map((item) => {
+          const text = [item.title, item.subtitle, item.keywords, item.type].join(" ");
+          return { item, score: scoreMatch(normalized, text) };
+        })
+        .filter((entry) => entry.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 12)
+        .map((entry) => entry.item);
+
+      return results;
+    };
+
+    const setActive = (index) => {
+      const nodes = list?.querySelectorAll("[data-index]") || [];
+      if (!nodes.length) return;
+      activeIndex = Math.max(0, Math.min(index, nodes.length - 1));
+
+      nodes.forEach((node) => {
+        const idx = Number(node.getAttribute("data-index"));
+        const isActive = idx === activeIndex;
+        node.classList.toggle("bg-white/15", isActive);
+        node.classList.toggle("border-white/30", isActive);
+        node.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+
+      const activeNode = nodes[activeIndex];
+      if (activeNode?.scrollIntoView) {
+        activeNode.scrollIntoView({ block: "nearest" });
+      }
+    };
+
+    const renderGroup = (label, entries, registerIndex) => {
+      if (!list || entries.length === 0) return;
+      const heading = document.createElement("div");
+      heading.className = "text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]";
+      heading.textContent = label;
+      list.appendChild(heading);
+
+      const group = document.createElement("div");
+      group.className = "grid gap-2";
+
+      entries.forEach((entry) => {
+        const link = document.createElement("a");
+        link.href = entry.item.url;
+        const displayIndex = registerIndex(entry.item);
+        link.className =
+          "group flex items-center justify-between gap-4 rounded-2xl border border-white/15 bg-black/40 px-4 py-3 transition";
+        link.setAttribute("data-index", String(displayIndex));
+        link.setAttribute("role", "option");
+
+        const info = document.createElement("div");
+        const title = document.createElement("div");
+        title.className = "text-base font-semibold text-white";
+        title.textContent = entry.item.title;
+
+        const subtitle = document.createElement("div");
+        subtitle.className = "text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)]";
+        subtitle.textContent = entry.item.subtitle || entry.item.type;
+
+        info.appendChild(title);
+        info.appendChild(subtitle);
+
+        const badge = document.createElement("span");
+        badge.className = "text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]";
+        badge.textContent = entry.item.type;
+
+        link.appendChild(info);
+        link.appendChild(badge);
+        group.appendChild(link);
+      });
+
+      list.appendChild(group);
+    };
+
+    const renderResults = (results) => {
+      if (!list) return;
+      list.innerHTML = "";
+      currentResults = [];
+
+      if (!results.length) {
+        const empty = document.createElement("div");
+        empty.className =
+          "rounded-2xl border border-white/15 bg-black/40 px-4 py-6 text-sm text-[color:var(--mist-200)]";
+        empty.textContent = "No matches. Try a different search.";
+        list.appendChild(empty);
+        return;
+      }
+
+      const grouped = {
+        Page: [],
+        Article: [],
+        Project: [],
+      };
+
+      results.forEach((item, index) => {
+        grouped[item.type]?.push({ item, index });
+      });
+
+      const displayResults = [];
+      const registerIndex = (item) => {
+        displayResults.push(item);
+        return displayResults.length - 1;
+      };
+
+      renderGroup("Pages", grouped.Page, registerIndex);
+      renderGroup("Articles", grouped.Article, registerIndex);
+      renderGroup("Projects", grouped.Project, registerIndex);
+
+      currentResults = displayResults;
+      setActive(0);
+    };
+
+    const openPalette = () => {
+      if (!palette || !input) return;
+      palette.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+      input.value = "";
+      renderResults(buildResults(""));
+      setTimeout(() => input.focus(), 0);
+    };
+
+    const closePalette = () => {
+      if (!palette) return;
+      palette.classList.add("hidden");
+      document.body.style.overflow = "";
+    };
+
+    const togglePalette = () => {
+      if (!palette) return;
+      if (palette.classList.contains("hidden")) {
+        openPalette();
+      } else {
+        closePalette();
+      }
+    };
+
+    const handleGlobalKey = (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        togglePalette();
+        return;
+      }
+
+      if (event.key === "Escape" && palette && !palette.classList.contains("hidden")) {
+        event.preventDefault();
+        closePalette();
+      }
+    };
+
+    const handleInput = () => {
+      if (!input) return;
+      renderResults(buildResults(input.value));
+    };
+
+    const handleInputKeys = (event) => {
+      if (!list) return;
+      const max = currentResults.length - 1;
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setActive(Math.min(activeIndex + 1, max));
+      }
+
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setActive(Math.max(activeIndex - 1, 0));
+      }
+
+      if (event.key === "Enter" && currentResults[activeIndex]) {
+        event.preventDefault();
+        window.location.href = currentResults[activeIndex].url;
+      }
+    };
+
+    const handleClick = (event) => {
+      const target = event.target;
+      if (target && target.matches("[data-overlay]")) {
+        closePalette();
+      }
+    };
+
+    const init = () => {
+      items = parseData();
+      document.addEventListener("keydown", handleGlobalKey);
+      input?.addEventListener("input", handleInput);
+      input?.addEventListener("keydown", handleInputKeys);
+      overlay?.addEventListener("click", handleClick);
+    };
+
+    init();
+  </script>
+</div>
