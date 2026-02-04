@@ -149,7 +149,7 @@ export const renderOgSvg = ({
   <rect x="60" y="60" width="1080" height="510" rx="40" fill="#0f141b" stroke="#232b36" stroke-width="2" />
   <rect x="60" y="60" width="1080" height="510" rx="40" fill="url(#accent)" />
 
-  <text x="120" y="170" fill="#9aa4b2" font-family="Space Grotesk, Arial, sans-serif" font-size="18" letter-spacing="6" font-weight="600">
+  <text x="120" y="170" fill="#d7dee8" font-family="Space Grotesk, Arial, sans-serif" font-size="18" letter-spacing="6" font-weight="600">
     ${escapeHtml(eyebrow.toUpperCase())}
   </text>
 
@@ -162,7 +162,7 @@ export const renderOgSvg = ({
       .join("")}
   </text>
 
-  <text x="120" y="${descriptionY}" fill="#cbd5f5" font-family="Space Grotesk, Arial, sans-serif" font-size="26" font-weight="400">
+  <text x="120" y="${descriptionY}" fill="#e2e8f0" font-family="Space Grotesk, Arial, sans-serif" font-size="26" font-weight="400">
     ${descriptionLines
       .map((line, index) => {
         const y = descriptionY + index * descriptionLineHeight;
@@ -173,14 +173,14 @@ export const renderOgSvg = ({
 
   ${
     tagsLine
-      ? `<text x="120" y="${tagsY}" fill="#94a3b8" font-family="Space Grotesk, Arial, sans-serif" font-size="18" letter-spacing="2" font-weight="600">${escapeHtml(
+      ? `<text x="120" y="${tagsY}" fill="#d3dae6" font-family="Space Grotesk, Arial, sans-serif" font-size="18" letter-spacing="2" font-weight="600">${escapeHtml(
           tagsLine
         )}</text>`
       : ""
   }
   ${
     footer
-      ? `<text x="120" y="520" fill="#7c8aa1" font-family="Space Grotesk, Arial, sans-serif" font-size="16" letter-spacing="1" font-weight="500">${escapeHtml(
+      ? `<text x="120" y="520" fill="#c7d0de" font-family="Space Grotesk, Arial, sans-serif" font-size="16" letter-spacing="1" font-weight="500">${escapeHtml(
           footer
         )}</text>`
       : ""
