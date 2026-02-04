@@ -30,9 +30,9 @@ const accents = Object.values(accentMap);
 const accent = accents[index % accents.length] ?? accentMap.mist;
 ---
 
-<a href={`/articles/${entry.slug}`} class="card group block overflow-hidden">
+<a href={`/articles/${entry.slug}`} class="card group block overflow-hidden h-full flex flex-col">
   <div class={`h-44 bg-gradient-to-br ${accent} to-transparent`}></div>
-  <div class="space-y-4 p-6">
+  <div class="space-y-4 p-6 flex-1 flex flex-col">
     <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)]">
       <span>{entry.data.date}</span>
       <span class="h-1 w-1 rounded-full bg-white/30"></span>
@@ -42,7 +42,7 @@ const accent = accents[index % accents.length] ?? accentMap.mist;
       <h3 class="text-xl font-semibold text-white transition group-hover:text-white">{entry.data.title}</h3>
       <p class="text-sm text-[color:var(--mist-200)]">{entry.data.description}</p>
     </div>
-    <div class="flex flex-wrap gap-2">
+    <div class="flex flex-wrap gap-2 mt-auto">
       {entry.data.tags.map((tag: string) => (
         <span class="chip">{tag}</span>
       ))}

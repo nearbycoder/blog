@@ -5,7 +5,6 @@ import { uses } from "../data/uses";
 const data = uses as unknown as {
   workstation: { name: string; description: string }[];
   development: { name: string; description: string }[];
-  design: { name: string; description: string }[];
   productivity: { name: string; description: string }[];
   ai: { name: string; description: string }[];
 };
@@ -55,31 +54,17 @@ const data = uses as unknown as {
           </div>
         </div>
         <div class="card rounded-[28px] p-6 overflow-hidden relative">
-          <div class="absolute inset-0 bg-gradient-to-br from-rose-400/20 via-transparent to-transparent opacity-50"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-400/20 via-transparent to-transparent opacity-50"></div>
           <div class="relative z-10 space-y-4">
-            <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Design</p>
+            <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Productivity</p>
             <div class="grid gap-4">
-              {data.design.map((item: { name: string; description: string }) => (
+              {data.productivity.map((item: { name: string; description: string }) => (
                 <div class="space-y-2">
                   <h3 class="text-base font-semibold text-white">{item.name}</h3>
                   <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="card rounded-[28px] p-6 overflow-hidden relative">
-        <div class="absolute inset-0 bg-gradient-to-br from-emerald-400/20 via-transparent to-transparent opacity-50"></div>
-        <div class="relative z-10 space-y-4">
-          <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Productivity</p>
-          <div class="grid gap-4 md:grid-cols-2">
-            {data.productivity.map((item: { name: string; description: string }) => (
-              <div class="space-y-2">
-                <h3 class="text-base font-semibold text-white">{item.name}</h3>
-                <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
-              </div>
-            ))}
           </div>
         </div>
       </div>

@@ -38,12 +38,9 @@ export const uses = {
       name: "Postico",
       description: "Nothing really beats Postico for accessing postgresql databases locally or remotely.",
     },
-  ],
-  design: [
     {
-      name: "Figma",
-      description:
-        "Used primarily as a interface with designers, however there are occasions where I find myself using it for personal projects.",
+      name: "Yaak",
+      description: "Local-first API client for quick REST and GraphQL testing.",
     },
   ],
   productivity: [
