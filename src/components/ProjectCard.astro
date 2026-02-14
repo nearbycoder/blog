@@ -30,9 +30,9 @@ const accents = Object.values(accentMap);
 const accent = accents[index % accents.length] ?? accentMap.mist;
 ---
 
-<article class="card group overflow-hidden">
+<article class="card group flex h-full flex-col overflow-hidden">
   <div class={`card-accent h-36 bg-gradient-to-br ${accent} to-transparent`}></div>
-  <div class="space-y-4 p-6">
+  <div class="flex flex-1 flex-col space-y-4 p-6">
     <div class="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] whitespace-nowrap leading-none">
       <span class="leading-none">{project.data.year}</span>
       <span class="h-4 w-px bg-white/30"></span>
@@ -50,7 +50,7 @@ const accent = accents[index % accents.length] ?? accentMap.mist;
       ))}
     </div>
     {project.data.link || project.data.githubLink ? (
-      <div class="flex flex-wrap gap-2 pt-2">
+      <div class="mt-auto flex flex-wrap gap-2 pt-2">
         {project.data.link ? (
         <a
           href={project.data.link}
