@@ -29,6 +29,15 @@ import ThemeToggle from "./ThemeToggle.astro";
     <div class="flex items-center gap-3">
       <ThemeToggle />
       <a
+        href="/resume.pdf"
+        target="_blank"
+        rel="noreferrer"
+        class="rounded-full border px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:border-white/60 hover:bg-white/20"
+        style="border-color: var(--accent-cyan); background-color: var(--glow);"
+      >
+        Resume
+      </a>
+      <a
         href="/articles"
         class="hidden rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:border-white/20 md:inline-flex"
       >
@@ -42,5 +51,8 @@ import ThemeToggle from "./ThemeToggle.astro";
         {item.label}
       </a>
     ))}
+    <a href="/resume.pdf" target="_blank" rel="noreferrer" class="text-white transition hover:text-white/80">
+      Resume
+    </a>
   </nav>
 </header>

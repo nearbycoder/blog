@@ -8,13 +8,21 @@ import { site } from "../data/site";
       <p class="text-sm text-[color:var(--mist-200)]">© 2026 {site.name}. All rights reserved.</p>
       <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--fog-500)]">Nearbycoder.com</p>
     </div>
-    <div class="flex flex-wrap gap-4 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)]">
+    <div class="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)]">
       {site.nav.map((item: { label: string; href: string }) => (
-        <a href={item.href} class="transition hover:text-white">
+        <a href={item.href} class="inline-flex items-center transition hover:text-white">
           {item.label}
         </a>
       ))}
-      <a href="/resume.pdf" class="transition hover:text-white">Resume</a>
+      <a
+        href="/resume.pdf"
+        target="_blank"
+        rel="noreferrer"
+        class="rounded-full border px-3 py-1 transition hover:border-white/60 hover:bg-white/10 hover:text-white"
+        style="border-color: var(--accent-cyan); background-color: var(--glow);"
+      >
+        Resume
+      </a>
     </div>
   </div>
 </footer>

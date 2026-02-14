@@ -68,21 +68,42 @@ const featuredProjects = sortedProjects.filter((entry: any) => entry.data.featur
   <section class="mt-20 reveal" style="--delay: 320ms">
     <div class="card grid gap-6 rounded-[32px] p-8 md:grid-cols-[1.2fr_0.8fr] md:items-center md:p-10 bg-grid">
       <div class="space-y-4">
-        <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">{site.newsletter.title}</p>
-        <h2 class="text-3xl font-semibold text-white">Writing + leadership notes</h2>
-        <p class="text-sm text-[color:var(--mist-200)]">{site.newsletter.description}</p>
+        <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Get In Touch</p>
+        <h2 class="text-3xl font-semibold text-white">Contact me directly</h2>
+        <p class="text-sm text-[color:var(--mist-200)]">
+          Send a quick note about opportunities, collaborations, or anything interesting you're building.
+        </p>
       </div>
-      <div class="grid gap-3">
+      <form action="mailto:nearbycoder@gmail.com" method="post" enctype="text/plain" class="grid gap-3">
+        <input
+          type="text"
+          name="name"
+          placeholder="Your name"
+          class="w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40"
+          required
+        />
         <input
           type="email"
-          placeholder="Email address"
+          name="email"
+          placeholder="Your email"
           class="w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40"
+          required
         />
-        <button class="rounded-full border border-white/10 bg-white/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-white">
-          Join the list
+        <textarea
+          name="message"
+          placeholder="Your message"
+          rows={4}
+          class="w-full rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40"
+          required
+        ></textarea>
+        <button
+          type="submit"
+          class="rounded-full border border-white/10 bg-white/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-white"
+        >
+          Send message
         </button>
-        <p class="text-xs text-[color:var(--fog-500)]">Coming soon. No spam. Unsubscribe anytime.</p>
-      </div>
+        <p class="text-xs text-[color:var(--fog-500)]">Opens your email app and sends to nearbycoder@gmail.com.</p>
+      </form>
     </div>
   </section>
 </BaseLayout>
