@@ -1,14 +1,14 @@
 ---
 title: "Secret Santa Pair"
-summary: "A quick way to pair a list of people for Secret Santa."
+summary: "Privacy-first Secret Santa app with URL-based state, elegant reveal links, and no backend."
 role: "Creator"
 year: "Ongoing"
-stack: ["Web App", "Utility"]
-impact: "Simple pairing flow for groups of any size."
+stack: ["React 19", "TypeScript", "Tailwind CSS 4", "Vite 7", "TanStack Router"]
+impact: "Built a no-login, no-database exchange flow where participants, assignments, and reveal links are generated and shared client-side."
 link: "https://santa.nrby.xyz"
 githubLink: "https://github.com/nearbycoder/santa"
 featured: false
 accent: "rose"
 ---
 
-Secret Santa Pair is a tiny tool that generates pairings without the overhead of a larger app.
+Secret Santa Pair is an elegant gift exchange app that keeps everything in the URL, so groups can create assignments and share individual reveal links instantly without accounts, tracking, or server-side storage.
