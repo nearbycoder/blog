@@ -48,6 +48,7 @@ const projects = defineCollection({
     stack: z.array(z.string()).default([]),
     impact: z.string().optional(),
     link: z.string().optional(),
+    githubLink: z.string().optional(),
     featured: z.boolean().default(false),
     accent: z.enum([
       "amber",

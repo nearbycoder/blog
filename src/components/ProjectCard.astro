@@ -49,8 +49,9 @@ const accent = accents[index % accents.length] ?? accentMap.mist;
         <span class="chip">{item}</span>
       ))}
     </div>
-    {project.data.link ? (
-      <div class="pt-2">
+    {project.data.link || project.data.githubLink ? (
+      <div class="flex flex-wrap gap-2 pt-2">
+        {project.data.link ? (
         <a
           href={project.data.link}
           target="_blank"
@@ -59,6 +60,17 @@ const accent = accents[index % accents.length] ?? accentMap.mist;
         >
           Visit project
         </a>
+        ) : null}
+        {project.data.githubLink ? (
+          <a
+            href={project.data.githubLink}
+            target="_blank"
+            rel="noreferrer"
+            class="inline-flex items-center justify-center rounded-full border border-white/25 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[color:var(--mist-200)] hover:text-white"
+          >
+            View code
+          </a>
+        ) : null}
       </div>
     ) : null}
   </div>

@@ -6,6 +6,7 @@ year: "Ongoing"
 stack: ["Web App", "Utility"]
 impact: "Simple pairing flow for groups of any size."
 link: "https://santa.nrby.xyz"
+githubLink: "https://github.com/nearbycoder/santa"
 featured: false
 accent: "rose"
 ---

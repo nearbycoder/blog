@@ -5,7 +5,8 @@ role: "Creator"
 year: "Ongoing"
 stack: ["React 19", "TypeScript", "Tailwind CSS 4", "Vite 7", "TanStack Router"]
 impact: "Built MathQuest with 20 topics across 7 categories, local progress persistence, and gamified learning loops."
-link: "https://github.com/nearbycoder/math-game"
+link: "https://math.nrby.xyz"
+githubLink: "https://github.com/nearbycoder/math-game"
 featured: true
 accent: "cyan"
 ---
