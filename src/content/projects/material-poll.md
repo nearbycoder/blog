@@ -8,6 +8,7 @@ impact: "Explored realtime polling flows and live updates."
 link: "https://github.com/nearbycoder/materialpoll"
 featured: false
 accent: "amber"
+draft: true
 ---
 
 Material Poll is a polling app experiment focused on realtime updates and simple UX.
