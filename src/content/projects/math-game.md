@@ -1,13 +1,13 @@
 ---
 title: "Math Game"
-summary: "Very simple math game built for my daughter."
+summary: "Duolingo-inspired math learning game with topic progression, XP, streaks, and lives."
 role: "Creator"
 year: "Ongoing"
-stack: ["Web App", "Family"]
-impact: "Created to make learning arithmetic fun and quick."
-link: "https://math.nrby.xyz"
+stack: ["React 19", "TypeScript", "Tailwind CSS 4", "Vite 7", "TanStack Router"]
+impact: "Built MathQuest with 20 topics across 7 categories, local progress persistence, and gamified learning loops."
+link: "https://github.com/nearbycoder/math-game"
 featured: true
 accent: "cyan"
 ---
 
-Math Game is a lightweight browser game focused on fast practice and playful learning.
+MathQuest is a browser-based learning game for 6th-grade math with a skill-tree style progression system, daily streak tracking, XP levels, hearts, crowns, and localStorage-backed progress.
