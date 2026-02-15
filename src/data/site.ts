@@ -6,10 +6,6 @@ export const site = {
     "Staff software engineer focused on resilient systems, pragmatic leadership, and building tools that keep teams shipping.",
   location: "Tulsa, Oklahoma",
   role: "Staff Software Engineer",
-  company: {
-    name: "Token Terminal",
-    url: "https://tokenterminal.com",
-  },
   socials: [
     { label: "X", url: "https://twitter.com/nearbycoder" },
     { label: "GitHub", url: "https://github.com/nearbycoder" },
@@ -39,7 +35,7 @@ export const site = {
     {
       company: "Token Terminal",
       role: "Staff Software Engineer",
-      range: "2024 - Present",
+      range: "2024 - 2026",
       accent: "cyan",
     },
     {

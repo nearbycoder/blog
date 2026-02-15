@@ -36,10 +36,6 @@ import { site } from "../data/site";
         <span class="font-serif text-lg text-white">{site.name}</span>
         <span class="h-1 w-1 rounded-full bg-white/40"></span>
         <span class="text-[color:var(--mist-200)]">{site.location}</span>
-        <span class="h-1 w-1 rounded-full bg-white/40"></span>
-        <a href={site.company.url} class="text-white/80 transition hover:text-white">
-          {site.company.name}
-        </a>
       </div>
       <div class="flex flex-wrap gap-2">
         {site.socials.map((social: { label: string; url: string }) => (

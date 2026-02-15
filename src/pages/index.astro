@@ -74,12 +74,23 @@ const featuredProjects = sortedProjects.filter((entry: any) => entry.data.featur
           Send a quick note about opportunities, collaborations, or anything interesting you're building.
         </p>
       </div>
-      <form action="mailto:nearbycoder@gmail.com" method="post" enctype="text/plain" class="grid gap-3">
+      <form
+        action="mailto:nearbycoder@gmail.com"
+        method="post"
+        enctype="text/plain"
+        class="grid gap-3"
+        autocomplete="off"
+        data-1p-ignore="true"
+        data-lpignore="true"
+      >
         <input
           type="text"
           name="name"
           placeholder="Your name"
           class="w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40"
+          autocomplete="off"
+          data-1p-ignore="true"
+          data-lpignore="true"
           required
         />
         <input
@@ -87,6 +98,9 @@ const featuredProjects = sortedProjects.filter((entry: any) => entry.data.featur
           name="email"
           placeholder="Your email"
           class="w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40"
+          autocomplete="off"
+          data-1p-ignore="true"
+          data-lpignore="true"
           required
         />
         <textarea
@@ -94,6 +108,9 @@ const featuredProjects = sortedProjects.filter((entry: any) => entry.data.featur
           placeholder="Your message"
           rows={4}
           class="w-full rounded-3xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40"
+          autocomplete="off"
+          data-1p-ignore="true"
+          data-lpignore="true"
           required
         ></textarea>
         <button
