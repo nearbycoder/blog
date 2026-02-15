@@ -1,0 +1,28 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import LayoffEntryCard from "../../components/LayoffEntryCard.astro";
+import { getCollection } from "astro:content";
+
+const entries = (await getCollection("layoff")) as any[];
+const sortedEntries = entries
+  .filter((entry: any) => !entry.data.draft)
+  .sort((a: any, b: any) => b.data.date.localeCompare(a.data.date));
+---
+
+<BaseLayout title="Layoff Log">
+  <section class="mt-10 space-y-8">
+    <div class="space-y-4">
+      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Layoff Log</p>
+      <h1 class="text-4xl font-semibold text-white md:text-5xl">One project a day until I get hired.</h1>
+      <p class="text-base text-[color:var(--mist-200)]">
+        Daily build journal with detailed notes for each project. Add a markdown file in `src/content/layoff`
+        to publish the next day.
+      </p>
+    </div>
+    <div class="grid gap-6 md:grid-cols-2">
+      {sortedEntries.map((entry: any, index: number) => (
+        <LayoffEntryCard entry={entry} index={index} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

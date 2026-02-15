@@ -1,13 +1,14 @@
 ---
 title: "React Chat"
-summary: "A simple messaging app, stateless backend, url based rooms."
+summary: "Real-time ephemeral chat with slash commands, private messages, GIFs, and code blocks."
 role: "Creator"
 year: "Ongoing"
-stack: ["Web App", "Realtime"]
-impact: "Built to explore lightweight chat without heavy backend state."
-link: "https://github.com/nearbycoder/react.chat"
+stack: ["React 19", "TypeScript", "TanStack Start", "Tailwind CSS 4", "WebSockets"]
+impact: "Built a full-stack chat app with reconnecting WebSockets, command-driven UX, and Railway-ready deployment."
+link: "http://chat.nrby.xyz/"
+githubLink: "https://github.com/nearbycoder/react.chat"
 featured: false
 accent: "mist"
 ---
 
-React Chat is a small messaging experiment with URL-based rooms and a minimal server.
+React Chat is a real-time ephemeral chat app with room-based messaging, optional nicknames, theme switching, private `/pm` messages, `/giphy` support, and syntax-highlighted code sharing.

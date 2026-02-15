@@ -79,7 +79,48 @@ const projects = defineCollection({
   }),
 });
 
+const layoff = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    summary: z.string(),
+    date: z.string(),
+    day: z.number().int().positive().optional(),
+    status: z.enum(["planned", "building", "shipped"]).default("planned"),
+    stack: z.array(z.string()).default([]),
+    repoUrl: z.string().url(),
+    siteUrl: z.string().url(),
+    accent: z.enum([
+      "amber",
+      "cyan",
+      "rose",
+      "mist",
+      "emerald",
+      "sky",
+      "violet",
+      "lime",
+      "teal",
+      "indigo",
+      "fuchsia",
+      "pink",
+      "orange",
+      "red",
+      "yellow",
+      "blue",
+      "slate",
+      "stone",
+      "zinc",
+      "neutral",
+      "purple",
+      "green",
+      "indigoDeep",
+    ]).default("cyan"),
+    draft: z.boolean().default(false),
+  }),
+});
+
 export const collections = {
   articles,
   projects,
+  layoff,
 };

@@ -21,6 +21,7 @@ const articles = ((await getCollection("articles")) as any[]).sort((a: any, b: a
   b.data.date.localeCompare(a.data.date)
 );
 const projects = (await getCollection("projects")) as any[];
+const layoffEntries = (await getCollection("layoff")) as any[];
 
 const searchItems = [
   { type: "Page", title: "Home", url: "/", subtitle: "Navigation" },
@@ -67,6 +68,21 @@ const searchItems = [
       title: entry.data.title,
       url: `/projects/${entry.slug}`,
       subtitle: [entry.data.year, entry.data.role].filter(Boolean).join(" · "),
+      keywords: [entry.data.summary, ...(entry.data.stack ?? [])].join(" "),
+    })),
+  ...layoffEntries
+    .filter((entry) => !entry.data.draft)
+    .map((entry) => ({
+      type: "Layoff Build",
+      title: entry.data.title,
+      url: `/layoff/${entry.slug}`,
+      subtitle: [
+        entry.data.date,
+        entry.data.day ? `Day ${entry.data.day}` : null,
+        entry.data.status,
+      ]
+        .filter(Boolean)
+        .join(" · "),
       keywords: [entry.data.summary, ...(entry.data.stack ?? [])].join(" "),
     })),
 ];
