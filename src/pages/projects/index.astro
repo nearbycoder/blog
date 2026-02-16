@@ -4,9 +4,18 @@ import ProjectCard from "../../components/ProjectCard.astro";
 import { getCollection } from "astro:content";
 
 const projects = (await getCollection("projects")) as any[];
+const pinnedProjectSlug = "dailystand-dev";
 const sortedProjects = projects
   .filter((entry: any) => !entry.data.draft)
-  .sort((a: any, b: any) => b.data.year.localeCompare(a.data.year));
+  .sort((a: any, b: any) => {
+    const aIsPinned = a.slug === pinnedProjectSlug;
+    const bIsPinned = b.slug === pinnedProjectSlug;
+
+    if (aIsPinned && !bIsPinned) return -1;
+    if (!aIsPinned && bIsPinned) return 1;
+
+    return b.data.year.localeCompare(a.data.year);
+  });
 ---
 
 <BaseLayout title="Projects">
