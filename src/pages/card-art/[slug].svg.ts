@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
-import { renderOgSvg } from "../../lib/og";
 import { isArticlePublished } from "../../lib/articles";
+import { renderCardArtSvg } from "../../lib/card-art";
 
 export const prerender = true;
 
@@ -14,8 +14,8 @@ export async function getStaticPaths() {
 
 export async function GET({ params }: { params: { slug?: string } }) {
   const slug = params.slug;
-  const entries = (await getCollection("articles")) as any[];
   const includeScheduled = !import.meta.env.PROD;
+  const entries = (await getCollection("articles")) as any[];
   const entry = entries.find(
     (item) => item.slug === slug && isArticlePublished(item, { includeScheduled })
   );
@@ -24,20 +24,16 @@ export async function GET({ params }: { params: { slug?: string } }) {
     return new Response("Not found", { status: 404 });
   }
 
-  const footerParts = [entry.data.date, entry.data.readTime].filter(Boolean);
-  const svg = renderOgSvg({
-    title: entry.data.title,
-    description: entry.data.description,
-    eyebrow: "Article",
+  const svg = renderCardArtSvg({
+    slug: entry.slug,
     tags: entry.data.tags ?? [],
     accent: entry.data.accent ?? "cyan",
-    footer: footerParts.join(" | "),
-    artSeed: entry.slug,
   });
 
   return new Response(svg, {
     headers: {
       "Content-Type": "image/svg+xml",
+      "Cache-Control": "public, max-age=0, must-revalidate",
     },
   });
 }

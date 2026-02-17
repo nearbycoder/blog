@@ -1,3 +1,5 @@
+import { renderCardArtSvg } from "./card-art";
+
 type OgAccent =
   | "amber"
   | "cyan"
@@ -30,6 +32,7 @@ type OgInput = {
   tags?: string[];
   accent?: OgAccent;
   footer?: string;
+  artSeed?: string;
 };
 
 type Palette = { primary: string; secondary: string; glow: string };
@@ -115,8 +118,18 @@ export const renderOgSvg = ({
   tags = [],
   accent = "cyan",
   footer,
+  artSeed,
 }: OgInput) => {
   const palette = paletteMap[accent] ?? paletteMap.cyan;
+  const artwork = encodeURIComponent(
+    renderCardArtSvg({
+      slug: artSeed ?? `${title}-${tags.join("-") || "article"}`,
+      tags,
+      accent,
+      width: 1200,
+      height: 630,
+    })
+  );
   const titleLines = wrapText(title, 32, 2);
   const descriptionLines = wrapText(description, 60, 3);
   const tagsLine = tags.slice(0, 4).map((tag) => tag.toUpperCase()).join(" | ");
@@ -144,8 +157,10 @@ export const renderOgSvg = ({
     </pattern>
   </defs>
   <rect width="1200" height="630" fill="#0b0f14" />
+  <image href="data:image/svg+xml;utf8,${artwork}" width="1200" height="630" preserveAspectRatio="xMidYMid slice" />
   <rect width="1200" height="630" fill="url(#grid)" />
   <rect width="1200" height="630" fill="url(#glow)" />
+  <rect width="1200" height="630" fill="rgba(6, 10, 18, 0.25)" />
   <rect x="60" y="60" width="1080" height="510" rx="40" fill="#0f141b" stroke="#232b36" stroke-width="2" />
   <rect x="60" y="60" width="1080" height="510" rx="40" fill="url(#accent)" />
 
