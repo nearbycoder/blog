@@ -1,11 +1,13 @@
 import { getCollection } from "astro:content";
 import { renderOgSvg } from "../../lib/og";
+import { isArticlePublished } from "../../lib/articles";
 
 export const prerender = true;
 
 export async function getStaticPaths() {
+  const includeScheduled = !import.meta.env.PROD;
   const entries = (await getCollection("articles")) as any[];
-  return entries.filter((entry) => !entry.data.draft).map((entry) => ({
+  return entries.filter((entry) => isArticlePublished(entry, { includeScheduled })).map((entry) => ({
     params: { slug: entry.slug },
   }));
 }
@@ -13,7 +15,10 @@ export async function getStaticPaths() {
 export async function GET({ params }: { params: { slug?: string } }) {
   const slug = params.slug;
   const entries = (await getCollection("articles")) as any[];
-  const entry = entries.find((item) => item.slug === slug && !item.data.draft);
+  const includeScheduled = !import.meta.env.PROD;
+  const entry = entries.find(
+    (item) => item.slug === slug && isArticlePublished(item, { includeScheduled })
+  );
 
   if (!entry) {
     return new Response("Not found", { status: 404 });

@@ -1,13 +1,17 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
+import { isArticlePublished } from "../../lib/articles";
 
 export async function getStaticPaths() {
+  const includeScheduled = !import.meta.env.PROD;
   const entries = (await getCollection("articles")) as any[];
-  return entries.filter((entry: any) => !entry.data.draft).map((entry: any) => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+  return entries
+    .filter((entry: any) => isArticlePublished(entry, { includeScheduled }))
+    .map((entry: any) => ({
+      params: { slug: entry.slug },
+      props: { entry },
+    }));
 }
 
 const { entry } = Astro.props as { entry: any };

@@ -5,6 +5,7 @@ import SiteFooter from "../components/SiteFooter.astro";
 import CommandPalette from "../components/CommandPalette.astro";
 import { site } from "../data/site";
 import { getCollection } from "astro:content";
+import { isArticlePublished } from "../lib/articles";
 
 const { title, description, handle } = site;
 const pageTitle = Astro.props.title ? `${Astro.props.title} · ${title}` : title;
@@ -16,6 +17,7 @@ const siteUrl = Astro.site ?? new URL("https://nearbycoder.com");
 const canonicalUrl = Astro.url?.toString() ?? new URL("/", siteUrl).toString();
 const ogImageUrl = new URL(imagePath, siteUrl).toString();
 const twitterHandle = handle ? `@${handle}` : undefined;
+const includeScheduled = !import.meta.env.PROD;
 
 const articles = ((await getCollection("articles")) as any[]).sort((a: any, b: any) =>
   b.data.date.localeCompare(a.data.date)
@@ -53,7 +55,7 @@ const searchItems = [
     keywords: "theme appearance system mode",
   },
   ...articles
-    .filter((entry) => !entry.data.draft)
+    .filter((entry) => isArticlePublished(entry, { includeScheduled }))
     .map((entry) => ({
       type: "Article",
       title: entry.data.title,
