@@ -1,7 +1,8 @@
 export const site = {
   name: "Josh Hamilton",
   handle: "nearbycoder",
-  title: "Josh Hamilton - Nearbycoder",
+  title:
+    "Josh Hamilton - Nearbycoder - I am a Staff software engineer and loving husband, and a father of two girls.",
   description:
     "Staff software engineer focused on resilient systems, pragmatic leadership, and building tools that keep teams shipping.",
   location: "Tulsa, Oklahoma",
@@ -20,7 +21,7 @@ export const site = {
     { label: "Uses", href: "/uses" },
   ],
   hero: {
-    title: "Staff software engineer, loving husband, and amateur gamer.",
+    title: "Staff software engineer, loving husband, father of two girls.",
     subtitle:
       "I build resilient systems, write about the messy parts of shipping, and try to keep teams calm when things get noisy.",
     ctaPrimary: { label: "Read the latest", href: "/articles" },
