@@ -36,8 +36,7 @@ const weekSections = sortedEntries.reduce(
       <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Layoff Log</p>
       <h1 class="text-4xl font-semibold text-white md:text-5xl">Shipping multiple builds each week until I get hired.</h1>
       <p class="text-base text-[color:var(--mist-200)]">
-        Weekly build journal grouped by week so each launch has its own entry. Reuse the same `week` number in
-        `src/content/layoff` to place multiple projects in the same weekly section.
+        Weekly launch log tracking what shipped, what changed, and why it matters.
       </p>
     </div>
     {weekSections.map((section: { key: string; label: string; entries: any[] }) => (
