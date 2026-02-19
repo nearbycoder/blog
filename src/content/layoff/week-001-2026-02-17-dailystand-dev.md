@@ -1,7 +1,7 @@
 ---
 title: "Launching dailystand.dev and bringing it into focus"
 summary: "A launch-focused update on shipping dailystand.dev in week 1 and making it easier to discover across the site."
-date: "2026-02-19"
+date: "2026-02-17"
 week: 1
 status: "shipped"
 stack: ["Next.js", "TypeScript", "PostgreSQL", "Drizzle", "Open Source"]
