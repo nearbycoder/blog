@@ -80,7 +80,7 @@ const searchItems = [
       url: `/layoff/${entry.slug}`,
       subtitle: [
         entry.data.date,
-        entry.data.day ? `Day ${entry.data.day}` : null,
+        entry.data.week ? `Week ${entry.data.week}` : entry.data.day ? `Day ${entry.data.day}` : null,
         entry.data.status,
       ]
         .filter(Boolean)

@@ -12,6 +12,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props as { entry: any };
 const { Content } = await entry.render();
+const cadenceLabel = entry.data.week ? `Week ${entry.data.week}` : entry.data.day ? `Day ${entry.data.day}` : null;
 ---
 
 <BaseLayout title={entry.data.title}>
@@ -22,10 +23,10 @@ const { Content } = await entry.render();
       <p class="text-base text-[color:var(--mist-200)]">{entry.data.summary}</p>
       <div class="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] whitespace-nowrap">
         <span>{entry.data.date}</span>
-        {entry.data.day ? (
+        {cadenceLabel ? (
           <>
             <span class="h-4 w-px bg-white/30"></span>
-            <span>Day {entry.data.day}</span>
+            <span>{cadenceLabel}</span>
           </>
         ) : null}
         <span class="h-4 w-px bg-white/30"></span>

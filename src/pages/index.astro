@@ -3,6 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import ArticleCard from "../components/ArticleCard.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import LayoffEntryCard from "../components/LayoffEntryCard.astro";
 import WorkTimeline from "../components/WorkTimeline.astro";
 import { getCollection } from "astro:content";
 import { site } from "../data/site";
@@ -29,6 +30,11 @@ const sortedProjects = projects
     return b.data.year.localeCompare(a.data.year);
   });
 const featuredProjects = sortedProjects.filter((entry: any) => entry.data.featured).slice(0, 2);
+const layoffEntries = (await getCollection("layoff")) as any[];
+const recentLayoffEntries = layoffEntries
+  .filter((entry: any) => !entry.data.draft)
+  .sort((a: any, b: any) => b.data.date.localeCompare(a.data.date))
+  .slice(0, 2);
 const contactEmail = "nearbycoder@gmail.com";
 const linkedInUrl = site.socials.find((social: { label: string; url: string }) => social.label === "LinkedIn")?.url;
 ---
@@ -69,6 +75,25 @@ const linkedInUrl = site.socials.find((social: { label: string; url: string }) =
       ))}
     </div>
   </section>
+
+  {recentLayoffEntries.length > 0 && (
+    <section class="mt-20 space-y-10 reveal" style="--delay: 200ms">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Layoff Log</p>
+          <h2 class="text-3xl font-semibold text-white md:text-4xl">Weekly build updates</h2>
+        </div>
+        <a href="/layoff" class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] hover:text-white">
+          View all
+        </a>
+      </div>
+      <div class="grid gap-6 md:grid-cols-2">
+        {recentLayoffEntries.map((entry: any, index: number) => (
+          <LayoffEntryCard entry={entry} index={index} />
+        ))}
+      </div>
+    </section>
+  )}
 
   <section class="mt-20 space-y-10 reveal" style="--delay: 240ms">
     <div>

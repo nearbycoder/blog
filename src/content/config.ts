@@ -85,9 +85,11 @@ const layoff = defineCollection({
     title: z.string(),
     summary: z.string(),
     date: z.string(),
+    week: z.number().int().positive().optional(),
     day: z.number().int().positive().optional(),
     status: z.enum(["planned", "building", "shipped"]).default("planned"),
     stack: z.array(z.string()).default([]),
+    image: z.string().optional(),
     repoUrl: z.string().url(),
     siteUrl: z.string().url(),
     accent: z.enum([

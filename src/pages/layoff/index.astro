@@ -7,22 +7,53 @@ const entries = (await getCollection("layoff")) as any[];
 const sortedEntries = entries
   .filter((entry: any) => !entry.data.draft)
   .sort((a: any, b: any) => b.data.date.localeCompare(a.data.date));
+
+const weekSections = sortedEntries.reduce(
+  (
+    sections: { key: string; label: string; entries: any[] }[],
+    entry: any
+  ) => {
+    const week = entry.data.week as number | undefined;
+    const key = typeof week === "number" ? `week-${week}` : "week-unassigned";
+    const label = typeof week === "number" ? `Week ${week}` : "Other Updates";
+    let section = sections.find((item) => item.key === key);
+
+    if (!section) {
+      section = { key, label, entries: [] };
+      sections.push(section);
+    }
+
+    section.entries.push(entry);
+    return sections;
+  },
+  []
+);
 ---
 
 <BaseLayout title="Layoff Log">
   <section class="mt-10 space-y-8">
     <div class="space-y-4">
       <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Layoff Log</p>
-      <h1 class="text-4xl font-semibold text-white md:text-5xl">One project a day until I get hired.</h1>
+      <h1 class="text-4xl font-semibold text-white md:text-5xl">Shipping multiple builds each week until I get hired.</h1>
       <p class="text-base text-[color:var(--mist-200)]">
-        Daily build journal with detailed notes for each project. Add a markdown file in `src/content/layoff`
-        to publish the next day.
+        Weekly build journal grouped by week so each launch has its own entry. Reuse the same `week` number in
+        `src/content/layoff` to place multiple projects in the same weekly section.
       </p>
     </div>
-    <div class="grid gap-6 md:grid-cols-2">
-      {sortedEntries.map((entry: any, index: number) => (
-        <LayoffEntryCard entry={entry} index={index} />
-      ))}
-    </div>
+    {weekSections.map((section: { key: string; label: string; entries: any[] }) => (
+      <section class="space-y-4">
+        <div class="flex flex-wrap items-center gap-3">
+          <h2 class="text-2xl font-semibold text-white md:text-3xl">{section.label}</h2>
+          <span class="chip">
+            {section.entries.length} {section.entries.length === 1 ? "update" : "updates"}
+          </span>
+        </div>
+        <div class="grid gap-6 md:grid-cols-2">
+          {section.entries.map((entry: any, index: number) => (
+            <LayoffEntryCard entry={entry} index={index} />
+          ))}
+        </div>
+      </section>
+    ))}
   </section>
 </BaseLayout>
