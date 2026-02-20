@@ -4,7 +4,7 @@ summary: "A launch-focused update on shipping dailystand.dev in week 1 and makin
 date: "2026-02-17"
 week: 1
 status: "shipped"
-stack: ["Next.js", "TypeScript", "PostgreSQL", "Drizzle", "Open Source"]
+stack: ["TanStack Start", "TypeScript", "PostgreSQL", "Drizzle", "Open Source"]
 image: "/images/dailystand-1.png"
 repoUrl: "https://github.com/nearbycoder/dailystand.dev"
 siteUrl: "https://dailystand.dev"

@@ -1,5 +1,5 @@
 import { getCollection } from "astro:content";
-import { isArticlePublished } from "../../lib/articles";
+import { isArticlePublished, resolveArticleAccent } from "../../lib/articles";
 import { renderCardArtSvg } from "../../lib/card-art";
 
 export const prerender = true;
@@ -27,7 +27,7 @@ export async function GET({ params }: { params: { slug?: string } }) {
   const svg = renderCardArtSvg({
     slug: entry.slug,
     tags: entry.data.tags ?? [],
-    accent: entry.data.accent ?? "cyan",
+    accent: resolveArticleAccent(entry),
   });
 
   return new Response(svg, {

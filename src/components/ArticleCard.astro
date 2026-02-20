@@ -1,4 +1,6 @@
 ---
+import { resolveArticleAccent } from "../lib/articles";
+
 const entry = Astro.props.entry as any;
 const index = (Astro.props.index as number | undefined) ?? 0;
 const accentMap: Record<string, string> = {
@@ -27,7 +29,7 @@ const accentMap: Record<string, string> = {
   indigoDeep: "from-indigo-500/25 via-transparent",
 };
 const accents = Object.values(accentMap);
-const accentKey = entry.data.accent as string | undefined;
+const accentKey = resolveArticleAccent(entry);
 const accent =
   (accentKey ? accentMap[accentKey] : undefined) ?? accents[index % accents.length] ?? accentMap.mist;
 ---

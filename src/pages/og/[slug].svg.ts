@@ -1,6 +1,6 @@
 import { getCollection } from "astro:content";
 import { renderOgSvg } from "../../lib/og";
-import { isArticlePublished } from "../../lib/articles";
+import { isArticlePublished, resolveArticleAccent } from "../../lib/articles";
 
 export const prerender = true;
 
@@ -30,7 +30,7 @@ export async function GET({ params }: { params: { slug?: string } }) {
     description: entry.data.description,
     eyebrow: "Article",
     tags: entry.data.tags ?? [],
-    accent: entry.data.accent ?? "cyan",
+    accent: resolveArticleAccent(entry),
     footer: footerParts.join(" | "),
     artSeed: entry.slug,
   });
