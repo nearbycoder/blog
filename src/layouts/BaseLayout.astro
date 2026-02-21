@@ -6,16 +6,17 @@ import CommandPalette from "../components/CommandPalette.astro";
 import { site } from "../data/site";
 import { getCollection } from "astro:content";
 import { isArticlePublished } from "../lib/articles";
+import { getImagePath } from "astro-opengraph-images";
 
 const { title, description, handle } = site;
 const pageTitle = Astro.props.title ? `${Astro.props.title} · ${title}` : title;
 const pageDescription = Astro.props.description ?? description;
 const ogType = Astro.props.type ?? "website";
-const imagePath = Astro.props.image ?? "/og/site.svg";
 const imageAlt = Astro.props.imageAlt ?? pageTitle;
 const siteUrl = Astro.site ?? new URL("https://nearbycoder.com");
-const canonicalUrl = Astro.url?.toString() ?? new URL("/", siteUrl).toString();
-const ogImageUrl = new URL(imagePath, siteUrl).toString();
+const currentUrl = Astro.url ?? new URL("/", siteUrl);
+const canonicalUrl = currentUrl.toString();
+const ogImageUrl = getImagePath({ url: currentUrl, site: Astro.site });
 const twitterHandle = handle ? `@${handle}` : undefined;
 const includeScheduled = !import.meta.env.PROD;
 
