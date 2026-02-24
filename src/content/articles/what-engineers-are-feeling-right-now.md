@@ -1,14 +1,14 @@
 ---
 title: "What engineers are feeling right now"
 description: "My take on why so many engineers feel the pressure, but few of us say it out loud."
-date: "2026-02-23"
+date: "2026-02-24"
 tags: ["career", "engineering", "mindset", "ai"]
 readTime: "4 min read"
 featured: false
 accent: "teal"
 ---
 
-I read Scott Walker's post, ["What engineers are feeling right now and why we aren't talking about it"](https://www.linkedin.com/pulse/what-engineers-feeling-right-now-why-we-arent-talking-scott-walker-qyirc/), and it hit close to home.
+My friend and coworker [Cameron Spencer](https://www.linkedin.com/in/cameronmspencer/) sent me Scott Walker's post, ["What engineers are feeling right now and why we aren't talking about it"](https://www.linkedin.com/pulse/what-engineers-feeling-right-now-why-we-arent-talking-scott-walker-qyirc/), and it hit close to home.
 
 Not because it was dramatic.
 
