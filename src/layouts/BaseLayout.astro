@@ -5,7 +5,7 @@ import SiteFooter from "../components/SiteFooter.astro";
 import CommandPalette from "../components/CommandPalette.astro";
 import { site } from "../data/site";
 import { getCollection } from "astro:content";
-import { isArticlePublished } from "../lib/articles";
+import { compareArticlesByPublishDateDesc, isArticlePublished } from "../lib/articles";
 import { getImagePath } from "astro-opengraph-images";
 
 const { title, description, handle } = site;
@@ -21,7 +21,7 @@ const twitterHandle = handle ? `@${handle}` : undefined;
 const includeScheduled = !import.meta.env.PROD;
 
 const articles = ((await getCollection("articles")) as any[]).sort((a: any, b: any) =>
-  b.data.date.localeCompare(a.data.date)
+  compareArticlesByPublishDateDesc(a, b)
 );
 const projects = (await getCollection("projects")) as any[];
 const layoffEntries = (await getCollection("layoff")) as any[];

@@ -4,7 +4,7 @@ import ProjectCard from "../../components/ProjectCard.astro";
 import { getCollection } from "astro:content";
 
 const projects = (await getCollection("projects")) as any[];
-const pinnedProjectSlug = "imposter-fm";
+const pinnedProjectSlug = "easyaccessqr-com";
 const sortedProjects = projects
   .filter((entry: any) => !entry.data.draft)
   .sort((a: any, b: any) => {
