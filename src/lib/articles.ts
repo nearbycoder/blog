@@ -3,6 +3,7 @@ type ArticleEntryLike = {
   data: {
     draft?: boolean;
     date: string;
+    publishedAt?: string;
     accent?: string;
   };
 };
@@ -80,6 +81,27 @@ function getTodayUtcDate(now: Date): string {
   return now.toISOString().slice(0, 10);
 }
 
+function parseArticleDate(value?: string): number {
+  if (!value) {
+    return Number.NaN;
+  }
+
+  if (ISO_DATE_ONLY.test(value)) {
+    return Date.parse(`${value}T00:00:00.000Z`);
+  }
+
+  return Date.parse(value);
+}
+
+function getPrimaryPublishDate(entry: ArticleEntryLike): string {
+  const publishedAt = entry.data.publishedAt;
+  if (publishedAt && !Number.isNaN(parseArticleDate(publishedAt))) {
+    return publishedAt;
+  }
+
+  return entry.data.date;
+}
+
 export function isArticlePublished(
   entry: ArticleEntryLike,
   options?: { includeScheduled?: boolean; now?: Date }
@@ -95,7 +117,7 @@ export function isArticlePublished(
     return true;
   }
 
-  const publishDate = entry.data.date;
+  const publishDate = getPrimaryPublishDate(entry);
   if (ISO_DATE_ONLY.test(publishDate)) {
     return publishDate <= getTodayUtcDate(now);
   }
@@ -106,6 +128,23 @@ export function isArticlePublished(
   }
 
   return parsedDate.getTime() <= now.getTime();
+}
+
+export function compareArticlesByPublishDateDesc(a: ArticleEntryLike, b: ArticleEntryLike): number {
+  const aTime = parseArticleDate(getPrimaryPublishDate(a));
+  const bTime = parseArticleDate(getPrimaryPublishDate(b));
+
+  if (!Number.isNaN(aTime) && !Number.isNaN(bTime) && aTime !== bTime) {
+    return bTime - aTime;
+  }
+  if (!Number.isNaN(aTime) && Number.isNaN(bTime)) {
+    return -1;
+  }
+  if (Number.isNaN(aTime) && !Number.isNaN(bTime)) {
+    return 1;
+  }
+
+  return (b.slug ?? "").localeCompare(a.slug ?? "");
 }
 
 export function resolveArticleAccent(entry: ArticleEntryLike): ArticleAccent {

@@ -7,13 +7,13 @@ import LayoffEntryCard from "../components/LayoffEntryCard.astro";
 import WorkTimeline from "../components/WorkTimeline.astro";
 import { getCollection } from "astro:content";
 import { site } from "../data/site";
-import { isArticlePublished } from "../lib/articles";
+import { compareArticlesByPublishDateDesc, isArticlePublished } from "../lib/articles";
 
 const articles = (await getCollection("articles")) as any[];
 const includeScheduled = !import.meta.env.PROD;
 const sortedArticles = articles
   .filter((entry: any) => isArticlePublished(entry, { includeScheduled }))
-  .sort((a: any, b: any) => b.data.date.localeCompare(a.data.date));
+  .sort((a: any, b: any) => compareArticlesByPublishDateDesc(a, b));
 const featuredArticles = sortedArticles.slice(0, 3);
 
 const projects = (await getCollection("projects")) as any[];

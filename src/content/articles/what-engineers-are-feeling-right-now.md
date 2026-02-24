@@ -2,6 +2,7 @@
 title: "What engineers are feeling right now"
 description: "My take on why so many engineers feel the pressure, but few of us say it out loud."
 date: "2026-02-24"
+publishedAt: "2026-02-24T00:00:00Z"
 tags: ["career", "engineering", "mindset", "ai"]
 readTime: "4 min read"
 featured: false
