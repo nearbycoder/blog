@@ -30,6 +30,10 @@ const accents = Object.values(accentMap);
 const accent =
   accentMap[entry.data.accent as string] ?? accents[index % accents.length] ?? accentMap.cyan;
 const cadenceLabel = entry.data.week ? `Week ${entry.data.week}` : entry.data.day ? `Day ${entry.data.day}` : null;
+const hasDistinctSiteUrl =
+  typeof entry.data.siteUrl === "string" &&
+  typeof entry.data.repoUrl === "string" &&
+  entry.data.siteUrl !== entry.data.repoUrl;
 ---
 
 <article class="card group flex h-full flex-col overflow-hidden">
@@ -70,6 +74,7 @@ const cadenceLabel = entry.data.week ? `Week ${entry.data.week}` : entry.data.da
       ))}
     </div>
     <div class="mt-auto flex flex-wrap gap-2 pt-2">
+      {hasDistinctSiteUrl ? (
       <a
         href={entry.data.siteUrl}
         target="_blank"
@@ -78,6 +83,7 @@ const cadenceLabel = entry.data.week ? `Week ${entry.data.week}` : entry.data.da
       >
         Visit site
       </a>
+      ) : null}
       <a
         href={entry.data.repoUrl}
         target="_blank"
