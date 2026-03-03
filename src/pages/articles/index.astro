@@ -51,28 +51,30 @@ const sortedArticles = articles
 </BaseLayout>
 
 <script is:inline>
-  const input = document.getElementById("article-search");
-  const items = Array.from(document.querySelectorAll("[data-article]"));
-  const emptyState = document.getElementById("articles-empty");
+  (() => {
+    const articleSearchInput = document.getElementById("article-search");
+    const articleItems = Array.from(document.querySelectorAll("[data-article]"));
+    const emptyState = document.getElementById("articles-empty");
 
-  const applyFilter = () => {
-    const query = (input?.value ?? "").trim().toLowerCase();
-    let visible = 0;
+    if (!articleSearchInput || articleItems.length === 0) return;
 
-    items.forEach((item) => {
-      const haystack = (item.getAttribute("data-search") ?? "").toLowerCase();
-      const match = query.length === 0 || haystack.includes(query);
-      item.classList.toggle("hidden", !match);
-      if (match) visible += 1;
-    });
+    const applyFilter = () => {
+      const query = articleSearchInput.value.trim().toLowerCase();
+      let visible = 0;
 
-    if (emptyState) {
-      emptyState.classList.toggle("hidden", visible !== 0);
-    }
-  };
+      articleItems.forEach((item) => {
+        const haystack = (item.getAttribute("data-search") ?? "").toLowerCase();
+        const match = query.length === 0 || haystack.includes(query);
+        item.classList.toggle("hidden", !match);
+        if (match) visible += 1;
+      });
 
-  if (input) {
-    input.addEventListener("input", applyFilter);
+      if (emptyState) {
+        emptyState.classList.toggle("hidden", visible !== 0);
+      }
+    };
+
+    articleSearchInput.addEventListener("input", applyFilter);
     applyFilter();
-  }
+  })();
 </script>
