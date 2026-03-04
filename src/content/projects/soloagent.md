@@ -47,5 +47,5 @@ I wanted first-hand implementation experience with AI harness constraints instea
 
 ## Related updates
 
-- Launch article: [Building SoloAgent to understand AI harnesses](/articles/building-soloagent-to-understand-ai-orchestration)
+- Launch article: [Building SoloAgent to understand AI harnesses](/articles/building-soloagent-to-understand-ai-harnesses)
 - Layoff log: [Week 3: SoloAgent AI harness experiment](/layoff/week-003-2026-03-03-soloagent)

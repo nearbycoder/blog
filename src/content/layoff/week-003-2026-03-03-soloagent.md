@@ -21,7 +21,7 @@ There is no live site yet, only the repository.
 ## What I built
 
 - Open source repo: [nearbycoder/soloagent](https://github.com/nearbycoder/soloagent)
-- New article: [Building SoloAgent to understand AI harnesses](/articles/building-soloagent-to-understand-ai-orchestration)
+- New article: [Building SoloAgent to understand AI harnesses](/articles/building-soloagent-to-understand-ai-harnesses)
 - New project page: [SoloAgent](/projects/soloagent)
 
 ## Repo pull-down tool audit
