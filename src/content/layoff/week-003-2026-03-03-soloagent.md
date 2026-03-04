@@ -1,6 +1,6 @@
 ---
-title: "Week 3: SoloAgent orchestration experiment"
-summary: "Built SoloAgent to understand orchestration internals in AI coding frameworks by implementing the workflow stack directly."
+title: "Week 3: SoloAgent AI harness experiment"
+summary: "Built SoloAgent to understand AI harness internals in modern coding workflows by implementing the workflow stack directly."
 date: "2026-03-03"
 week: 3
 status: "building"
@@ -12,7 +12,7 @@ accent: "indigoDeep"
 draft: false
 ---
 
-This Week 3 build is [SoloAgent](https://github.com/nearbycoder/soloagent), a desktop orchestration experiment for AI-assisted coding workflows.
+This Week 3 build is [SoloAgent](https://github.com/nearbycoder/soloagent), a desktop AI harness experiment for AI-assisted coding workflows.
 
 ![SoloAgent screenshot](/images/soloagent.jpg)
 
@@ -21,7 +21,7 @@ There is no live site yet, only the repository.
 ## What I built
 
 - Open source repo: [nearbycoder/soloagent](https://github.com/nearbycoder/soloagent)
-- New article: [Building SoloAgent to understand AI orchestration](/articles/building-soloagent-to-understand-ai-orchestration)
+- New article: [Building SoloAgent to understand AI harnesses](/articles/building-soloagent-to-understand-ai-orchestration)
 - New project page: [SoloAgent](/projects/soloagent)
 
 ## Repo pull-down tool audit
@@ -37,4 +37,4 @@ I pulled the repo and inspected the current manifests/docs to verify the tooling
 
 ## Why this mattered
 
-This was a practical way to map where orchestration complexity actually sits: state boundaries, tool-call UX, terminal process management, and git operations that hold up under real project workflows.
+This was a practical way to map where AI harness complexity actually sits: state boundaries, tool-call UX, terminal process management, and git operations that hold up under real project workflows.
