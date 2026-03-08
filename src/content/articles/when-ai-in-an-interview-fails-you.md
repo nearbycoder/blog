@@ -95,6 +95,16 @@ This is the version I worked on today:
   Your browser does not support the video tag.
 </video>
 
+One other part of this rework mattered a lot to me: benchmarking.
+
+One of the big questions that came up in the interview was what would happen if the board scaled to something like a million by million cells. That is the kind of question where the toy version of the app stops being enough, so I wanted the follow-up project to take scale more seriously.
+
+That is why I added a benchmark arena.
+
+It let me test hypotheses around different player counts and rendering loads without pretending it was a perfect one-to-one simulation of real websocket traffic. It does not fully replicate multiplayer network conditions, but it does surface the rendering constraints and performance ceilings that start to matter once the game gets more crowded.
+
+I felt good about that addition because it pushed the project beyond "here is a nicer version of the interview app" and into "here is how I would actually investigate whether this idea holds up under pressure."
+
 ## What I am taking from this
 
 I still believe AI belongs in modern interviews if companies are serious about evaluating how engineers actually work now.
