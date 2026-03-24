@@ -6,7 +6,6 @@ import ProjectCard from "../components/ProjectCard.astro";
 import LayoffEntryCard from "../components/LayoffEntryCard.astro";
 import WorkTimeline from "../components/WorkTimeline.astro";
 import { getCollection } from "astro:content";
-import { site } from "../data/site";
 import { compareArticlesByPublishDateDesc, isArticlePublished } from "../lib/articles";
 
 const articles = (await getCollection("articles")) as any[];
@@ -35,8 +34,6 @@ const recentLayoffEntries = layoffEntries
   .filter((entry: any) => !entry.data.draft)
   .sort((a: any, b: any) => b.data.date.localeCompare(a.data.date))
   .slice(0, 2);
-const contactEmail = "nearbycoder@gmail.com";
-const linkedInUrl = site.socials.find((social: { label: string; url: string }) => social.label === "LinkedIn")?.url;
 ---
 
 <BaseLayout>
@@ -101,36 +98,6 @@ const linkedInUrl = site.socials.find((social: { label: string; url: string }) =
       <h2 class="text-3xl font-semibold text-white md:text-4xl">Where I've built</h2>
     </div>
     <WorkTimeline />
-    <div class="card glass sparkle-card relative overflow-hidden rounded-3xl p-6 md:p-8">
-      <div class="relative z-10 grid gap-6 md:grid-cols-[1.2fr_0.8fr] md:items-center">
-        <div class="space-y-3">
-          <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Next Team</p>
-          <h3 class="text-2xl font-semibold text-white md:text-3xl">This could be you</h3>
-          <p class="text-sm text-[color:var(--mist-200)]">
-            If you need a calm staff engineer who ships reliable product and can lead through messy problems, let's talk.
-          </p>
-        </div>
-        <div class="grid gap-3">
-          <a
-            href={`mailto:${contactEmail}`}
-            class="inline-flex items-center justify-between rounded-full border border-white/10 bg-white/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-white transition hover:border-white/30"
-          >
-            <span>Email</span>
-            <span class="normal-case tracking-normal text-[color:var(--mist-200)]">{contactEmail}</span>
-          </a>
-          {linkedInUrl && (
-            <a
-              href={linkedInUrl}
-              target="_blank"
-              rel="noreferrer"
-              class="inline-flex items-center justify-center rounded-full border border-white/10 px-4 py-3 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] transition hover:border-white/30 hover:text-white"
-            >
-              Message on LinkedIn
-            </a>
-          )}
-        </div>
-      </div>
-    </div>
   </section>
 
 </BaseLayout>

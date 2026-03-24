@@ -30,14 +30,18 @@ const weekSections = sortedEntries.reduce(
 );
 ---
 
-<BaseLayout title="Layoff Log">
+<BaseLayout title="Early 2026 Layoff Log">
   <section class="mt-10 space-y-8">
     <div class="space-y-4">
       <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Layoff Log</p>
-      <h1 class="text-4xl font-semibold text-white md:text-5xl">Shipping multiple builds each week until I get hired.</h1>
+      <h1 class="text-4xl font-semibold text-white md:text-5xl">Early 2026 Layoff Log</h1>
       <p class="text-base text-[color:var(--mist-200)]">
         Weekly launch log tracking what shipped, what changed, and why it matters.
       </p>
+      <div class="inline-flex max-w-2xl items-center rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 text-sm text-[color:var(--mist-100)]">
+        Week 4 plot twist: confetti time 🎉 I joined Augment Code, and this log is now the breadcrumb trail of the weird
+        little builds that helped get me there.
+      </div>
     </div>
     {weekSections.map((section: { key: string; label: string; entries: any[] }) => (
       <section class="space-y-4">

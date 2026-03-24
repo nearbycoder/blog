@@ -1,5 +1,7 @@
 ---
 import { site } from "../data/site";
+
+const currentCompany = site.work[0]?.company;
 ---
 
 <section class="grid gap-10 pt-8 md:grid-cols-[1.05fr_0.95fr] md:items-center reveal" style="--delay: 20ms">
@@ -36,6 +38,19 @@ import { site } from "../data/site";
         <span class="font-serif text-lg text-white">{site.name}</span>
         <span class="h-1 w-1 rounded-full bg-white/40"></span>
         <span class="text-[color:var(--mist-200)]">{site.location}</span>
+        {currentCompany && (
+          <>
+            <span class="h-1 w-1 rounded-full bg-white/40"></span>
+            <a
+              href="https://augmentcode.com"
+              target="_blank"
+              rel="noreferrer"
+              class="text-[color:var(--mist-200)] transition hover:text-white"
+            >
+              {currentCompany}
+            </a>
+          </>
+        )}
       </div>
       <div class="flex flex-wrap gap-2">
         {site.socials.map((social: { label: string; url: string }) => (

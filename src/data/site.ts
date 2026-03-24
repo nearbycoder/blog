@@ -34,6 +34,12 @@ export const site = {
   },
   work: [
     {
+      company: "Augment Code",
+      role: "Member of Technical Staff",
+      range: "2026 - current",
+      accent: "cyan",
+    },
+    {
       company: "Token Terminal",
       role: "Staff Software Engineer",
       range: "2024 - 2026",
