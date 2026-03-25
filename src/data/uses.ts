@@ -1,13 +1,8 @@
 export const uses = {
   workstation: [
     {
-      name: "Mac Studio, M1 Max, 64GB RAM (2021)",
-      description: "Powerful desktop computer for all of my needs.",
-    },
-    {
-      name: "16-inch MacBook Pro, M1 Pro, 16GB RAM (2021)",
-      description:
-        "Previously I had an Intel Mac and wanted to make sure I was future proof. Decided to get close to the base model M1 Pro as if I was going to work at my desk I would prefer a more powerful machine, so there was no need to max out the laptop.",
+      name: "MacBook Pro, M4 Max, 48GB RAM (2024)",
+      description: "My main machine for coding, writing, and everything else.",
     },
     {
       name: "2x LG 32UD60-B 4K Monitor 32",
@@ -48,8 +43,20 @@ export const uses = {
       name: "Raycast",
       description: "Before I would have said Alfred but Raycast has slowly been taking over most of my tooling.",
     },
+    {
+      name: "CleanShot X",
+      description: "Fast screenshots, annotations, and screen recordings without extra friction.",
+    },
+    {
+      name: "Linear",
+      description: "Keeps projects, bugs, and ideas organized without feeling heavy.",
+    },
   ],
   ai: [
+    {
+      name: "Augment Code",
+      description: "AI coding assistant for in-editor help and faster iteration.",
+    },
     {
       name: "Cursor",
       description: "Primary editor for prompting, refactors, and fast iteration.",
