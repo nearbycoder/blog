@@ -1,17 +1,17 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
   const entries = (await getCollection("layoff")) as any[];
   return entries.filter((entry: any) => !entry.data.draft).map((entry: any) => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: { entry },
   }));
 }
 
 const { entry } = Astro.props as { entry: any };
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 const cadenceLabel = entry.data.week ? `Week ${entry.data.week}` : entry.data.day ? `Day ${entry.data.day}` : null;
 const hasDistinctSiteUrl =
   typeof entry.data.siteUrl === "string" &&

@@ -20,8 +20,8 @@ const pinnedProjectSlug = "easyaccessqr-com";
 const sortedProjects = projects
   .filter((entry: any) => !entry.data.draft)
   .sort((a: any, b: any) => {
-    const aIsPinned = a.slug === pinnedProjectSlug;
-    const bIsPinned = b.slug === pinnedProjectSlug;
+    const aIsPinned = a.id === pinnedProjectSlug;
+    const bIsPinned = b.id === pinnedProjectSlug;
 
     if (aIsPinned && !bIsPinned) return -1;
     if (!aIsPinned && bIsPinned) return 1;

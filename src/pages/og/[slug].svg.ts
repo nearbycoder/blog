@@ -8,7 +8,7 @@ export async function getStaticPaths() {
   const includeScheduled = !import.meta.env.PROD;
   const entries = (await getCollection("articles")) as any[];
   return entries.filter((entry) => isArticlePublished(entry, { includeScheduled })).map((entry) => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
   }));
 }
 
@@ -17,7 +17,7 @@ export async function GET({ params }: { params: { slug?: string } }) {
   const entries = (await getCollection("articles")) as any[];
   const includeScheduled = !import.meta.env.PROD;
   const entry = entries.find(
-    (item) => item.slug === slug && isArticlePublished(item, { includeScheduled })
+    (item) => item.id === slug && isArticlePublished(item, { includeScheduled })
   );
 
   if (!entry) {
@@ -32,7 +32,7 @@ export async function GET({ params }: { params: { slug?: string } }) {
     tags: entry.data.tags ?? [],
     accent: resolveArticleAccent(entry),
     footer: footerParts.join(" | "),
-    artSeed: entry.slug,
+    artSeed: entry.id,
   });
 
   return new Response(svg, {

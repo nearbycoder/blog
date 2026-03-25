@@ -34,10 +34,10 @@ const accent =
   (accentKey ? accentMap[accentKey] : undefined) ?? accents[index % accents.length] ?? accentMap.mist;
 ---
 
-<a href={`/articles/${entry.slug}`} class="card group block overflow-hidden h-full flex flex-col">
+<a href={`/articles/${entry.id}`} class="card group block overflow-hidden h-full flex flex-col">
   <div class="relative h-44 overflow-hidden border-b border-white/10">
     <img
-      src={`/card-art/${entry.slug}.svg`}
+      src={`/card-art/${entry.id}.svg`}
       alt=""
       loading="lazy"
       decoding="async"

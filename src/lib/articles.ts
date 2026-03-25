@@ -1,5 +1,5 @@
 type ArticleEntryLike = {
-  slug?: string;
+  id?: string;
   data: {
     draft?: boolean;
     date: string;
@@ -144,7 +144,7 @@ export function compareArticlesByPublishDateDesc(a: ArticleEntryLike, b: Article
     return 1;
   }
 
-  return (b.slug ?? "").localeCompare(a.slug ?? "");
+  return (b.id ?? "").localeCompare(a.id ?? "");
 }
 
 export function resolveArticleAccent(entry: ArticleEntryLike): ArticleAccent {
@@ -152,7 +152,7 @@ export function resolveArticleAccent(entry: ArticleEntryLike): ArticleAccent {
   const fallbackAccent: ArticleAccent = "mist";
   const startAccent = baseAccent && isArticleAccent(baseAccent) ? baseAccent : fallbackAccent;
   const family = accentFamilies[startAccent] ?? [startAccent];
-  const seed = `${entry.slug ?? ""}:${entry.data.date}:${startAccent}`;
+  const seed = `${entry.id ?? ""}:${entry.data.date}:${startAccent}`;
   const index = hashString(seed) % family.length;
   return family[index] ?? startAccent;
 }

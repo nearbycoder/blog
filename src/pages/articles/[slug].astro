@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import { isArticlePublished } from "../../lib/articles";
 
 export async function getStaticPaths() {
@@ -9,13 +9,13 @@ export async function getStaticPaths() {
   return entries
     .filter((entry: any) => isArticlePublished(entry, { includeScheduled }))
     .map((entry: any) => ({
-      params: { slug: entry.slug },
+      params: { slug: entry.id },
       props: { entry },
     }));
 }
 
 const { entry } = Astro.props as { entry: any };
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 ---
 
 <BaseLayout

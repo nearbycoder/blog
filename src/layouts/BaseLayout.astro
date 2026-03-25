@@ -60,7 +60,7 @@ const searchItems = [
     .map((entry) => ({
       type: "Article",
       title: entry.data.title,
-      url: `/articles/${entry.slug}`,
+      url: `/articles/${entry.id}`,
       subtitle: [entry.data.date, entry.data.readTime].filter(Boolean).join(" · "),
       keywords: [entry.data.description, ...(entry.data.tags ?? [])].join(" "),
     })),
@@ -69,7 +69,7 @@ const searchItems = [
     .map((entry) => ({
       type: "Project",
       title: entry.data.title,
-      url: `/projects/${entry.slug}`,
+      url: `/projects/${entry.id}`,
       subtitle: [entry.data.year, entry.data.role].filter(Boolean).join(" · "),
       keywords: [entry.data.summary, ...(entry.data.stack ?? [])].join(" "),
     })),
@@ -78,7 +78,7 @@ const searchItems = [
     .map((entry) => ({
       type: "Layoff Build",
       title: entry.data.title,
-      url: `/layoff/${entry.slug}`,
+      url: `/layoff/${entry.id}`,
       subtitle: [
         entry.data.date,
         entry.data.week ? `Week ${entry.data.week}` : entry.data.day ? `Day ${entry.data.day}` : null,
