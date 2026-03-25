@@ -24,62 +24,76 @@ export const uses = {
     {
       name: "Visual Studio Code",
       description: "Pretty much the go to IDE these days.",
+      url: "https://code.visualstudio.com/",
     },
     {
       name: "Warp",
       description: "Warp is quickly becoming my favorite terminal",
+      url: "https://www.warp.dev/",
     },
     {
       name: "Postico",
       description: "Nothing really beats Postico for accessing postgresql databases locally or remotely.",
+      url: "https://eggerapps.at/postico2/",
     },
     {
       name: "Yaak",
       description: "Local-first API client for quick REST and GraphQL testing.",
+      url: "https://yaak.app/",
     },
   ],
   productivity: [
     {
       name: "Raycast",
       description: "Before I would have said Alfred but Raycast has slowly been taking over most of my tooling.",
+      url: "https://www.raycast.com/",
     },
     {
       name: "CleanShot X",
       description: "Fast screenshots, annotations, and screen recordings without extra friction.",
+      url: "https://cleanshot.com/",
     },
     {
       name: "Linear",
       description: "Keeps projects, bugs, and ideas organized without feeling heavy.",
+      url: "https://linear.app/",
     },
   ],
   ai: [
     {
       name: "Augment Code",
       description: "AI coding assistant for in-editor help and faster iteration.",
+      url: "https://www.augmentcode.com/",
     },
     {
       name: "Cursor",
       description: "Primary editor for prompting, refactors, and fast iteration.",
+      url: "https://cursor.com/",
     },
     {
       name: "ChatGPT",
       description: "Drafting, brainstorming, and quick explanations when I need a second brain.",
+      url: "https://chatgpt.com/",
     },
     {
       name: "t3.chat",
       description: "Quick prompts and lightweight sessions without extra setup.",
+      url: "https://t3.chat/",
     },
     {
       name: "Codex",
       description: "Focused coding help for structured changes and reviews.",
+      url: "https://chatgpt.com/features/codex/",
     },
     {
       name: "OpenCode",
       description: "Interactive CLI-style flow for multi-step engineering tasks.",
+      url: "https://opencode.ai/",
     },
     {
       name: "Claude Code",
       description: "Long-form reasoning and deeper refactors when I need more context.",
+      url: "https://www.claude.com/product/claude-code",
     },
   ],
 };

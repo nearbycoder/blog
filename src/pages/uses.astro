@@ -3,10 +3,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { uses } from "../data/uses";
 
 const data = uses as unknown as {
-  workstation: { name: string; description: string }[];
-  development: { name: string; description: string }[];
-  productivity: { name: string; description: string }[];
-  ai: { name: string; description: string }[];
+  workstation: { name: string; description: string; url?: string }[];
+  development: { name: string; description: string; url?: string }[];
+  productivity: { name: string; description: string; url?: string }[];
+  ai: { name: string; description: string; url?: string }[];
 };
 ---
 
@@ -29,9 +29,22 @@ const data = uses as unknown as {
         <div class="relative z-10 space-y-4">
           <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Workstation</p>
           <div class="grid gap-4">
-            {data.workstation.map((item: { name: string; description: string }) => (
+            {data.workstation.map((item) => (
               <div class="space-y-2">
-                <h3 class="text-base font-semibold text-white">{item.name}</h3>
+                <h3 class="text-base font-semibold text-white">
+                  {item.url ? (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
+                    >
+                      {item.name}
+                    </a>
+                  ) : (
+                    item.name
+                  )}
+                </h3>
                 <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
               </div>
             ))}
@@ -44,9 +57,22 @@ const data = uses as unknown as {
           <div class="relative z-10 space-y-4">
             <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Development tools</p>
             <div class="grid gap-4">
-              {data.development.map((item: { name: string; description: string }) => (
+              {data.development.map((item) => (
                 <div class="space-y-2">
-                  <h3 class="text-base font-semibold text-white">{item.name}</h3>
+                  <h3 class="text-base font-semibold text-white">
+                    {item.url ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
+                      >
+                        {item.name}
+                      </a>
+                    ) : (
+                      item.name
+                    )}
+                  </h3>
                   <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
                 </div>
               ))}
@@ -58,9 +84,22 @@ const data = uses as unknown as {
           <div class="relative z-10 space-y-4">
             <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Productivity</p>
             <div class="grid gap-4">
-              {data.productivity.map((item: { name: string; description: string }) => (
+              {data.productivity.map((item) => (
                 <div class="space-y-2">
-                  <h3 class="text-base font-semibold text-white">{item.name}</h3>
+                  <h3 class="text-base font-semibold text-white">
+                    {item.url ? (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
+                      >
+                        {item.name}
+                      </a>
+                    ) : (
+                      item.name
+                    )}
+                  </h3>
                   <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
                 </div>
               ))}
@@ -73,9 +112,22 @@ const data = uses as unknown as {
         <div class="relative z-10 space-y-4">
           <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">AI</p>
           <div class="grid gap-4 md:grid-cols-2">
-            {data.ai.map((item: { name: string; description: string }) => (
+            {data.ai.map((item) => (
               <div class="space-y-2">
-                <h3 class="text-base font-semibold text-white">{item.name}</h3>
+                <h3 class="text-base font-semibold text-white">
+                  {item.url ? (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="underline decoration-white/30 underline-offset-4 transition hover:decoration-white"
+                    >
+                      {item.name}
+                    </a>
+                  ) : (
+                    item.name
+                  )}
+                </h3>
                 <p class="text-sm text-[color:var(--mist-200)]">{item.description}</p>
               </div>
             ))}
