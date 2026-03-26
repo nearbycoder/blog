@@ -64,46 +64,46 @@ const currentCompany = site.work[0]?.company;
       </div>
     </div>
   </div>
-  <div class="hero-sparkle-shell relative opacity-95">
+  <div class="hero-sparkle-shell relative min-w-0 opacity-95">
     <div class="hero-sparkles pointer-events-none" aria-hidden="true">
       <span class="hero-spark hero-spark--one"></span>
       <span class="hero-spark hero-spark--two"></span>
       <span class="hero-spark hero-spark--three"></span>
     </div>
     <div class="card absolute inset-0 rounded-[32px] bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_45%),radial-gradient(circle_at_70%_10%,rgba(111,209,215,0.16),transparent_50%),radial-gradient(circle_at_90%_90%,rgba(245,181,74,0.16),transparent_60%)]"></div>
-    <div class="relative grid gap-4 rounded-[32px] p-5 md:p-6 overflow-hidden">
-      <div class="grid grid-cols-2 gap-4 relative z-10">
-        <div class="card glass h-36 rounded-3xl p-4 overflow-hidden relative">
+    <div class="relative grid gap-4 overflow-hidden rounded-[32px] p-4 sm:p-5 md:p-6">
+      <div class="relative z-10 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+        <div class="card glass min-h-36 rounded-3xl p-4 overflow-hidden relative">
           <div class="h-44 bg-gradient-to-br from-yellow-400/20 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
-          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Focus</p>
-          <p class="mt-3 text-lg font-semibold text-white relative z-10">Steady Systems</p>
+          <p class="text-xs uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Focus</p>
+          <p class="mt-3 text-lg font-semibold leading-tight text-white relative z-10">Steady Systems</p>
         </div>
-        <div class="card glass h-36 rounded-3xl p-4 overflow-hidden relative">
+        <div class="card glass min-h-36 rounded-3xl p-4 overflow-hidden relative">
           <div class="h-44 bg-gradient-to-br from-orange-400/25 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
-          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Practice</p>
-          <p class="mt-3 text-lg font-semibold text-white relative z-10">Clear On Purpose</p>
+          <p class="text-xs uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Practice</p>
+          <p class="mt-3 text-lg font-semibold leading-tight text-white relative z-10">Clear On Purpose</p>
         </div>
       </div>
-      <div class="card glass h-40 rounded-3xl p-5 relative z-10 overflow-hidden">
+      <div class="card glass min-h-40 rounded-3xl p-4 sm:p-5 relative z-10 overflow-hidden">
         <div class="h-44 bg-gradient-to-br from-rose-400/25 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
-        <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Signal</p>
-        <p class="mt-3 text-2xl font-semibold text-white relative z-10">Building through layoffs and AI shifts</p>
+        <p class="text-xs uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Signal</p>
+        <p class="mt-3 text-xl font-semibold leading-tight text-white relative z-10 sm:text-2xl">Building through layoffs and AI shifts</p>
       </div>
-      <div class="grid grid-cols-3 gap-4 relative z-10">
-        <div class="card glass h-20 rounded-2xl p-3 overflow-hidden relative">
+      <div class="relative z-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+        <div class="card glass min-h-24 rounded-2xl p-3 overflow-hidden relative">
           <div class="h-44 bg-gradient-to-br from-emerald-400/20 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
-          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Speed</p>
-          <p class="mt-2 text-sm text-white relative z-10">Ship Often</p>
+          <p class="text-xs uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Speed</p>
+          <p class="mt-2 text-base leading-tight text-white relative z-10 sm:text-sm">Ship Often</p>
         </div>
-        <div class="card glass h-20 rounded-2xl p-3 overflow-hidden relative">
+        <div class="card glass min-h-24 rounded-2xl p-3 overflow-hidden relative">
           <div class="h-44 bg-gradient-to-br from-sky-400/20 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
-          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Signal</p>
-          <p class="mt-2 text-sm text-white relative z-10">Signal > Noise</p>
+          <p class="text-xs uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Signal</p>
+          <p class="mt-2 text-base leading-tight text-white relative z-10 sm:text-sm">Signal > Noise</p>
         </div>
-        <div class="card glass h-20 rounded-2xl p-3 overflow-hidden relative">
+        <div class="card glass col-span-2 min-h-24 rounded-2xl p-3 overflow-hidden relative sm:col-span-1">
           <div class="h-44 bg-gradient-to-br from-violet-400/20 via-transparent to-transparent absolute top-0 left-0 right-0 pointer-events-none opacity-30"></div>
-          <p class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Teams</p>
-          <p class="mt-2 text-sm text-white relative z-10">Calm Crew</p>
+          <p class="text-xs uppercase tracking-[0.16em] sm:tracking-[0.2em] text-[color:var(--mist-200)] relative z-10">Teams</p>
+          <p class="mt-2 text-base leading-tight text-white relative z-10 sm:text-sm">Calm Crew</p>
         </div>
       </div>
     </div>
