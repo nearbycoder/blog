@@ -4,15 +4,15 @@ import ProjectCard from "../../components/ProjectCard.astro";
 import { getCollection } from "astro:content";
 
 const projects = (await getCollection("projects")) as any[];
-const pinnedProjectSlug = "easyaccessqr-com";
+const bottomProjectSlug = "easyaccessqr-com";
 const sortedProjects = projects
   .filter((entry: any) => !entry.data.draft)
   .sort((a: any, b: any) => {
-    const aIsPinned = a.id === pinnedProjectSlug;
-    const bIsPinned = b.id === pinnedProjectSlug;
+    const aIsBottom = a.id === bottomProjectSlug;
+    const bIsBottom = b.id === bottomProjectSlug;
 
-    if (aIsPinned && !bIsPinned) return -1;
-    if (!aIsPinned && bIsPinned) return 1;
+    if (aIsBottom && !bIsBottom) return 1;
+    if (!aIsBottom && bIsBottom) return -1;
 
     return b.data.year.localeCompare(a.data.year);
   });

@@ -16,7 +16,7 @@ stack:
 impact: "Pivoted a production-ready SaaS foundation into a new app quickly by reusing battle-tested auth, user management, billing, testing, and setup workflows."
 link: "https://easyaccessqr.com/"
 githubLink: "https://github.com/nearbycoder/easyaccessqr.com"
-featured: true
+featured: false
 accent: "sky"
 draft: false
 ---

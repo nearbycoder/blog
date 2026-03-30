@@ -28,7 +28,15 @@ const sortedProjects = projects
 
     return b.data.year.localeCompare(a.data.year);
   });
-const featuredProjects = sortedProjects.filter((entry: any) => entry.data.featured).slice(0, 2);
+const selectedBuildProjectSlugs = ["agfs-dev", "dailystand-dev"];
+const selectedBuildProjectSet = new Set(selectedBuildProjectSlugs);
+const featuredProjects = [
+  // Keep the homepage "selected builds" curated instead of depending on collection order.
+  ...selectedBuildProjectSlugs
+    .map((slug) => sortedProjects.find((entry: any) => entry.id === slug && entry.data.featured))
+    .filter(Boolean),
+  ...sortedProjects.filter((entry: any) => entry.data.featured && !selectedBuildProjectSet.has(entry.id)),
+].slice(0, 2);
 const layoffEntries = (await getCollection("layoff")) as any[];
 const recentLayoffEntries = layoffEntries
   .filter((entry: any) => !entry.data.draft)
