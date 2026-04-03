@@ -16,6 +16,7 @@ const imageAlt = Astro.props.imageAlt ?? pageTitle;
 const siteUrl = Astro.site ?? new URL("https://nearbycoder.com");
 const currentUrl = Astro.url ?? new URL("/", siteUrl);
 const canonicalUrl = currentUrl.toString();
+const rssUrl = new URL("/rss.xml", siteUrl).toString();
 const ogImageUrl = getImagePath({ url: currentUrl, site: Astro.site });
 const twitterHandle = handle ? `@${handle}` : undefined;
 const includeScheduled = !import.meta.env.PROD;
@@ -108,6 +109,7 @@ const searchItems = [
     </script>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS Feed`} href={rssUrl} />
     <meta property="og:site_name" content={title} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
