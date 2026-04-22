@@ -249,39 +249,88 @@ function motifChecker(rng, variant, panelW, panelH) {
   return items;
 }
 
-function motifBigMark(rng, variant, panelW, panelH) {
-  const symbols = ["§", "◼", "●", "▲", "◆", "+", "×", "★"];
-  const sym = symbols[Math.floor(rng() * symbols.length)];
-  const num = String(Math.floor(rng() * 99)).padStart(2, "0");
+function motifConcentric(rng, variant, panelW, panelH) {
+  const count = 5 + Math.floor(rng() * 3);
+  const cx = panelW * (0.3 + rng() * 0.4);
+  const cy = panelH * (0.3 + rng() * 0.4);
+  const maxR = Math.min(panelW, panelH) * 0.55;
+  const items = [];
+  for (let i = count - 1; i >= 0; i -= 1) {
+    const r = (maxR / count) * (i + 1);
+    const color = i % 2 === 0 ? variant.panelFg : variant.panelAccent;
+    items.push(
+      h("div", {
+        key: `c${i}`,
+        style: {
+          position: "absolute",
+          left: cx - r,
+          top: cy - r,
+          width: r * 2,
+          height: r * 2,
+          backgroundColor: color,
+          borderRadius: "50%",
+        },
+      })
+    );
+  }
+  return items;
+}
+
+function motifNested(rng, variant, panelW, panelH) {
+  const count = 6 + Math.floor(rng() * 3);
+  const thick = Math.max(4, panelW * 0.015);
+  const items = [];
+  for (let i = 0; i < count; i += 1) {
+    const inset = ((Math.min(panelW, panelH) * 0.4) / count) * i + panelW * 0.05;
+    const color = i === 0 ? variant.panelAccent : variant.panelFg;
+    items.push(
+      h("div", {
+        key: `n${i}`,
+        style: {
+          position: "absolute",
+          left: inset,
+          top: inset,
+          width: panelW - inset * 2,
+          height: panelH - inset * 2,
+          border: `${i === 0 ? thick * 1.5 : thick}px solid ${color}`,
+        },
+      })
+    );
+  }
+  return items;
+}
+
+function motifArrow(rng, variant, panelW, panelH) {
+  const shaftH = panelH * 0.18;
+  const shaftY = panelH / 2 - shaftH / 2;
+  const shaftW = panelW * 0.6;
+  const shaftX = panelW * 0.1;
+  const tipSize = panelH * 0.34;
+  // Use two rotated squares to form the arrowhead
   return [
     h("div", {
-      key: "num",
+      key: "shaft",
       style: {
         position: "absolute",
-        left: panelW * 0.08,
-        top: panelH * 0.1,
-        fontSize: panelH * 0.45,
-        fontWeight: 700,
-        color: variant.panelFg,
-        fontFamily: "Space Grotesk",
-        lineHeight: 1,
-        letterSpacing: -4,
+        left: shaftX,
+        top: shaftY,
+        width: shaftW,
+        height: shaftH,
+        backgroundColor: variant.panelFg,
       },
-      children: num,
     }),
     h("div", {
-      key: "sym",
+      key: "head-top",
       style: {
         position: "absolute",
-        left: panelW * 0.15,
-        top: panelH * 0.4,
-        fontSize: panelH * 0.55,
-        fontWeight: 700,
-        color: variant.panelAccent,
-        fontFamily: "Space Grotesk",
-        lineHeight: 1,
+        left: shaftX + shaftW - tipSize * 0.6,
+        top: panelH / 2 - tipSize,
+        width: tipSize,
+        height: tipSize,
+        backgroundColor: variant.panelAccent,
+        transform: "rotate(45deg)",
+        transformOrigin: "center",
       },
-      children: sym,
     }),
   ];
 }
@@ -324,7 +373,17 @@ function motifScanlines(rng, variant, panelW, panelH) {
   return items;
 }
 
-const MOTIFS = [motifStripes, motifGrid, motifHalftone, motifBars, motifChecker, motifBigMark, motifScanlines];
+const MOTIFS = [
+  motifStripes,
+  motifGrid,
+  motifHalftone,
+  motifBars,
+  motifChecker,
+  motifConcentric,
+  motifNested,
+  motifArrow,
+  motifScanlines,
+];
 
 // ---------- Main renderer ----------
 
@@ -440,7 +499,7 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                 },
                 children:
                   safeDescription ||
-                  "Member of Technical Staff · writing through layoffs, building, and adaptation.",
+                  "Member of Technical Staff @ Augment Code · writing through layoffs, building, and adaptation.",
               }),
             ],
           }),
