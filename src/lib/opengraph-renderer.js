@@ -73,7 +73,7 @@ function getTheme(pathname) {
 
 function getUrlLabel(pathname) {
   if (pathname === "/") return "nearbycoder.com";
-  return truncate(`nearbycoder.com${pathname.replace(/\/$/, "")}`, 52);
+  return truncate(`nearbycoder.com${pathname.replace(/\/$/, "")}`, 38);
 }
 
 function getDisplayTitle(rawTitle, pathname) {
@@ -510,6 +510,7 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              gap: 32,
               borderTop: `4px solid ${variant.fg}`,
               paddingTop: 20,
               fontSize: 20,
@@ -521,7 +522,12 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
             children: [
               h("div", {
                 key: "brand",
-                style: { display: "flex", gap: 14, alignItems: "center" },
+                style: {
+                  display: "flex",
+                  gap: 14,
+                  alignItems: "center",
+                  flexShrink: 0,
+                },
                 children: [
                   h("span", {
                     key: "mark",
@@ -546,10 +552,14 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                 key: "url",
                 style: {
                   color: variant.fg,
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: 500,
-                  letterSpacing: 1,
+                  letterSpacing: 0,
                   textTransform: "none",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "flex",
                 },
                 children: urlLabel,
               }),
