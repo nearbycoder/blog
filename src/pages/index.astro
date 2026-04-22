@@ -31,7 +31,6 @@ const sortedProjects = projects
 const selectedBuildProjectSlugs = ["agfs-dev", "dailystand-dev"];
 const selectedBuildProjectSet = new Set(selectedBuildProjectSlugs);
 const featuredProjects = [
-  // Keep the homepage "selected builds" curated instead of depending on collection order.
   ...selectedBuildProjectSlugs
     .map((slug) => sortedProjects.find((entry: any) => entry.id === slug && entry.data.featured))
     .filter(Boolean),
@@ -47,16 +46,14 @@ const recentLayoffEntries = layoffEntries
 <BaseLayout>
   <Hero />
 
-  <section class="mt-20 space-y-10 reveal" style="--delay: 80ms">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Writing</p>
-        <h2 class="text-3xl font-semibold text-white md:text-4xl">Latest articles</h2>
+  <section class="mt-24 space-y-8 reveal" style="--delay: 80ms;">
+    <header class="flex flex-wrap items-end justify-between gap-4 rule-b-heavy pb-4" style="border-color: var(--border);">
+      <div class="space-y-1">
+        <p class="label-strong">§ 01 / Writing</p>
+        <h2 class="display text-4xl md:text-5xl">Latest articles</h2>
       </div>
-      <a href="/articles" class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] hover:text-white">
-        View all
-      </a>
-    </div>
+      <a href="/articles" class="btn">All articles →</a>
+    </header>
     <div class="grid gap-6 md:grid-cols-3">
       {featuredArticles.map((entry: any, index: number) => (
         <ArticleCard entry={entry} index={index} />
@@ -64,16 +61,14 @@ const recentLayoffEntries = layoffEntries
     </div>
   </section>
 
-  <section class="mt-20 space-y-10 reveal" style="--delay: 160ms">
-    <div class="flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Projects</p>
-        <h2 class="text-3xl font-semibold text-white md:text-4xl">Selected builds</h2>
+  <section class="mt-24 space-y-8 reveal" style="--delay: 160ms;">
+    <header class="flex flex-wrap items-end justify-between gap-4 rule-b-heavy pb-4" style="border-color: var(--border);">
+      <div class="space-y-1">
+        <p class="label-strong">§ 02 / Projects</p>
+        <h2 class="display text-4xl md:text-5xl">Selected builds</h2>
       </div>
-      <a href="/projects" class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] hover:text-white">
-        View all
-      </a>
-    </div>
+      <a href="/projects" class="btn">All projects →</a>
+    </header>
     <div class="grid gap-6 md:grid-cols-2">
       {featuredProjects.map((project: any, index: number) => (
         <ProjectCard project={project} index={index} />
@@ -82,16 +77,14 @@ const recentLayoffEntries = layoffEntries
   </section>
 
   {recentLayoffEntries.length > 0 && (
-    <section class="mt-20 space-y-10 reveal" style="--delay: 200ms">
-      <div class="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Layoff Log</p>
-          <h2 class="text-3xl font-semibold text-white md:text-4xl">Weekly build updates</h2>
+    <section class="mt-24 space-y-8 reveal" style="--delay: 200ms;">
+      <header class="flex flex-wrap items-end justify-between gap-4 rule-b-heavy pb-4" style="border-color: var(--border);">
+        <div class="space-y-1">
+          <p class="label-strong">§ 03 / Layoff Log</p>
+          <h2 class="display text-4xl md:text-5xl">Weekly updates</h2>
         </div>
-        <a href="/layoff" class="text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] hover:text-white">
-          View all
-        </a>
-      </div>
+        <a href="/layoff" class="btn">Full log →</a>
+      </header>
       <div class="grid gap-6 md:grid-cols-2">
         {recentLayoffEntries.map((entry: any, index: number) => (
           <LayoffEntryCard entry={entry} index={index} />
@@ -100,12 +93,11 @@ const recentLayoffEntries = layoffEntries
     </section>
   )}
 
-  <section class="mt-20 space-y-10 reveal" style="--delay: 240ms">
-    <div>
-      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Experience</p>
-      <h2 class="text-3xl font-semibold text-white md:text-4xl">Where I've built</h2>
-    </div>
+  <section class="mt-24 space-y-8 reveal" style="--delay: 240ms;">
+    <header class="rule-b-heavy pb-4 space-y-1" style="border-color: var(--border);">
+      <p class="label-strong">§ 04 / Experience</p>
+      <h2 class="display text-4xl md:text-5xl">Where I've built</h2>
+    </header>
     <WorkTimeline />
   </section>
-
 </BaseLayout>

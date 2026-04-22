@@ -1,65 +1,44 @@
 ---
 import { resolveArticleAccent } from "../lib/articles";
+import { renderCardArtSvg } from "../lib/card-art";
 
 const entry = Astro.props.entry as any;
 const index = (Astro.props.index as number | undefined) ?? 0;
-const accentMap: Record<string, string> = {
-  pink: "from-pink-400/25 via-transparent",
-  teal: "from-teal-400/25 via-transparent",
-  zinc: "from-zinc-400/20 via-transparent",
-  amber: "from-amber-500/30 via-transparent",
-  cyan: "from-cyan-400/20 via-transparent",
-  rose: "from-rose-400/30 via-transparent",
-  mist: "from-white/15 via-transparent",
-  emerald: "from-emerald-400/25 via-transparent",
-  sky: "from-sky-400/25 via-transparent",
-  violet: "from-violet-400/25 via-transparent",
-  lime: "from-lime-400/25 via-transparent",
-  indigo: "from-indigo-400/25 via-transparent",
-  fuchsia: "from-fuchsia-400/25 via-transparent",
-  orange: "from-orange-400/25 via-transparent",
-  red: "from-red-400/25 via-transparent",
-  yellow: "from-yellow-400/25 via-transparent",
-  blue: "from-blue-400/25 via-transparent",
-  slate: "from-slate-400/20 via-transparent",
-  stone: "from-stone-400/20 via-transparent",
-  neutral: "from-neutral-400/20 via-transparent",
-  purple: "from-purple-400/25 via-transparent",
-  green: "from-green-400/25 via-transparent",
-  indigoDeep: "from-indigo-500/25 via-transparent",
-};
-const accents = Object.values(accentMap);
-const accentKey = resolveArticleAccent(entry);
-const accent =
-  (accentKey ? accentMap[accentKey] : undefined) ?? accents[index % accents.length] ?? accentMap.mist;
+const number = String(index + 1).padStart(2, "0");
+const svgMarkup = renderCardArtSvg({
+  slug: entry.id,
+  tags: entry.data.tags ?? [],
+  accent: resolveArticleAccent(entry),
+});
 ---
 
-<a href={`/articles/${entry.id}`} class="card group block overflow-hidden h-full flex flex-col">
-  <div class="relative h-44 overflow-hidden border-b border-white/10">
-    <img
-      src={`/card-art/${entry.id}.svg`}
-      alt=""
-      loading="lazy"
-      decoding="async"
-      class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-    />
-    <div class={`card-accent absolute inset-0 bg-gradient-to-br ${accent} to-transparent`}></div>
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_14%_18%,rgba(255,255,255,0.2),transparent_40%),linear-gradient(to_top,rgba(6,9,15,0.55),transparent_55%)]"></div>
+<a
+  href={`/articles/${entry.id}`}
+  class="block-box block-box-shadow block-box-hover group flex h-full flex-col"
+>
+  <div class="relative aspect-[16/10] overflow-hidden rule-b" style="border-color: var(--border);">
+    <div class="absolute inset-0" set:html={svgMarkup}></div>
+    <span class="absolute left-3 top-3 chip chip-accent">
+      Article / {number}
+    </span>
   </div>
-  <div class="space-y-4 p-6 flex-1 flex flex-col">
-    <div class="flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)]">
+  <div class="flex flex-1 flex-col gap-4 p-5">
+    <div class="flex items-center justify-between gap-3 font-mono text-[0.68rem] uppercase tracking-[0.12em]" style="color: var(--fg-muted);">
       <span>{entry.data.date}</span>
-      <span class="h-1 w-1 rounded-full bg-white/30"></span>
-      <span>{entry.data.readTime ?? ""}</span>
+      {entry.data.readTime ? <span>{entry.data.readTime}</span> : null}
     </div>
     <div class="space-y-2">
-      <h3 class="text-xl font-semibold text-white transition group-hover:text-white">{entry.data.title}</h3>
-      <p class="text-sm text-[color:var(--mist-200)]">{entry.data.description}</p>
+      <h3 class="display text-xl leading-[1.05] transition group-hover:underline" style="text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 4px;">
+        {entry.data.title}
+      </h3>
+      <p class="text-sm leading-relaxed" style="color: var(--fg-muted);">{entry.data.description}</p>
     </div>
-    <div class="flex flex-wrap gap-2 mt-auto">
-      {entry.data.tags.map((tag: string) => (
-        <span class="chip">{tag}</span>
-      ))}
-    </div>
+    {entry.data.tags && entry.data.tags.length ? (
+      <div class="mt-auto flex flex-wrap gap-1.5 pt-2">
+        {entry.data.tags.map((tag: string) => (
+          <span class="chip">{tag}</span>
+        ))}
+      </div>
+    ) : null}
   </div>
 </a>

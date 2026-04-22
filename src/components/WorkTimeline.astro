@@ -1,26 +1,23 @@
 ---
 import { site } from "../data/site";
-
-const accentMap: Record<string, string> = {
-  amber: "from-amber-500/20 via-transparent",
-  cyan: "from-cyan-400/20 via-transparent",
-  rose: "from-rose-400/20 via-transparent",
-  mist: "from-white/10 via-transparent",
-};
 ---
 
-<div class="relative space-y-5 pt-2">
-  {(site.work as any[]).map((item: { company: string; role: string; range: string; accent: string }) => (
-    <div class="relative grid gap-4 md:grid-cols-[8.5rem_minmax(0,1fr)] md:items-center md:gap-6">
-      <div class="relative z-10 flex items-center gap-3 pr-2 text-xs uppercase tracking-[0.2em] text-[color:var(--fog-500)] whitespace-nowrap">
-        <span class="h-3 w-3 shrink-0 rounded-full border border-white/20 bg-white/10"></span>
-        <span>{item.range}</span>
+<ol class="block-box block-box-shadow">
+  {(site.work as any[]).map((item: { company: string; role: string; range: string }, index: number) => (
+    <li
+      class="grid grid-cols-[auto_1fr_auto] items-center gap-4 px-5 py-4 sm:gap-6 sm:px-6"
+      style={index === 0 ? undefined : "border-top: 2px solid var(--border);"}
+    >
+      <span class="font-mono text-xs font-bold uppercase tracking-[0.1em] text-right" style="color: var(--fg-dim); min-width: 5rem;">
+        {String(index + 1).padStart(2, "0")} /
+      </span>
+      <div class="min-w-0">
+        <p class="display text-lg sm:text-xl" style="line-height: 1.1;">{item.company}</p>
+        <p class="font-mono text-xs uppercase tracking-[0.12em]" style="color: var(--fg-muted);">{item.role}</p>
       </div>
-      <div class="card glass min-w-0 rounded-2xl px-5 py-4 overflow-hidden relative">
-        <div class={`absolute inset-0 bg-gradient-to-br ${accentMap[item.accent] ?? accentMap.mist} to-transparent opacity-60`}></div>
-        <p class="text-base font-semibold text-white relative z-10">{item.company}</p>
-        <p class="text-sm text-[color:var(--mist-200)] relative z-10">{item.role}</p>
-      </div>
-    </div>
+      <span class="font-mono text-xs uppercase tracking-[0.12em] whitespace-nowrap" style="color: var(--fg-muted);">
+        {item.range}
+      </span>
+    </li>
   ))}
-</div>
+</ol>

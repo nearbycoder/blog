@@ -1,45 +1,50 @@
+---
+---
+
 <div class="relative" data-theme-root>
   <button
     type="button"
-    class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-xs uppercase tracking-[0.2em] text-white transition hover:border-white/30"
+    class="btn btn-ghost"
     aria-haspopup="true"
     aria-expanded="false"
     data-theme-trigger
+    aria-label="Toggle theme"
   >
-    Theme
-    <span class="text-[color:var(--mist-200)]" data-theme-label>System</span>
+    <span data-theme-icon>◐</span>
+    <span class="hidden sm:inline" data-theme-label>System</span>
   </button>
   <div
-    class="absolute right-0 z-40 mt-2 hidden w-44 rounded-2xl border border-white/10 bg-black/60 p-2 shadow-xl backdrop-blur"
+    class="block-box absolute right-0 z-40 mt-2 hidden w-40 p-1"
+    style="box-shadow: 5px 5px 0 0 var(--shadow-color);"
     role="menu"
     data-theme-menu
   >
     <button
       type="button"
-      class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] transition hover:bg-white/10 hover:text-white"
+      class="flex w-full items-center justify-between px-3 py-2 font-mono text-xs uppercase tracking-[0.12em] transition"
       data-theme-option="light"
       role="menuitem"
     >
-      Light
-      <span class="text-[10px] text-[color:var(--fog-500)]">L</span>
+      <span>◯ Light</span>
+      <span style="color: var(--fg-dim);">L</span>
     </button>
     <button
       type="button"
-      class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] transition hover:bg-white/10 hover:text-white"
+      class="flex w-full items-center justify-between px-3 py-2 font-mono text-xs uppercase tracking-[0.12em] transition"
       data-theme-option="dark"
       role="menuitem"
     >
-      Dark
-      <span class="text-[10px] text-[color:var(--fog-500)]">D</span>
+      <span>● Dark</span>
+      <span style="color: var(--fg-dim);">D</span>
     </button>
     <button
       type="button"
-      class="flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] transition hover:bg-white/10 hover:text-white"
+      class="flex w-full items-center justify-between px-3 py-2 font-mono text-xs uppercase tracking-[0.12em] transition"
       data-theme-option="system"
       role="menuitem"
     >
-      System
-      <span class="text-[10px] text-[color:var(--fog-500)]">OS</span>
+      <span>◐ System</span>
+      <span style="color: var(--fg-dim);">OS</span>
     </button>
   </div>
 
@@ -53,7 +58,10 @@
       const trigger = container.querySelector("[data-theme-trigger]");
       const menu = container.querySelector("[data-theme-menu]");
       const label = container.querySelector("[data-theme-label]");
+      const icon = container.querySelector("[data-theme-icon]");
       const options = Array.from(container.querySelectorAll("[data-theme-option]"));
+
+      const icons = { light: "◯", dark: "●", system: "◐" };
 
       const getTheme = () => root.getAttribute("data-theme") || "system";
 
@@ -62,10 +70,11 @@
       const updateUI = () => {
         const theme = getTheme();
         if (label) label.textContent = formatLabel(theme);
+        if (icon) icon.textContent = icons[theme] || "◐";
         options.forEach((button) => {
           const active = button.getAttribute("data-theme-option") === theme;
-          button.classList.toggle("bg-white/10", active);
-          button.classList.toggle("text-white", active);
+          button.style.background = active ? "var(--accent)" : "";
+          button.style.color = active ? "var(--accent-fg)" : "";
           button.setAttribute("aria-pressed", active ? "true" : "false");
         });
       };
@@ -92,11 +101,8 @@
 
       const toggleMenu = () => {
         if (!menu) return;
-        if (menu.classList.contains("hidden")) {
-          openMenu();
-        } else {
-          closeMenu();
-        }
+        if (menu.classList.contains("hidden")) openMenu();
+        else closeMenu();
       };
 
       trigger?.addEventListener("click", (event) => {
@@ -111,19 +117,27 @@
           setTheme(value);
           closeMenu();
         });
+        button.addEventListener("mouseenter", () => {
+          if (button.getAttribute("aria-pressed") !== "true") {
+            button.style.background = "var(--fg)";
+            button.style.color = "var(--bg)";
+          }
+        });
+        button.addEventListener("mouseleave", () => {
+          if (button.getAttribute("aria-pressed") !== "true") {
+            button.style.background = "";
+            button.style.color = "";
+          }
+        });
       });
 
       document.addEventListener("click", (event) => {
         if (!menu || menu.classList.contains("hidden")) return;
-        if (!container.contains(event.target)) {
-          closeMenu();
-        }
+        if (!container.contains(event.target)) closeMenu();
       });
 
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          closeMenu();
-        }
+        if (event.key === "Escape") closeMenu();
       });
 
       updateUI();

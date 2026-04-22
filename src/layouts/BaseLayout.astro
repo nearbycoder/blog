@@ -107,6 +107,27 @@ const searchItems = [
         } catch {}
       })();
     </script>
+    <script is:inline>
+      (() => {
+        const accents = [
+          { dark: "#a78bfa", light: "#7c3aed", name: "purple" },
+          { dark: "#60a5fa", light: "#2563eb", name: "blue" },
+          { dark: "#f472b6", light: "#db2777", name: "pink" },
+          { dark: "#fb923c", light: "#ea580c", name: "orange" },
+          { dark: "#a3e635", light: "#65a30d", name: "lime" },
+          { dark: "#f87171", light: "#dc2626", name: "red" },
+          { dark: "#facc15", light: "#ca8a04", name: "yellow" },
+          { dark: "#22d3ee", light: "#0891b2", name: "cyan" },
+          { dark: "#fde047", light: "#a16207", name: "gold" },
+          { dark: "#4ade80", light: "#16a34a", name: "green" },
+        ];
+        const pick = accents[Math.floor(Math.random() * accents.length)];
+        const root = document.documentElement;
+        root.style.setProperty("--accent-dark", pick.dark);
+        root.style.setProperty("--accent-light", pick.light);
+        root.setAttribute("data-accent", pick.name);
+      })();
+    </script>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS Feed`} href={rssUrl} />
@@ -126,18 +147,19 @@ const searchItems = [
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="twitter:image:alt" content={imageAlt} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     />
     <link rel="icon" type="image/jpeg" href="/logo.jpeg" />
     <script defer data-domain="nearbycoder.com" src="https://tic.nrby.xyz/js/script.js"></script>
     <title>{pageTitle}</title>
   </head>
-  <body class="bg-grid min-h-screen flex flex-col">
-    <div class="pointer-events-none fixed inset-0 page-glow opacity-70"></div>
+  <body class="min-h-screen flex flex-col">
     <SiteHeader />
-    <main class="relative z-10 mx-auto w-full max-w-6xl flex-1 px-6 pb-24">
+    <main class="relative mx-auto w-full max-w-6xl flex-1 px-5 pb-24 sm:px-8">
       <slot />
     </main>
     <SiteFooter />

@@ -12,26 +12,27 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
 ---
 
 <div id="command-palette" class="fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" data-overlay></div>
+  <div class="absolute inset-0" style="background: color-mix(in srgb, var(--bg) 85%, transparent);" data-overlay></div>
   <div class="relative mx-auto mt-20 w-[min(760px,92vw)]">
-    <div class="card command-panel rounded-[28px] p-5">
-      <div class="flex flex-col gap-3 md:flex-row md:items-center">
-        <span class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Command</span>
+    <div class="block-box p-0" style="box-shadow: 10px 10px 0 0 var(--shadow-color);">
+      <div class="flex items-center gap-3 rule-b px-5 py-4" style="border-color: var(--border);">
+        <span class="label-strong">⌘K /</span>
         <input
           id="command-input"
           type="search"
           placeholder="Search articles, projects, or pages"
-          class="w-full bg-transparent text-lg text-white placeholder:text-[color:var(--fog-500)] outline-none"
+          class="w-full bg-transparent font-mono text-base outline-none"
+          style="color: var(--fg);"
         />
-        <span class="hidden text-xs uppercase tracking-[0.2em] text-[color:var(--fog-500)] md:inline">⌘K</span>
+        <span class="hidden font-mono text-xs uppercase tracking-[0.14em] md:inline" style="color: var(--fg-dim);">ESC</span>
       </div>
-      <div class="mt-4 max-h-[360px] overflow-y-auto">
-        <div id="command-results" class="grid gap-4"></div>
+      <div class="max-h-[420px] overflow-y-auto p-3">
+        <div id="command-results" class="grid gap-3"></div>
       </div>
-      <div class="mt-4 flex flex-wrap items-center justify-between gap-2 text-xs text-[color:var(--mist-200)]">
-        <span>Arrows to navigate</span>
-        <span>Enter to open</span>
-        <span>Esc to close</span>
+      <div class="flex flex-wrap items-center justify-between gap-2 rule px-5 py-3 font-mono text-[0.7rem] uppercase tracking-[0.12em]" style="border-color: var(--border); color: var(--fg-muted);">
+        <span>↑↓ Navigate</span>
+        <span>↵ Open</span>
+        <span>ESC Close</span>
       </div>
     </div>
   </div>
@@ -111,9 +112,14 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
       nodes.forEach((node) => {
         const idx = Number(node.getAttribute("data-index"));
         const isActive = idx === activeIndex;
-        node.classList.toggle("bg-white/15", isActive);
-        node.classList.toggle("border-white/30", isActive);
         node.classList.toggle("is-active", isActive);
+        if (isActive) {
+          node.style.background = "var(--accent)";
+          node.style.color = "var(--accent-fg)";
+        } else {
+          node.style.background = "";
+          node.style.color = "";
+        }
         node.setAttribute("aria-selected", isActive ? "true" : "false");
       });
 
@@ -126,36 +132,41 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
     const renderGroup = (label, entries, registerIndex) => {
       if (!list || entries.length === 0) return;
       const heading = document.createElement("div");
-      heading.className = "text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]";
+      heading.className = "label-strong";
+      heading.style.padding = "0.5rem 0.25rem 0.25rem";
       heading.textContent = label;
       list.appendChild(heading);
 
       const group = document.createElement("div");
-      group.className = "grid gap-2";
+      group.className = "grid gap-1.5";
 
       entries.forEach((entry) => {
         const link = document.createElement("a");
         link.href = entry.item.url;
         const displayIndex = registerIndex(entry.item);
-        link.className =
-          "command-option group flex items-center justify-between gap-4 rounded-2xl border border-white/15 bg-black/40 px-4 py-3 transition";
+        link.className = "command-option flex items-center justify-between gap-4 px-3 py-2.5 transition";
+        link.style.border = "2px solid var(--border)";
         link.setAttribute("data-index", String(displayIndex));
         link.setAttribute("role", "option");
 
         const info = document.createElement("div");
         const title = document.createElement("div");
-        title.className = "text-base font-semibold text-white";
+        title.className = "font-mono text-sm font-semibold";
         title.textContent = entry.item.title;
 
         const subtitle = document.createElement("div");
-        subtitle.className = "text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)]";
+        subtitle.className = "font-mono text-[0.7rem] uppercase";
+        subtitle.style.letterSpacing = "0.12em";
+        subtitle.style.opacity = "0.7";
         subtitle.textContent = entry.item.subtitle || entry.item.type;
 
         info.appendChild(title);
         info.appendChild(subtitle);
 
         const badge = document.createElement("span");
-        badge.className = "text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]";
+        badge.className = "font-mono text-[0.68rem] uppercase";
+        badge.style.letterSpacing = "0.14em";
+        badge.style.opacity = "0.7";
         badge.textContent = entry.item.type;
 
         link.appendChild(info);
@@ -173,8 +184,9 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
 
       if (!results.length) {
         const empty = document.createElement("div");
-        empty.className =
-          "rounded-2xl border border-white/15 bg-black/40 px-4 py-6 text-sm text-[color:var(--mist-200)]";
+        empty.className = "font-mono text-sm";
+        empty.style.padding = "1.5rem 0.75rem";
+        empty.style.color = "var(--fg-muted)";
         empty.textContent = "No matches. Try a different search.";
         list.appendChild(empty);
         return;
@@ -223,11 +235,8 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
 
     const togglePalette = () => {
       if (!palette) return;
-      if (palette.classList.contains("hidden")) {
-        openPalette();
-      } else {
-        closePalette();
-      }
+      if (palette.classList.contains("hidden")) openPalette();
+      else closePalette();
     };
 
     const handleGlobalKey = (event) => {

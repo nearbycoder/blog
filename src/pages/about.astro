@@ -3,13 +3,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout title="About">
-  <section class="mt-10 grid gap-12 md:grid-cols-[0.9fr_1.1fr] md:items-start">
-    <div class="space-y-6">
-      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">About</p>
-      <h1 class="text-4xl font-semibold text-white md:text-5xl">
-        I'm Josh Hamilton. I live in Tulsa, where I engineer for the world to see.
+  <section class="mt-12 space-y-10">
+    <header class="rule-b-heavy pb-6 space-y-3" style="border-color: var(--border);">
+      <p class="label-strong">§ About / Josh Hamilton</p>
+      <h1 class="display text-5xl md:text-6xl">
+        I live in <span class="marker">Tulsa</span>,<br />
+        where I engineer<br />
+        for the world to see.
       </h1>
-      <div class="space-y-5 text-base text-[color:var(--mist-200)]">
+    </header>
+
+    <div class="grid gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">
+      <div class="space-y-5 text-base leading-relaxed" style="color: var(--fg);">
         <p>
           Growing up I always had a passion for building things. I started early in High School taking web
           design classes with old school software such as Dreamweaver, Fireworks and Flash before it was
@@ -30,29 +35,29 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           YouTube & Twitch video game commentary that really pushed me to what I wanted really in life.
         </p>
         <p>
-          After spenting 6 months in full time YouTube & Twitch and realizing that it just ultimately wasn't
+          After spending 6 months in full time YouTube & Twitch and realizing that it just ultimately wasn't
           something I felt like I wanted to do for a career, I pivoted into getting my start in the tech
           industry as a technical support specialist for a local hosting company in Tulsa, Oklahoma,
-          <a href="https://fabricut.com/" style="color: var(--accent-cyan)">Hostek.</a>
+          <a href="https://fabricut.com/">Hostek</a>.
         </p>
         <p>
           I spent a few years building up my knowledge and learning PHP on the side as well as a little
           ColdFusion to break free from that job and get my first start at a real development job at a local
-          fabric company, named <a href="https://fabricut.com/" style="color: var(--accent-cyan)">Fabricut.</a> From there I
+          fabric company, named <a href="https://fabricut.com/">Fabricut</a>. From there I
           ended up learning Ruby on Rails and fell in love with Ruby as well as frontend frameworks such as
           Angular.JS which had just really taken off at the time.
         </p>
         <p>
           After a year or so in the online Ecommerce of textiles, I thought it best to move on given the
           knowledge that I had gained. I interviewed and got hired at an amazing small consulting company
-          <a href="https://madebymunsters.com/" style="color: var(--accent-cyan)">Made By Munsters.</a> I learned a lot
+          <a href="https://madebymunsters.com/">Made By Munsters</a>. I learned a lot
           working for such a small company. I was able to stretch myself and learn Rails API with full
           Single Page Application setups in Angular.JS, Angular, and React. As well as building out fun apps
           for news websites for MLB and ESPN.
         </p>
         <p>
           After some years went by I found myself really wanting to break into the startup industry. That's
-          where I interviewed and was hired at <a href="https://youearnedit.com/" style="color: var(--accent-cyan)">YouEarnedIt.</a>
+          where I interviewed and was hired at <a href="https://youearnedit.com/">YouEarnedIt</a>.
           YouEarnedIt was a dream to work at. Not only did I increase my salary over 2x my previous job but
           I got to work with seasoned engineers that I could really learn from. Although startups all have
           their risks and we were unfortunately bought out by a private equity firm, which pivoted our name
@@ -60,30 +65,41 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </p>
         <p>
           From this point I have worked at various startups and I will say they all have their benefits and
-          problems. The main thing to keep in mind is to have fun in the moments and don't stress to much
+          problems. The main thing to keep in mind is to have fun in the moments and don't stress too much
           when things get rough.
         </p>
       </div>
-    </div>
-    <div class="space-y-6">
-      <div class="card overflow-hidden rounded-[28px]">
-        <img
-          src="/images/0289d46e-a3de-4f6f-b593-d81393ec931e.png"
-          alt="Josh Hamilton"
-          class="h-full w-full object-cover"
-          loading="lazy"
-        />
-      </div>
-      <div class="card glass rounded-[28px] p-6">
-        <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Connect</p>
-        <div class="mt-4 grid gap-3 text-sm text-[color:var(--mist-200)]">
-          <a href="https://twitter.com/nearbycoder" class="text-white">Follow on X</a>
-          <a href="https://www.instagram.com/nearbycoder/" class="text-white">Follow on Instagram</a>
-          <a href="https://github.com/nearbycoder" class="text-white">Follow on GitHub</a>
-          <a href="https://www.linkedin.com/in/joshuahamilton1/" class="text-white">Follow on LinkedIn</a>
-          <a href="mailto:nearbycoder@gmail.com" class="text-white">nearbycoder@gmail.com</a>
+
+      <aside class="space-y-5">
+        <div class="block-box block-box-shadow overflow-hidden">
+          <img
+            src="/images/0289d46e-a3de-4f6f-b593-d81393ec931e.png"
+            alt="Josh Hamilton"
+            class="h-full w-full object-cover"
+            loading="lazy"
+          />
         </div>
-      </div>
+        <div class="block-box block-box-shadow p-5 space-y-4">
+          <p class="label-strong">Connect</p>
+          <ul class="grid gap-2 font-mono text-sm">
+            <li><a href="https://twitter.com/nearbycoder" class="nav-link">X / Twitter ↗</a></li>
+            <li><a href="https://www.instagram.com/nearbycoder/" class="nav-link">Instagram ↗</a></li>
+            <li><a href="https://github.com/nearbycoder" class="nav-link">GitHub ↗</a></li>
+            <li><a href="https://www.linkedin.com/in/joshuahamilton1/" class="nav-link">LinkedIn ↗</a></li>
+            <li><a href="mailto:nearbycoder@gmail.com" class="nav-link">nearbycoder@gmail.com</a></li>
+          </ul>
+        </div>
+      </aside>
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  a[href^="http"],
+  a[href^="mailto"] {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+  }
+</style>

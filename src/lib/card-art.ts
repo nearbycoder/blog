@@ -24,70 +24,60 @@ export type CardAccent =
   | "indigoDeep";
 
 type Motif =
-  | "nodes"
-  | "rise"
-  | "blocks"
-  | "orbits"
-  | "signal"
-  | "shards"
+  | "stripes"
+  | "halftone"
+  | "grid"
+  | "target"
+  | "arrow"
   | "rings"
-  | "dunes"
-  | "lattice"
-  | "pulse";
+  | "checker"
+  | "bars"
+  | "burst"
+  | "mono"
+  | "barcode"
+  | "corners"
+  | "coordinates"
+  | "nested"
+  | "dashed"
+  | "zigzag"
+  | "iso"
+  | "letter"
+  | "dotline"
+  | "bigX"
+  | "diamond"
+  | "tags"
+  | "scanlines"
+  | "stamp";
 
 type Palette = {
-  primary: string;
+  bg: string;
+  fg: string;
+  accent: string;
+  /** a second non-bg color that's rarely used for subtle contrast */
   secondary: string;
-  glow: string;
 };
 
-const paletteMap: Record<CardAccent, Palette> = {
-  amber: { primary: "#fbbf24", secondary: "#f59e0b", glow: "#fbbf24" },
-  cyan: { primary: "#67e8f9", secondary: "#22d3ee", glow: "#22d3ee" },
-  rose: { primary: "#fb7185", secondary: "#f43f5e", glow: "#fb7185" },
-  mist: { primary: "#e2e8f0", secondary: "#94a3b8", glow: "#e2e8f0" },
-  emerald: { primary: "#6ee7b7", secondary: "#10b981", glow: "#34d399" },
-  sky: { primary: "#7dd3fc", secondary: "#38bdf8", glow: "#7dd3fc" },
-  violet: { primary: "#c4b5fd", secondary: "#8b5cf6", glow: "#c4b5fd" },
-  lime: { primary: "#bef264", secondary: "#84cc16", glow: "#bef264" },
-  teal: { primary: "#5eead4", secondary: "#14b8a6", glow: "#5eead4" },
-  indigo: { primary: "#a5b4fc", secondary: "#6366f1", glow: "#a5b4fc" },
-  fuchsia: { primary: "#f0abfc", secondary: "#d946ef", glow: "#f0abfc" },
-  pink: { primary: "#f9a8d4", secondary: "#ec4899", glow: "#f9a8d4" },
-  orange: { primary: "#fdba74", secondary: "#f97316", glow: "#fdba74" },
-  red: { primary: "#fca5a5", secondary: "#ef4444", glow: "#fca5a5" },
-  yellow: { primary: "#fde047", secondary: "#eab308", glow: "#fde047" },
-  blue: { primary: "#93c5fd", secondary: "#3b82f6", glow: "#93c5fd" },
-  slate: { primary: "#cbd5f5", secondary: "#64748b", glow: "#cbd5f5" },
-  stone: { primary: "#d6d3d1", secondary: "#78716c", glow: "#d6d3d1" },
-  zinc: { primary: "#d4d4d8", secondary: "#71717a", glow: "#d4d4d8" },
-  neutral: { primary: "#e5e5e5", secondary: "#737373", glow: "#e5e5e5" },
-  purple: { primary: "#d8b4fe", secondary: "#a855f7", glow: "#d8b4fe" },
-  green: { primary: "#86efac", secondary: "#22c55e", glow: "#86efac" },
-  indigoDeep: { primary: "#818cf8", secondary: "#4f46e5", glow: "#818cf8" },
-};
+const INK = "#0a0a0a";
+const CREAM = "#f4f0e8";
+// Accent colors use CSS variable references so the SVG picks up the
+// page's rotating accent when inlined. External /card-art/*.svg loads
+// fall back to the hex literal.
+const PURPLE = "var(--accent-light, #7c3aed)";
+const PURPLE_LIGHT = "var(--accent-dark, #a78bfa)";
 
-const motifs: Motif[] = [
-  "nodes",
-  "rise",
-  "blocks",
-  "orbits",
-  "signal",
-  "shards",
-  "rings",
-  "dunes",
-  "lattice",
-  "pulse",
+const palettes: Palette[] = [
+  { bg: INK, fg: CREAM, accent: PURPLE_LIGHT, secondary: "#3a3a38" },
+  { bg: CREAM, fg: INK, accent: PURPLE, secondary: "#c9c3b4" },
+  { bg: PURPLE, fg: CREAM, accent: INK, secondary: "#9b6ef0" },
+  { bg: CREAM, fg: PURPLE, accent: INK, secondary: "#c9c3b4" },
+  { bg: INK, fg: PURPLE_LIGHT, accent: CREAM, secondary: "#3a3a38" },
 ];
 
-const keywordMotifs: Array<{ keywords: string[]; motifs: Motif[] }> = [
-  { keywords: ["ai", "automation", "workflow", "codex", "claude"], motifs: ["orbits", "signal", "pulse", "rings"] },
-  { keywords: ["career", "job", "layoff", "resume", "mindset"], motifs: ["rise", "dunes", "shards", "signal"] },
-  { keywords: ["react", "frontend", "vite", "tooling"], motifs: ["blocks", "lattice", "signal", "rings"] },
-  { keywords: ["backend", "api", "redis", "debug", "opensource"], motifs: ["nodes", "lattice", "pulse", "blocks"] },
-  { keywords: ["product", "saas", "ship", "build"], motifs: ["signal", "nodes", "shards", "rings"] },
-  { keywords: ["rate", "performance", "speed"], motifs: ["pulse", "rings", "nodes", "signal"] },
-  { keywords: ["pair", "collaboration", "team"], motifs: ["lattice", "nodes", "blocks", "rings"] },
+const allMotifs: Motif[] = [
+  "stripes", "halftone", "grid", "target", "arrow", "rings", "checker",
+  "bars", "burst", "mono", "barcode", "corners", "coordinates", "nested",
+  "dashed", "zigzag", "iso", "letter", "dotline", "bigX", "diamond",
+  "tags", "scanlines", "stamp",
 ];
 
 const hashString = (input: string) => {
@@ -109,510 +99,578 @@ const createRng = (seed: number) => {
   };
 };
 
-const format = (value: number) => value.toFixed(2);
+const fmt = (value: number) => value.toFixed(2);
 
-const toX = (ratio: number, width: number) => width * ratio;
-const toY = (ratio: number, height: number) => height * ratio;
+// ---------- Motif renderers ----------
 
-const pickRelevantMotifs = (slug: string, tags: string[]) => {
-  const lowerSlug = slug.toLowerCase();
-  const lowerTags = tags.map((tag) => tag.toLowerCase());
-  const found: Motif[] = [];
-
-  for (const rule of keywordMotifs) {
-    const matched = rule.keywords.some(
-      (keyword) => lowerSlug.includes(keyword) || lowerTags.some((tag) => tag.includes(keyword))
+const renderStripes = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const count = 6 + Math.floor(rng() * 6);
+  const angles = [-45, -30, 30, 45, 60, -60, 0, 90];
+  const angle = angles[Math.floor(rng() * angles.length)];
+  const stripeW = (w * 2) / count;
+  const elements: string[] = [];
+  for (let i = -2; i < count + 2; i += 1) {
+    const x = i * stripeW - w * 0.3;
+    const useAccent = i % 2 === 0;
+    if (!useAccent && rng() > 0.7) continue;
+    const color = useAccent ? palette.accent : palette.fg;
+    elements.push(
+      `<rect x="${fmt(x)}" y="${fmt(-h * 0.5)}" width="${fmt(stripeW * (useAccent ? 1 : 0.3 + rng() * 0.4))}" height="${fmt(h * 2)}" fill="${color}" transform="rotate(${angle} ${fmt(w / 2)} ${fmt(h / 2)})" />`
     );
-    if (matched) {
-      for (const motif of rule.motifs) {
-        if (!found.includes(motif)) found.push(motif);
-      }
-    }
   }
-
-  return found;
+  return elements.join("");
 };
 
-const pickMotifSet = (slug: string, tags: string[], rng: () => number) => {
-  const relevant = pickRelevantMotifs(slug, tags);
-  const chosen: Motif[] = [];
-  const maxLayers = 3 + Math.floor(rng() * 2);
+const renderHalftone = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const cols = 14 + Math.floor(rng() * 8);
+  const rows = 8 + Math.floor(rng() * 4);
+  const cellW = w / cols;
+  const cellH = h / rows;
+  const mode = Math.floor(rng() * 4); // 0: l-r, 1: r-l, 2: center-out, 3: t-b
+  const circles: string[] = [];
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      let progress: number;
+      if (mode === 0) progress = col / cols;
+      else if (mode === 1) progress = 1 - col / cols;
+      else if (mode === 2) {
+        const dx = (col - cols / 2) / cols;
+        const dy = (row - rows / 2) / rows;
+        progress = 1 - Math.min(1, Math.sqrt(dx * dx + dy * dy) * 2);
+      }
+      else progress = row / rows;
+      const radius = Math.max(0.5, (Math.min(cellW, cellH) / 2) * (0.1 + progress * 0.85));
+      const cx = col * cellW + cellW / 2;
+      const cy = row * cellH + cellH / 2;
+      const useAccent = progress > 0.55 && rng() > 0.6;
+      circles.push(
+        `<circle cx="${fmt(cx)}" cy="${fmt(cy)}" r="${fmt(radius)}" fill="${useAccent ? palette.accent : palette.fg}" />`
+      );
+    }
+  }
+  return circles.join("");
+};
 
-  const add = (motif: Motif) => {
-    if (!chosen.includes(motif)) chosen.push(motif);
+const renderGrid = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const cols = 4 + Math.floor(rng() * 4);
+  const rows = 3 + Math.floor(rng() * 3);
+  const pad = w * 0.06;
+  const cellW = (w - pad * 2) / cols;
+  const cellH = (h - pad * 2) / rows;
+  const gap = Math.min(cellW, cellH) * (0.08 + rng() * 0.12);
+  const accentCount = 2 + Math.floor(rng() * 4);
+  const accentCells = new Set<number>();
+  while (accentCells.size < accentCount) {
+    accentCells.add(Math.floor(rng() * cols * rows));
+  }
+  const rects: string[] = [];
+  for (let i = 0; i < cols * rows; i += 1) {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const x = pad + col * cellW + gap / 2;
+    const y = pad + row * cellH + gap / 2;
+    const isAccent = accentCells.has(i);
+    const color = isAccent ? palette.accent : palette.fg;
+    rects.push(
+      `<rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(cellW - gap)}" height="${fmt(cellH - gap)}" fill="${color}" />`
+    );
+  }
+  return rects.join("");
+};
+
+const renderTarget = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const offsetX = w * (0.35 + rng() * 0.3);
+  const offsetY = h * (0.35 + rng() * 0.3);
+  const maxR = Math.min(w, h) * (0.45 + rng() * 0.15);
+  const rings = 4 + Math.floor(rng() * 3);
+  const elements: string[] = [];
+  for (let i = rings; i >= 0; i -= 1) {
+    const r = (maxR / rings) * i;
+    const color = i % 2 === 0 ? palette.fg : palette.accent;
+    elements.push(`<circle cx="${fmt(offsetX)}" cy="${fmt(offsetY)}" r="${fmt(r)}" fill="${color}" />`);
+  }
+  const stroke = Math.max(4, w * 0.005);
+  elements.push(
+    `<line x1="${fmt(offsetX)}" y1="0" x2="${fmt(offsetX)}" y2="${fmt(h)}" stroke="${palette.bg}" stroke-width="${fmt(stroke)}" />`,
+    `<line x1="0" y1="${fmt(offsetY)}" x2="${fmt(w)}" y2="${fmt(offsetY)}" stroke="${palette.bg}" stroke-width="${fmt(stroke)}" />`
+  );
+  return elements.join("");
+};
+
+const renderArrow = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const orient = Math.floor(rng() * 4); // 0 right, 1 left, 2 up, 3 down
+  const shaftW = (orient < 2 ? w : h) * 0.55;
+  const shaftH = (orient < 2 ? h : w) * 0.2;
+  let elements = "";
+
+  const makeHoriz = (dir: number) => {
+    const sx = dir > 0 ? w * 0.1 : w * 0.35;
+    const sy = h / 2 - shaftH / 2;
+    const tipX = dir > 0 ? sx + shaftW : sx;
+    const tipSize = h * 0.42;
+    const pts = dir > 0
+      ? `${fmt(tipX)},${fmt(h / 2 - tipSize)} ${fmt(tipX + tipSize * 0.9)},${fmt(h / 2)} ${fmt(tipX)},${fmt(h / 2 + tipSize)}`
+      : `${fmt(tipX)},${fmt(h / 2 - tipSize)} ${fmt(tipX - tipSize * 0.9)},${fmt(h / 2)} ${fmt(tipX)},${fmt(h / 2 + tipSize)}`;
+    return `
+      <rect x="${fmt(sx)}" y="${fmt(sy)}" width="${fmt(shaftW)}" height="${fmt(shaftH)}" fill="${palette.fg}" />
+      <polygon points="${pts}" fill="${palette.accent}" />`;
   };
 
-  if (relevant.length > 0 && rng() > 0.16) {
-    add(relevant[Math.floor(rng() * relevant.length)] ?? "signal");
+  const makeVert = (dir: number) => {
+    const sx = w / 2 - shaftH / 2;
+    const sy = dir > 0 ? h * 0.25 : h * 0.15;
+    const tipY = dir > 0 ? sy + shaftW : sy;
+    const tipSize = w * 0.32;
+    const pts = dir > 0
+      ? `${fmt(w / 2 - tipSize)},${fmt(tipY)} ${fmt(w / 2)},${fmt(tipY + tipSize * 0.9)} ${fmt(w / 2 + tipSize)},${fmt(tipY)}`
+      : `${fmt(w / 2 - tipSize)},${fmt(tipY)} ${fmt(w / 2)},${fmt(tipY - tipSize * 0.9)} ${fmt(w / 2 + tipSize)},${fmt(tipY)}`;
+    return `
+      <rect x="${fmt(sx)}" y="${fmt(sy)}" width="${fmt(shaftH)}" height="${fmt(shaftW)}" fill="${palette.fg}" />
+      <polygon points="${pts}" fill="${palette.accent}" />`;
+  };
+
+  if (orient === 0) elements = makeHoriz(1);
+  else if (orient === 1) elements = makeHoriz(-1);
+  else if (orient === 2) elements = makeVert(-1);
+  else elements = makeVert(1);
+  return elements;
+};
+
+const renderRings = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const elements: string[] = [];
+  const concentric = rng() > 0.5;
+  if (concentric) {
+    const cx = w * (0.3 + rng() * 0.4);
+    const cy = h * (0.3 + rng() * 0.4);
+    const rings = 4 + Math.floor(rng() * 4);
+    for (let i = 0; i < rings; i += 1) {
+      const r = Math.min(w, h) * (0.06 + i * 0.08);
+      const stroke = Math.max(3, w * 0.007);
+      const color = i % 2 === 0 ? palette.fg : palette.accent;
+      elements.push(`<circle cx="${fmt(cx)}" cy="${fmt(cy)}" r="${fmt(r)}" fill="none" stroke="${color}" stroke-width="${fmt(stroke)}" />`);
+    }
   } else {
-    add(motifs[Math.floor(rng() * motifs.length)] ?? "signal");
+    const count = 4 + Math.floor(rng() * 4);
+    for (let i = 0; i < count; i += 1) {
+      const cx = w * (0.1 + rng() * 0.8);
+      const cy = h * (0.1 + rng() * 0.8);
+      const r = Math.min(w, h) * (0.08 + rng() * 0.22);
+      const stroke = Math.max(4, w * 0.008);
+      const color = rng() > 0.3 ? palette.fg : palette.accent;
+      const filled = rng() > 0.75;
+      if (filled) {
+        elements.push(`<circle cx="${fmt(cx)}" cy="${fmt(cy)}" r="${fmt(r)}" fill="${color}" />`);
+      } else {
+        elements.push(`<circle cx="${fmt(cx)}" cy="${fmt(cy)}" r="${fmt(r)}" fill="none" stroke="${color}" stroke-width="${fmt(stroke)}" />`);
+      }
+    }
   }
+  return elements.join("");
+};
 
-  while (chosen.length < maxLayers) {
-    const source = relevant.length > 0 && rng() > 0.52 ? relevant : motifs;
-    add(source[Math.floor(rng() * source.length)] ?? "signal");
+const renderChecker = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const cols = 6 + Math.floor(rng() * 4);
+  const rows = 4 + Math.floor(rng() * 2);
+  const cellW = w / cols;
+  const cellH = h / rows;
+  const rects: string[] = [];
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < cols; col += 1) {
+      if ((row + col) % 2 === 0) continue;
+      const x = col * cellW;
+      const y = row * cellH;
+      const isAccent = rng() > 0.75;
+      rects.push(
+        `<rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(cellW)}" height="${fmt(cellH)}" fill="${isAccent ? palette.accent : palette.fg}" />`
+      );
+    }
   }
-
-  return chosen;
+  return rects.join("");
 };
 
-type AmbientMode = "bubbles" | "streaks" | "dots" | "panels";
-
-const renderAmbientBubbles = (rng: () => number, palette: Palette, width: number, height: number) => {
-  const circles = Array.from({ length: 10 }).map(() => {
-    const cx = toX(0.06 + rng() * 0.88, width);
-    const cy = toY(0.08 + rng() * 0.84, height);
-    const radius = width * (0.03 + rng() * 0.14);
-    const opacity = 0.05 + rng() * 0.12;
-    const color = rng() > 0.5 ? palette.primary : palette.secondary;
-    return `<circle cx="${format(cx)}" cy="${format(cy)}" r="${format(radius)}" fill="${color}" opacity="${format(opacity)}" />`;
-  });
-
-  const arcs = Array.from({ length: 8 }).map(() => {
-    const x = toX(0.1 + rng() * 0.8, width);
-    const y = toY(0.1 + rng() * 0.8, height);
-    const rx = width * (0.07 + rng() * 0.18);
-    const ry = height * (0.05 + rng() * 0.12);
-    const rotation = -50 + rng() * 100;
-    const opacity = 0.08 + rng() * 0.12;
-    return `<ellipse cx="${format(x)}" cy="${format(y)}" rx="${format(rx)}" ry="${format(ry)}" transform="rotate(${format(
-      rotation
-    )} ${format(x)} ${format(y)})" fill="none" stroke="${palette.glow}" stroke-width="${format(
-      1 + rng() * 1.1
-    )}" opacity="${format(opacity)}" />`;
-  });
-
-  return [...circles, ...arcs].join("");
-};
-
-const renderAmbientStreaks = (rng: () => number, palette: Palette, width: number, height: number) => {
-  return Array.from({ length: 20 })
-    .map(() => {
-      const x1 = toX(-0.1 + rng() * 1.2, width);
-      const y1 = toY(rng() * 1.1, height);
-      const length = width * (0.12 + rng() * 0.26);
-      const angle = -45 + rng() * 90;
-      const radians = (angle * Math.PI) / 180;
-      const x2 = x1 + Math.cos(radians) * length;
-      const y2 = y1 + Math.sin(radians) * length;
-      const color = rng() > 0.5 ? palette.primary : palette.secondary;
-      return `<line x1="${format(x1)}" y1="${format(y1)}" x2="${format(x2)}" y2="${format(
-        y2
-      )}" stroke="${color}" stroke-opacity="${format(0.08 + rng() * 0.16)}" stroke-width="${format(
-        0.8 + rng() * 2.1
-      )}" stroke-linecap="round" />`;
-    })
-    .join("");
-};
-
-const renderAmbientDots = (rng: () => number, palette: Palette, width: number, height: number) => {
-  return Array.from({ length: 180 })
-    .map(() => {
-      const cx = toX(rng(), width);
-      const cy = toY(rng(), height);
-      const radius = width * (0.0008 + rng() * 0.0024);
-      const color = rng() > 0.55 ? palette.primary : palette.secondary;
-      return `<circle cx="${format(cx)}" cy="${format(cy)}" r="${format(radius)}" fill="${color}" fill-opacity="${format(
-        0.07 + rng() * 0.22
-      )}" />`;
-    })
-    .join("");
-};
-
-const renderAmbientPanels = (rng: () => number, palette: Palette, width: number, height: number) => {
-  return Array.from({ length: 18 })
-    .map(() => {
-      const panelWidth = width * (0.05 + rng() * 0.2);
-      const panelHeight = height * (0.05 + rng() * 0.24);
-      const x = toX(-0.05 + rng() * 1.05, width);
-      const y = toY(-0.05 + rng() * 1.05, height);
-      const rotation = -22 + rng() * 44;
-      const color = rng() > 0.5 ? palette.primary : palette.secondary;
-      return `<rect x="${format(x)}" y="${format(y)}" width="${format(panelWidth)}" height="${format(
-        panelHeight
-      )}" rx="${format(8 + rng() * 18)}" transform="rotate(${format(rotation)} ${format(x)} ${format(
-        y
-      )})" fill="${color}" fill-opacity="${format(0.06 + rng() * 0.14)}" />`;
-    })
-    .join("");
-};
-
-const renderAmbientShapes = (rng: () => number, palette: Palette, width: number, height: number) => {
-  const modes: AmbientMode[] = ["bubbles", "streaks", "dots", "panels"];
-  const first = modes[Math.floor(rng() * modes.length)] ?? "bubbles";
-  const secondPool = modes.filter((mode) => mode !== first);
-  const second = rng() > 0.45 ? secondPool[Math.floor(rng() * secondPool.length)] : undefined;
-
-  const renderByMode = (mode: AmbientMode) => {
-    if (mode === "bubbles") return renderAmbientBubbles(rng, palette, width, height);
-    if (mode === "streaks") return renderAmbientStreaks(rng, palette, width, height);
-    if (mode === "dots") return renderAmbientDots(rng, palette, width, height);
-    return renderAmbientPanels(rng, palette, width, height);
-  };
-
-  return `${renderByMode(first)}${second ? renderByMode(second) : ""}`;
-};
-
-const renderNodes = (rng: () => number, palette: Palette, width: number, height: number) => {
-  const points = Array.from({ length: 12 }).map(() => ({
-    x: toX(0.1 + rng() * 0.8, width),
-    y: toY(0.16 + rng() * 0.68, height),
-    r: width * (0.0025 + rng() * 0.0055),
-  }));
-
-  const lines: string[] = [];
-  for (let i = 0; i < points.length - 1; i += 1) {
-    const current = points[i];
-    const next = points[i + 1];
-    lines.push(
-      `<line x1="${format(current.x)}" y1="${format(current.y)}" x2="${format(next.x)}" y2="${format(
-        next.y
-      )}" stroke="${palette.secondary}" stroke-opacity="${format(0.24 + rng() * 0.22)}" stroke-width="${format(
-        1 + rng() * 1.5
-      )}" />`
+const renderBars = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const count = 5 + Math.floor(rng() * 6);
+  const pad = w * 0.08;
+  const areaW = w - pad * 2;
+  const barW = (areaW / count) * 0.7;
+  const gap = (areaW - barW * count) / (count - 1);
+  const baseY = h * 0.88;
+  const maxBarH = h * 0.72;
+  const accentIdx = Math.floor(rng() * count);
+  const bars: string[] = [];
+  for (let i = 0; i < count; i += 1) {
+    const barH = maxBarH * (0.2 + rng() * 0.8);
+    const x = pad + i * (barW + gap);
+    const y = baseY - barH;
+    bars.push(
+      `<rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(barW)}" height="${fmt(barH)}" fill="${i === accentIdx ? palette.accent : palette.fg}" />`
     );
   }
-
-  const extraLinks = Array.from({ length: 8 }).map(() => {
-    const a = points[Math.floor(rng() * points.length)];
-    const b = points[Math.floor(rng() * points.length)];
-    return `<line x1="${format(a.x)}" y1="${format(a.y)}" x2="${format(b.x)}" y2="${format(
-      b.y
-    )}" stroke="${palette.primary}" stroke-opacity="${format(0.1 + rng() * 0.15)}" stroke-width="${format(
-      0.9 + rng() * 0.8
-    )}" />`;
-  });
-
-  const nodes = points.map(
-    (point) =>
-      `<circle cx="${format(point.x)}" cy="${format(point.y)}" r="${format(point.r)}" fill="${palette.primary}" fill-opacity="${format(
-        0.34 + rng() * 0.28
-      )}" />`
+  bars.push(
+    `<line x1="${fmt(pad)}" y1="${fmt(baseY)}" x2="${fmt(pad + areaW)}" y2="${fmt(baseY)}" stroke="${palette.fg}" stroke-width="${fmt(Math.max(4, w * 0.006))}" />`
   );
-
-  return [...lines, ...extraLinks, ...nodes].join("");
+  return bars.join("");
 };
 
-const renderRise = (rng: () => number, palette: Palette, width: number, height: number) => {
-  let x = toX(0.1, width);
-  const bars = Array.from({ length: 8 }).map((_, index) => {
-    const barWidth = width * (0.045 + rng() * 0.02);
-    const barHeight = height * (0.16 + index * 0.052 + rng() * 0.06);
-    const y = height - barHeight - height * 0.03;
-    const radius = 12 + rng() * 12;
-    const bar = `<rect x="${format(x)}" y="${format(y)}" width="${format(barWidth)}" height="${format(
-      barHeight
-    )}" rx="${format(radius)}" fill="${palette.secondary}" fill-opacity="${format(0.12 + rng() * 0.14)}" />`;
-    x += barWidth + width * (0.015 + rng() * 0.01);
-    return bar;
-  });
-
-  const points = Array.from({ length: 7 }).map((_, index) => ({
-    x: toX(0.12 + index * 0.125 + rng() * 0.02, width),
-    y: toY(0.76 - index * 0.09 + (rng() * 0.04 - 0.02), height),
-  }));
-  const path = points
-    .map((point, index) => `${index === 0 ? "M" : "L"} ${format(point.x)} ${format(point.y)}`)
-    .join(" ");
-  const arrow = points[points.length - 1];
-
-  return `
-    ${bars.join("")}
-    <path d="${path}" fill="none" stroke="${palette.primary}" stroke-width="${format(
-      2.6 + rng() * 1.6
-    )}" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.86" />
-    <path d="M ${format(arrow.x - width * 0.028)} ${format(arrow.y + height * 0.014)} L ${format(
-      arrow.x
-    )} ${format(arrow.y)} L ${format(arrow.x - width * 0.012)} ${format(
-      arrow.y + height * 0.034
-    )}" fill="none" stroke="${palette.primary}" stroke-width="${format(
-      2.6 + rng() * 1.3
-    )}" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.86" />
-  `.trim();
-};
-
-const renderBlocks = (rng: () => number, palette: Palette, width: number, height: number) => {
-  const columns = 4;
-  const rows = 4;
-  const blocks = Array.from({ length: columns * rows }).map((_, index) => {
-    const col = index % columns;
-    const row = Math.floor(index / columns);
-    const blockWidth = width * (0.11 + rng() * 0.08);
-    const blockHeight = height * (0.08 + rng() * 0.06);
-    const x = width * (0.08 + col * 0.22 + rng() * 0.018);
-    const y = height * (0.14 + row * 0.19 + rng() * 0.015);
-    const color = rng() > 0.45 ? palette.primary : palette.secondary;
-    const opacity = 0.1 + rng() * 0.2;
-    return `<rect x="${format(x)}" y="${format(y)}" width="${format(blockWidth)}" height="${format(
-      blockHeight
-    )}" rx="${format(14 + rng() * 12)}" fill="${color}" fill-opacity="${format(opacity)}" stroke="#ffffff" stroke-opacity="0.08" />`;
-  });
-
-  const rails = Array.from({ length: 7 }).map(() => {
-    const y = toY(0.12 + rng() * 0.78, height);
-    return `<line x1="${format(toX(0.06, width))}" y1="${format(y)}" x2="${format(
-      toX(0.94, width)
-    )}" y2="${format(y)}" stroke="${palette.secondary}" stroke-opacity="0.14" stroke-width="1" />`;
-  });
-
-  return [...rails, ...blocks].join("");
-};
-
-const renderOrbits = (rng: () => number, palette: Palette, width: number, height: number) => {
-  const centerX = toX(0.5 + (rng() * 0.08 - 0.04), width);
-  const centerY = toY(0.5 + (rng() * 0.08 - 0.04), height);
-
-  const rings = Array.from({ length: 6 }).map((_, index) => {
-    const rx = width * (0.09 + index * 0.056 + rng() * 0.014);
-    const ry = height * (0.08 + index * 0.04 + rng() * 0.014);
-    const rotation = -32 + index * 12 + rng() * 10;
-    return `<ellipse cx="${format(centerX)}" cy="${format(centerY)}" rx="${format(rx)}" ry="${format(
-      ry
-    )}" transform="rotate(${format(rotation)} ${format(centerX)} ${format(
-      centerY
-    )})" fill="none" stroke="${palette.primary}" stroke-opacity="${format(
-      0.13 + index * 0.07
-    )}" stroke-width="${format(1.3 + rng() * 0.8)}" />`;
-  });
-
-  const satellites = Array.from({ length: 14 }).map(() => {
-    const angle = rng() * Math.PI * 2;
-    const radiusX = width * (0.06 + rng() * 0.32);
-    const radiusY = height * (0.05 + rng() * 0.22);
-    const x = centerX + Math.cos(angle) * radiusX;
-    const y = centerY + Math.sin(angle) * radiusY;
-    const r = width * (0.003 + rng() * 0.006);
-    return `<circle cx="${format(x)}" cy="${format(y)}" r="${format(r)}" fill="${palette.secondary}" fill-opacity="${format(
-      0.42 + rng() * 0.36
-    )}" />`;
-  });
-
-  return [...rings, ...satellites].join("");
-};
-
-const renderSignal = (rng: () => number, palette: Palette, width: number, height: number) => {
-  const makePath = (offset: number, amplitude: number, phase: number) => {
-    const steps = 14;
-    const points: string[] = [];
-    for (let i = 0; i <= steps; i += 1) {
-      const x = toX(0.06 + (0.88 / steps) * i, width);
-      const y =
-        toY(offset, height) +
-        Math.sin(i * 0.72 + phase) * height * amplitude +
-        (rng() * height * 0.025 - height * 0.0125);
-      points.push(`${i === 0 ? "M" : "L"} ${format(x)} ${format(y)}`);
-    }
-    return points.join(" ");
-  };
-
-  const waves = [
-    { offset: 0.28, amplitude: 0.05, width: 2.2, opacity: 0.36, color: palette.primary },
-    { offset: 0.4, amplitude: 0.07, width: 2.7, opacity: 0.44, color: palette.secondary },
-    { offset: 0.54, amplitude: 0.08, width: 2.2, opacity: 0.3, color: palette.primary },
-    { offset: 0.68, amplitude: 0.06, width: 1.8, opacity: 0.25, color: palette.secondary },
-  ];
-
-  const signals = waves.map((wave) => {
-    const phase = rng() * 1.2;
-    return `<path d="${makePath(wave.offset, wave.amplitude, phase)}" fill="none" stroke="${
-      wave.color
-    }" stroke-width="${wave.width}" stroke-opacity="${wave.opacity}" stroke-linecap="round" />`;
-  });
-
-  const pulses = Array.from({ length: 10 }).map(() => {
-    const cx = toX(0.08 + rng() * 0.84, width);
-    const cy = toY(0.14 + rng() * 0.7, height);
-    const radius = width * (0.015 + rng() * 0.03);
-    return `<circle cx="${format(cx)}" cy="${format(cy)}" r="${format(radius)}" fill="none" stroke="${
-      palette.glow
-    }" stroke-width="1.1" stroke-opacity="${format(0.1 + rng() * 0.2)}" />`;
-  });
-
-  return [...signals, ...pulses].join("");
-};
-
-const renderShards = (rng: () => number, palette: Palette, width: number, height: number) => {
-  return Array.from({ length: 16 })
-    .map(() => {
-      const x1 = toX(0.06 + rng() * 0.88, width);
-      const y1 = toY(0.06 + rng() * 0.88, height);
-      const x2 = x1 + width * (0.03 + rng() * 0.1);
-      const y2 = y1 + height * (0.02 + rng() * 0.12);
-      const x3 = x1 + width * (-0.02 + rng() * 0.08);
-      const y3 = y1 + height * (0.06 + rng() * 0.1);
-      const color = rng() > 0.4 ? palette.primary : palette.secondary;
-      return `<polygon points="${format(x1)},${format(y1)} ${format(x2)},${format(y2)} ${format(x3)},${format(
-        y3
-      )}" fill="${color}" fill-opacity="${format(0.12 + rng() * 0.22)}" />`;
-    })
-    .join("");
-};
-
-const renderRings = (rng: () => number, palette: Palette, width: number, height: number) => {
-  return Array.from({ length: 11 })
-    .map(() => {
-      const cx = toX(0.1 + rng() * 0.8, width);
-      const cy = toY(0.14 + rng() * 0.72, height);
-      const outer = width * (0.018 + rng() * 0.07);
-      const inner = outer * (0.35 + rng() * 0.4);
-      return `
-        <circle cx="${format(cx)}" cy="${format(cy)}" r="${format(outer)}" fill="none" stroke="${palette.primary}" stroke-opacity="${format(
-          0.16 + rng() * 0.22
-        )}" stroke-width="${format(1.1 + rng() * 1.1)}" />
-        <circle cx="${format(cx)}" cy="${format(cy)}" r="${format(inner)}" fill="${palette.secondary}" fill-opacity="${format(
-          0.08 + rng() * 0.18
-        )}" />
-      `.trim();
-    })
-    .join("");
-};
-
-const renderDunes = (rng: () => number, palette: Palette, width: number, height: number) => {
-  const band = (offset: number, variance: number, opacity: number, color: string) => {
-    const steps = 10;
-    const top: string[] = [];
-    const bottom: string[] = [];
-    for (let i = 0; i <= steps; i += 1) {
-      const x = toX((1 / steps) * i, width);
-      const y = toY(offset + Math.sin(i * 0.55 + rng() * 0.3) * variance, height);
-      top.push(`${i === 0 ? "M" : "L"} ${format(x)} ${format(y)}`);
-    }
-    for (let i = steps; i >= 0; i -= 1) {
-      const x = toX((1 / steps) * i, width);
-      const y = toY(offset + 0.16 + Math.sin(i * 0.45 + rng() * 0.3) * variance, height);
-      bottom.push(`L ${format(x)} ${format(y)}`);
-    }
-    return `<path d="${[...top, ...bottom, "Z"].join(" ")}" fill="${color}" fill-opacity="${format(opacity)}" />`;
-  };
-
-  return [
-    band(0.26, 0.03, 0.14 + rng() * 0.08, palette.primary),
-    band(0.44, 0.03, 0.12 + rng() * 0.08, palette.secondary),
-    band(0.61, 0.028, 0.1 + rng() * 0.07, palette.primary),
-  ].join("");
-};
-
-const renderLattice = (rng: () => number, palette: Palette, width: number, height: number) => {
-  const cols = 9;
-  const rows = 5;
-  const points: Array<{ x: number; y: number }> = [];
-
-  for (let row = 0; row < rows; row += 1) {
-    for (let col = 0; col < cols; col += 1) {
-      points.push({
-        x: toX(0.12 + col * 0.095 + (rng() * 0.02 - 0.01), width),
-        y: toY(0.2 + row * 0.14 + (rng() * 0.018 - 0.009), height),
-      });
-    }
-  }
-
+const renderBurst = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const corners = [[0, 0], [w, 0], [0, h], [w, h], [w / 2, h / 2]];
+  const [cx, cy] = corners[Math.floor(rng() * corners.length)];
+  const rays = 14 + Math.floor(rng() * 8);
+  const maxLen = Math.sqrt(w * w + h * h) * 1.2;
   const lines: string[] = [];
-  for (let row = 0; row < rows; row += 1) {
-    for (let col = 0; col < cols; col += 1) {
-      const idx = row * cols + col;
-      const current = points[idx];
-      if (col < cols - 1) {
-        const right = points[idx + 1];
-        lines.push(
-          `<line x1="${format(current.x)}" y1="${format(current.y)}" x2="${format(right.x)}" y2="${format(
-            right.y
-          )}" stroke="${palette.primary}" stroke-opacity="${format(0.14 + rng() * 0.16)}" stroke-width="1" />`
-        );
-      }
-      if (row < rows - 1) {
-        const down = points[idx + cols];
-        lines.push(
-          `<line x1="${format(current.x)}" y1="${format(current.y)}" x2="${format(down.x)}" y2="${format(
-            down.y
-          )}" stroke="${palette.secondary}" stroke-opacity="${format(0.11 + rng() * 0.18)}" stroke-width="1" />`
-        );
-      }
+  const startAngle = rng() * Math.PI;
+  const spread = cx === w / 2 && cy === h / 2 ? Math.PI * 2 : Math.PI;
+  for (let i = 0; i < rays; i += 1) {
+    const angle = startAngle + (spread * i) / rays;
+    const x2 = cx + Math.cos(angle) * maxLen;
+    const y2 = cy + Math.sin(angle) * maxLen;
+    const isAccent = i % 3 === 0;
+    const strokeW = isAccent ? w * 0.014 : w * 0.006;
+    lines.push(
+      `<line x1="${fmt(cx)}" y1="${fmt(cy)}" x2="${fmt(x2)}" y2="${fmt(y2)}" stroke="${isAccent ? palette.accent : palette.fg}" stroke-width="${fmt(strokeW)}" />`
+    );
+  }
+  return lines.join("");
+};
+
+const renderMono = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const symbols = ["§", "◼", "●", "▲", "◆", "▪", "/", "×", "+", "#", "★", "◯", "∎"];
+  const char = symbols[Math.floor(rng() * symbols.length)];
+  const num = String(Math.floor(rng() * 99)).padStart(2, "0");
+  return `
+    <text x="${fmt(w * 0.08)}" y="${fmt(h * 0.85)}" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="${fmt(h * 0.85)}" fill="${palette.fg}" letter-spacing="-8">${num}</text>
+    <text x="${fmt(w * 0.68)}" y="${fmt(h * 0.88)}" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="${fmt(h * 0.82)}" fill="${palette.accent}">${char}</text>
+  `;
+};
+
+const renderBarcode = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const pad = w * 0.06;
+  const area = w - pad * 2;
+  const lines: string[] = [];
+  let x = pad;
+  while (x < w - pad) {
+    const barW = area * (0.005 + rng() * 0.025);
+    const gap = area * (0.004 + rng() * 0.014);
+    const isAccent = rng() > 0.82;
+    const topPad = h * (0.08 + rng() * 0.08);
+    const bottomPad = h * (0.08 + rng() * 0.08);
+    lines.push(
+      `<rect x="${fmt(x)}" y="${fmt(topPad)}" width="${fmt(barW)}" height="${fmt(h - topPad - bottomPad)}" fill="${isAccent ? palette.accent : palette.fg}" />`
+    );
+    x += barW + gap;
+  }
+  return lines.join("");
+};
+
+const renderCorners = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const size = Math.min(w, h) * (0.25 + rng() * 0.15);
+  const thick = Math.max(8, w * 0.015);
+  const c = palette.fg;
+  const a = palette.accent;
+  const corners = [
+    { x: 0, y: 0, hx: size, hy: thick, vx: thick, vy: size, c: c },
+    { x: w - size, y: 0, hx: size, hy: thick, vx: w - thick, vy: size, c: rng() > 0.5 ? a : c },
+    { x: 0, y: h - thick, hx: size, hy: thick, vx: thick, vy: h - size, c: rng() > 0.5 ? a : c },
+    { x: w - size, y: h - thick, hx: size, hy: thick, vx: w - thick, vy: h - size, c: c },
+  ];
+  const parts: string[] = [];
+  for (const k of corners) {
+    parts.push(
+      `<rect x="${fmt(k.x)}" y="${fmt(k.y)}" width="${fmt(k.hx)}" height="${fmt(k.hy)}" fill="${k.c}" />`,
+      `<rect x="${fmt(k.vx)}" y="${fmt(k.vy - (k.vy === 0 ? 0 : (k.vy === h - size ? 0 : 0)))}" width="${fmt(thick)}" height="${fmt(size)}" fill="${k.c}" />`
+    );
+  }
+  // center mark
+  const cx = w / 2;
+  const cy = h / 2;
+  const markSize = Math.min(w, h) * 0.08;
+  parts.push(
+    `<rect x="${fmt(cx - markSize / 2)}" y="${fmt(cy - thick / 2)}" width="${fmt(markSize)}" height="${fmt(thick)}" fill="${a}" />`,
+    `<rect x="${fmt(cx - thick / 2)}" y="${fmt(cy - markSize / 2)}" width="${fmt(thick)}" height="${fmt(markSize)}" fill="${a}" />`
+  );
+  return parts.join("");
+};
+
+const renderCoordinates = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const parts: string[] = [];
+  const margin = w * 0.08;
+  const thick = Math.max(3, w * 0.004);
+  // axes
+  parts.push(
+    `<line x1="${fmt(margin)}" y1="${fmt(h - margin)}" x2="${fmt(w - margin)}" y2="${fmt(h - margin)}" stroke="${palette.fg}" stroke-width="${fmt(thick)}" />`,
+    `<line x1="${fmt(margin)}" y1="${fmt(margin)}" x2="${fmt(margin)}" y2="${fmt(h - margin)}" stroke="${palette.fg}" stroke-width="${fmt(thick)}" />`
+  );
+  // ticks
+  const tickCount = 10;
+  for (let i = 0; i <= tickCount; i += 1) {
+    const x = margin + ((w - margin * 2) / tickCount) * i;
+    const y = margin + ((h - margin * 2) / tickCount) * i;
+    parts.push(
+      `<line x1="${fmt(x)}" y1="${fmt(h - margin)}" x2="${fmt(x)}" y2="${fmt(h - margin + 14)}" stroke="${palette.fg}" stroke-width="${fmt(thick)}" />`,
+      `<line x1="${fmt(margin - 14)}" y1="${fmt(y)}" x2="${fmt(margin)}" y2="${fmt(y)}" stroke="${palette.fg}" stroke-width="${fmt(thick)}" />`
+    );
+  }
+  // plot points
+  const pts = 4 + Math.floor(rng() * 4);
+  const plotPts: Array<[number, number]> = [];
+  for (let i = 0; i < pts; i += 1) {
+    const px = margin + rng() * (w - margin * 2);
+    const py = margin + rng() * (h - margin * 2);
+    plotPts.push([px, py]);
+  }
+  // connect with lines
+  for (let i = 0; i < plotPts.length - 1; i += 1) {
+    parts.push(
+      `<line x1="${fmt(plotPts[i][0])}" y1="${fmt(plotPts[i][1])}" x2="${fmt(plotPts[i + 1][0])}" y2="${fmt(plotPts[i + 1][1])}" stroke="${palette.accent}" stroke-width="${fmt(thick * 2)}" />`
+    );
+  }
+  for (const [x, y] of plotPts) {
+    parts.push(`<circle cx="${fmt(x)}" cy="${fmt(y)}" r="${fmt(w * 0.012)}" fill="${palette.accent}" />`);
+  }
+  return parts.join("");
+};
+
+const renderNested = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const count = 5 + Math.floor(rng() * 5);
+  const thick = Math.max(3, w * 0.004);
+  const parts: string[] = [];
+  for (let i = count - 1; i >= 0; i -= 1) {
+    const inset = ((Math.min(w, h) * 0.45) / count) * i + w * 0.05;
+    const color = i === 0 ? palette.accent : i % 2 === 0 ? palette.fg : palette.secondary;
+    parts.push(
+      `<rect x="${fmt(inset)}" y="${fmt(inset * (h / w))}" width="${fmt(w - inset * 2)}" height="${fmt(h - inset * 2 * (h / w))}" fill="none" stroke="${color}" stroke-width="${fmt(thick * (i === 0 ? 2.5 : 1))}" />`
+    );
+  }
+  return parts.join("");
+};
+
+const renderDashed = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const segments = 28 + Math.floor(rng() * 12);
+  const perim = 2 * (w + h);
+  const step = perim / segments;
+  const dashLen = step * (0.55 + rng() * 0.25);
+  const thick = Math.max(6, w * 0.01);
+  const parts: string[] = [];
+  let d = 0;
+  let index = 0;
+  while (d < perim) {
+    const isAccent = index % 4 === 0;
+    const color = isAccent ? palette.accent : palette.fg;
+    // determine which edge & draw dash
+    if (d < w) {
+      parts.push(`<rect x="${fmt(d)}" y="0" width="${fmt(Math.min(dashLen, w - d))}" height="${fmt(thick)}" fill="${color}" />`);
+    } else if (d < w + h) {
+      const y = d - w;
+      parts.push(`<rect x="${fmt(w - thick)}" y="${fmt(y)}" width="${fmt(thick)}" height="${fmt(Math.min(dashLen, h - y))}" fill="${color}" />`);
+    } else if (d < 2 * w + h) {
+      const x = w - (d - (w + h));
+      parts.push(`<rect x="${fmt(x - dashLen)}" y="${fmt(h - thick)}" width="${fmt(Math.min(dashLen, x))}" height="${fmt(thick)}" fill="${color}" />`);
+    } else {
+      const y = h - (d - (2 * w + h));
+      parts.push(`<rect x="0" y="${fmt(y - dashLen)}" width="${fmt(thick)}" height="${fmt(Math.min(dashLen, y))}" fill="${color}" />`);
+    }
+    d += step;
+    index += 1;
+  }
+  // central giant dot
+  parts.push(`<circle cx="${fmt(w / 2)}" cy="${fmt(h / 2)}" r="${fmt(Math.min(w, h) * 0.12)}" fill="${palette.accent}" />`);
+  return parts.join("");
+};
+
+const renderZigzag = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const rows = 4 + Math.floor(rng() * 4);
+  const segments = 8 + Math.floor(rng() * 4);
+  const thick = Math.max(3, w * 0.005);
+  const parts: string[] = [];
+  for (let r = 0; r < rows; r += 1) {
+    const baseY = h * (0.1 + r * (0.8 / rows));
+    const amp = h * 0.04;
+    const points: string[] = [];
+    for (let i = 0; i <= segments; i += 1) {
+      const x = (w / segments) * i;
+      const y = baseY + (i % 2 === 0 ? -amp : amp);
+      points.push(`${i === 0 ? "M" : "L"} ${fmt(x)} ${fmt(y)}`);
+    }
+    const color = r % 2 === 0 ? palette.fg : palette.accent;
+    parts.push(`<path d="${points.join(" ")}" fill="none" stroke="${color}" stroke-width="${fmt(thick)}" />`);
+  }
+  return parts.join("");
+};
+
+const renderIso = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const size = Math.min(w, h) * 0.13;
+  const cols = Math.ceil(w / (size * 1.7)) + 1;
+  const rows = Math.ceil(h / (size * 0.95)) + 1;
+  const parts: string[] = [];
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      if (rng() > 0.55) continue;
+      const cx = c * size * 1.7 + (r % 2 === 1 ? size * 0.85 : 0);
+      const cy = r * size * 0.95;
+      // isometric cube: three rhombi
+      const topPts = `${fmt(cx)},${fmt(cy - size)} ${fmt(cx + size * 0.87)},${fmt(cy - size * 0.5)} ${fmt(cx)},${fmt(cy)} ${fmt(cx - size * 0.87)},${fmt(cy - size * 0.5)}`;
+      const rightPts = `${fmt(cx)},${fmt(cy)} ${fmt(cx + size * 0.87)},${fmt(cy - size * 0.5)} ${fmt(cx + size * 0.87)},${fmt(cy + size * 0.5)} ${fmt(cx)},${fmt(cy + size)}`;
+      const leftPts = `${fmt(cx)},${fmt(cy)} ${fmt(cx - size * 0.87)},${fmt(cy - size * 0.5)} ${fmt(cx - size * 0.87)},${fmt(cy + size * 0.5)} ${fmt(cx)},${fmt(cy + size)}`;
+      const useAccent = rng() > 0.7;
+      parts.push(
+        `<polygon points="${topPts}" fill="${useAccent ? palette.accent : palette.fg}" />`,
+        `<polygon points="${rightPts}" fill="${palette.secondary}" />`,
+        `<polygon points="${leftPts}" fill="${palette.fg}" opacity="0.6" />`
+      );
     }
   }
+  return parts.join("");
+};
 
-  const nodes = points.map(
-    (point) =>
-      `<circle cx="${format(point.x)}" cy="${format(point.y)}" r="${format(
-        width * (0.0018 + rng() * 0.0026)
-      )}" fill="${palette.glow}" fill-opacity="${format(0.34 + rng() * 0.4)}" />`
+const renderLetter = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const letters = ["A", "B", "E", "K", "M", "N", "Q", "R", "S", "T", "X", "Z", "&", "?", "!"];
+  const char = letters[Math.floor(rng() * letters.length)];
+  const size = h * 1.05;
+  const x = w * (0.05 + rng() * 0.1);
+  return `
+    <text x="${fmt(x)}" y="${fmt(h * 0.92)}" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="${fmt(size)}" fill="${palette.fg}" letter-spacing="-10">${char}</text>
+    <rect x="${fmt(w * 0.55)}" y="${fmt(h * 0.15)}" width="${fmt(w * 0.35)}" height="${fmt(h * 0.12)}" fill="${palette.accent}" />
+    <rect x="${fmt(w * 0.55)}" y="${fmt(h * 0.72)}" width="${fmt(w * 0.25)}" height="${fmt(h * 0.08)}" fill="${palette.fg}" />
+  `;
+};
+
+const renderDotline = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const rows = 5 + Math.floor(rng() * 4);
+  const cols = 10 + Math.floor(rng() * 8);
+  const padY = h * 0.1;
+  const padX = w * 0.06;
+  const spaceX = (w - padX * 2) / (cols - 1);
+  const spaceY = (h - padY * 2) / (rows - 1);
+  const parts: string[] = [];
+  for (let r = 0; r < rows; r += 1) {
+    for (let c = 0; c < cols; c += 1) {
+      const cx = padX + c * spaceX;
+      const cy = padY + r * spaceY;
+      const useAccent = rng() > 0.85;
+      const radius = Math.min(spaceX, spaceY) * (0.18 + rng() * 0.14);
+      parts.push(`<circle cx="${fmt(cx)}" cy="${fmt(cy)}" r="${fmt(radius)}" fill="${useAccent ? palette.accent : palette.fg}" />`);
+    }
+  }
+  return parts.join("");
+};
+
+const renderBigX = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const thick = Math.min(w, h) * 0.1;
+  const pad = w * 0.1;
+  void rng;
+  return `
+    <line x1="${fmt(pad)}" y1="${fmt(pad * (h / w))}" x2="${fmt(w - pad)}" y2="${fmt(h - pad * (h / w))}" stroke="${palette.fg}" stroke-width="${fmt(thick)}" stroke-linecap="square" />
+    <line x1="${fmt(w - pad)}" y1="${fmt(pad * (h / w))}" x2="${fmt(pad)}" y2="${fmt(h - pad * (h / w))}" stroke="${palette.accent}" stroke-width="${fmt(thick)}" stroke-linecap="square" />
+    <circle cx="${fmt(w / 2)}" cy="${fmt(h / 2)}" r="${fmt(Math.min(w, h) * 0.1)}" fill="${palette.fg}" />
+  `;
+};
+
+const renderDiamond = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const cx = w / 2;
+  const cy = h / 2;
+  const maxR = Math.min(w, h) * 0.42;
+  const count = 4 + Math.floor(rng() * 3);
+  const parts: string[] = [];
+  for (let i = count - 1; i >= 0; i -= 1) {
+    const r = (maxR / count) * (i + 1);
+    const pts = `${fmt(cx)},${fmt(cy - r)} ${fmt(cx + r)},${fmt(cy)} ${fmt(cx)},${fmt(cy + r)} ${fmt(cx - r)},${fmt(cy)}`;
+    const color = i % 2 === 0 ? palette.fg : palette.accent;
+    parts.push(`<polygon points="${pts}" fill="${color}" />`);
+  }
+  return parts.join("");
+};
+
+const renderTags = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const tagLabels = ["INDEX", "LOG", "BETA", "DRAFT", "BUILD", "SHIP", "NOTE", "DATA", "v01", "2026", "§§", "READ"];
+  const count = 4 + Math.floor(rng() * 3);
+  const parts: string[] = [];
+  const shuffled = [...tagLabels].sort(() => rng() - 0.5).slice(0, count);
+  let y = h * 0.15;
+  for (let i = 0; i < shuffled.length; i += 1) {
+    const label = shuffled[i];
+    const x = w * (0.08 + rng() * 0.15);
+    const width = label.length * h * 0.065 + h * 0.1;
+    const isAccent = i === 0;
+    const height = h * 0.12;
+    parts.push(
+      `<rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(width)}" height="${fmt(height)}" fill="${isAccent ? palette.accent : palette.bg}" stroke="${palette.fg}" stroke-width="${fmt(Math.max(3, w * 0.004))}" />`,
+      `<text x="${fmt(x + height * 0.4)}" y="${fmt(y + height * 0.72)}" font-family="JetBrains Mono, monospace" font-weight="700" font-size="${fmt(height * 0.55)}" fill="${isAccent ? palette.bg : palette.fg}" letter-spacing="2">${label}</text>`
+    );
+    y += height + h * 0.04;
+  }
+  return parts.join("");
+};
+
+const renderScanlines = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const count = 16 + Math.floor(rng() * 14);
+  const thick = h / count * 0.45;
+  const parts: string[] = [];
+  for (let i = 0; i < count; i += 1) {
+    const y = (h / count) * i;
+    const color = i % 5 === 0 ? palette.accent : palette.fg;
+    parts.push(`<rect x="0" y="${fmt(y)}" width="${fmt(w)}" height="${fmt(thick)}" fill="${color}" />`);
+  }
+  // a horizontal bar / marker
+  const markerY = h * (0.3 + rng() * 0.4);
+  parts.push(`<rect x="0" y="${fmt(markerY)}" width="${fmt(w)}" height="${fmt(h * 0.06)}" fill="${palette.accent}" />`);
+  return parts.join("");
+};
+
+const renderStamp = (rng: () => number, palette: Palette, w: number, h: number) => {
+  const cx = w * (0.3 + rng() * 0.4);
+  const cy = h * (0.4 + rng() * 0.2);
+  const r = Math.min(w, h) * 0.34;
+  const thick = Math.max(6, w * 0.012);
+  const words = ["ORIGINAL", "CERTIFIED", "APPROVED", "VOID", "DRAFT", "BUILD-LOG", "NEARBYCODER"];
+  const word = words[Math.floor(rng() * words.length)];
+  const parts: string[] = [
+    `<circle cx="${fmt(cx)}" cy="${fmt(cy)}" r="${fmt(r)}" fill="none" stroke="${palette.accent}" stroke-width="${fmt(thick)}" />`,
+    `<circle cx="${fmt(cx)}" cy="${fmt(cy)}" r="${fmt(r * 0.78)}" fill="none" stroke="${palette.accent}" stroke-width="${fmt(thick * 0.6)}" />`,
+  ];
+  // middle text
+  parts.push(
+    `<text x="${fmt(cx)}" y="${fmt(cy + h * 0.03)}" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="${fmt(r * 0.5)}" fill="${palette.accent}" text-anchor="middle" letter-spacing="2">${word}</text>`,
+    `<text x="${fmt(cx)}" y="${fmt(cy + r * 0.55)}" font-family="JetBrains Mono, monospace" font-weight="500" font-size="${fmt(r * 0.18)}" fill="${palette.fg}" text-anchor="middle" letter-spacing="4">${new Date().getFullYear()}</text>`
   );
-
-  return [...lines, ...nodes].join("");
+  // stray slash line
+  const angle = rng() * Math.PI;
+  const x1 = cx + Math.cos(angle) * r * 1.3;
+  const y1 = cy + Math.sin(angle) * r * 1.3;
+  const x2 = cx - Math.cos(angle) * r * 1.3;
+  const y2 = cy - Math.sin(angle) * r * 1.3;
+  parts.push(
+    `<line x1="${fmt(x1)}" y1="${fmt(y1)}" x2="${fmt(x2)}" y2="${fmt(y2)}" stroke="${palette.accent}" stroke-width="${fmt(thick * 0.5)}" opacity="0.8" />`
+  );
+  return parts.join("");
 };
 
-const renderPulse = (rng: () => number, palette: Palette, width: number, height: number) => {
-  const centerX = toX(0.5 + (rng() * 0.06 - 0.03), width);
-  const centerY = toY(0.54 + (rng() * 0.06 - 0.03), height);
-
-  const rings = Array.from({ length: 8 }).map((_, index) => {
-    const radius = width * (0.03 + index * 0.032 + rng() * 0.008);
-    return `<circle cx="${format(centerX)}" cy="${format(centerY)}" r="${format(radius)}" fill="none" stroke="${
-      index % 2 === 0 ? palette.primary : palette.secondary
-    }" stroke-opacity="${format(0.08 + (8 - index) * 0.03)}" stroke-width="${format(
-      1 + rng() * 1.2
-    )}" />`;
-  });
-
-  const rays = Array.from({ length: 16 }).map(() => {
-    const angle = rng() * Math.PI * 2;
-    const inner = width * (0.04 + rng() * 0.08);
-    const outer = width * (0.14 + rng() * 0.22);
-    const x1 = centerX + Math.cos(angle) * inner;
-    const y1 = centerY + Math.sin(angle) * inner;
-    const x2 = centerX + Math.cos(angle) * outer;
-    const y2 = centerY + Math.sin(angle) * outer;
-    return `<line x1="${format(x1)}" y1="${format(y1)}" x2="${format(x2)}" y2="${format(
-      y2
-    )}" stroke="${palette.glow}" stroke-opacity="${format(0.1 + rng() * 0.2)}" stroke-width="${format(
-      1 + rng() * 1.6
-    )}" />`;
-  });
-
-  return [...rings, ...rays].join("");
-};
-
-const renderMotif = (
-  motif: Motif,
-  rng: () => number,
-  palette: Palette,
-  width: number,
-  height: number
-) => {
-  if (motif === "nodes") return renderNodes(rng, palette, width, height);
-  if (motif === "rise") return renderRise(rng, palette, width, height);
-  if (motif === "blocks") return renderBlocks(rng, palette, width, height);
-  if (motif === "orbits") return renderOrbits(rng, palette, width, height);
-  if (motif === "signal") return renderSignal(rng, palette, width, height);
-  if (motif === "shards") return renderShards(rng, palette, width, height);
-  if (motif === "rings") return renderRings(rng, palette, width, height);
-  if (motif === "dunes") return renderDunes(rng, palette, width, height);
-  if (motif === "lattice") return renderLattice(rng, palette, width, height);
-  return renderPulse(rng, palette, width, height);
-};
-
-type LayerLayout = "free" | "top-band" | "diagonal" | "center-focus";
-
-const renderTransformedLayer = (
-  content: string,
-  rng: () => number,
-  width: number,
-  height: number,
-  opacity: number,
-  clipId?: string
-) => {
-  const tx = width * (rng() * 0.1 - 0.05);
-  const ty = height * (rng() * 0.1 - 0.05);
-  const rotation = rng() * 24 - 12;
-  const scale = 0.9 + rng() * 0.25;
-  const cx = width / 2;
-  const cy = height / 2;
-  return `<g opacity="${format(opacity)}" ${
-    clipId ? `clip-path="url(#${clipId})"` : ""
-  } transform="translate(${format(tx)} ${format(ty)}) translate(${format(cx)} ${format(
-    cy
-  )}) rotate(${format(rotation)}) scale(${format(scale)} ${format(scale)}) translate(${format(
-    -cx
-  )} ${format(-cy)})">${content}</g>`;
+const renderMotif = (motif: Motif, rng: () => number, palette: Palette, w: number, h: number) => {
+  switch (motif) {
+    case "stripes": return renderStripes(rng, palette, w, h);
+    case "halftone": return renderHalftone(rng, palette, w, h);
+    case "grid": return renderGrid(rng, palette, w, h);
+    case "target": return renderTarget(rng, palette, w, h);
+    case "arrow": return renderArrow(rng, palette, w, h);
+    case "rings": return renderRings(rng, palette, w, h);
+    case "checker": return renderChecker(rng, palette, w, h);
+    case "bars": return renderBars(rng, palette, w, h);
+    case "burst": return renderBurst(rng, palette, w, h);
+    case "mono": return renderMono(rng, palette, w, h);
+    case "barcode": return renderBarcode(rng, palette, w, h);
+    case "corners": return renderCorners(rng, palette, w, h);
+    case "coordinates": return renderCoordinates(rng, palette, w, h);
+    case "nested": return renderNested(rng, palette, w, h);
+    case "dashed": return renderDashed(rng, palette, w, h);
+    case "zigzag": return renderZigzag(rng, palette, w, h);
+    case "iso": return renderIso(rng, palette, w, h);
+    case "letter": return renderLetter(rng, palette, w, h);
+    case "dotline": return renderDotline(rng, palette, w, h);
+    case "bigX": return renderBigX(rng, palette, w, h);
+    case "diamond": return renderDiamond(rng, palette, w, h);
+    case "tags": return renderTags(rng, palette, w, h);
+    case "scanlines": return renderScanlines(rng, palette, w, h);
+    case "stamp": return renderStamp(rng, palette, w, h);
+  }
 };
 
 type RenderCardArtInput = {
@@ -623,136 +681,82 @@ type RenderCardArtInput = {
   height?: number;
 };
 
+// Motif family groups — motifs within the same group shouldn't co-occur.
+const familyOf = (motif: Motif): string => {
+  if (motif === "rings" || motif === "target" || motif === "diamond" || motif === "stamp") return "circular";
+  if (motif === "stripes" || motif === "scanlines" || motif === "barcode") return "linear";
+  if (motif === "grid" || motif === "checker" || motif === "dotline") return "grid";
+  if (motif === "mono" || motif === "letter" || motif === "tags") return "type";
+  if (motif === "arrow" || motif === "bigX" || motif === "burst") return "mark";
+  if (motif === "corners" || motif === "dashed" || motif === "nested") return "frame";
+  if (motif === "coordinates" || motif === "bars" || motif === "zigzag") return "chart";
+  return "other";
+};
+
 export const renderCardArtSvg = ({
   slug,
   tags = [],
-  accent = "cyan",
+  accent = "purple",
   width = 1200,
   height = 680,
 }: RenderCardArtInput) => {
-  const palette = paletteMap[accent] ?? paletteMap.cyan;
   const seed = hashString(`${slug}:${tags.join(",")}:${accent}`);
   const rng = createRng(seed);
-  const motifSet = pickMotifSet(slug, tags, rng);
-  const gridSize = Math.round(36 + rng() * 22);
-  const layoutOptions: LayerLayout[] = ["free", "top-band", "diagonal", "center-focus"];
-  const layout = layoutOptions[Math.floor(rng() * layoutOptions.length)] ?? "free";
+  const palette = palettes[Math.floor(rng() * palettes.length)] ?? palettes[0];
 
-  const ambient = renderAmbientShapes(rng, palette, width, height);
-  const primaryLayer = renderMotif(motifSet[0] as Motif, rng, palette, width, height);
-  const secondaryLayer = renderMotif(motifSet[1] as Motif, rng, palette, width, height);
-  const tertiaryLayer = motifSet[2]
-    ? renderMotif(motifSet[2] as Motif, rng, palette, width, height)
-    : "";
-  const quaternaryLayer = motifSet[3]
-    ? renderMotif(motifSet[3] as Motif, rng, palette, width, height)
-    : "";
+  // Pick a primary motif and an optional accent/overlay motif from a different family.
+  const primary = allMotifs[Math.floor(rng() * allMotifs.length)] ?? "grid";
+  const primaryFamily = familyOf(primary);
+  const candidateOverlays = allMotifs.filter((m) => familyOf(m) !== primaryFamily && m !== primary);
+  const shouldOverlay = rng() > 0.55;
+  const overlay = shouldOverlay
+    ? candidateOverlays[Math.floor(rng() * candidateOverlays.length)]
+    : null;
 
-  const secondaryClip =
-    layout === "top-band" ? "clipTopBand" : layout === "diagonal" ? "clipDiagonal" : undefined;
-  const tertiaryClip = layout === "center-focus" ? "clipCenterFocus" : undefined;
-  const quaternaryClip =
-    layout === "free" ? undefined : layout === "top-band" ? "clipLowerBand" : "clipCenterFocus";
+  // Primary layer fills the card
+  const primaryContent = renderMotif(primary, rng, palette, width, height);
 
-  const primaryLayerSvg = renderTransformedLayer(primaryLayer, rng, width, height, 0.52 + rng() * 0.24);
-  const secondaryLayerSvg = renderTransformedLayer(
-    secondaryLayer,
-    rng,
-    width,
-    height,
-    0.32 + rng() * 0.22,
-    secondaryClip
-  );
-  const tertiaryLayerSvg = tertiaryLayer
-    ? renderTransformedLayer(tertiaryLayer, rng, width, height, 0.24 + rng() * 0.18, tertiaryClip)
-    : "";
-  const quaternaryLayerSvg = quaternaryLayer
-    ? renderTransformedLayer(
-        quaternaryLayer,
-        rng,
-        width,
-        height,
-        0.18 + rng() * 0.14,
-        quaternaryClip
-      )
-    : "";
+  // Overlay layer is positioned as a corner panel / mark, not full-bleed
+  let overlayContent = "";
+  if (overlay) {
+    const mode = Math.floor(rng() * 3);
+    const scale = 0.35 + rng() * 0.15;
+    const panelW = width * scale;
+    const panelH = height * scale;
+    const corners = [
+      { x: 0, y: 0 },
+      { x: width - panelW, y: 0 },
+      { x: 0, y: height - panelH },
+      { x: width - panelW, y: height - panelH },
+    ];
+    const spot = corners[Math.floor(rng() * corners.length)];
+    const overlayPalette: Palette =
+      mode === 0
+        ? palette
+        : mode === 1
+          ? { ...palette, bg: palette.fg, fg: palette.bg }
+          : { ...palette, bg: palette.accent, fg: palette.bg, accent: palette.fg };
+    const inner = renderMotif(overlay, rng, overlayPalette, panelW, panelH);
+    const borderW = Math.max(3, width * 0.004);
+    overlayContent = `
+      <g transform="translate(${fmt(spot.x)} ${fmt(spot.y)})">
+        <rect x="0" y="0" width="${fmt(panelW)}" height="${fmt(panelH)}" fill="${overlayPalette.bg}" />
+        ${inner}
+        <rect x="${fmt(borderW / 2)}" y="${fmt(borderW / 2)}" width="${fmt(panelW - borderW)}" height="${fmt(panelH - borderW)}" fill="none" stroke="${palette.fg}" stroke-width="${fmt(borderW)}" />
+      </g>
+    `;
+  }
 
-  const svg = `
-<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="base" x1="${format(width * 0.1)}" y1="${format(height * 0.08)}" x2="${format(
-      width * 0.9
-    )}" y2="${format(height * 0.92)}" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0f1626" />
-      <stop offset="45%" stop-color="#0b121f" />
-      <stop offset="100%" stop-color="#090e16" />
-    </linearGradient>
-    <linearGradient id="accentSweep" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${palette.primary}" stop-opacity="0.4" />
-      <stop offset="50%" stop-color="${palette.secondary}" stop-opacity="0.2" />
-      <stop offset="100%" stop-color="#070b13" stop-opacity="0" />
-    </linearGradient>
-    <radialGradient id="glowA" cx="${format(0.15 + rng() * 0.14)}" cy="${format(
-      0.1 + rng() * 0.1
-    )}" r="0.72">
-      <stop offset="0%" stop-color="${palette.glow}" stop-opacity="0.3" />
-      <stop offset="100%" stop-color="#070b13" stop-opacity="0" />
-    </radialGradient>
-    <radialGradient id="glowB" cx="${format(0.72 + rng() * 0.2)}" cy="${format(
-      0.74 + rng() * 0.18
-    )}" r="0.64">
-      <stop offset="0%" stop-color="${palette.secondary}" stop-opacity="0.22" />
-      <stop offset="100%" stop-color="#070b13" stop-opacity="0" />
-    </radialGradient>
-    <pattern id="grid" width="${gridSize}" height="${gridSize}" patternUnits="userSpaceOnUse">
-      <path d="M ${gridSize} 0 L 0 0 0 ${gridSize}" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1" />
-    </pattern>
-    <clipPath id="clipTopBand">
-      <rect x="0" y="0" width="${width}" height="${format(height * 0.56)}" />
-    </clipPath>
-    <clipPath id="clipLowerBand">
-      <rect x="0" y="${format(height * 0.4)}" width="${width}" height="${format(height * 0.6)}" />
-    </clipPath>
-    <clipPath id="clipDiagonal">
-      <polygon points="0,0 ${width},0 ${width},${format(height * 0.82)} 0,${format(height * 0.58)}" />
-    </clipPath>
-    <clipPath id="clipCenterFocus">
-      <ellipse cx="${format(width * 0.5)}" cy="${format(height * 0.52)}" rx="${format(
-        width * 0.34
-      )}" ry="${format(height * 0.34)}" />
-    </clipPath>
-    <filter id="softBlur" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-      <feGaussianBlur stdDeviation="${format(18 + rng() * 22)}" />
-    </filter>
-  </defs>
+  const borderW = Math.max(3, width * 0.003);
+  const slugTag = slug.slice(0, 16).toUpperCase();
 
-  <rect width="${width}" height="${height}" fill="url(#base)" />
-  <rect width="${width}" height="${height}" fill="url(#grid)" />
-  <rect width="${width}" height="${height}" fill="url(#glowA)" />
-  <rect width="${width}" height="${height}" fill="url(#glowB)" />
-  <rect width="${width}" height="${height}" fill="url(#accentSweep)" />
-
-  <g filter="url(#softBlur)" opacity="${format(0.34 + rng() * 0.24)}">
-    <circle cx="${format(width * (0.12 + rng() * 0.08))}" cy="${format(height * (0.12 + rng() * 0.08))}" r="${format(
-      width * (0.1 + rng() * 0.07)
-    )}" fill="${palette.primary}" />
-    <circle cx="${format(width * (0.8 + rng() * 0.12))}" cy="${format(height * (0.72 + rng() * 0.16))}" r="${format(
-      width * (0.11 + rng() * 0.08)
-    )}" fill="${palette.secondary}" />
-  </g>
-
-  <g opacity="${format(0.68 + rng() * 0.25)}">
-    ${ambient}
-  </g>
-
-  ${secondaryLayerSvg}
-  ${primaryLayerSvg}
-  ${tertiaryLayerSvg}
-  ${quaternaryLayerSvg}
-
-  <rect x="0.5" y="0.5" width="${width - 1}" height="${height - 1}" stroke="rgba(255,255,255,0.08)" />
+  return `
+<svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <rect width="${width}" height="${height}" fill="${palette.bg}" />
+  ${primaryContent}
+  ${overlayContent}
+  <text x="${fmt(width - width * 0.03)}" y="${fmt(height - height * 0.035)}" font-family="JetBrains Mono, monospace" font-weight="500" font-size="${fmt(height * 0.035)}" fill="${palette.fg}" opacity="0.45" text-anchor="end" letter-spacing="3">${slugTag}</text>
+  <rect x="${fmt(borderW / 2)}" y="${fmt(borderW / 2)}" width="${fmt(width - borderW)}" height="${fmt(height - borderW)}" fill="none" stroke="${palette.fg}" stroke-width="${fmt(borderW)}" />
 </svg>
-`;
-
-  return svg.trim();
+  `.trim();
 };

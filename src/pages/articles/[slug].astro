@@ -25,15 +25,23 @@ const { Content } = await render(entry);
   imageAlt={entry.data.title}
 >
   <article class="mx-auto mt-10 max-w-3xl space-y-10">
-    <header class="space-y-4">
-      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Article</p>
-      <h1 class="text-4xl font-semibold text-white md:text-5xl">{entry.data.title}</h1>
-      <p class="text-base text-[color:var(--mist-200)]">{entry.data.description}</p>
-      <div class="flex flex-wrap items-center gap-4 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)]">
-        <span>{entry.data.date}</span>
-        <span class="h-1 w-1 rounded-full bg-white/40"></span>
-        <span>{entry.data.readTime ?? ""}</span>
+    <header class="rule-b-heavy pb-6 space-y-4" style="border-color: var(--border);">
+      <div class="flex items-center gap-3">
+        <a href="/articles" class="nav-link">← Articles</a>
+        <span class="dot dot-accent"></span>
+        <span class="font-mono text-xs uppercase tracking-[0.14em]" style="color: var(--fg-muted);">
+          {entry.data.date}{entry.data.readTime ? ` · ${entry.data.readTime}` : ""}
+        </span>
       </div>
+      <h1 class="display text-4xl md:text-6xl">{entry.data.title}</h1>
+      <p class="text-lg leading-relaxed" style="color: var(--fg-muted);">{entry.data.description}</p>
+      {entry.data.tags && entry.data.tags.length ? (
+        <div class="flex flex-wrap gap-1.5 pt-2">
+          {entry.data.tags.map((tag: string) => (
+            <span class="chip">{tag}</span>
+          ))}
+        </div>
+      ) : null}
     </header>
     <div class="article-content">
       <Content />

@@ -16,51 +16,47 @@ const { Content } = await render(entry);
 
 <BaseLayout title={entry.data.title}>
   <article class="mx-auto mt-10 max-w-3xl space-y-10">
-    <header class="space-y-4">
-      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Project</p>
-      <h1 class="text-4xl font-semibold text-white md:text-5xl">{entry.data.title}</h1>
-      <p class="text-base text-[color:var(--mist-200)]">{entry.data.summary}</p>
-      <div class="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.2em] text-[color:var(--mist-200)] whitespace-nowrap">
-        <span>{entry.data.year}</span>
-        <span class="h-4 w-px bg-white/30"></span>
-        <span>{entry.data.role}</span>
+    <header class="rule-b-heavy pb-6 space-y-4" style="border-color: var(--border);">
+      <div class="flex items-center gap-3">
+        <a href="/projects" class="nav-link">← Projects</a>
+        <span class="dot dot-accent"></span>
+        <span class="font-mono text-xs uppercase tracking-[0.14em]" style="color: var(--fg-muted);">
+          {entry.data.year} · {entry.data.role}
+        </span>
       </div>
+      <h1 class="display text-4xl md:text-6xl">{entry.data.title}</h1>
+      <p class="text-lg leading-relaxed" style="color: var(--fg-muted);">{entry.data.summary}</p>
       {entry.data.link || entry.data.githubLink ? (
         <div class="flex flex-wrap gap-2">
           {entry.data.link ? (
-            <a
-              href={entry.data.link}
-              target="_blank"
-              rel="noreferrer"
-              class="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/15 px-4 py-2 text-xs uppercase tracking-[0.18em] text-white"
-            >
-              Visit project
+            <a href={entry.data.link} target="_blank" rel="noreferrer" class="btn btn-accent">
+              Visit project ↗
             </a>
           ) : null}
           {entry.data.githubLink ? (
-            <a
-              href={entry.data.githubLink}
-              target="_blank"
-              rel="noreferrer"
-              class="inline-flex items-center justify-center rounded-full border border-white/25 px-4 py-2 text-xs uppercase tracking-[0.18em] text-[color:var(--mist-200)] hover:text-white"
-            >
-              View code
+            <a href={entry.data.githubLink} target="_blank" rel="noreferrer" class="btn">
+              View code ↗
             </a>
           ) : null}
         </div>
       ) : null}
     </header>
-    <div class="flex flex-wrap gap-2">
-      {entry.data.stack.map((item: string) => (
-        <span class="chip">{item}</span>
-      ))}
-    </div>
-    {entry.data.impact ? (
-      <div class="card rounded-2xl p-6 text-sm text-[color:var(--mist-200)]">
-        <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Impact</p>
-        <p class="mt-3 text-base text-white">{entry.data.impact}</p>
+
+    {entry.data.stack?.length ? (
+      <div class="flex flex-wrap gap-1.5">
+        {entry.data.stack.map((item: string) => (
+          <span class="chip">{item}</span>
+        ))}
       </div>
     ) : null}
+
+    {entry.data.impact ? (
+      <div class="block-box block-box-shadow p-6">
+        <p class="label-strong">Impact</p>
+        <p class="mt-3 display text-xl md:text-2xl">{entry.data.impact}</p>
+      </div>
+    ) : null}
+
     <div class="article-content">
       <Content />
     </div>

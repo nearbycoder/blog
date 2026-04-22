@@ -12,30 +12,33 @@ const sortedArticles = articles
 ---
 
 <BaseLayout title="Articles">
-  <section class="mt-10 space-y-8">
-    <div class="space-y-4">
-      <p class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">Articles</p>
-      <h1 class="text-4xl font-semibold text-white md:text-5xl">Writing through layoffs, building, and adaptation.</h1>
-      <p class="text-base text-[color:var(--mist-200)]">
+  <section class="mt-12 space-y-8">
+    <header class="rule-b-heavy pb-6 space-y-3" style="border-color: var(--border);">
+      <p class="label-strong">§ Articles / {sortedArticles.length} entries</p>
+      <h1 class="display text-5xl md:text-6xl">
+        Writing through <span class="marker">layoffs</span>,<br />
+        building, and adaptation.
+      </h1>
+      <p class="max-w-2xl text-base leading-relaxed" style="color: var(--fg-muted);">
         Personal notes on job searching, shipping with AI, and rebuilding momentum one project at a time.
       </p>
+    </header>
+
+    <div class="block-box flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center">
+      <label for="article-search" class="label-strong shrink-0">Search /</label>
+      <input
+        id="article-search"
+        type="search"
+        placeholder="Title, tag, or description…"
+        class="w-full bg-transparent font-mono text-base outline-none"
+        style="color: var(--fg);"
+      />
     </div>
-    <div class="card rounded-[24px] p-4 md:p-5">
-      <div class="flex flex-col gap-3 md:flex-row md:items-center">
-        <label for="article-search" class="text-xs uppercase tracking-[0.3em] text-[color:var(--fog-500)]">
-          Search
-        </label>
-        <input
-          id="article-search"
-          type="search"
-          placeholder="Search by title, tag, or description"
-          class="w-full bg-transparent text-base text-white placeholder:text-[color:var(--fog-500)] outline-none"
-        />
-      </div>
-    </div>
-    <p id="articles-empty" class="hidden text-sm text-[color:var(--mist-200)]">
+
+    <p id="articles-empty" class="hidden font-mono text-sm" style="color: var(--fg-muted);">
       No articles match that search.
     </p>
+
     <div id="articles-grid" class="grid gap-6 md:grid-cols-3">
       {sortedArticles.map((entry: any, index: number) => (
         <div
