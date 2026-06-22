@@ -110,21 +110,18 @@ const searchItems = [
     <script is:inline>
       (() => {
         const accents = [
-          { dark: "#a78bfa", light: "#7c3aed", name: "purple" },
-          { dark: "#60a5fa", light: "#2563eb", name: "blue" },
-          { dark: "#f472b6", light: "#db2777", name: "pink" },
-          { dark: "#fb923c", light: "#ea580c", name: "orange" },
-          { dark: "#a3e635", light: "#65a30d", name: "lime" },
-          { dark: "#f87171", light: "#dc2626", name: "red" },
-          { dark: "#facc15", light: "#ca8a04", name: "yellow" },
-          { dark: "#22d3ee", light: "#0891b2", name: "cyan" },
-          { dark: "#fde047", light: "#a16207", name: "gold" },
-          { dark: "#4ade80", light: "#16a34a", name: "green" },
+          { dark: "#5ff0d8", light: "#ff6b4a", second: "#ffcf38", third: "#69d2ff", name: "coral-circuit" },
+          { dark: "#f7ff57", light: "#00a884", second: "#ff7a90", third: "#7cc7ff", name: "mint-marker" },
+          { dark: "#ff8bd1", light: "#1ea7ff", second: "#f8e25b", third: "#92e6a7", name: "blue-sticker" },
+          { dark: "#8ee95d", light: "#ef4e7b", second: "#70d6ff", third: "#ffe45e", name: "raspberry-terminal" },
+          { dark: "#ffd166", light: "#2ec4b6", second: "#ff7f50", third: "#b8f2e6", name: "desk-lamp" },
         ];
         const pick = accents[Math.floor(Math.random() * accents.length)];
         const root = document.documentElement;
         root.style.setProperty("--accent-dark", pick.dark);
         root.style.setProperty("--accent-light", pick.light);
+        root.style.setProperty("--accent-2", pick.second);
+        root.style.setProperty("--accent-3", pick.third);
         root.setAttribute("data-accent", pick.name);
       })();
     </script>
@@ -151,7 +148,7 @@ const searchItems = [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
     />
     <link rel="icon" type="image/jpeg" href="/logo.jpeg" />
     <script defer data-domain="nearbycoder.com" src="https://tic.nrby.xyz/js/script.js"></script>
@@ -159,7 +156,7 @@ const searchItems = [
   </head>
   <body class="min-h-screen flex flex-col">
     <SiteHeader />
-    <main class="relative mx-auto w-full max-w-6xl flex-1 px-5 pb-24 sm:px-8">
+    <main class="relative mx-auto w-full max-w-[1180px] flex-1 px-5 pb-24 sm:px-8">
       <slot />
     </main>
     <SiteFooter />

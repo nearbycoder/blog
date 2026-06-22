@@ -2,20 +2,20 @@
 import { site } from "../data/site";
 ---
 
-<ol class="block-box block-box-shadow">
+<ol class="window-panel">
   {(site.work as any[]).map((item: { company: string; role: string; range: string }, index: number) => (
     <li
-      class="grid grid-cols-[auto_1fr_auto] items-center gap-4 px-5 py-4 sm:gap-6 sm:px-6"
-      style={index === 0 ? undefined : "border-top: 2px solid var(--border);"}
+      class="grid gap-3 px-5 py-4 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-6 sm:px-6"
+      style={index === 0 ? undefined : "border-top: 1.5px dashed var(--border);"}
     >
-      <span class="font-mono text-xs font-bold uppercase tracking-[0.1em] text-right" style="color: var(--fg-dim); min-width: 5rem;">
-        {String(index + 1).padStart(2, "0")} /
+      <span class="card-index">
+        {String(index + 1).padStart(2, "0")}
       </span>
       <div class="min-w-0">
-        <p class="display text-lg sm:text-xl" style="line-height: 1.1;">{item.company}</p>
-        <p class="font-mono text-xs uppercase tracking-[0.12em]" style="color: var(--fg-muted);">{item.role}</p>
+        <p class="display text-2xl sm:text-3xl" style="line-height: 1;">{item.company}</p>
+        <p class="font-mono text-xs font-bold uppercase tracking-normal" style="color: var(--fg-muted);">{item.role}</p>
       </div>
-      <span class="font-mono text-xs uppercase tracking-[0.12em] whitespace-nowrap" style="color: var(--fg-muted);">
+      <span class="font-mono text-xs font-bold uppercase tracking-normal sm:justify-self-end" style="color: var(--fg-muted);">
         {item.range}
       </span>
     </li>

@@ -4,21 +4,21 @@ const index = (Astro.props.index as number | undefined) ?? 0;
 const number = String(index + 1).padStart(2, "0");
 ---
 
-<article class="block-box block-box-shadow block-box-hover group flex h-full flex-col">
-  <div class="flex items-center justify-between gap-3 rule-b px-5 py-3" style="border-color: var(--border);">
-    <span class="font-mono text-xs font-bold uppercase tracking-[0.14em]">
-      PRJ / {number}
+<article class="block-box block-box-shadow block-box-hover group flex h-full flex-col overflow-hidden">
+  <div class="flex items-center justify-between gap-3 rule-b px-5 py-4" style="border-color: var(--border); background: color-mix(in srgb, var(--surface-2) 70%, transparent);">
+    <span class="card-index">
+      {number}
     </span>
-    <span class="font-mono text-[0.7rem] uppercase tracking-[0.12em]" style="color: var(--fg-muted);">
+    <span class="font-mono text-[0.7rem] font-bold uppercase tracking-normal" style="color: var(--fg-muted);">
       {project.data.year} · {project.data.role}
     </span>
   </div>
 
-  <div class="flex flex-1 flex-col gap-4 p-5">
+  <div class="flex flex-1 flex-col gap-4 p-5 md:p-6">
     <div class="space-y-2">
       <a
         href={`/projects/${project.id}`}
-        class="display block text-2xl leading-[1.05] transition group-hover:underline"
+        class="display block text-3xl leading-[1] transition group-hover:underline md:text-4xl"
         style="text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 4px;"
       >
         {project.data.title}

@@ -1,22 +1,18 @@
 import React from "react";
 
-const INK = "#0a0a0a";
-const CREAM = "#f4f0e8";
+const INK = "#132124";
+const PAPER = "#fff9df";
+const BLUE_PAPER = "#e8f6ff";
 
 // Accent palette — must stay in sync with the client-side accent rotation
 // in BaseLayout.astro. Each entry has a saturated (light) tone used on
 // cream and a brighter (dark) tone used on ink.
 const ACCENTS = [
-  { light: "#7c3aed", dark: "#a78bfa" }, // purple
-  { light: "#2563eb", dark: "#60a5fa" }, // blue
-  { light: "#db2777", dark: "#f472b6" }, // pink
-  { light: "#ea580c", dark: "#fb923c" }, // orange
-  { light: "#65a30d", dark: "#a3e635" }, // lime
-  { light: "#dc2626", dark: "#f87171" }, // red
-  { light: "#ca8a04", dark: "#facc15" }, // yellow
-  { light: "#0891b2", dark: "#22d3ee" }, // cyan
-  { light: "#a16207", dark: "#fde047" }, // gold
-  { light: "#16a34a", dark: "#4ade80" }, // green
+  { light: "#ff6b4a", dark: "#5ff0d8" },
+  { light: "#00a884", dark: "#f7ff57" },
+  { light: "#1ea7ff", dark: "#ff8bd1" },
+  { light: "#ef4e7b", dark: "#8ee95d" },
+  { light: "#2ec4b6", dark: "#ffd166" },
 ];
 
 const SECTION_THEME = {
@@ -29,10 +25,10 @@ const SECTION_THEME = {
 // The structural variant controls which areas are ink/cream/accent.
 // `accent` is injected per-page from ACCENTS based on the pathname hash.
 const PALETTE_VARIANTS = [
-  (accent) => ({ bg: CREAM, fg: INK, accent: accent.light, panelBg: INK, panelFg: CREAM, panelAccent: accent.dark }),
-  (accent) => ({ bg: CREAM, fg: INK, accent: accent.light, panelBg: accent.light, panelFg: CREAM, panelAccent: INK }),
-  (accent) => ({ bg: INK, fg: CREAM, accent: accent.dark, panelBg: CREAM, panelFg: INK, panelAccent: accent.light }),
-  (accent) => ({ bg: CREAM, fg: INK, accent: accent.light, panelBg: CREAM, panelFg: INK, panelAccent: accent.light }),
+  (accent) => ({ bg: PAPER, fg: INK, accent: accent.light, panelBg: INK, panelFg: PAPER, panelAccent: accent.dark }),
+  (accent) => ({ bg: BLUE_PAPER, fg: INK, accent: accent.light, panelBg: accent.light, panelFg: PAPER, panelAccent: INK }),
+  (accent) => ({ bg: INK, fg: PAPER, accent: accent.dark, panelBg: PAPER, panelFg: INK, panelAccent: accent.light }),
+  (accent) => ({ bg: PAPER, fg: INK, accent: accent.light, panelBg: BLUE_PAPER, panelFg: INK, panelAccent: accent.dark }),
 ];
 
 function truncate(value, maxLength) {
@@ -417,7 +413,7 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
       position: "relative",
       backgroundColor: variant.bg,
       color: variant.fg,
-      fontFamily: "Space Grotesk",
+      fontFamily: "Atkinson Hyperlegible, Arial, sans-serif",
       overflow: "hidden",
     },
     children: [
@@ -458,7 +454,7 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                 key: "eyebrow",
                 style: {
                   fontSize: 22,
-                  letterSpacing: 4,
+                  letterSpacing: 0,
                   textTransform: "uppercase",
                   color: variant.fg,
                   fontWeight: 700,
@@ -479,9 +475,10 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                 style: {
                   fontSize: titleSize,
                   lineHeight: 0.98,
-                  fontWeight: 700,
+                  fontFamily: "Instrument Serif, Georgia, serif",
+                  fontWeight: 400,
                   color: variant.fg,
-                  letterSpacing: -3,
+                  letterSpacing: 0,
                   maxWidth: "100%",
                   display: "flex",
                 },
@@ -515,7 +512,7 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
               paddingTop: 20,
               fontSize: 20,
               fontWeight: 600,
-              letterSpacing: 2,
+              letterSpacing: 0,
               textTransform: "uppercase",
               color: variant.fg,
             },

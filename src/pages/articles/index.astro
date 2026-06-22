@@ -12,11 +12,11 @@ const sortedArticles = articles
 ---
 
 <BaseLayout title="Articles">
-  <section class="mt-12 space-y-8">
-    <header class="rule-b-heavy pb-6 space-y-3" style="border-color: var(--border);">
-      <p class="label-strong">§ Articles / {sortedArticles.length} entries</p>
-      <h1 class="display text-5xl md:text-6xl">
-        Writing through <span class="marker">layoffs</span>,<br />
+  <section class="page-shell space-y-8">
+    <header class="page-intro">
+      <p class="paper-strip">Articles / {sortedArticles.length} entries</p>
+      <h1 class="display max-w-4xl text-6xl md:text-7xl">
+        Writing through <span class="marker">layoffs</span>,
         building, and adaptation.
       </h1>
       <p class="max-w-2xl text-base leading-relaxed" style="color: var(--fg-muted);">
@@ -24,7 +24,7 @@ const sortedArticles = articles
       </p>
     </header>
 
-    <div class="block-box flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center">
+    <div class="block-box block-box-shadow flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center">
       <label for="article-search" class="label-strong shrink-0">Search /</label>
       <input
         id="article-search"

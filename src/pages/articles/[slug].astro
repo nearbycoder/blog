@@ -1,7 +1,8 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
-import { isArticlePublished } from "../../lib/articles";
+import { isArticlePublished, resolveArticleAccent } from "../../lib/articles";
+import { renderCardArtSvg } from "../../lib/card-art";
 
 export async function getStaticPaths() {
   const includeScheduled = !import.meta.env.PROD;
@@ -16,6 +17,11 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props as { entry: any };
 const { Content } = await render(entry);
+const svgMarkup = renderCardArtSvg({
+  slug: entry.id,
+  tags: entry.data.tags ?? [],
+  accent: resolveArticleAccent(entry),
+});
 ---
 
 <BaseLayout
@@ -24,26 +30,33 @@ const { Content } = await render(entry);
   type="article"
   imageAlt={entry.data.title}
 >
-  <article class="mx-auto mt-10 max-w-3xl space-y-10">
-    <header class="rule-b-heavy pb-6 space-y-4" style="border-color: var(--border);">
-      <div class="flex items-center gap-3">
+  <article class="page-shell mx-auto max-w-4xl space-y-10">
+    <header class="page-intro">
+      <div class="flex flex-wrap items-center gap-3">
         <a href="/articles" class="nav-link">← Articles</a>
         <span class="dot dot-accent"></span>
-        <span class="font-mono text-xs uppercase tracking-[0.14em]" style="color: var(--fg-muted);">
+        <span class="font-mono text-xs font-bold uppercase tracking-normal" style="color: var(--fg-muted);">
           {entry.data.date}{entry.data.readTime ? ` · ${entry.data.readTime}` : ""}
         </span>
       </div>
-      <h1 class="display text-4xl md:text-6xl">{entry.data.title}</h1>
-      <p class="text-lg leading-relaxed" style="color: var(--fg-muted);">{entry.data.description}</p>
-      {entry.data.tags && entry.data.tags.length ? (
-        <div class="flex flex-wrap gap-1.5 pt-2">
-          {entry.data.tags.map((tag: string) => (
-            <span class="chip">{tag}</span>
-          ))}
+      <div class="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.48fr)] md:items-start">
+        <div class="space-y-4">
+          <h1 class="display text-5xl md:text-7xl">{entry.data.title}</h1>
+          <p class="text-lg leading-relaxed" style="color: var(--fg-muted);">{entry.data.description}</p>
+          {entry.data.tags && entry.data.tags.length ? (
+            <div class="flex flex-wrap gap-1.5 pt-2">
+              {entry.data.tags.map((tag: string) => (
+                <span class="chip">{tag}</span>
+              ))}
+            </div>
+          ) : null}
         </div>
-      ) : null}
+        <div class="block-box overflow-hidden" style="background: var(--surface-2);">
+          <div class="aspect-[4/3]" set:html={svgMarkup}></div>
+        </div>
+      </div>
     </header>
-    <div class="article-content">
+    <div class="article-content mx-auto max-w-3xl">
       <Content />
     </div>
   </article>

@@ -47,10 +47,10 @@ const recentLayoffEntries = layoffEntries
   <Hero />
 
   <section class="mt-24 space-y-8 reveal" style="--delay: 80ms;">
-    <header class="flex flex-wrap items-end justify-between gap-4 rule-b-heavy pb-4" style="border-color: var(--border);">
+    <header class="section-head">
       <div class="space-y-1">
-        <p class="label-strong">§ 01 / Writing</p>
-        <h2 class="display text-4xl md:text-5xl">Latest articles</h2>
+        <p class="label-strong">Field notes / 01</p>
+        <h2 class="display text-5xl md:text-6xl">Latest articles</h2>
       </div>
       <a href="/articles" class="btn">All articles →</a>
     </header>
@@ -62,10 +62,10 @@ const recentLayoffEntries = layoffEntries
   </section>
 
   <section class="mt-24 space-y-8 reveal" style="--delay: 160ms;">
-    <header class="flex flex-wrap items-end justify-between gap-4 rule-b-heavy pb-4" style="border-color: var(--border);">
+    <header class="section-head">
       <div class="space-y-1">
-        <p class="label-strong">§ 02 / Projects</p>
-        <h2 class="display text-4xl md:text-5xl">Selected builds</h2>
+        <p class="label-strong">Workbench / 02</p>
+        <h2 class="display text-5xl md:text-6xl">Selected builds</h2>
       </div>
       <a href="/projects" class="btn">All projects →</a>
     </header>
@@ -78,10 +78,10 @@ const recentLayoffEntries = layoffEntries
 
   {recentLayoffEntries.length > 0 && (
     <section class="mt-24 space-y-8 reveal" style="--delay: 200ms;">
-      <header class="flex flex-wrap items-end justify-between gap-4 rule-b-heavy pb-4" style="border-color: var(--border);">
+      <header class="section-head">
         <div class="space-y-1">
-          <p class="label-strong">§ 03 / Layoff Log</p>
-          <h2 class="display text-4xl md:text-5xl">Weekly updates</h2>
+          <p class="label-strong">Build diary / 03</p>
+          <h2 class="display text-5xl md:text-6xl">Weekly updates</h2>
         </div>
         <a href="/layoff" class="btn">Full log →</a>
       </header>
@@ -94,9 +94,11 @@ const recentLayoffEntries = layoffEntries
   )}
 
   <section class="mt-24 space-y-8 reveal" style="--delay: 240ms;">
-    <header class="rule-b-heavy pb-4 space-y-1" style="border-color: var(--border);">
-      <p class="label-strong">§ 04 / Experience</p>
-      <h2 class="display text-4xl md:text-5xl">Where I've built</h2>
+    <header class="section-head">
+      <div class="space-y-1">
+        <p class="label-strong">Timeline / 04</p>
+        <h2 class="display text-5xl md:text-6xl">Where I've built</h2>
+      </div>
     </header>
     <WorkTimeline />
   </section>

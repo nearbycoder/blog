@@ -3,18 +3,18 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
 <BaseLayout title="About">
-  <section class="mt-12 space-y-10">
-    <header class="rule-b-heavy pb-6 space-y-3" style="border-color: var(--border);">
-      <p class="label-strong">§ About / Josh Hamilton</p>
-      <h1 class="display text-5xl md:text-6xl">
+  <section class="page-shell space-y-10">
+    <header class="page-intro">
+      <p class="paper-strip">About / Josh Hamilton</p>
+      <h1 class="display max-w-4xl text-6xl md:text-7xl">
         I live in <span class="marker">Tulsa</span>,<br />
         where I engineer<br />
         for the world to see.
       </h1>
     </header>
 
-    <div class="grid gap-12 md:grid-cols-[1.2fr_0.8fr] md:items-start">
-      <div class="space-y-5 text-base leading-relaxed" style="color: var(--fg);">
+    <div class="grid gap-12 md:grid-cols-[1.15fr_0.85fr] md:items-start">
+      <div class="article-content">
         <p>
           Growing up I always had a passion for building things. I started early in High School taking web
           design classes with old school software such as Dreamweaver, Fireworks and Flash before it was
@@ -71,15 +71,15 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       </div>
 
       <aside class="space-y-5">
-        <div class="block-box block-box-shadow overflow-hidden">
+        <div class="frame-image rotate-1">
           <img
             src="/images/0289d46e-a3de-4f6f-b593-d81393ec931e.png"
             alt="Josh Hamilton"
-            class="h-full w-full object-cover"
+            class="aspect-[4/5] h-full w-full object-cover"
             loading="lazy"
           />
         </div>
-        <div class="block-box block-box-shadow p-5 space-y-4">
+        <div class="sticker-note p-5 space-y-4">
           <p class="label-strong">Connect</p>
           <ul class="grid gap-2 font-mono text-sm">
             <li><a href="https://twitter.com/nearbycoder" class="nav-link">X / Twitter ↗</a></li>

@@ -164,11 +164,11 @@ export const renderOgSvg = ({
   <rect x="60" y="60" width="1080" height="510" rx="40" fill="#0f141b" stroke="#232b36" stroke-width="2" />
   <rect x="60" y="60" width="1080" height="510" rx="40" fill="url(#accent)" />
 
-  <text x="120" y="170" fill="#d7dee8" font-family="Space Grotesk, Arial, sans-serif" font-size="18" letter-spacing="6" font-weight="600">
+  <text x="120" y="170" fill="#d7dee8" font-family="JetBrains Mono, monospace" font-size="18" letter-spacing="0" font-weight="700">
     ${escapeHtml(eyebrow.toUpperCase())}
   </text>
 
-  <text x="120" y="${titleY}" fill="#f8fafc" font-family="Space Grotesk, Arial, sans-serif" font-size="56" font-weight="700">
+  <text x="120" y="${titleY}" fill="#f8fafc" font-family="Instrument Serif, Georgia, serif" font-size="64" font-weight="400">
     ${titleLines
       .map((line, index) => {
         const y = titleY + index * titleLineHeight;
@@ -177,7 +177,7 @@ export const renderOgSvg = ({
       .join("")}
   </text>
 
-  <text x="120" y="${descriptionY}" fill="#e2e8f0" font-family="Space Grotesk, Arial, sans-serif" font-size="26" font-weight="400">
+  <text x="120" y="${descriptionY}" fill="#e2e8f0" font-family="Atkinson Hyperlegible, Arial, sans-serif" font-size="26" font-weight="400">
     ${descriptionLines
       .map((line, index) => {
         const y = descriptionY + index * descriptionLineHeight;
@@ -188,14 +188,14 @@ export const renderOgSvg = ({
 
   ${
     tagsLine
-      ? `<text x="120" y="${tagsY}" fill="#d3dae6" font-family="Space Grotesk, Arial, sans-serif" font-size="18" letter-spacing="2" font-weight="600">${escapeHtml(
+      ? `<text x="120" y="${tagsY}" fill="#d3dae6" font-family="JetBrains Mono, monospace" font-size="18" letter-spacing="0" font-weight="700">${escapeHtml(
           tagsLine
         )}</text>`
       : ""
   }
   ${
     footer
-      ? `<text x="120" y="520" fill="#c7d0de" font-family="Space Grotesk, Arial, sans-serif" font-size="16" letter-spacing="1" font-weight="500">${escapeHtml(
+      ? `<text x="120" y="520" fill="#c7d0de" font-family="JetBrains Mono, monospace" font-size="16" letter-spacing="0" font-weight="600">${escapeHtml(
           footer
         )}</text>`
       : ""

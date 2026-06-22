@@ -14,21 +14,24 @@ const svgMarkup = renderCardArtSvg({
 
 <a
   href={`/articles/${entry.id}`}
-  class="block-box block-box-shadow block-box-hover group flex h-full flex-col"
+  class="block-box block-box-shadow block-box-hover group flex h-full flex-col overflow-hidden"
 >
-  <div class="relative aspect-[16/10] overflow-hidden rule-b" style="border-color: var(--border);">
+  <div class="relative aspect-[16/10] overflow-hidden rule-b" style="border-color: var(--border); background: var(--surface-2);">
     <div class="absolute inset-0" set:html={svgMarkup}></div>
-    <span class="absolute left-3 top-3 chip chip-accent">
-      Article / {number}
+    <span class="card-index absolute left-3 top-3">
+      {number}
+    </span>
+    <span class="chip absolute bottom-3 right-3">
+      Essay
     </span>
   </div>
-  <div class="flex flex-1 flex-col gap-4 p-5">
-    <div class="flex items-center justify-between gap-3 font-mono text-[0.68rem] uppercase tracking-[0.12em]" style="color: var(--fg-muted);">
+  <div class="flex flex-1 flex-col gap-4 p-5 md:p-6">
+    <div class="meta-row justify-between gap-3 text-[0.68rem]">
       <span>{entry.data.date}</span>
       {entry.data.readTime ? <span>{entry.data.readTime}</span> : null}
     </div>
     <div class="space-y-2">
-      <h3 class="display text-xl leading-[1.05] transition group-hover:underline" style="text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 4px;">
+      <h3 class="display text-2xl leading-[1] transition group-hover:underline md:text-3xl" style="text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 4px;">
         {entry.data.title}
       </h3>
       <p class="text-sm leading-relaxed" style="color: var(--fg-muted);">{entry.data.description}</p>

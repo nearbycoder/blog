@@ -15,31 +15,40 @@ const { Content } = await render(entry);
 ---
 
 <BaseLayout title={entry.data.title}>
-  <article class="mx-auto mt-10 max-w-3xl space-y-10">
-    <header class="rule-b-heavy pb-6 space-y-4" style="border-color: var(--border);">
-      <div class="flex items-center gap-3">
+  <article class="page-shell mx-auto max-w-4xl space-y-10">
+    <header class="page-intro">
+      <div class="flex flex-wrap items-center gap-3">
         <a href="/projects" class="nav-link">← Projects</a>
         <span class="dot dot-accent"></span>
-        <span class="font-mono text-xs uppercase tracking-[0.14em]" style="color: var(--fg-muted);">
+        <span class="font-mono text-xs font-bold uppercase tracking-normal" style="color: var(--fg-muted);">
           {entry.data.year} · {entry.data.role}
         </span>
       </div>
-      <h1 class="display text-4xl md:text-6xl">{entry.data.title}</h1>
-      <p class="text-lg leading-relaxed" style="color: var(--fg-muted);">{entry.data.summary}</p>
-      {entry.data.link || entry.data.githubLink ? (
-        <div class="flex flex-wrap gap-2">
-          {entry.data.link ? (
-            <a href={entry.data.link} target="_blank" rel="noreferrer" class="btn btn-accent">
-              Visit project ↗
-            </a>
-          ) : null}
-          {entry.data.githubLink ? (
-            <a href={entry.data.githubLink} target="_blank" rel="noreferrer" class="btn">
-              View code ↗
-            </a>
+      <div class="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.42fr)] md:items-start">
+        <div class="space-y-4">
+          <h1 class="display text-5xl md:text-7xl">{entry.data.title}</h1>
+          <p class="text-lg leading-relaxed" style="color: var(--fg-muted);">{entry.data.summary}</p>
+          {entry.data.link || entry.data.githubLink ? (
+            <div class="flex flex-wrap gap-2">
+              {entry.data.link ? (
+                <a href={entry.data.link} target="_blank" rel="noreferrer" class="btn btn-accent">
+                  Visit project ↗
+                </a>
+              ) : null}
+              {entry.data.githubLink ? (
+                <a href={entry.data.githubLink} target="_blank" rel="noreferrer" class="btn">
+                  View code ↗
+                </a>
+              ) : null}
+            </div>
           ) : null}
         </div>
-      ) : null}
+        <aside class="sticker-note p-5">
+          <p class="label-strong">Project brief</p>
+          <p class="mt-3 display text-3xl leading-none">{entry.data.role}</p>
+          <p class="mt-3 font-mono text-xs font-bold uppercase tracking-normal" style="color: var(--fg-muted);">{entry.data.year}</p>
+        </aside>
+      </div>
     </header>
 
     {entry.data.stack?.length ? (
@@ -51,13 +60,13 @@ const { Content } = await render(entry);
     ) : null}
 
     {entry.data.impact ? (
-      <div class="block-box block-box-shadow p-6">
+      <div class="sticker-note p-6">
         <p class="label-strong">Impact</p>
-        <p class="mt-3 display text-xl md:text-2xl">{entry.data.impact}</p>
+        <p class="mt-3 display text-3xl md:text-4xl">{entry.data.impact}</p>
       </div>
     ) : null}
 
-    <div class="article-content">
+    <div class="article-content mx-auto max-w-3xl">
       <Content />
     </div>
   </article>

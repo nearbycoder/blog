@@ -9,25 +9,25 @@ const isActive = (href: string) => {
 };
 ---
 
-<header class="relative z-30 rule-b-heavy" style="border-color: var(--border);">
-  <div class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-5 py-5 sm:px-8">
-    <a href="/" class="group flex min-w-0 items-center gap-3">
+<header class="relative z-30 border-b" style="border-color: var(--border); background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(16px);">
+  <div class="mx-auto flex w-full max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
+    <a href="/" class="group flex min-w-0 items-center gap-3" aria-label="Nearbycoder home">
       <img
         src="/logo.jpeg"
         alt="Nearbycoder avatar"
         width="40"
         height="40"
         loading="eager"
-        class="h-10 w-10 shrink-0 object-cover"
-        style="border: 2px solid var(--border); box-shadow: 3px 3px 0 0 var(--shadow-color);"
+        class="h-11 w-11 shrink-0 rotate-[-2deg] rounded-[7px] object-cover transition group-hover:rotate-2"
+        style="border: 1.5px solid var(--border); box-shadow: 4px 4px 0 0 color-mix(in srgb, var(--shadow-color) 82%, transparent);"
       />
       <div class="min-w-0 leading-tight">
-        <p class="label-strong truncate">Nearbycoder</p>
-        <p class="font-mono truncate text-[0.68rem] tracking-[0.14em] uppercase" style="color: var(--fg-muted);">{site.name}</p>
+        <p class="display truncate text-[1.65rem] leading-none">Nearbycoder</p>
+        <p class="font-mono truncate text-[0.66rem] font-bold tracking-normal uppercase" style="color: var(--fg-muted);">{site.role}</p>
       </div>
     </a>
 
-    <nav class="hidden items-center gap-6 lg:flex">
+    <nav class="hidden items-center gap-5 lg:flex">
       {site.nav.map((item: { label: string; href: string }) => (
         <a
           href={item.href}
@@ -47,7 +47,7 @@ const isActive = (href: string) => {
         aria-label="Open command palette"
       >
         <span class="font-mono">⌘K</span>
-        <span class="hidden sm:inline">Search</span>
+        <span class="hidden sm:inline">Find</span>
       </button>
       <ThemeToggle />
       <a
@@ -61,7 +61,7 @@ const isActive = (href: string) => {
     </div>
   </div>
 
-  <nav class="mx-auto flex w-full max-w-6xl flex-wrap gap-x-5 gap-y-2 rule-b px-5 pb-3 sm:px-8 lg:hidden" style="border-color: var(--border);">
+  <nav class="mx-auto flex w-full max-w-[1180px] flex-wrap gap-x-5 gap-y-2 px-5 pb-4 sm:px-8 lg:hidden">
     {site.nav.map((item: { label: string; href: string }) => (
       <a
         href={item.href}

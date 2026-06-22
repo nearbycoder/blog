@@ -13,18 +13,18 @@ const hasDistinctSiteUrl =
   entry.data.siteUrl !== entry.data.repoUrl;
 ---
 
-<article class="block-box block-box-shadow block-box-hover group flex h-full flex-col">
-  <div class="flex items-center justify-between gap-3 rule-b px-5 py-3" style="border-color: var(--border);">
-    <span class="font-mono text-xs font-bold uppercase tracking-[0.14em]">
-      LOG / {number}
+<article class="block-box block-box-shadow block-box-hover group flex h-full flex-col overflow-hidden">
+  <div class="flex items-center justify-between gap-3 rule-b px-5 py-4" style="border-color: var(--border); background: color-mix(in srgb, var(--accent-2) 28%, var(--surface));">
+    <span class="card-index">
+      {number}
     </span>
-    <span class="font-mono text-[0.7rem] uppercase tracking-[0.12em]" style="color: var(--fg-muted);">
+    <span class="font-mono text-[0.7rem] font-bold uppercase tracking-normal" style="color: var(--fg-muted);">
       {entry.data.date}{cadenceLabel ? ` · ${cadenceLabel}` : ""} · {entry.data.status}
     </span>
   </div>
 
   {entry.data.image ? (
-    <div class="relative aspect-[16/9] overflow-hidden rule-b" style="border-color: var(--border);">
+    <div class="relative aspect-[16/9] overflow-hidden rule-b" style="border-color: var(--border); background: var(--surface-2);">
       <img
         src={entry.data.image}
         alt={entry.data.title}
@@ -34,11 +34,11 @@ const hasDistinctSiteUrl =
     </div>
   ) : null}
 
-  <div class="flex flex-1 flex-col gap-4 p-5">
+  <div class="flex flex-1 flex-col gap-4 p-5 md:p-6">
     <div class="space-y-2">
       <a
         href={`/layoff/${entry.id}`}
-        class="display block text-2xl leading-[1.05] transition group-hover:underline"
+        class="display block text-3xl leading-[1] transition group-hover:underline md:text-4xl"
         style="text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 4px;"
       >
         {entry.data.title}

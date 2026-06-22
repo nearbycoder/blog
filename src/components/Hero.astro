@@ -5,89 +5,69 @@ const currentCompany = site.work[0]?.company;
 const today = new Date().toISOString().slice(0, 10);
 ---
 
-<section class="relative grid gap-12 pt-10 pb-14 md:grid-cols-[1.1fr_0.9fr] md:items-start reveal" style="--delay: 20ms;">
-  <div class="space-y-8">
-    <div class="flex flex-wrap items-center gap-2">
-      <span class="chip chip-accent">● Online</span>
-      <span class="chip">MTS @ Augment</span>
-      <span class="chip">Tulsa, OK</span>
-    </div>
+<section class="page-shell reveal" style="--delay: 20ms;">
+  <div class="grid gap-10 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.82fr)] lg:items-center">
+    <div class="space-y-7">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="paper-strip">Online notebook</span>
+        <span class="chip">Tulsa, OK</span>
+        <span class="chip">MTS @ Augment</span>
+      </div>
 
-    <h1 class="display text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem]">
-      Software<br />
-      <span class="marker">Engineer</span>,<br />
-      loving<br />
-      father.
-    </h1>
+      <div class="space-y-5">
+        <h1 class="display max-w-4xl text-6xl sm:text-7xl md:text-8xl lg:text-[6.6rem]">
+          Building calm tools for noisy systems.
+        </h1>
+        <p class="max-w-2xl text-lg leading-relaxed md:text-xl" style="color: var(--fg-muted);">
+          {site.hero.subtitle}
+        </p>
+      </div>
 
-    <p class="max-w-xl text-lg leading-relaxed" style="color: var(--fg-muted);">
-      {site.hero.subtitle}
-    </p>
-
-    <div class="flex flex-wrap gap-3">
-      <a href={site.hero.ctaPrimary.href} class="btn btn-accent">
-        {site.hero.ctaPrimary.label} →
-      </a>
-      <a href={site.hero.ctaSecondary.href} class="btn">
-        {site.hero.ctaSecondary.label}
-      </a>
-    </div>
-
-    <div class="flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-xs uppercase tracking-[0.14em]" style="color: var(--fg-muted);">
-      <span style="color: var(--fg);">{site.name}</span>
-      <span class="dot dot-accent"></span>
-      {currentCompany && (
-        <a href="https://augmentcode.com" target="_blank" rel="noreferrer" class="nav-link">
-          @ {currentCompany}
+      <div class="flex flex-wrap gap-3">
+        <a href={site.hero.ctaPrimary.href} class="btn btn-accent">
+          {site.hero.ctaPrimary.label} →
         </a>
-      )}
-    </div>
-
-    <div class="flex flex-wrap gap-2">
-      {site.socials.map((social: { label: string; url: string }) => (
-        <a
-          href={social.url}
-          target="_blank"
-          rel="noreferrer"
-          class="chip"
-        >
-          {social.label} ↗
+        <a href={site.hero.ctaSecondary.href} class="btn">
+          {site.hero.ctaSecondary.label}
         </a>
-      ))}
-    </div>
-  </div>
+      </div>
 
-  <aside class="grid min-w-0 gap-4">
-    <div class="block-box block-box-shadow p-5">
-      <div class="flex items-center justify-between rule-b pb-3" style="border-color: var(--border);">
+      <div class="meta-row">
+        <span style="color: var(--fg);">{site.name}</span>
+        <span class="dot dot-accent"></span>
+        {currentCompany && (
+          <a href="https://augmentcode.com" target="_blank" rel="noreferrer" class="nav-link">
+            @ {currentCompany}
+          </a>
+        )}
+      </div>
+    </div>
+
+    <aside class="relative grid gap-4">
+      <div class="frame-image rotate-1">
+        <img
+          src="/images/0289d46e-a3de-4f6f-b593-d81393ec931e.png"
+          alt="Josh Hamilton"
+          class="aspect-[4/5] h-full w-full object-cover"
+          loading="eager"
+        />
+      </div>
+
+      <div class="sticker-note absolute -left-3 top-6 max-w-[13rem] rotate-[-4deg] p-4 sm:-left-8">
         <p class="label-strong">Status</p>
-        <span class="font-mono text-xs" style="color: var(--fg-dim);">{today}</span>
+        <p class="mt-2 display text-3xl leading-none">Shipping notes in public.</p>
       </div>
-      <p class="mt-4 display text-2xl md:text-3xl">
-        Building through layoffs <span class="marker">&amp;</span> AI shifts.
-      </p>
-      <p class="mt-3 font-mono text-xs leading-relaxed uppercase tracking-[0.1em]" style="color: var(--fg-muted);">
-        Shipping weekly → measuring what sticks.
-      </p>
-    </div>
 
-    <div class="grid grid-cols-2 gap-4">
-      <div class="block-box p-4">
-        <p class="label">Focus</p>
-        <p class="mt-2 font-mono text-sm font-semibold uppercase tracking-[0.06em]" style="color: var(--fg);">Steady<br />Systems</p>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="block-box p-4">
+          <p class="label">Today</p>
+          <p class="mt-2 font-mono text-sm font-bold uppercase tracking-normal" style="color: var(--fg);">{today}</p>
+        </div>
+        <div class="block-box-accent rounded-[7px] p-4">
+          <p class="label" style="color: var(--accent-fg); opacity: 0.8;">Signal</p>
+          <p class="mt-2 font-mono text-sm font-bold uppercase tracking-normal">Build logs</p>
+        </div>
       </div>
-      <div class="block-box p-4" style="background: var(--accent); color: var(--accent-fg); border-color: var(--border);">
-        <p class="label" style="color: var(--accent-fg); opacity: 0.75;">Practice</p>
-        <p class="mt-2 font-mono text-sm font-semibold uppercase tracking-[0.06em]">Clear on<br />Purpose</p>
-      </div>
-      <div class="block-box p-4">
-        <p class="label">Speed</p>
-        <p class="mt-2 font-mono text-sm font-semibold uppercase tracking-[0.06em]">Ship<br />Often</p>
-      </div>
-      <div class="block-box p-4">
-        <p class="label">Signal</p>
-        <p class="mt-2 font-mono text-sm font-semibold uppercase tracking-[0.06em]">Signal<br />&gt; Noise</p>
-      </div>
-    </div>
-  </aside>
+    </aside>
+  </div>
 </section>

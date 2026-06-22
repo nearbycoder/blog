@@ -31,11 +31,11 @@ const weekSections = sortedEntries.reduce(
 ---
 
 <BaseLayout title="Early 2026 Layoff Log">
-  <section class="mt-12 space-y-10">
-    <header class="rule-b-heavy pb-6 space-y-3" style="border-color: var(--border);">
-      <p class="label-strong">§ Layoff Log / Early 2026</p>
-      <h1 class="display text-5xl md:text-6xl">
-        Weekly build<br />
+  <section class="page-shell space-y-10">
+    <header class="page-intro">
+      <p class="paper-strip">Layoff Log / Early 2026</p>
+      <h1 class="display max-w-4xl text-6xl md:text-7xl">
+        Weekly build
         <span class="marker">launch log</span>.
       </h1>
       <p class="max-w-2xl text-base leading-relaxed" style="color: var(--fg-muted);">
@@ -43,19 +43,19 @@ const weekSections = sortedEntries.reduce(
       </p>
     </header>
 
-    <div class="block-box block-box-shadow p-5" style="background: var(--accent); color: var(--accent-fg); border-color: var(--border);">
-      <p class="font-mono text-xs font-bold uppercase tracking-[0.14em]" style="opacity: 0.8;">
+    <div class="sticker-note p-5 md:p-6" style="background: var(--accent); color: var(--accent-fg);">
+      <p class="font-mono text-xs font-bold uppercase tracking-normal" style="opacity: 0.8;">
         Plot twist
       </p>
-      <p class="mt-2 display text-xl md:text-2xl">
+      <p class="mt-2 display text-3xl md:text-4xl" style="color: var(--accent-fg);">
         Week 4: I joined Augment Code. This log is now the breadcrumb trail of the weird little builds that helped get me there.
       </p>
     </div>
 
     {weekSections.map((section: { key: string; label: string; entries: any[] }) => (
       <section class="space-y-5">
-        <header class="flex flex-wrap items-end justify-between gap-3 rule-b pb-3" style="border-color: var(--border);">
-          <h2 class="display text-3xl md:text-4xl">{section.label}</h2>
+        <header class="section-head">
+          <h2 class="display text-5xl md:text-6xl">{section.label}</h2>
           <span class="chip">
             {section.entries.length} {section.entries.length === 1 ? "update" : "updates"}
           </span>

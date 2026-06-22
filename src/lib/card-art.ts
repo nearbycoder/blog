@@ -57,20 +57,23 @@ type Palette = {
   secondary: string;
 };
 
-const INK = "#0a0a0a";
-const CREAM = "#f4f0e8";
+const INK = "#132124";
+const PAPER = "#fff9df";
+const BLUE_PAPER = "#e8f6ff";
 // Accent colors use CSS variable references so the SVG picks up the
 // page's rotating accent when inlined. External /card-art/*.svg loads
 // fall back to the hex literal.
-const PURPLE = "var(--accent-light, #7c3aed)";
-const PURPLE_LIGHT = "var(--accent-dark, #a78bfa)";
+const ACCENT = "var(--accent-light, #ff6b4a)";
+const ACCENT_DARK = "var(--accent-dark, #3dd6c6)";
+const ACCENT_2 = "var(--accent-2, #ffcf38)";
+const ACCENT_3 = "var(--accent-3, #69d2ff)";
 
 const palettes: Palette[] = [
-  { bg: INK, fg: CREAM, accent: PURPLE_LIGHT, secondary: "#3a3a38" },
-  { bg: CREAM, fg: INK, accent: PURPLE, secondary: "#c9c3b4" },
-  { bg: PURPLE, fg: CREAM, accent: INK, secondary: "#9b6ef0" },
-  { bg: CREAM, fg: PURPLE, accent: INK, secondary: "#c9c3b4" },
-  { bg: INK, fg: PURPLE_LIGHT, accent: CREAM, secondary: "#3a3a38" },
+  { bg: INK, fg: PAPER, accent: ACCENT_DARK, secondary: "#314144" },
+  { bg: PAPER, fg: INK, accent: ACCENT, secondary: "#d7ddc6" },
+  { bg: ACCENT_2, fg: INK, accent: ACCENT, secondary: "#f4b940" },
+  { bg: BLUE_PAPER, fg: INK, accent: ACCENT_3, secondary: "#b6d7df" },
+  { bg: ACCENT, fg: PAPER, accent: INK, secondary: "#f08d76" },
 ];
 
 const allMotifs: Motif[] = [
@@ -338,8 +341,8 @@ const renderMono = (rng: () => number, palette: Palette, w: number, h: number) =
   const char = symbols[Math.floor(rng() * symbols.length)];
   const num = String(Math.floor(rng() * 99)).padStart(2, "0");
   return `
-    <text x="${fmt(w * 0.08)}" y="${fmt(h * 0.85)}" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="${fmt(h * 0.85)}" fill="${palette.fg}" letter-spacing="-8">${num}</text>
-    <text x="${fmt(w * 0.68)}" y="${fmt(h * 0.88)}" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="${fmt(h * 0.82)}" fill="${palette.accent}">${char}</text>
+    <text x="${fmt(w * 0.08)}" y="${fmt(h * 0.85)}" font-family="Instrument Serif, Georgia, serif" font-weight="400" font-size="${fmt(h * 0.85)}" fill="${palette.fg}" letter-spacing="0">${num}</text>
+    <text x="${fmt(w * 0.68)}" y="${fmt(h * 0.88)}" font-family="Instrument Serif, Georgia, serif" font-weight="400" font-size="${fmt(h * 0.82)}" fill="${palette.accent}">${char}</text>
   `;
 };
 
@@ -528,7 +531,7 @@ const renderLetter = (rng: () => number, palette: Palette, w: number, h: number)
   const size = h * 1.05;
   const x = w * (0.05 + rng() * 0.1);
   return `
-    <text x="${fmt(x)}" y="${fmt(h * 0.92)}" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="${fmt(size)}" fill="${palette.fg}" letter-spacing="-10">${char}</text>
+    <text x="${fmt(x)}" y="${fmt(h * 0.92)}" font-family="Instrument Serif, Georgia, serif" font-weight="400" font-size="${fmt(size)}" fill="${palette.fg}" letter-spacing="0">${char}</text>
     <rect x="${fmt(w * 0.55)}" y="${fmt(h * 0.15)}" width="${fmt(w * 0.35)}" height="${fmt(h * 0.12)}" fill="${palette.accent}" />
     <rect x="${fmt(w * 0.55)}" y="${fmt(h * 0.72)}" width="${fmt(w * 0.25)}" height="${fmt(h * 0.08)}" fill="${palette.fg}" />
   `;
@@ -594,7 +597,7 @@ const renderTags = (rng: () => number, palette: Palette, w: number, h: number) =
     const height = h * 0.12;
     parts.push(
       `<rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(width)}" height="${fmt(height)}" fill="${isAccent ? palette.accent : palette.bg}" stroke="${palette.fg}" stroke-width="${fmt(Math.max(3, w * 0.004))}" />`,
-      `<text x="${fmt(x + height * 0.4)}" y="${fmt(y + height * 0.72)}" font-family="JetBrains Mono, monospace" font-weight="700" font-size="${fmt(height * 0.55)}" fill="${isAccent ? palette.bg : palette.fg}" letter-spacing="2">${label}</text>`
+      `<text x="${fmt(x + height * 0.4)}" y="${fmt(y + height * 0.72)}" font-family="JetBrains Mono, monospace" font-weight="700" font-size="${fmt(height * 0.55)}" fill="${isAccent ? palette.bg : palette.fg}" letter-spacing="0">${label}</text>`
     );
     y += height + h * 0.04;
   }
@@ -629,8 +632,8 @@ const renderStamp = (rng: () => number, palette: Palette, w: number, h: number) 
   ];
   // middle text
   parts.push(
-    `<text x="${fmt(cx)}" y="${fmt(cy + h * 0.03)}" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="${fmt(r * 0.5)}" fill="${palette.accent}" text-anchor="middle" letter-spacing="2">${word}</text>`,
-    `<text x="${fmt(cx)}" y="${fmt(cy + r * 0.55)}" font-family="JetBrains Mono, monospace" font-weight="500" font-size="${fmt(r * 0.18)}" fill="${palette.fg}" text-anchor="middle" letter-spacing="4">${new Date().getFullYear()}</text>`
+    `<text x="${fmt(cx)}" y="${fmt(cy + h * 0.03)}" font-family="JetBrains Mono, monospace" font-weight="800" font-size="${fmt(r * 0.5)}" fill="${palette.accent}" text-anchor="middle" letter-spacing="0">${word}</text>`,
+    `<text x="${fmt(cx)}" y="${fmt(cy + r * 0.55)}" font-family="JetBrains Mono, monospace" font-weight="500" font-size="${fmt(r * 0.18)}" fill="${palette.fg}" text-anchor="middle" letter-spacing="0">${new Date().getFullYear()}</text>`
   );
   // stray slash line
   const angle = rng() * Math.PI;
@@ -755,7 +758,7 @@ export const renderCardArtSvg = ({
   <rect width="${width}" height="${height}" fill="${palette.bg}" />
   ${primaryContent}
   ${overlayContent}
-  <text x="${fmt(width - width * 0.03)}" y="${fmt(height - height * 0.035)}" font-family="JetBrains Mono, monospace" font-weight="500" font-size="${fmt(height * 0.035)}" fill="${palette.fg}" opacity="0.45" text-anchor="end" letter-spacing="3">${slugTag}</text>
+  <text x="${fmt(width - width * 0.03)}" y="${fmt(height - height * 0.035)}" font-family="JetBrains Mono, monospace" font-weight="500" font-size="${fmt(height * 0.035)}" fill="${palette.fg}" opacity="0.45" text-anchor="end" letter-spacing="0">${slugTag}</text>
   <rect x="${fmt(borderW / 2)}" y="${fmt(borderW / 2)}" width="${fmt(width - borderW)}" height="${fmt(height - borderW)}" fill="none" stroke="${palette.fg}" stroke-width="${fmt(borderW)}" />
 </svg>
   `.trim();

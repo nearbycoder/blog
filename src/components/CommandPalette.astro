@@ -12,11 +12,11 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
 ---
 
 <div id="command-palette" class="fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0" style="background: color-mix(in srgb, var(--bg) 85%, transparent);" data-overlay></div>
+  <div class="absolute inset-0" style="background: color-mix(in srgb, var(--bg) 78%, transparent); backdrop-filter: blur(12px);" data-overlay></div>
   <div class="relative mx-auto mt-20 w-[min(760px,92vw)]">
-    <div class="block-box p-0" style="box-shadow: 10px 10px 0 0 var(--shadow-color);">
+    <div class="window-panel p-0">
       <div class="flex items-center gap-3 rule-b px-5 py-4" style="border-color: var(--border);">
-        <span class="label-strong">⌘K /</span>
+        <span class="paper-strip">Find</span>
         <input
           id="command-input"
           type="search"
@@ -24,15 +24,14 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
           class="w-full bg-transparent font-mono text-base outline-none"
           style="color: var(--fg);"
         />
-        <span class="hidden font-mono text-xs uppercase tracking-[0.14em] md:inline" style="color: var(--fg-dim);">ESC</span>
+        <span class="hidden font-mono text-xs uppercase tracking-normal md:inline" style="color: var(--fg-dim);">ESC</span>
       </div>
       <div class="max-h-[420px] overflow-y-auto p-3">
         <div id="command-results" class="grid gap-3"></div>
       </div>
-      <div class="flex flex-wrap items-center justify-between gap-2 rule px-5 py-3 font-mono text-[0.7rem] uppercase tracking-[0.12em]" style="border-color: var(--border); color: var(--fg-muted);">
-        <span>↑↓ Navigate</span>
-        <span>↵ Open</span>
-        <span>ESC Close</span>
+      <div class="flex flex-wrap items-center justify-between gap-2 rule px-5 py-3 font-mono text-[0.7rem] font-bold uppercase tracking-normal" style="border-color: var(--border); color: var(--fg-muted);">
+        <span>Pages + posts + projects</span>
+        <span>Theme switcher included</span>
       </div>
     </div>
   </div>
@@ -133,7 +132,7 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
       if (!list || entries.length === 0) return;
       const heading = document.createElement("div");
       heading.className = "label-strong";
-      heading.style.padding = "0.5rem 0.25rem 0.25rem";
+      heading.style.padding = "0.55rem 0.25rem 0.25rem";
       heading.textContent = label;
       list.appendChild(heading);
 
@@ -144,8 +143,9 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
         const link = document.createElement("a");
         link.href = entry.item.url;
         const displayIndex = registerIndex(entry.item);
-        link.className = "command-option flex items-center justify-between gap-4 px-3 py-2.5 transition";
-        link.style.border = "2px solid var(--border)";
+        link.className = "command-option flex items-center justify-between gap-4 rounded-[6px] px-3 py-2.5 transition";
+        link.style.border = "1.5px solid var(--border)";
+        link.style.background = "color-mix(in srgb, var(--surface) 86%, transparent)";
         link.setAttribute("data-index", String(displayIndex));
         link.setAttribute("role", "option");
 
