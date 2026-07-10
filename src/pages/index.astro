@@ -52,9 +52,9 @@ const recentLayoffEntries = layoffEntries
         <p class="label-strong">Field notes / 01</p>
         <h2 class="display text-5xl md:text-6xl">Latest articles</h2>
       </div>
-      <a href="/articles" class="btn">All articles →</a>
+      <a href="/articles" class="btn">All articles</a>
     </header>
-    <div class="grid gap-6 md:grid-cols-3">
+    <div class="article-archive-grid">
       {featuredArticles.map((entry: any, index: number) => (
         <ArticleCard entry={entry} index={index} />
       ))}
@@ -67,9 +67,9 @@ const recentLayoffEntries = layoffEntries
         <p class="label-strong">Workbench / 02</p>
         <h2 class="display text-5xl md:text-6xl">Selected builds</h2>
       </div>
-      <a href="/projects" class="btn">All projects →</a>
+      <a href="/projects" class="btn">All projects</a>
     </header>
-    <div class="grid gap-6 md:grid-cols-2">
+    <div class="grid gap-x-12 md:grid-cols-2">
       {featuredProjects.map((project: any, index: number) => (
         <ProjectCard project={project} index={index} />
       ))}
@@ -83,9 +83,9 @@ const recentLayoffEntries = layoffEntries
           <p class="label-strong">Build diary / 03</p>
           <h2 class="display text-5xl md:text-6xl">Weekly updates</h2>
         </div>
-        <a href="/layoff" class="btn">Full log →</a>
+        <a href="/layoff" class="btn">Full log</a>
       </header>
-      <div class="grid gap-6 md:grid-cols-2">
+      <div class="grid gap-x-12 md:grid-cols-2">
         {recentLayoffEntries.map((entry: any, index: number) => (
           <LayoffEntryCard entry={entry} index={index} />
         ))}

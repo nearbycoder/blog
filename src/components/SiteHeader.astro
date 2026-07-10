@@ -3,89 +3,48 @@ import { site } from "../data/site";
 import ThemeToggle from "./ThemeToggle.astro";
 
 const pathname = Astro.url.pathname;
-const isActive = (href: string) => {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
-};
+const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 ---
 
-<header class="relative z-30 border-b" style="border-color: var(--border); background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(16px);">
-  <div class="mx-auto flex w-full max-w-[1180px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8">
+<header class="sticky top-0 z-30 border-b" style="border-color: var(--border); background: color-mix(in srgb, var(--bg) 91%, transparent); backdrop-filter: blur(14px);">
+  <div class="mx-auto grid w-full max-w-[1240px] grid-cols-[1fr_auto] items-center gap-5 px-5 py-3 sm:px-8 lg:grid-cols-[250px_1fr_auto]">
     <a href="/" class="group flex min-w-0 items-center gap-3" aria-label="Nearbycoder home">
-      <img
-        src="/logo.jpeg"
-        alt="Nearbycoder avatar"
-        width="40"
-        height="40"
-        loading="eager"
-        class="h-11 w-11 shrink-0 rotate-[-2deg] rounded-[7px] object-cover transition group-hover:rotate-2"
-        style="border: 1.5px solid var(--border); box-shadow: 4px 4px 0 0 color-mix(in srgb, var(--shadow-color) 82%, transparent);"
-      />
-      <div class="min-w-0 leading-tight">
-        <p class="display truncate text-[1.65rem] leading-none">Nearbycoder</p>
-        <p class="font-mono truncate text-[0.66rem] font-bold tracking-normal uppercase" style="color: var(--fg-muted);">{site.role}</p>
-      </div>
+      <span class="relative grid h-9 w-9 shrink-0 place-items-center border" style="border-color: var(--border);">
+        <span class="h-2 w-2 rounded-full" style="background: var(--accent);"></span>
+        <span class="absolute inset-x-1/2 top-0 h-full w-px" style="background: var(--border-dim);"></span>
+        <span class="absolute inset-y-1/2 left-0 h-px w-full" style="background: var(--border-dim);"></span>
+      </span>
+      <span class="min-w-0 leading-none">
+        <span class="block truncate text-sm font-bold tracking-[-0.02em]">NEARBYCODER</span>
+        <span class="label mt-1 block truncate">Signal archive / 26</span>
+      </span>
     </a>
 
-    <nav class="hidden items-center gap-5 lg:flex">
-      {site.nav.map((item: { label: string; href: string }) => (
-        <a
-          href={item.href}
-          class="nav-link"
-          aria-current={isActive(item.href) ? "page" : undefined}
-        >
-          {item.label}
+    <nav class="hidden items-center justify-center gap-7 lg:flex" aria-label="Main navigation">
+      {site.nav.map((item: { label: string; href: string }, index: number) => (
+        <a href={item.href} class="nav-link" aria-current={isActive(item.href) ? "page" : undefined}>
+          <span style="color: var(--fg-dim); margin-right: .35rem;">{String(index + 1).padStart(2, "0")}</span>{item.label}
         </a>
       ))}
     </nav>
 
-    <div class="ml-auto flex flex-wrap items-center justify-end gap-2">
-      <button
-        type="button"
-        class="btn btn-ghost"
-        data-command-trigger
-        aria-label="Open command palette"
-      >
-        <span class="font-mono">⌘K</span>
-        <span class="hidden sm:inline">Find</span>
+    <div class="flex items-center justify-end gap-2">
+      <button type="button" class="btn btn-ghost hidden sm:inline-flex" data-command-trigger aria-label="Open search">
+        <span>Search</span><span style="color: var(--fg-dim);">⌘K</span>
       </button>
       <ThemeToggle />
-      <a
-        href="/resume.pdf"
-        target="_blank"
-        rel="noreferrer"
-        class="btn btn-accent"
-      >
-        Resume →
-      </a>
     </div>
   </div>
 
-  <nav class="mx-auto flex w-full max-w-[1180px] flex-wrap gap-x-5 gap-y-2 px-5 pb-4 sm:px-8 lg:hidden">
+  <nav class="mx-auto flex w-full max-w-[1240px] gap-5 overflow-x-auto border-t px-5 py-2 sm:px-8 lg:hidden" style="border-color: var(--border-dim);" aria-label="Mobile navigation">
     {site.nav.map((item: { label: string; href: string }) => (
-      <a
-        href={item.href}
-        class="nav-link"
-        aria-current={isActive(item.href) ? "page" : undefined}
-      >
-        {item.label}
-      </a>
+      <a href={item.href} class="nav-link shrink-0" aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</a>
     ))}
   </nav>
 </header>
 
 <script is:inline>
-  (() => {
-    document.querySelectorAll("[data-command-trigger]").forEach((btn) => {
-      btn.addEventListener("click", (event) => {
-        event.preventDefault();
-        const ev = new KeyboardEvent("keydown", {
-          key: "k",
-          metaKey: true,
-          bubbles: true,
-        });
-        document.dispatchEvent(ev);
-      });
-    });
-  })();
+  document.querySelectorAll("[data-command-trigger]").forEach((button) => {
+    button.addEventListener("click", () => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })));
+  });
 </script>

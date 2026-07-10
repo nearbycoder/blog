@@ -2,75 +2,17 @@
 const entry = Astro.props.entry as any;
 const index = (Astro.props.index as number | undefined) ?? 0;
 const number = String(index + 1).padStart(2, "0");
-const cadenceLabel = entry.data.week
-  ? `W${entry.data.week}`
-  : entry.data.day
-    ? `D${entry.data.day}`
-    : null;
-const hasDistinctSiteUrl =
-  typeof entry.data.siteUrl === "string" &&
-  typeof entry.data.repoUrl === "string" &&
-  entry.data.siteUrl !== entry.data.repoUrl;
+const cadenceLabel = entry.data.week ? `W${entry.data.week}` : entry.data.day ? `D${entry.data.day}` : null;
 ---
 
-<article class="block-box block-box-shadow block-box-hover group flex h-full flex-col overflow-hidden">
-  <div class="flex items-center justify-between gap-3 rule-b px-5 py-4" style="border-color: var(--border); background: color-mix(in srgb, var(--accent-2) 28%, var(--surface));">
-    <span class="card-index">
-      {number}
-    </span>
-    <span class="font-mono text-[0.7rem] font-bold uppercase tracking-normal" style="color: var(--fg-muted);">
-      {entry.data.date}{cadenceLabel ? ` · ${cadenceLabel}` : ""} · {entry.data.status}
-    </span>
-  </div>
-
-  {entry.data.image ? (
-    <div class="relative aspect-[16/9] overflow-hidden rule-b" style="border-color: var(--border); background: var(--surface-2);">
-      <img
-        src={entry.data.image}
-        alt={entry.data.title}
-        loading="lazy"
-        class="h-full w-full object-cover"
-      />
-    </div>
-  ) : null}
-
-  <div class="flex flex-1 flex-col gap-4 p-5 md:p-6">
-    <div class="space-y-2">
-      <a
-        href={`/layoff/${entry.id}`}
-        class="display block text-3xl leading-[1] transition group-hover:underline md:text-4xl"
-        style="text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 4px;"
-      >
-        {entry.data.title}
-      </a>
-      <p class="text-sm leading-relaxed" style="color: var(--fg-muted);">{entry.data.summary}</p>
-    </div>
-
-    <div class="flex flex-wrap gap-1.5">
-      {entry.data.stack.map((item: string) => (
-        <span class="chip">{item}</span>
-      ))}
-    </div>
-
-    <div class="mt-auto flex flex-wrap gap-2 pt-2">
-      {hasDistinctSiteUrl ? (
-        <a
-          href={entry.data.siteUrl}
-          target="_blank"
-          rel="noreferrer"
-          class="btn btn-accent"
-        >
-          Visit ↗
-        </a>
-      ) : null}
-      <a
-        href={entry.data.repoUrl}
-        target="_blank"
-        rel="noreferrer"
-        class="btn"
-      >
-        Code ↗
-      </a>
-    </div>
+<article class="group grid gap-5 border-t py-6 md:grid-cols-[4rem_1fr]" style="border-color: var(--border);">
+  <span class="card-index">{number}</span>
+  <div class="flex min-w-0 flex-col gap-4">
+    <div class="meta-row"><span>{entry.data.date}</span>{cadenceLabel && <span>{cadenceLabel}</span>}<span style="color: var(--accent);">{entry.data.status}</span></div>
+    {entry.data.image ? <div class="aspect-[16/8] overflow-hidden border" style="border-color: var(--border-dim);"><img src={entry.data.image} alt={entry.data.title} loading="lazy" class="h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0" /></div> : null}
+    <a href={`/layoff/${entry.id}`} class="display text-3xl transition duration-300 group-hover:text-[var(--accent)] md:text-4xl">{entry.data.title}</a>
+    <p class="text-sm leading-relaxed" style="color: var(--fg-muted);">{entry.data.summary}</p>
+    <div class="flex flex-wrap gap-1.5">{entry.data.stack.slice(0, 5).map((item: string) => <span class="chip">{item}</span>)}</div>
+    <a href={`/layoff/${entry.id}`} class="nav-link mt-auto">Open dispatch</a>
   </div>
 </article>
