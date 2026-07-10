@@ -1,146 +1,45 @@
----
----
-
 <div class="relative" data-theme-root>
-  <button
-    type="button"
-    class="btn btn-ghost"
-    aria-haspopup="true"
-    aria-expanded="false"
-    data-theme-trigger
-    aria-label="Toggle theme"
-  >
-    <span data-theme-icon>◐</span>
-    <span class="hidden sm:inline" data-theme-label>System</span>
+  <button type="button" class="btn btn-ghost h-11 w-11 p-0" aria-haspopup="true" aria-expanded="false" data-theme-trigger aria-label="Choose color theme">
+    <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.7">
+      <circle cx="12" cy="12" r="7"></circle><path d="M12 5a7 7 0 0 1 0 14Z" fill="currentColor"></path>
+    </svg>
   </button>
-  <div
-    class="block-box absolute right-0 z-40 mt-2 hidden w-44 p-1"
-    style="box-shadow: 6px 6px 0 0 color-mix(in srgb, var(--shadow-color) 82%, transparent);"
-    role="menu"
-    data-theme-menu
-  >
-    <button
-      type="button"
-      class="rounded-[5px] flex w-full items-center justify-between px-3 py-2 font-mono text-xs font-bold uppercase tracking-normal transition"
-      data-theme-option="light"
-      role="menuitem"
-    >
-      <span>◯ Light</span>
-      <span style="color: var(--fg-dim);">L</span>
-    </button>
-    <button
-      type="button"
-      class="rounded-[5px] flex w-full items-center justify-between px-3 py-2 font-mono text-xs font-bold uppercase tracking-normal transition"
-      data-theme-option="dark"
-      role="menuitem"
-    >
-      <span>● Dark</span>
-      <span style="color: var(--fg-dim);">D</span>
-    </button>
-    <button
-      type="button"
-      class="rounded-[5px] flex w-full items-center justify-between px-3 py-2 font-mono text-xs font-bold uppercase tracking-normal transition"
-      data-theme-option="system"
-      role="menuitem"
-    >
-      <span>◐ System</span>
-      <span style="color: var(--fg-dim);">OS</span>
-    </button>
+  <div class="absolute right-0 z-40 mt-2 hidden w-48 border p-1" style="border-color: var(--border); background: var(--surface);" role="menu" data-theme-menu>
+    <button type="button" class="flex w-full items-center justify-between px-3 py-2.5 label-strong" data-theme-option="light" role="menuitem"><span>Light</span><span class="label">L</span></button>
+    <button type="button" class="flex w-full items-center justify-between px-3 py-2.5 label-strong" data-theme-option="dark" role="menuitem"><span>Dark</span><span class="label">D</span></button>
+    <button type="button" class="flex w-full items-center justify-between px-3 py-2.5 label-strong" data-theme-option="system" role="menuitem"><span>System</span><span class="label">OS</span></button>
   </div>
-
   <script is:inline>
     (() => {
       const root = document.documentElement;
-      const STORAGE_KEY = "theme-preference";
+      const storageKey = "theme-preference";
       const container = document.currentScript?.closest("[data-theme-root]");
       if (!container) return;
-
       const trigger = container.querySelector("[data-theme-trigger]");
       const menu = container.querySelector("[data-theme-menu]");
-      const label = container.querySelector("[data-theme-label]");
-      const icon = container.querySelector("[data-theme-icon]");
       const options = Array.from(container.querySelectorAll("[data-theme-option]"));
-
-      const icons = { light: "◯", dark: "●", system: "◐" };
-
-      const getTheme = () => root.getAttribute("data-theme") || "system";
-
-      const formatLabel = (value) => value.charAt(0).toUpperCase() + value.slice(1);
-
-      const updateUI = () => {
-        const theme = getTheme();
-        if (label) label.textContent = formatLabel(theme);
-        if (icon) icon.textContent = icons[theme] || "◐";
-        options.forEach((button) => {
-          const active = button.getAttribute("data-theme-option") === theme;
-          button.style.background = active ? "var(--accent)" : "";
-          button.style.color = active ? "var(--accent-fg)" : "";
-          button.setAttribute("aria-pressed", active ? "true" : "false");
-        });
-      };
-
-      const setTheme = (value) => {
-        root.setAttribute("data-theme", value);
-        try {
-          localStorage.setItem(STORAGE_KEY, value);
-        } catch {}
-        updateUI();
-      };
-
-      const openMenu = () => {
-        if (!menu || !trigger) return;
-        menu.classList.remove("hidden");
-        trigger.setAttribute("aria-expanded", "true");
-      };
-
-      const closeMenu = () => {
-        if (!menu || !trigger) return;
-        menu.classList.add("hidden");
-        trigger.setAttribute("aria-expanded", "false");
-      };
-
-      const toggleMenu = () => {
-        if (!menu) return;
-        if (menu.classList.contains("hidden")) openMenu();
-        else closeMenu();
-      };
-
+      const close = () => { menu?.classList.add("hidden"); trigger?.setAttribute("aria-expanded", "false"); };
+      const update = () => options.forEach((button) => {
+        const active = button.getAttribute("data-theme-option") === (root.getAttribute("data-theme") || "system");
+        button.style.background = active ? "var(--accent)" : "";
+        button.style.color = active ? "var(--accent-fg)" : "";
+        button.setAttribute("aria-pressed", String(active));
+      });
       trigger?.addEventListener("click", (event) => {
         event.stopPropagation();
-        toggleMenu();
+        const hidden = menu?.classList.contains("hidden");
+        menu?.classList.toggle("hidden", !hidden);
+        trigger.setAttribute("aria-expanded", String(hidden));
       });
-
-      options.forEach((button) => {
-        button.addEventListener("click", (event) => {
-          event.preventDefault();
-          const value = button.getAttribute("data-theme-option") || "system";
-          setTheme(value);
-          closeMenu();
-        });
-        button.addEventListener("mouseenter", () => {
-          if (button.getAttribute("aria-pressed") !== "true") {
-            button.style.background = "var(--fg)";
-            button.style.color = "var(--bg)";
-          }
-        });
-        button.addEventListener("mouseleave", () => {
-          if (button.getAttribute("aria-pressed") !== "true") {
-            button.style.background = "";
-            button.style.color = "";
-          }
-        });
-      });
-
-      document.addEventListener("click", (event) => {
-        if (!menu || menu.classList.contains("hidden")) return;
-        if (!container.contains(event.target)) closeMenu();
-      });
-
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") closeMenu();
-      });
-
-      updateUI();
+      options.forEach((button) => button.addEventListener("click", () => {
+        const value = button.getAttribute("data-theme-option") || "system";
+        root.setAttribute("data-theme", value);
+        try { localStorage.setItem(storageKey, value); } catch {}
+        update(); close();
+      }));
+      document.addEventListener("click", (event) => { if (!container.contains(event.target)) close(); });
+      document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
+      update();
     })();
   </script>
 </div>

@@ -57,23 +57,23 @@ type Palette = {
   secondary: string;
 };
 
-const INK = "#132124";
-const PAPER = "#fff9df";
-const BLUE_PAPER = "#e8f6ff";
+const INK = "#20211f";
+const PAPER = "#f4f0e7";
+const BLUE_PAPER = "#ded8cd";
 // Accent colors use CSS variable references so the SVG picks up the
 // page's rotating accent when inlined. External /card-art/*.svg loads
 // fall back to the hex literal.
-const ACCENT = "var(--accent-light, #ff6b4a)";
-const ACCENT_DARK = "var(--accent-dark, #3dd6c6)";
-const ACCENT_2 = "var(--accent-2, #ffcf38)";
-const ACCENT_3 = "var(--accent-3, #69d2ff)";
+const ACCENT = "var(--accent-light, #bd4a32)";
+const ACCENT_DARK = "var(--accent-dark, #e66b4d)";
+const ACCENT_2 = "var(--accent-2, #bd4a32)";
+const ACCENT_3 = "var(--accent-3, #20211f)";
 
 const palettes: Palette[] = [
-  { bg: INK, fg: PAPER, accent: ACCENT_DARK, secondary: "#314144" },
-  { bg: PAPER, fg: INK, accent: ACCENT, secondary: "#d7ddc6" },
-  { bg: ACCENT_2, fg: INK, accent: ACCENT, secondary: "#f4b940" },
-  { bg: BLUE_PAPER, fg: INK, accent: ACCENT_3, secondary: "#b6d7df" },
-  { bg: ACCENT, fg: PAPER, accent: INK, secondary: "#f08d76" },
+  { bg: INK, fg: PAPER, accent: ACCENT_DARK, secondary: "#3b3b36" },
+  { bg: PAPER, fg: INK, accent: ACCENT, secondary: "#d6d0c5" },
+  { bg: ACCENT_2, fg: PAPER, accent: INK, secondary: "#9d3c2a" },
+  { bg: BLUE_PAPER, fg: INK, accent: ACCENT, secondary: "#c7c0b5" },
+  { bg: ACCENT, fg: PAPER, accent: INK, secondary: "#9d3c2a" },
 ];
 
 const allMotifs: Motif[] = [
@@ -337,7 +337,7 @@ const renderBurst = (rng: () => number, palette: Palette, w: number, h: number) 
 };
 
 const renderMono = (rng: () => number, palette: Palette, w: number, h: number) => {
-  const symbols = ["§", "◼", "●", "▲", "◆", "▪", "/", "×", "+", "#", "★", "◯", "∎"];
+  const symbols = ["A", "R", "C", "H", "01", "//", "×", "+", "#", "[ ]", "::"];
   const char = symbols[Math.floor(rng() * symbols.length)];
   const num = String(Math.floor(rng() * 99)).padStart(2, "0");
   return `

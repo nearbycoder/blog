@@ -38,29 +38,29 @@ type OgInput = {
 type Palette = { primary: string; secondary: string; glow: string };
 
 const paletteMap: Record<OgAccent, Palette> = {
-  amber: { primary: "#fbbf24", secondary: "#f59e0b", glow: "#fbbf24" },
-  cyan: { primary: "#67e8f9", secondary: "#22d3ee", glow: "#22d3ee" },
-  rose: { primary: "#fb7185", secondary: "#f43f5e", glow: "#fb7185" },
-  mist: { primary: "#e2e8f0", secondary: "#94a3b8", glow: "#e2e8f0" },
-  emerald: { primary: "#6ee7b7", secondary: "#10b981", glow: "#34d399" },
-  sky: { primary: "#7dd3fc", secondary: "#38bdf8", glow: "#7dd3fc" },
-  violet: { primary: "#c4b5fd", secondary: "#8b5cf6", glow: "#c4b5fd" },
-  lime: { primary: "#bef264", secondary: "#84cc16", glow: "#bef264" },
-  teal: { primary: "#5eead4", secondary: "#14b8a6", glow: "#5eead4" },
-  indigo: { primary: "#a5b4fc", secondary: "#6366f1", glow: "#a5b4fc" },
-  fuchsia: { primary: "#f0abfc", secondary: "#d946ef", glow: "#f0abfc" },
-  pink: { primary: "#f9a8d4", secondary: "#ec4899", glow: "#f9a8d4" },
-  orange: { primary: "#fdba74", secondary: "#f97316", glow: "#fdba74" },
-  red: { primary: "#fca5a5", secondary: "#ef4444", glow: "#fca5a5" },
-  yellow: { primary: "#fde047", secondary: "#eab308", glow: "#fde047" },
-  blue: { primary: "#93c5fd", secondary: "#3b82f6", glow: "#93c5fd" },
-  slate: { primary: "#cbd5f5", secondary: "#64748b", glow: "#cbd5f5" },
-  stone: { primary: "#d6d3d1", secondary: "#78716c", glow: "#d6d3d1" },
-  zinc: { primary: "#d4d4d8", secondary: "#71717a", glow: "#d4d4d8" },
-  neutral: { primary: "#e5e5e5", secondary: "#737373", glow: "#e5e5e5" },
-  purple: { primary: "#d8b4fe", secondary: "#a855f7", glow: "#d8b4fe" },
-  green: { primary: "#86efac", secondary: "#22c55e", glow: "#86efac" },
-  indigoDeep: { primary: "#818cf8", secondary: "#4f46e5", glow: "#818cf8" },
+  amber: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  cyan: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  rose: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  mist: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  emerald: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  sky: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  violet: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  lime: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  teal: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  indigo: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  fuchsia: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  pink: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  orange: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  red: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  yellow: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  blue: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  slate: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  stone: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  zinc: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  neutral: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  purple: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  green: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  indigoDeep: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
 };
 
 const escapeHtml = (value: string) =>
@@ -143,59 +143,51 @@ export const renderOgSvg = ({
   const svg = `
 <svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="${palette.primary}" stop-opacity="0.5" />
-      <stop offset="60%" stop-color="${palette.secondary}" stop-opacity="0.2" />
-      <stop offset="100%" stop-color="#0b0f14" stop-opacity="0" />
-    </linearGradient>
-    <radialGradient id="glow" cx="0.2" cy="0.2" r="0.65">
-      <stop offset="0%" stop-color="${palette.glow}" stop-opacity="0.35" />
-      <stop offset="65%" stop-color="#0b0f14" stop-opacity="0" />
-    </radialGradient>
+    <clipPath id="artClip"><rect x="780" y="0" width="420" height="630" /></clipPath>
     <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-      <path d="M 48 0 L 0 0 0 48" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1" />
+      <path d="M 48 0 L 0 0 0 48" stroke="#20211f" stroke-opacity="0.06" stroke-width="1" />
     </pattern>
   </defs>
-  <rect width="1200" height="630" fill="#0b0f14" />
-  <image href="data:image/svg+xml;utf8,${artwork}" width="1200" height="630" preserveAspectRatio="xMidYMid slice" />
+  <rect width="1200" height="630" fill="#e9e4da" />
   <rect width="1200" height="630" fill="url(#grid)" />
-  <rect width="1200" height="630" fill="url(#glow)" />
-  <rect width="1200" height="630" fill="rgba(6, 10, 18, 0.25)" />
-  <rect x="60" y="60" width="1080" height="510" rx="40" fill="#0f141b" stroke="#232b36" stroke-width="2" />
-  <rect x="60" y="60" width="1080" height="510" rx="40" fill="url(#accent)" />
+  <image href="data:image/svg+xml;utf8,${artwork}" width="1200" height="630" preserveAspectRatio="xMidYMid slice" clip-path="url(#artClip)" />
+  <rect x="0" y="0" width="16" height="630" fill="${palette.primary}" />
+  <line x1="60" y1="60" x2="1140" y2="60" stroke="#20211f" stroke-width="2" />
+  <line x1="60" y1="570" x2="1140" y2="570" stroke="#20211f" stroke-width="2" />
+  <circle cx="1110" cy="100" r="20" fill="none" stroke="#f4f0e7" stroke-width="2" />
 
-  <text x="120" y="170" fill="#d7dee8" font-family="JetBrains Mono, monospace" font-size="18" letter-spacing="0" font-weight="700">
+  <text x="72" y="110" fill="${palette.primary}" font-family="Space Grotesk, Arial, sans-serif" font-size="16" letter-spacing="3" font-weight="700">
     ${escapeHtml(eyebrow.toUpperCase())}
   </text>
 
-  <text x="120" y="${titleY}" fill="#f8fafc" font-family="Instrument Serif, Georgia, serif" font-size="64" font-weight="400">
+  <text x="72" y="${titleY}" fill="#20211f" font-family="Instrument Serif, Georgia, serif" font-size="64" font-weight="400">
     ${titleLines
       .map((line, index) => {
         const y = titleY + index * titleLineHeight;
-        return `<tspan x="120" y="${y}">${escapeHtml(line)}</tspan>`;
+        return `<tspan x="72" y="${y}">${escapeHtml(line)}</tspan>`;
       })
       .join("")}
   </text>
 
-  <text x="120" y="${descriptionY}" fill="#e2e8f0" font-family="Atkinson Hyperlegible, Arial, sans-serif" font-size="26" font-weight="400">
+  <text x="72" y="${descriptionY}" fill="#65655e" font-family="Space Grotesk, Arial, sans-serif" font-size="23" font-weight="400">
     ${descriptionLines
       .map((line, index) => {
         const y = descriptionY + index * descriptionLineHeight;
-        return `<tspan x="120" y="${y}">${escapeHtml(line)}</tspan>`;
+        return `<tspan x="72" y="${y}">${escapeHtml(line)}</tspan>`;
       })
       .join("")}
   </text>
 
   ${
     tagsLine
-      ? `<text x="120" y="${tagsY}" fill="#d3dae6" font-family="JetBrains Mono, monospace" font-size="18" letter-spacing="0" font-weight="700">${escapeHtml(
+      ? `<text x="72" y="${tagsY}" fill="#bd4a32" font-family="Space Grotesk, Arial, sans-serif" font-size="16" letter-spacing="2" font-weight="700">${escapeHtml(
           tagsLine
         )}</text>`
       : ""
   }
   ${
     footer
-      ? `<text x="120" y="520" fill="#c7d0de" font-family="JetBrains Mono, monospace" font-size="16" letter-spacing="0" font-weight="600">${escapeHtml(
+      ? `<text x="72" y="540" fill="#65655e" font-family="Space Grotesk, Arial, sans-serif" font-size="15" letter-spacing="2" font-weight="600">${escapeHtml(
           footer
         )}</text>`
       : ""

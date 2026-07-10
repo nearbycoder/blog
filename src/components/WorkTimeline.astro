@@ -2,22 +2,12 @@
 import { site } from "../data/site";
 ---
 
-<ol class="window-panel">
+<ol class="border-t" style="border-color: var(--border);">
   {(site.work as any[]).map((item: { company: string; role: string; range: string }, index: number) => (
-    <li
-      class="grid gap-3 px-5 py-4 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-6 sm:px-6"
-      style={index === 0 ? undefined : "border-top: 1.5px dashed var(--border);"}
-    >
-      <span class="card-index">
-        {String(index + 1).padStart(2, "0")}
-      </span>
-      <div class="min-w-0">
-        <p class="display text-2xl sm:text-3xl" style="line-height: 1;">{item.company}</p>
-        <p class="font-mono text-xs font-bold uppercase tracking-normal" style="color: var(--fg-muted);">{item.role}</p>
-      </div>
-      <span class="font-mono text-xs font-bold uppercase tracking-normal sm:justify-self-end" style="color: var(--fg-muted);">
-        {item.range}
-      </span>
+    <li class="group grid gap-3 border-b py-5 sm:grid-cols-[4rem_minmax(0,1fr)_minmax(9rem,auto)] sm:items-center" style="border-color: var(--border-dim);">
+      <span class="label" style="color: var(--accent);">{String(index + 1).padStart(2, "0")}</span>
+      <div><p class="display text-3xl transition duration-300 group-hover:translate-x-2 md:text-4xl">{item.company}</p><p class="label mt-1">{item.role}</p></div>
+      <span class="label sm:justify-self-end">{item.range}</span>
     </li>
   ))}
 </ol>
