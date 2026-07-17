@@ -4,14 +4,14 @@ const index = (Astro.props.index as number | undefined) ?? 0;
 const number = String(index + 1).padStart(2, "0");
 ---
 
-<article class="group grid gap-5 border-t py-6 md:grid-cols-[5rem_1fr]" style="border-color: var(--border);">
+<article class="group grid gap-5 border-t py-7 md:grid-cols-[5rem_1fr]" style="border-color: var(--border); border-top-width: var(--rule);">
   <div><span class="card-index">{number}</span></div>
   <div class="flex min-w-0 flex-col gap-4">
     <div class="meta-row"><span>{project.data.year}</span><span>/</span><span>{project.data.role}</span></div>
-    <a href={`/projects/${project.id}`} class="display text-4xl transition duration-300 group-hover:text-[var(--accent)] md:text-5xl">{project.data.title}</a>
+    <a href={`/projects/${project.id}`} class="display text-4xl transition duration-300 group-hover:translate-x-2 group-hover:text-[var(--accent)] md:text-5xl">{project.data.title}</a>
     <p class="max-w-xl text-sm leading-relaxed" style="color: var(--fg-muted);">{project.data.summary}</p>
     <div class="flex flex-wrap gap-1.5">{project.data.stack.slice(0, 6).map((item: string) => <span class="chip">{item}</span>)}</div>
-    <div class="mt-auto flex flex-wrap gap-2 pt-2">
+    <div class="mt-auto flex flex-wrap gap-4 pt-2">
       <a href={`/projects/${project.id}`} class="nav-link">Read case file</a>
       {project.data.link ? <a href={project.data.link} target="_blank" rel="noreferrer" class="nav-link">Live project</a> : null}
       {project.data.githubLink ? <a href={project.data.githubLink} target="_blank" rel="noreferrer" class="nav-link">Source</a> : null}

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fontsource/instrument-serif": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/space-grotesk": "^5.2.10",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.7",

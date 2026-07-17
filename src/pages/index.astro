@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
+import Marquee from "../components/Marquee.astro";
 import ArticleCard from "../components/ArticleCard.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import LayoffEntryCard from "../components/LayoffEntryCard.astro";
@@ -46,11 +47,15 @@ const recentLayoffEntries = layoffEntries
 <BaseLayout>
   <Hero />
 
+  <div class="mt-10 reveal" style="--delay: 60ms;">
+    <Marquee />
+  </div>
+
   <section class="mt-24 space-y-8 reveal" style="--delay: 80ms;">
     <header class="section-head">
       <div class="space-y-1">
-        <p class="label-strong">Field notes / 01</p>
-        <h2 class="display text-5xl md:text-6xl">Latest articles</h2>
+        <p class="label-strong">No. 01 — Field notes</p>
+        <h2 class="display text-5xl md:text-6xl">Latest <em>articles</em></h2>
       </div>
       <a href="/articles" class="btn">All articles</a>
     </header>
@@ -64,8 +69,8 @@ const recentLayoffEntries = layoffEntries
   <section class="mt-24 space-y-8 reveal" style="--delay: 160ms;">
     <header class="section-head">
       <div class="space-y-1">
-        <p class="label-strong">Workbench / 02</p>
-        <h2 class="display text-5xl md:text-6xl">Selected builds</h2>
+        <p class="label-strong">No. 02 — Workbench</p>
+        <h2 class="display text-5xl md:text-6xl">Selected <em>builds</em></h2>
       </div>
       <a href="/projects" class="btn">All projects</a>
     </header>
@@ -80,8 +85,8 @@ const recentLayoffEntries = layoffEntries
     <section class="mt-24 space-y-8 reveal" style="--delay: 200ms;">
       <header class="section-head">
         <div class="space-y-1">
-          <p class="label-strong">Build diary / 03</p>
-          <h2 class="display text-5xl md:text-6xl">Weekly updates</h2>
+          <p class="label-strong">No. 03 — Build diary</p>
+          <h2 class="display text-5xl md:text-6xl">Weekly <em>updates</em></h2>
         </div>
         <a href="/layoff" class="btn">Full log</a>
       </header>
@@ -96,8 +101,8 @@ const recentLayoffEntries = layoffEntries
   <section class="mt-24 space-y-8 reveal" style="--delay: 240ms;">
     <header class="section-head">
       <div class="space-y-1">
-        <p class="label-strong">Timeline / 04</p>
-        <h2 class="display text-5xl md:text-6xl">Where I've built</h2>
+        <p class="label-strong">No. 04 — Timeline</p>
+        <h2 class="display text-5xl md:text-6xl">Where I've <em>built</em></h2>
       </div>
     </header>
     <WorkTimeline />

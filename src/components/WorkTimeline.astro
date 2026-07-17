@@ -2,9 +2,9 @@
 import { site } from "../data/site";
 ---
 
-<ol class="border-t" style="border-color: var(--border);">
+<ol class="border-t" style="border-color: var(--border); border-top-width: var(--rule);">
   {(site.work as any[]).map((item: { company: string; role: string; range: string }, index: number) => (
-    <li class="group grid gap-3 border-b py-5 sm:grid-cols-[4rem_minmax(0,1fr)_minmax(9rem,auto)] sm:items-center" style="border-color: var(--border-dim);">
+    <li class="group grid gap-3 border-b py-5 sm:grid-cols-[4rem_minmax(0,1fr)_minmax(9rem,auto)] sm:items-center" style="border-color: var(--border-dim); border-bottom-width: var(--rule);">
       <span class="label" style="color: var(--accent);">{String(index + 1).padStart(2, "0")}</span>
       <div><p class="display text-3xl transition duration-300 group-hover:translate-x-2 md:text-4xl">{item.company}</p><p class="label mt-1">{item.role}</p></div>
       <span class="label sm:justify-self-end">{item.range}</span>

@@ -3,12 +3,15 @@ import { site } from "../data/site";
 const year = new Date().getFullYear();
 ---
 
-<footer class="mt-12 border-t" style="border-color: var(--border);">
-  <div class="mx-auto w-full max-w-[1240px] px-5 py-10 sm:px-8">
+<footer class="mt-16 border-t" style="border-color: var(--border); border-top-width: var(--rule-heavy);">
+  <div class="mx-auto w-full max-w-[1240px] px-5 py-12 sm:px-8">
     <div class="grid gap-10 md:grid-cols-[1.4fr_.7fr_.7fr]">
       <div>
-        <p class="label">End transmission / {year}</p>
-        <p class="display mt-4 max-w-xl text-4xl md:text-5xl">Still curious. Still building. Still taking notes.</p>
+        <p class="paper-strip">Colophon / {year}</p>
+        <p class="display mt-6 max-w-xl text-4xl md:text-5xl">
+          Still curious. Still building. Still taking <em>notes.</em>
+        </p>
+        <p class="label mt-6">Set in Instrument Serif, Space Grotesk &amp; JetBrains Mono.</p>
       </div>
       <div>
         <p class="label-strong mb-4">Index</p>
@@ -25,9 +28,15 @@ const year = new Date().getFullYear();
         </ul>
       </div>
     </div>
-    <div class="mt-12 flex flex-wrap items-center justify-between gap-4 border-t pt-4" style="border-color: var(--border-dim);">
+    <div class="mt-12 flex flex-wrap items-center justify-between gap-4 border-t pt-4" style="border-color: var(--border); border-top-width: var(--rule);">
       <p class="label">{site.name} / {site.location}</p>
-      <p class="label">Built from scratch / Filed with care</p>
+      <p class="label flex items-center gap-2">
+        <svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <circle cx="12" cy="12" r="7"></circle>
+          <path d="M12 1v5M12 18v5M1 12h5M18 12h5"></path>
+        </svg>
+        Built from scratch / Filed with care
+      </p>
     </div>
   </div>
 </footer>

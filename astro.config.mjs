@@ -33,6 +33,12 @@ export default defineConfig({
             style: "normal",
             data: readFileSync("node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff"),
           },
+          {
+            name: "JetBrains Mono",
+            weight: 700,
+            style: "normal",
+            data: readFileSync("node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff"),
+          },
         ],
       },
       render: renderNearbycoderOg,

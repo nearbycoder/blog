@@ -1,18 +1,18 @@
 import React from "react";
 
-const INK = "#132124";
-const PAPER = "#fff9df";
-const BLUE_PAPER = "#e8f6ff";
+const INK = "#17140e";
+const PAPER = "#f5f1e6";
+const BLUE_PAPER = "#e4dec9";
 
-// Accent palette — must stay in sync with the client-side accent rotation
-// in BaseLayout.astro. Each entry has a saturated (light) tone used on
-// cream and a brighter (dark) tone used on ink.
+// Accent palette — cobalt press-ink family, kept in sync with the
+// site's Riso Press design tokens. Each entry has a saturated (light)
+// tone used on paper and a brighter (dark) tone used on ink.
 const ACCENTS = [
-  { light: "#ff6b4a", dark: "#5ff0d8" },
-  { light: "#00a884", dark: "#f7ff57" },
-  { light: "#1ea7ff", dark: "#ff8bd1" },
-  { light: "#ef4e7b", dark: "#8ee95d" },
-  { light: "#2ec4b6", dark: "#ffd166" },
+  { light: "#2743d9", dark: "#8fa1ff" },
+  { light: "#1d2f9e", dark: "#6b7fff" },
+  { light: "#2743d9", dark: "#c8d0ff" },
+  { light: "#4f66f0", dark: "#8fa1ff" },
+  { light: "#17140e", dark: "#f5f1e6" },
 ];
 
 const SECTION_THEME = {
@@ -413,7 +413,7 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
       position: "relative",
       backgroundColor: variant.bg,
       color: variant.fg,
-      fontFamily: "Atkinson Hyperlegible, Arial, sans-serif",
+      fontFamily: "Space Grotesk, Arial, sans-serif",
       overflow: "hidden",
     },
     children: [
@@ -458,6 +458,7 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                   textTransform: "uppercase",
                   color: variant.fg,
                   fontWeight: 700,
+                  fontFamily: "JetBrains Mono, monospace",
                   borderBottom: `4px solid ${variant.fg}`,
                   paddingBottom: 8,
                   alignSelf: "flex-start",

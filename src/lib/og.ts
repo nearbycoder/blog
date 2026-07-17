@@ -38,29 +38,29 @@ type OgInput = {
 type Palette = { primary: string; secondary: string; glow: string };
 
 const paletteMap: Record<OgAccent, Palette> = {
-  amber: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  cyan: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  rose: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  mist: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  emerald: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  sky: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  violet: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  lime: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  teal: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  indigo: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  fuchsia: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  pink: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  orange: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  red: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  yellow: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  blue: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  slate: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  stone: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  zinc: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  neutral: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  purple: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  green: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
-  indigoDeep: { primary: "#bd4a32", secondary: "#9d3c2a", glow: "#bd4a32" },
+  amber: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  cyan: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  rose: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  mist: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  emerald: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  sky: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  violet: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  lime: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  teal: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  indigo: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  fuchsia: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  pink: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  orange: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  red: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  yellow: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  blue: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  slate: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  stone: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  zinc: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  neutral: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  purple: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  green: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
+  indigoDeep: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
 };
 
 const escapeHtml = (value: string) =>
@@ -145,22 +145,22 @@ export const renderOgSvg = ({
   <defs>
     <clipPath id="artClip"><rect x="780" y="0" width="420" height="630" /></clipPath>
     <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-      <path d="M 48 0 L 0 0 0 48" stroke="#20211f" stroke-opacity="0.06" stroke-width="1" />
+      <path d="M 48 0 L 0 0 0 48" stroke="#17140e" stroke-opacity="0.06" stroke-width="1" />
     </pattern>
   </defs>
-  <rect width="1200" height="630" fill="#e9e4da" />
+  <rect width="1200" height="630" fill="#f5f1e6" />
   <rect width="1200" height="630" fill="url(#grid)" />
   <image href="data:image/svg+xml;utf8,${artwork}" width="1200" height="630" preserveAspectRatio="xMidYMid slice" clip-path="url(#artClip)" />
   <rect x="0" y="0" width="16" height="630" fill="${palette.primary}" />
-  <line x1="60" y1="60" x2="1140" y2="60" stroke="#20211f" stroke-width="2" />
-  <line x1="60" y1="570" x2="1140" y2="570" stroke="#20211f" stroke-width="2" />
+  <line x1="60" y1="60" x2="1140" y2="60" stroke="#17140e" stroke-width="2" />
+  <line x1="60" y1="570" x2="1140" y2="570" stroke="#17140e" stroke-width="2" />
   <circle cx="1110" cy="100" r="20" fill="none" stroke="#f4f0e7" stroke-width="2" />
 
   <text x="72" y="110" fill="${palette.primary}" font-family="Space Grotesk, Arial, sans-serif" font-size="16" letter-spacing="3" font-weight="700">
     ${escapeHtml(eyebrow.toUpperCase())}
   </text>
 
-  <text x="72" y="${titleY}" fill="#20211f" font-family="Instrument Serif, Georgia, serif" font-size="64" font-weight="400">
+  <text x="72" y="${titleY}" fill="#17140e" font-family="Instrument Serif, Georgia, serif" font-size="64" font-weight="400">
     ${titleLines
       .map((line, index) => {
         const y = titleY + index * titleLineHeight;
@@ -169,7 +169,7 @@ export const renderOgSvg = ({
       .join("")}
   </text>
 
-  <text x="72" y="${descriptionY}" fill="#65655e" font-family="Space Grotesk, Arial, sans-serif" font-size="23" font-weight="400">
+  <text x="72" y="${descriptionY}" fill="#5b5442" font-family="Space Grotesk, Arial, sans-serif" font-size="23" font-weight="400">
     ${descriptionLines
       .map((line, index) => {
         const y = descriptionY + index * descriptionLineHeight;
@@ -180,14 +180,14 @@ export const renderOgSvg = ({
 
   ${
     tagsLine
-      ? `<text x="72" y="${tagsY}" fill="#bd4a32" font-family="Space Grotesk, Arial, sans-serif" font-size="16" letter-spacing="2" font-weight="700">${escapeHtml(
+      ? `<text x="72" y="${tagsY}" fill="#2743d9" font-family="Space Grotesk, Arial, sans-serif" font-size="16" letter-spacing="2" font-weight="700">${escapeHtml(
           tagsLine
         )}</text>`
       : ""
   }
   ${
     footer
-      ? `<text x="72" y="540" fill="#65655e" font-family="Space Grotesk, Arial, sans-serif" font-size="15" letter-spacing="2" font-weight="600">${escapeHtml(
+      ? `<text x="72" y="540" fill="#5b5442" font-family="Space Grotesk, Arial, sans-serif" font-size="15" letter-spacing="2" font-weight="600">${escapeHtml(
           footer
         )}</text>`
       : ""

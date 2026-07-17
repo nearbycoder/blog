@@ -4,17 +4,19 @@ const currentCompany = site.work[0]?.company;
 ---
 
 <section class="page-shell reveal" style="--delay: 20ms;">
-  <div class="border-y" style="border-color: var(--border);">
+  <div class="border-y" style="border-color: var(--border); border-top-width: var(--rule-heavy); border-bottom-width: var(--rule-heavy);">
     <div class="grid min-h-[min(780px,82dvh)] grid-cols-1 lg:grid-cols-12">
       <div class="flex flex-col justify-between gap-12 py-8 lg:col-span-7 lg:border-r lg:py-12 lg:pr-10" style="border-color: var(--border);">
         <div class="flex items-center justify-between gap-4">
-          <p class="paper-strip">Personal engineering archive</p>
+          <p class="paper-strip">Personal engineering blog</p>
           <p class="label hidden sm:block">Tulsa / 36.1540° N</p>
         </div>
 
         <div>
           <p class="label mb-5 flex items-center gap-2"><span class="dot dot-accent"></span> Currently building at {currentCompany}</p>
-          <h1 class="display max-w-[11ch] text-[clamp(4rem,8vw,7.3rem)]">Useful systems for uncertain days.</h1>
+          <h1 class="display max-w-[12ch] text-[clamp(3.4rem,7vw,6.2rem)]">
+            Useful systems for <em>uncertain</em> days.
+          </h1>
         </div>
 
         <div class="grid gap-7 sm:grid-cols-[1fr_auto] sm:items-end">
@@ -27,19 +29,21 @@ const currentCompany = site.work[0]?.company;
       </div>
 
       <aside class="relative grid grid-rows-[1fr_auto] lg:col-span-5 lg:pl-10">
-        <div class="relative min-h-[28rem] overflow-hidden lg:min-h-0">
-          <img src="/images/0289d46e-a3de-4f6f-b593-d81393ec931e.png" alt="Josh Hamilton" class="absolute inset-0 h-full w-full object-cover grayscale contrast-[1.04]" loading="eager" />
-          <div class="absolute inset-0" style="background: linear-gradient(180deg, transparent 55%, color-mix(in srgb, var(--accent) 72%, transparent)); mix-blend-mode: multiply;"></div>
-          <div class="absolute left-5 top-5 border px-3 py-2" style="border-color: color-mix(in srgb, white 55%, transparent); color: white;">
-            <p class="label" style="color: inherit;">Subject / JH</p>
+        <div class="relative min-h-[28rem] lg:min-h-0">
+          <div class="frame-image frame-image-fill">
+            <img src="/images/0289d46e-a3de-4f6f-b593-d81393ec931e.png" alt="Josh Hamilton" class="absolute inset-0 h-full w-full object-cover grayscale contrast-[1.04]" loading="eager" />
+            <div class="absolute inset-0" style="background: linear-gradient(180deg, transparent 58%, color-mix(in srgb, var(--accent) 68%, transparent)); mix-blend-mode: multiply;"></div>
+            <p class="display absolute bottom-4 left-5 text-[7rem] leading-none" style="color: color-mix(in srgb, white 84%, transparent);">01</p>
           </div>
-          <p class="display absolute bottom-4 right-5 text-[7rem] leading-none" style="color: color-mix(in srgb, white 82%, transparent);">01</p>
+          <div class="sticker-note absolute -left-2 top-6 z-10 px-3 py-2 lg:-left-4" style="transform: rotate(-3deg);">
+            <p class="label" style="color: var(--fg);">Subject / JH</p>
+          </div>
         </div>
-        <div class="grid grid-cols-2 border-x border-b" style="border-color: var(--border);">
+        <div class="grid grid-cols-2 border-x border-b" style="border-color: var(--border); border-width: var(--rule); border-top: 0;">
           <div class="p-4">
             <p class="label">Role</p><p class="mt-2 text-sm font-semibold">Member of Technical Staff</p>
           </div>
-          <div class="border-l p-4" style="border-color: var(--border);">
+          <div class="border-l p-4" style="border-color: var(--border); border-left-width: var(--rule);">
             <p class="label">Status</p><p class="mt-2 text-sm font-semibold">Shipping in public</p>
           </div>
         </div>

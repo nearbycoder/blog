@@ -6,17 +6,19 @@ const pathname = Astro.url.pathname;
 const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 ---
 
-<header class="sticky top-0 z-30 border-b" style="border-color: var(--border); background: color-mix(in srgb, var(--bg) 91%, transparent); backdrop-filter: blur(14px);">
+<header class="sticky top-0 z-30 border-b" style="border-color: var(--border); border-bottom-width: var(--rule); background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(14px);">
   <div class="mx-auto grid w-full max-w-[1240px] grid-cols-[1fr_auto] items-center gap-5 px-5 py-3 sm:px-8 lg:grid-cols-[250px_1fr_auto]">
     <a href="/" class="group flex min-w-0 items-center gap-3" aria-label="Nearbycoder home">
-      <span class="relative grid h-9 w-9 shrink-0 place-items-center border" style="border-color: var(--border);">
-        <span class="h-2 w-2 rounded-full" style="background: var(--accent);"></span>
-        <span class="absolute inset-x-1/2 top-0 h-full w-px" style="background: var(--border-dim);"></span>
-        <span class="absolute inset-y-1/2 left-0 h-px w-full" style="background: var(--border-dim);"></span>
+      <span class="relative grid h-9 w-9 shrink-0 place-items-center border" style="border-color: var(--border); border-width: var(--rule); background: var(--surface); box-shadow: 3px 3px 0 var(--shadow-color);">
+        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="var(--fg)" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="7"></circle>
+          <path d="M12 1v5M12 18v5M1 12h5M18 12h5"></path>
+          <rect x="9.5" y="9.5" width="5" height="5" fill="var(--accent)" stroke="none"></rect>
+        </svg>
       </span>
       <span class="min-w-0 leading-none">
         <span class="block truncate text-sm font-bold tracking-[-0.02em]">NEARBYCODER</span>
-        <span class="label mt-1 block truncate">Signal archive / 26</span>
+        <span class="label mt-1 block truncate">Personal blog / 26</span>
       </span>
     </a>
 

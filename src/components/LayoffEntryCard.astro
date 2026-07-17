@@ -5,12 +5,12 @@ const number = String(index + 1).padStart(2, "0");
 const cadenceLabel = entry.data.week ? `W${entry.data.week}` : entry.data.day ? `D${entry.data.day}` : null;
 ---
 
-<article class="group grid gap-5 border-t py-6 md:grid-cols-[4rem_1fr]" style="border-color: var(--border);">
+<article class="group grid gap-5 border-t py-7 md:grid-cols-[4rem_1fr]" style="border-color: var(--border); border-top-width: var(--rule);">
   <span class="card-index">{number}</span>
   <div class="flex min-w-0 flex-col gap-4">
     <div class="meta-row"><span>{entry.data.date}</span>{cadenceLabel && <span>{cadenceLabel}</span>}<span style="color: var(--accent);">{entry.data.status}</span></div>
-    {entry.data.image ? <div class="aspect-[16/8] overflow-hidden border" style="border-color: var(--border-dim);"><img src={entry.data.image} alt={entry.data.title} loading="lazy" class="h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0" /></div> : null}
-    <a href={`/layoff/${entry.id}`} class="display text-3xl transition duration-300 group-hover:text-[var(--accent)] md:text-4xl">{entry.data.title}</a>
+    {entry.data.image ? <div class="block-box block-box-shadow block-box-hover aspect-[16/8] overflow-hidden"><img src={entry.data.image} alt={entry.data.title} loading="lazy" class="h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0" /></div> : null}
+    <a href={`/layoff/${entry.id}`} class="display text-3xl transition duration-300 group-hover:translate-x-2 group-hover:text-[var(--accent)] md:text-4xl">{entry.data.title}</a>
     <p class="text-sm leading-relaxed" style="color: var(--fg-muted);">{entry.data.summary}</p>
     <div class="flex flex-wrap gap-1.5">{entry.data.stack.slice(0, 5).map((item: string) => <span class="chip">{item}</span>)}</div>
     <a href={`/layoff/${entry.id}`} class="nav-link mt-auto">Open dispatch</a>

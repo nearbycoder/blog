@@ -143,9 +143,9 @@ const json = JSON.stringify(items).replace(/</g, "\\u003c");
         const link = document.createElement("a");
         link.href = entry.item.url;
         const displayIndex = registerIndex(entry.item);
-        link.className = "command-option flex items-center justify-between gap-4 rounded-[6px] px-3 py-2.5 transition";
-        link.style.border = "1.5px solid var(--border)";
-        link.style.background = "color-mix(in srgb, var(--surface) 86%, transparent)";
+        link.className = "command-option flex items-center justify-between gap-4 px-3 py-2.5 transition";
+        link.style.border = "2px solid var(--border)";
+        link.style.background = "var(--surface)";
         link.setAttribute("data-index", String(displayIndex));
         link.setAttribute("role", "option");
 

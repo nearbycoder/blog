@@ -1,0 +1,28 @@
+---
+const { items = [] } = Astro.props as { items?: string[] };
+const line = items.length
+  ? items
+  : [
+      "Shipping in public",
+      "Building with AI",
+      "Field notes from the bench",
+      "Member of Technical Staff @ Augment Code",
+      "Tulsa, Oklahoma",
+      "Est. 2013",
+    ];
+---
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    {[0, 1].map((copy) => (
+      <div class="marquee-item">
+        {line.map((item) => (
+          <>
+            <span>{item}</span>
+            <span class="marquee-dot"></span>
+          </>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
