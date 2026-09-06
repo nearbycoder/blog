@@ -1,4 +1,6 @@
 ---
+import ReadingTools from "../../components/ReadingTools.astro";
+import CopyCode from "../../components/CopyCode.astro";
 import ArticleContext from "../../components/ArticleContext.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
@@ -79,9 +81,18 @@ const toc = headings.filter((heading) => heading.depth === 2);
               </>
             </nav>
           )
-        }<ShareArticle />
+        }<ShareArticle /><ReadingTools id={entry.id} />
       </aside><div>
-        <div class="article-content"><Content /></div><ArticleContext articleId={entry.id} /><div class="reading-end">
+        <div id="reading-resume" class="reading-resume" hidden>
+          <p class="label">Pick up where you left off</p><a
+            class="text-link"
+            href="#main-content">Continue reading →</a>
+        </div><div class="article-content"><Content /></div><div
+          class="reading-finish"
+        >
+          <button id="mark-reading-complete" class="btn" disabled
+            >Mark as read</button>
+        </div><ArticleContext articleId={entry.id} /><div class="reading-end">
           <div class="flex flex-wrap gap-2">
             {entry.data.tags.map((tag) => <span class="chip">{tag}</span>)}
           </div><a href="/articles" class="text-link">Back to all articles →</a>
@@ -105,7 +116,8 @@ const toc = headings.filter((heading) => heading.depth === 2);
       </section>
     )
   }
-</BaseLayout>
+  <CopyCode /></BaseLayout
+>
 <script>
   const links = Array.from(
     document.querySelectorAll<HTMLAnchorElement>(".toc a"),

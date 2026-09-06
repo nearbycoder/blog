@@ -1,0 +1,16 @@
+---
+const { id } = Astro.props;
+---
+
+<div class="reading-tools" data-reading-id={id}>
+  <button class="btn" id="save-article" aria-pressed="false" disabled
+    >Save article</button
+  >
+  <a href="/reading-list" class="text-link">Your reading list →</a>
+  <label class="reading-remember"
+    ><input type="checkbox" id="remember-reading" disabled />Remember my place</label
+  >
+  <p class="lab-hint">Saves and reading history stay in this browser.</p>
+  <p id="reading-tool-status" role="status" class="lab-hint"></p>
+</div>
+<script src="../scripts/reading-tools.ts"></script>

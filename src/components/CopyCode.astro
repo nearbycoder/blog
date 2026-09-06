@@ -1,0 +1,32 @@
+<script>
+  document
+    .querySelectorAll<HTMLPreElement>(".article-content pre")
+    .forEach((pre, index) => {
+      const code = pre.querySelector("code");
+      if (!code) return;
+      const wrapper = document.createElement("div");
+      wrapper.className = "code-with-tools";
+      const bar = document.createElement("div");
+      bar.className = "code-toolbar";
+      const status = document.createElement("span");
+      status.setAttribute("role", "status");
+      status.className = "code-copy-status";
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "btn code-copy";
+      button.textContent = "Copy code";
+      button.setAttribute("aria-label", `Copy code block ${index + 1}`);
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent ?? "");
+          status.textContent = "Code copied.";
+        } catch {
+          status.textContent =
+            "Clipboard unavailable. Select the code to copy it.";
+        }
+      });
+      pre.before(wrapper);
+      bar.append(status, button);
+      wrapper.append(bar, pre);
+    });
+</script>
