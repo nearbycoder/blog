@@ -1,0 +1,93 @@
+<div id="poll-lab" class="lab-workbench">
+  <form id="local-poll" class="lab-controls">
+    <fieldset>
+      <legend>What makes a side project worth shipping?</legend>
+      {
+        [
+          "It solves my own problem",
+          "It teaches me something",
+          "Someone else asks for it",
+        ].map((label, i) => (
+          <label class="poll-option">
+            <input type="radio" name="answer" value={i} required />
+            {label}
+          </label>
+        ))
+      }
+    </fieldset>
+    <div class="lab-actions">
+      <button type="submit" class="btn btn-accent" disabled>Cast vote</button
+      ><button type="button" id="poll-reset" class="btn" disabled
+        >Reset vote</button>
+    </div>
+    <p class="lab-status" role="status" id="poll-status">
+      Enable JavaScript to try the poll.
+    </p>
+  </form>
+  <div class="poll-results">
+    <h2>Your tab’s results</h2><p class="lab-hint">
+      This is a single-vote sandbox. Results start at zero and reset when you
+      leave. Nothing is sent to QikPoll.
+    </p>
+    {
+      ["My own problem", "Learning", "Someone asks"].map((label, i) => (
+        <div class="poll-result">
+          <>
+            <div>
+              <>
+                <span>{label}</span>
+                <strong data-votes={i}>0 votes</strong>
+              </>
+            </div>
+            <meter min="0" max="1" value="0" data-meter={i} aria-label={label}>
+              0 of 1
+            </meter>
+          </>
+        </div>
+      ))
+    }
+    <p class="lab-hint">
+      Change your selection and vote again to replace your vote. The total stays
+      at one.
+    </p>
+  </div>
+</div>
+<script>
+  const form = document.querySelector<HTMLFormElement>("#local-poll")!;
+  const submit = form.querySelector<HTMLButtonElement>("[type=submit]")!;
+  const reset = form.querySelector<HTMLButtonElement>("#poll-reset")!;
+  const status = document.querySelector<HTMLElement>("#poll-status")!;
+  let vote: number | null = null;
+  function draw() {
+    document
+      .querySelectorAll<HTMLElement>("[data-votes]")
+      .forEach(
+        (el) =>
+          (el.textContent =
+            Number(el.dataset.votes) === vote ? "1 vote" : "0 votes"),
+      );
+    document
+      .querySelectorAll<HTMLMeterElement>("[data-meter]")
+      .forEach((el) => {
+        el.value = Number(el.dataset.meter) === vote ? 1 : 0;
+        el.textContent = `${el.value} of 1`;
+      });
+    reset.disabled = vote === null;
+    submit.textContent = vote === null ? "Cast vote" : "Replace vote";
+  }
+  submit.disabled = false;
+  status.textContent = "No votes yet. Choose an answer to begin.";
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    vote = Number(new FormData(form).get("answer"));
+    draw();
+    status.textContent = "Vote counted in this tab. 1 total vote.";
+  });
+  reset.addEventListener("click", () => {
+    vote = null;
+    form.reset();
+    draw();
+    status.textContent = "Vote reset. 0 total votes.";
+    submit.focus();
+  });
+</script>

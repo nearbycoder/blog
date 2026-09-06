@@ -1,0 +1,129 @@
+<div class="lab-workbench" id="agent-lab">
+  <div class="lab-controls">
+    <h2>A small task, several decisions.</h2>
+    <label for="agent-scenario">Choose a scenario</label>
+    <select id="agent-scenario" class="lab-select"
+      ><option value="test">Investigate a failing test</option><option
+        value="artifact">Share a build artifact</option
+      ></select
+    >
+    <label class="poll-option"
+      ><input type="checkbox" id="agent-failure" />Make the first tool call fail</label
+    >
+    <p class="lab-hint">
+      A scripted explanation inspired by SoloAgent. No model requests, file
+      access, or commands run on your computer.
+    </p>
+    <div class="lab-actions">
+      <button id="agent-next" class="btn btn-accent" disabled
+        >Begin walkthrough</button
+      ><button id="agent-reset" class="btn" disabled>Start over</button>
+    </div>
+    <p class="lab-status" id="agent-status" role="status">
+      Enable JavaScript to step through the loop.
+    </p>
+  </div>
+  <ol
+    id="agent-transcript"
+    class="agent-transcript"
+    aria-label="Workflow steps"
+  >
+    <li class="lab-hint">The first step is understanding the request.</li>
+  </ol>
+</div>
+<script>
+  type Step = { title: string; body: string };
+  const scenario =
+      document.querySelector<HTMLSelectElement>("#agent-scenario")!,
+    failure = document.querySelector<HTMLInputElement>("#agent-failure")!;
+  const next = document.querySelector<HTMLButtonElement>("#agent-next")!,
+    reset = document.querySelector<HTMLButtonElement>("#agent-reset")!;
+  const transcript =
+      document.querySelector<HTMLOListElement>("#agent-transcript")!,
+    status = document.querySelector<HTMLElement>("#agent-status")!;
+  let cursor = 0;
+  function steps(): Step[] {
+    const isTest = scenario.value === "test";
+    const rows: Step[] = [
+      {
+        title: "Gather context",
+        body: isTest
+          ? "The user reports a failing date-format test. The harness supplies the request, repository instructions, and available tools."
+          : "The user wants a teammate to download a build. The harness supplies the artifact path and sharing constraints.",
+      },
+      {
+        title: "Choose a tool",
+        body: isTest
+          ? "The model proposes reading the failing assertion and running the relevant test. The harness validates the requested tool and its arguments."
+          : "The model proposes checking that the artifact exists before requesting a temporary download link. The harness validates tool arguments.",
+      },
+    ];
+    if (failure.checked)
+      rows.push(
+        {
+          title: "Handle a tool failure",
+          body: isTest
+            ? "The test runner is unavailable. The harness returns the failure as a tool result, preserving the conversation instead of claiming the test passed."
+            : "The upload service times out. The harness returns an error. There is no usable link yet.",
+        },
+        {
+          title: "Replan with evidence",
+          body: isTest
+            ? "The next decision is to inspect the package scripts and report the missing prerequisite. Retrying the same command would not fix the environment."
+            : "The next decision is to check whether the upload completed before retrying. This avoids accidentally creating duplicate artifacts.",
+        },
+      );
+    else
+      rows.push({
+        title: "Read the tool result",
+        body: isTest
+          ? "The example test output shows a timezone-dependent assertion. That evidence narrows the next investigation; it does not prove a fix."
+          : "The example tool returns an expiring download URL. The harness records it as a result available for the next model turn.",
+      });
+    rows.push({
+      title: "Review before finishing",
+      body: failure.checked
+        ? "The final response explains what failed and the next useful action. A visible failure is better than an invented success."
+        : isTest
+          ? "The next useful action is to check the intended timezone, make a focused change, and rerun the test. This walkthrough stops before that work."
+          : "The response can share the verified result and its expiry. The model’s prose should match the evidence returned by the tool.",
+    });
+    return rows;
+  }
+  function start() {
+    cursor = 0;
+    transcript.replaceChildren();
+    const li = document.createElement("li");
+    li.className = "lab-hint";
+    li.textContent = "The first step is understanding the request.";
+    transcript.append(li);
+    next.disabled = false;
+    reset.disabled = true;
+    next.textContent = "Begin walkthrough";
+    status.textContent = "Ready to explore.";
+  }
+  next.addEventListener("click", () => {
+    const rows = steps();
+    if (cursor === 0) transcript.replaceChildren();
+    const row = rows[cursor++];
+    const li = document.createElement("li"),
+      h = document.createElement("h3"),
+      p = document.createElement("p");
+    h.textContent = row.title;
+    p.textContent = row.body;
+    li.append(h, p);
+    transcript.append(li);
+    next.disabled = cursor === rows.length;
+    reset.disabled = false;
+    next.textContent =
+      cursor === rows.length ? "Walkthrough complete" : "Next step";
+    status.textContent = `Step ${cursor} of ${rows.length}: ${row.title}.`;
+  });
+  scenario.addEventListener("change", start);
+  failure.addEventListener("change", start);
+  reset.addEventListener("click", () => {
+    start();
+    next.focus();
+  });
+  start();
+</script>

@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
-import {getReadingPaths} from "../lib/discovery";
+import { labs } from "../data/labs";
+import { getReadingPaths } from "../lib/discovery";
 import SiteHeader from "../components/SiteHeader.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import CommandPalette from "../components/CommandPalette.astro";
@@ -33,13 +34,34 @@ const articles = ((await getCollection("articles")) as any[]).sort(
 const projects = (await getCollection("projects")) as any[];
 const layoffEntries = (await getCollection("layoff")) as any[];
 
-const readingPaths=await getReadingPaths();
-const postmortems=(await getCollection("postmortems")).filter(e=>!e.data.draft);
+const readingPaths = await getReadingPaths();
+const postmortems = (await getCollection("postmortems")).filter(
+  (e) => !e.data.draft,
+);
 const searchItems = [
-  ...readingPaths.map(path=>({type:"Reading path",title:path.title,url:`/start-here/${path.slug}`,subtitle:`${path.entries.length} stories`,keywords:path.description})),
-  ...postmortems.map(entry=>({type:"Postmortem",title:entry.data.title,url:`/postmortems/${entry.id}`,subtitle:entry.data.date,keywords:entry.data.description})),
+  ...labs.map((lab) => ({
+    type: "Experiment",
+    title: lab.title,
+    url: `/lab/${lab.slug}`,
+    subtitle: lab.kind,
+    keywords: lab.description,
+  })),
+  ...readingPaths.map((path) => ({
+    type: "Reading path",
+    title: path.title,
+    url: `/start-here/${path.slug}`,
+    subtitle: `${path.entries.length} stories`,
+    keywords: path.description,
+  })),
+  ...postmortems.map((entry) => ({
+    type: "Postmortem",
+    title: entry.data.title,
+    url: `/postmortems/${entry.id}`,
+    subtitle: entry.data.date,
+    keywords: entry.data.description,
+  })),
   { type: "Page", title: "Home", url: "/", subtitle: "Navigation" },
-  ...[...site.nav,...site.explore].map((item) => ({
+  ...[...site.nav, ...site.explore].map((item) => ({
     type: "Page",
     title: item.label,
     url: item.href,

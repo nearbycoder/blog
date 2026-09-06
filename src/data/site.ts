@@ -21,8 +21,9 @@ export const site = {
     { label: "Uses", href: "/uses" },
   ],
   explore: [
-    {label:"Now",href:"/now"},
-    {label:"Postmortems",href:"/postmortems"},
+    { label: "Lab", href: "/lab" },
+    { label: "Now", href: "/now" },
+    { label: "Postmortems", href: "/postmortems" },
   ],
   hero: {
     title:

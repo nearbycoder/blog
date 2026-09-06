@@ -11,3 +11,9 @@
 To add a postmortem, create `src/content/postmortems/<slug>.md` with `title`, `description`, `date`, `project`, and `sources` (article IDs). Use headings for what shipped, what proved difficult, where AI fit, tradeoffs, and what changes next time. Do not invent an incident or next step when the original notes do not contain one. Set `draft: true` while writing.
 
 Validation: 68 pages; 10 browser tests; route and asset checks; 320/390/768/1440 px; new surfaces included in light/dark Axe checks.
+
+## Interactive project lab
+
+`src/data/labs.ts` connects three experiments to their real project pages. `/lab/roomba` is a deterministic command simulator with collision checks, one-time cleaning, bounded queues, replay, and cancellation. `/lab/poll` keeps one replaceable vote in tab memory; it never invents a crowd or sends votes to the live app. `/lab/agent` is explicitly scripted and includes tool failure/replanning. None of these demos calls paid APIs.
+
+The lab appears on the homepage, in navigation/search, and on its related project pages. Each route receives the same generated social image and accessible layout as other pages. The lab tests exercise the underlying movement rules and complete interactive flows. Static instructions and project links remain available without JavaScript.

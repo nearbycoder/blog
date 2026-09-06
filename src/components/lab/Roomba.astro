@@ -1,0 +1,167 @@
+---
+import { size, obstacles, dirt } from "../../lib/roomba";
+---
+
+<div class="lab-workbench" id="roomba-lab">
+  <div>
+    <table class="robot-board">
+      <caption class="sr-only"
+        >Roomba room. Rows and columns start at 1.</caption
+      ><tbody>
+        {
+          Array.from({ length: size }, (_, y) => (
+            <tr>
+              {Array.from({ length: size }, (_, x) => {
+                const key = `${x},${y}`;
+                return (
+                  <td
+                    data-cell={key}
+                    data-kind={
+                      obstacles.includes(key)
+                        ? "wall"
+                        : dirt.includes(key)
+                          ? "dirt"
+                          : "floor"
+                    }
+                  >
+                    <span class="sr-only">
+                      Row {y + 1}, column {x + 1}:{" "}
+                    </span>
+                    <span data-tile>
+                      {obstacles.includes(key)
+                        ? "Wall"
+                        : dirt.includes(key)
+                          ? "Dirt"
+                          : "Empty"}
+                    </span>
+                  </td>
+                );
+              })}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    <p class="lab-hint">
+      The arrow is your robot. Dark squares are walls. Clean all five dirt
+      squares.
+    </p>
+  </div>
+  <div class="lab-controls">
+    <h2>Your program</h2>
+    <p>
+      Append commands, then step through them or run the whole queue. Limit: 30
+      commands.
+    </p>
+    <div class="lab-actions">
+      <button class="btn" data-command="forward" disabled>+ Forward</button
+      ><button class="btn" data-command="right" disabled>+ Turn right</button>
+    </div>
+    <ol class="program-queue" aria-label="Queued commands" id="program-queue">
+    </ol>
+    <p id="queue-empty" class="lab-hint">
+      No commands yet. Start with Forward.
+    </p>
+    <div class="lab-actions">
+      <button class="btn btn-accent" id="robot-step" disabled>Step</button
+      ><button class="btn" id="robot-run" disabled>Run program</button><button
+        class="btn"
+        id="robot-reset"
+        disabled>Reset room</button
+      ><button class="btn" id="robot-clear" disabled>Clear program</button>
+    </div>
+    <p class="lab-status" id="robot-status" role="status">
+      Enable JavaScript to program the robot.
+    </p>
+  </div>
+</div>
+<script>
+  import {
+    initialRobot,
+    move,
+    directions,
+    dirt,
+    type Command,
+  } from "../../lib/roomba";
+  const root = document.querySelector<HTMLElement>("#roomba-lab")!;
+  let robot = initialRobot(),
+    queue: Command[] = [],
+    cursor = 0,
+    timer: ReturnType<typeof setInterval> | undefined;
+  const status = root.querySelector<HTMLElement>("#robot-status")!;
+  const list = root.querySelector<HTMLOListElement>("#program-queue")!;
+  const button = (id: string) => root.querySelector<HTMLButtonElement>(id)!;
+  function stop() {
+    clearInterval(timer);
+    timer = undefined;
+  }
+  function draw(message = "Ready.") {
+    root.querySelectorAll<HTMLElement>("[data-cell]").forEach((cell) => {
+      const here = cell.dataset.cell === `${robot.x},${robot.y}`;
+      cell.dataset.robot = String(here);
+      const label = here
+        ? `Robot facing ${directions[robot.direction]}`
+        : robot.cleaned.includes(cell.dataset.cell!)
+          ? "Clean"
+          : cell.dataset.kind === "wall"
+            ? "Wall"
+            : cell.dataset.kind === "dirt"
+              ? "Dirt"
+              : "Empty";
+      const tile = cell.querySelector<HTMLElement>("[data-tile]")!;
+      tile.textContent = here ? ["→", "↓", "←", "↑"][robot.direction] : label;
+      tile.setAttribute("aria-label", label);
+    });
+    list.replaceChildren(
+      ...queue.map((command, i) => {
+        const li = document.createElement("li");
+        li.textContent = command === "forward" ? "Forward" : "Right";
+        li.dataset.done = String(i < cursor);
+        if (i === cursor) li.setAttribute("aria-current", "step");
+        return li;
+      }),
+    );
+    root.querySelector<HTMLElement>("#queue-empty")!.hidden = queue.length > 0;
+    root
+      .querySelectorAll<HTMLButtonElement>("[data-command]")
+      .forEach((b) => (b.disabled = Boolean(timer) || queue.length >= 30));
+    button("#robot-step").disabled = Boolean(timer) || cursor >= queue.length;
+    button("#robot-run").disabled = Boolean(timer) || cursor >= queue.length;
+    button("#robot-clear").disabled = queue.length === 0;
+    button("#robot-reset").disabled = false;
+    status.textContent = `${message} Row ${robot.y + 1}, column ${robot.x + 1}, facing ${directions[robot.direction]}. ${robot.cleaned.length} of ${dirt.length} cleaned. ${cursor} of ${queue.length} commands run.`;
+  }
+  function step() {
+    const result = move(robot, queue[cursor++]);
+    robot = result.robot;
+    if (cursor >= queue.length) stop();
+    draw(robot.cleaned.length === dirt.length ? "Room clean!" : result.message);
+  }
+  root.querySelectorAll<HTMLButtonElement>("[data-command]").forEach((b) =>
+    b.addEventListener("click", () => {
+      if (queue.length < 30) {
+        queue.push(b.dataset.command as Command);
+        draw("Command added.");
+      }
+    }),
+  );
+  button("#robot-step").addEventListener("click", step);
+  button("#robot-run").addEventListener("click", () => {
+    timer = setInterval(step, 300);
+    draw("Running.");
+  });
+  button("#robot-reset").addEventListener("click", () => {
+    stop();
+    robot = initialRobot();
+    cursor = 0;
+    draw("Room reset. Your program is ready to replay.");
+  });
+  button("#robot-clear").addEventListener("click", () => {
+    stop();
+    queue = [];
+    cursor = 0;
+    draw("Program cleared.");
+  });
+  window.addEventListener("pagehide", stop);
+  draw();
+</script>
