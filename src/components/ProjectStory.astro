@@ -1,0 +1,65 @@
+---
+import { getCollection } from "astro:content";
+import { projectStories } from "../data/project-stories";
+import { isArticlePublished } from "../lib/articles";
+const { projectId } = Astro.props as { projectId: string };
+const relation = projectStories[projectId];
+const articles = (await getCollection("articles")).filter(
+  (e) =>
+    relation?.articles.includes(e.id) &&
+    isArticlePublished(e, { includeScheduled: !import.meta.env.PROD }),
+);
+const updates = (await getCollection("layoff")).filter(
+  (e) => relation?.updates.includes(e.id) && !e.data.draft,
+);
+const recaps = (await getCollection("postmortems")).filter(
+  (e) => e.data.project === projectId && !e.data.draft,
+);
+const stories = [
+  ...articles.map((e) => ({
+    title: e.data.title,
+    description: e.data.description,
+    url: `/articles/${e.id}`,
+    date: e.data.date,
+    kind: "Article",
+  })),
+  ...updates.map((e) => ({
+    title: e.data.title,
+    description: e.data.summary,
+    url: `/layoff/${e.id}`,
+    date: e.data.date,
+    kind: "Build log",
+  })),
+  ...recaps.map((e) => ({
+    title: e.data.title,
+    description: e.data.description,
+    url: `/postmortems/${e.id}`,
+    date: e.data.date,
+    kind: "Postmortem",
+  })),
+].sort((a, b) => a.date.localeCompare(b.date));
+---
+
+{
+  stories.length > 0 && (
+    <section class="home-section" aria-labelledby="project-story-heading">
+      <>
+        <header class="section-head">
+          <h2 id="project-story-heading">The story behind the build</h2>
+        </header>
+        <div class="story-connections">
+          {stories.map((story) => (
+            <a href={story.url}>
+              <p class="label">
+                {story.kind} · {story.date}
+              </p>
+              <h3>{story.title}</h3>
+              <p>{story.description}</p>
+              <span class="text-link">Read more →</span>
+            </a>
+          ))}
+        </div>
+      </>
+    </section>
+  )
+}

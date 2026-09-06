@@ -1,4 +1,5 @@
 ---
+import DiscoveryLinks from "../components/DiscoveryLinks.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import Icon from "../components/Icon.astro";
@@ -113,6 +114,7 @@ const latest = sortedArticles[0];
       </section>
     )
   }
+  <DiscoveryLinks />
   <section class="home-section">
     <header class="section-head">
       <h2>Ideas, made real.</h2><a href="/projects" class="text-link"

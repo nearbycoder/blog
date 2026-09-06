@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { now } from "../data/now";
+import { formatDate } from "../lib/media";
+---
+
+<BaseLayout
+  title="Now"
+  description="A dated snapshot of Josh Hamilton’s work, the blog, and what’s in the notebook."
+>
+  <section class="page-shell">
+    <header class="page-intro">
+      <p class="paper-strip">
+        Now · Updated <time datetime={now.updated}
+          >{formatDate(now.updated)}</time>
+      </p><h1 class="display">A snapshot of<br /><em>right now.</em></h1><p>
+        A small update on work, this site, and the ideas in the notebook.
+        Updated by hand, when something changes.
+      </p>
+    </header><div class="now-grid">
+      {
+        now.items.map((item) => (
+          <section>
+            <>
+              <h2>{item.title}</h2>
+              <p>{item.description}</p>
+              <a href={item.href} class="text-link">
+                {item.link} →
+              </a>
+            </>
+          </section>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+const entries = (await getCollection("postmortems"))
+  .filter((e) => !e.data.draft)
+  .sort((a, b) => b.data.date.localeCompare(a.data.date));
+---
+
+<BaseLayout
+  title="Build postmortems"
+  description="What shipped, what proved difficult, where AI fit, and the lessons carried into the next build."
+>
+  <section class="page-shell">
+    <header class="page-intro">
+      <p class="paper-strip">Build postmortems</p><h1 class="display">
+        After the build.<br /><em>Before the next one.</em>
+      </h1><p>
+        Structured recaps of published build notes: the outcome, the tradeoffs,
+        and the lessons. Each recap links to its original source.
+      </p>
+    </header><div class="path-grid">
+      {
+        entries.map((entry) => (
+          <a class="path-card" href={`/postmortems/${entry.id}`}>
+            <>
+              <p class="label">Build retrospective</p>
+              <h2>{entry.data.title}</h2>
+              <p>{entry.data.description}</p>
+              <span class="text-link">Read the recap →</span>
+            </>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,57 @@
+---
+import { getReadingPaths } from "../lib/discovery";
+import { projectStories } from "../data/project-stories";
+import { getCollection } from "astro:content";
+const { articleId } = Astro.props as { articleId: string };
+const paths = (await getReadingPaths()).filter((path) =>
+  path.entries.some((item) => item.entry.id === articleId),
+);
+const projects = (await getCollection("projects")).filter(
+  (project) =>
+    !project.data.draft &&
+    projectStories[project.id]?.articles.includes(articleId),
+);
+---
+
+{
+  (paths.length > 0 || projects.length > 0) && (
+    <section class="article-context" aria-label="Explore the context">
+      {projects.length > 0 && (
+        <div>
+          <h2>Behind this story</h2>
+          {projects.map((project) => (
+            <a href={`/projects/${project.id}`} class="text-link">
+              Explore {project.data.title} →
+            </a>
+          ))}
+        </div>
+      )}
+      {paths.length > 0 && (
+        <div>
+          <h2>Part of a reading path</h2>
+          {paths.map((path) => {
+            const index = path.entries.findIndex(
+              (item) => item.entry.id === articleId,
+            );
+            const next = path.entries[index + 1];
+            return (
+              <div class="context-path">
+                <a href={`/start-here/${path.slug}`} class="text-link">
+                  {path.title} · {index + 1} of {path.entries.length}
+                </a>
+                {next && (
+                  <p>
+                    Up next:{" "}
+                    <a href={`/articles/${next.entry.id}`}>
+                      {next.entry.data.title}
+                    </a>
+                  </p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  )
+}

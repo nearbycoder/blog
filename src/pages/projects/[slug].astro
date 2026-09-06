@@ -1,4 +1,5 @@
 ---
+import ProjectStory from "../../components/ProjectStory.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Icon from "../../components/Icon.astro";
 import { getCollection, render } from "astro:content";
@@ -91,4 +92,5 @@ const image = projectImage(entry);
       </div>
     </div>
   </article>
+<ProjectStory projectId={entry.id} />
 </BaseLayout>

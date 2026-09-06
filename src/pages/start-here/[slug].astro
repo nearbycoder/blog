@@ -1,0 +1,57 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getReadingPaths } from "../../lib/discovery";
+import { formatDate } from "../../lib/media";
+export async function getStaticPaths() {
+  return (await getReadingPaths()).map((path) => ({
+    params: { slug: path.slug },
+    props: { path },
+  }));
+}
+const { path } = Astro.props;
+---
+
+<BaseLayout title={path.title} description={path.description}>
+  <section class="page-shell">
+    <header class="page-intro">
+      <a href="/start-here" class="nav-link">← All reading paths</a><h1
+        class="display"
+      >
+        {path.title}
+      </h1><p>{path.description}</p>
+    </header>
+    <ol class="reading-path">
+      {
+        path.entries.map(({ entry, note }, index) => (
+          <li>
+            <>
+              <span class="path-step" aria-hidden="true">
+                {index + 1}
+              </span>
+              <div>
+                <>
+                  <p class="meta-row">
+                    <>
+                      <time datetime={entry.data.date}>
+                        {formatDate(entry.data.date)}
+                      </time>
+                      <span>{entry.data.readTime}</span>
+                    </>
+                  </p>
+                  <h2>
+                    <a href={`/articles/${entry.id}`}>{entry.data.title}</a>
+                  </h2>
+                  <p>{note}</p>
+                  <a href={`/articles/${entry.id}`} class="text-link">
+                    Read this story →
+                  </a>
+                </>
+              </div>
+            </>
+          </li>
+        ))
+      }
+    </ol>
+    <a href="/start-here" class="text-link">Explore another path →</a>
+  </section>
+</BaseLayout>

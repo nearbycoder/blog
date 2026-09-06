@@ -16,7 +16,7 @@ import Icon from "./Icon.astro";
       <div>
         <p class="label">Explore</p><ul>
           {
-            site.nav.map((item) => (
+            [...site.nav,...site.explore].map((item) => (
               <li>
                 <a href={item.href} class="nav-link">
                   {item.label}

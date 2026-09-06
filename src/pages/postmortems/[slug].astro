@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import { isArticlePublished } from "../../lib/articles";
+export async function getStaticPaths() {
+  return (await getCollection("postmortems"))
+    .filter((e) => !e.data.draft)
+    .map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const articles = await getCollection("articles");
+const sources = entry.data.sources.flatMap((id) => {
+  const article = articles.find((a) => a.id === id);
+  if (!article) throw new Error(`Missing postmortem source: ${id}`);
+  return isArticlePublished(article, {
+    includeScheduled: !import.meta.env.PROD,
+  })
+    ? [article]
+    : [];
+});
+const project = (await getCollection("projects")).find(
+  (p) => p.id === entry.data.project && !p.data.draft,
+);
+---
+
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  type="article"
+>
+  <article>
+    <header class="reading-header">
+      <a href="/postmortems" class="nav-link">← Build postmortems</a><h1
+        class="display"
+      >
+        {entry.data.title}
+      </h1><p class="deck">{entry.data.description}</p><p class="meta-row mt-6">
+        A recap of the {entry.data.date} build notes
+      </p>
+    </header><div class="reading-layout">
+      <aside class="reading-sidebar">
+        <p class="label">Original sources</p><div class="toc">
+          {
+            sources.map((source) => (
+              <a href={`/articles/${source.id}`}>{source.data.title}</a>
+            ))
+          }
+        </div>{
+          project && (
+            <a href={`/projects/${project.id}`} class="text-link mt-6">
+              Explore {project.data.title} →
+            </a>
+          )
+        }
+      </aside><div class="article-content"><Content /></div>
+    </div>
+  </article>
+</BaseLayout>
