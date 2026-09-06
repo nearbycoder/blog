@@ -11,7 +11,10 @@ Personal site for Josh Hamilton (`nearbycoder`) built with Astro. The app combin
 - About and Uses pages driven by local data files
 - Global command palette (`Cmd/Ctrl + K`) for pages, articles, projects, and theme switching
 - Light, dark, and system theme support
-- Generated Open Graph images and decorative article card art SVG routes
+- Automatically generated 1200 × 630 PNG social images, with existing SVG endpoints retained
+- Article topic filters, heading navigation, related stories, and copy-link sharing
+- Mobile navigation and an accessible search dialog, including layoff entries
+- Optimized WebP cover images and a custom 404 page
 
 ## Stack
 
@@ -94,6 +97,17 @@ The dev server runs on `0.0.0.0:4321`.
 
 ## Notes
 
-- `easyaccessqr-com` is currently pinned to the top of the projects listing.
+- `easyaccessqr-com` is placed last in the projects archive, preserving the existing archive order.
 - The articles page has its own client-side search input in addition to the global command palette.
 - Site metadata and canonical URL settings are configured for `https://nearbycoder.com`.
+
+## Verification and redesign
+
+```sh
+npx playwright install chromium
+npm run verify
+```
+
+`verify` runs Astro type checks, a production build, and browser regression tests against the built site. `npm test` expects an existing production build. Images are optimized automatically before development and production builds.
+
+See [the redesign notes and screenshot gallery](docs/redesign.md) for the visual direction, route coverage, accessibility scope, and measured performance.

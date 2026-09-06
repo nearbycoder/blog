@@ -1,0 +1,38 @@
+---
+import Icon from "./Icon.astro";
+---
+
+<div class="mt-6">
+  <button type="button" class="btn" data-copy-link
+    ><Icon name="copy" /><span>Copy link</span></button
+  ><p
+    data-copy-status
+    class="mt-2 text-xs"
+    role="status"
+    style="color:var(--fg-muted)"
+  >
+  </p>
+</div>
+<script>
+  document
+    .querySelectorAll<HTMLButtonElement>("[data-copy-link]")
+    .forEach((button) =>
+      button.addEventListener("click", async () => {
+        const status =
+          button.parentElement?.querySelector<HTMLElement>(
+            "[data-copy-status]",
+          );
+        try {
+          await navigator.clipboard.writeText(
+            document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+              ?.href ?? location.href,
+          );
+          if (status) status.textContent = "Link copied. Thanks for sharing!";
+        } catch {
+          if (status)
+            status.textContent =
+              "Copy this page’s address from your browser to share.";
+        }
+      }),
+    );
+</script>

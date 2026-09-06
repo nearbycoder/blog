@@ -1,325 +1,176 @@
 ---
+import Icon from "./Icon.astro";
 type SearchItem = {
-  type: "Page" | "Article" | "Project" | "Theme";
+  type: string;
   title: string;
   url: string;
   subtitle?: string;
   keywords?: string;
 };
-
 const { items } = Astro.props as { items: SearchItem[] };
 const json = JSON.stringify(items).replace(/</g, "\\u003c");
 ---
 
-<div id="command-palette" class="fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0" style="background: color-mix(in srgb, var(--bg) 78%, transparent); backdrop-filter: blur(12px);" data-overlay></div>
-  <div class="relative mx-auto mt-20 w-[min(760px,92vw)]">
-    <div class="window-panel p-0">
-      <div class="flex items-center gap-3 rule-b px-5 py-4" style="border-color: var(--border);">
-        <span class="paper-strip">Find</span>
-        <input
-          id="command-input"
-          type="search"
-          placeholder="Search articles, projects, or pages"
-          class="w-full bg-transparent font-mono text-base outline-none"
-          style="color: var(--fg);"
-        />
-        <span class="hidden font-mono text-xs uppercase tracking-normal md:inline" style="color: var(--fg-dim);">ESC</span>
-      </div>
-      <div class="max-h-[420px] overflow-y-auto p-3">
-        <div id="command-results" class="grid gap-3"></div>
-      </div>
-      <div class="flex flex-wrap items-center justify-between gap-2 rule px-5 py-3 font-mono text-[0.7rem] font-bold uppercase tracking-normal" style="border-color: var(--border); color: var(--fg-muted);">
-        <span>Pages + posts + projects</span>
-        <span>Theme switcher included</span>
-      </div>
+<dialog id="command-palette" aria-label="Search this site">
+  <div class="command-shell">
+    <div class="command-search">
+      <Icon name="search" /><label for="command-input" class="sr-only"
+        >Search articles, projects, pages, and themes</label
+      ><input
+        id="command-input"
+        type="search"
+        autocomplete="off"
+        placeholder="What are you curious about?"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-expanded="true"
+        aria-controls="command-results"
+      /><button
+        type="button"
+        class="btn btn-ghost icon-button"
+        data-command-close
+        aria-label="Close search"><Icon name="close" /></button
+      >
+    </div>
+    <div
+      id="command-results"
+      class="command-results"
+      role="listbox"
+      aria-label="Search results"
+    >
+    </div>
+    <p id="command-status" class="sr-only" role="status"></p>
+    <div class="command-footer">
+      ↑ ↓ to explore &nbsp; · &nbsp; Enter to open &nbsp; · &nbsp; Esc to close
     </div>
   </div>
-  <script id="command-data" type="application/json" set:html={json}></script>
-  <script is:inline>
-    const palette = document.getElementById("command-palette");
-    const overlay = palette?.querySelector("[data-overlay]");
-    const input = document.getElementById("command-input");
-    const list = document.getElementById("command-results");
-    const data = document.getElementById("command-data");
-    const root = document.documentElement;
-    const STORAGE_KEY = "theme-preference";
-
-    let items = [];
-    let activeIndex = 0;
-    let currentResults = [];
-
-    const parseData = () => {
-      if (!data) return [];
+</dialog>
+<script is:inline id="command-data" type="application/json" set:html={json} />
+<script>
+  type Item = {
+    type: string;
+    title: string;
+    url: string;
+    subtitle?: string;
+    keywords?: string;
+  };
+  const dialog = document.querySelector<HTMLDialogElement>("#command-palette")!;
+  const input = document.querySelector<HTMLInputElement>("#command-input")!;
+  const list = document.querySelector<HTMLElement>("#command-results")!;
+  const status = document.getElementById("command-status")!;
+  const items: Item[] = JSON.parse(
+    document.getElementById("command-data")?.textContent || "[]",
+  );
+  let results: Item[] = [];
+  let active = 0;
+  let previous: HTMLElement | null = null;
+  const activate = (index: number) => {
+    active = Math.max(0, Math.min(index, results.length - 1));
+    list
+      .querySelectorAll('[role="option"]')
+      .forEach((node, i) =>
+        node.setAttribute("aria-selected", String(i === active)),
+      );
+    if (results.length) {
+      input.setAttribute("aria-activedescendant", `command-result-${active}`);
+      document
+        .getElementById(`command-result-${active}`)
+        ?.scrollIntoView({ block: "nearest" });
+    } else input.removeAttribute("aria-activedescendant");
+  };
+  const choose = (item: Item) => {
+    if (item.url.startsWith("theme:")) {
+      const theme = item.url.slice(6);
+      document.documentElement.dataset.theme = theme;
       try {
-        return JSON.parse(data.textContent || "[]");
-      } catch {
-        return [];
-      }
-    };
-
-    const normalize = (value) => (value || "").toLowerCase();
-
-    const scoreMatch = (query, text) => {
-      if (!query) return 1;
-      if (!text) return 0;
-      const haystack = normalize(text);
-      const needle = normalize(query);
-      const idx = haystack.indexOf(needle);
-      if (idx !== -1) return 200 - idx;
-
-      let score = 0;
-      let q = 0;
-      for (let i = 0; i < haystack.length && q < needle.length; i += 1) {
-        if (haystack[i] === needle[q]) {
-          score += 1;
-          q += 1;
-        }
-      }
-      if (q < needle.length) return 0;
-      return score;
-    };
-
-    const buildResults = (query) => {
-      const normalized = normalize(query);
-      const defaultTypes = new Set(["Page", "Article", "Theme"]);
-      const pool = normalized.length === 0
-        ? items.filter((item) => defaultTypes.has(item.type))
-        : items;
-      if (normalized.length === 0) {
-        return pool.slice(0, 12);
-      }
-
-      const results = pool
-        .map((item) => {
-          const text = [item.title, item.subtitle, item.keywords, item.type].join(" ");
-          return { item, score: scoreMatch(normalized, text) };
-        })
-        .filter((entry) => entry.score > 0)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 12)
-        .map((entry) => entry.item);
-
-      return results;
-    };
-
-    const setActive = (index) => {
-      const nodes = list?.querySelectorAll("[data-index]") || [];
-      if (!nodes.length) return;
-      activeIndex = Math.max(0, Math.min(index, nodes.length - 1));
-
-      nodes.forEach((node) => {
-        const idx = Number(node.getAttribute("data-index"));
-        const isActive = idx === activeIndex;
-        node.classList.toggle("is-active", isActive);
-        if (isActive) {
-          node.style.background = "var(--accent)";
-          node.style.color = "var(--accent-fg)";
-        } else {
-          node.style.background = "";
-          node.style.color = "";
-        }
-        node.setAttribute("aria-selected", isActive ? "true" : "false");
-      });
-
-      const activeNode = nodes[activeIndex];
-      if (activeNode?.scrollIntoView) {
-        activeNode.scrollIntoView({ block: "nearest" });
-      }
-    };
-
-    const renderGroup = (label, entries, registerIndex) => {
-      if (!list || entries.length === 0) return;
-      const heading = document.createElement("div");
-      heading.className = "label-strong";
-      heading.style.padding = "0.55rem 0.25rem 0.25rem";
-      heading.textContent = label;
-      list.appendChild(heading);
-
-      const group = document.createElement("div");
-      group.className = "grid gap-1.5";
-
-      entries.forEach((entry) => {
-        const link = document.createElement("a");
-        link.href = entry.item.url;
-        const displayIndex = registerIndex(entry.item);
-        link.className = "command-option flex items-center justify-between gap-4 px-3 py-2.5 transition";
-        link.style.border = "2px solid var(--border)";
-        link.style.background = "var(--surface)";
-        link.setAttribute("data-index", String(displayIndex));
-        link.setAttribute("role", "option");
-
-        const info = document.createElement("div");
-        const title = document.createElement("div");
-        title.className = "font-mono text-sm font-semibold";
-        title.textContent = entry.item.title;
-
-        const subtitle = document.createElement("div");
-        subtitle.className = "font-mono text-[0.7rem] uppercase";
-        subtitle.style.letterSpacing = "0.12em";
-        subtitle.style.opacity = "0.7";
-        subtitle.textContent = entry.item.subtitle || entry.item.type;
-
-        info.appendChild(title);
-        info.appendChild(subtitle);
-
-        const badge = document.createElement("span");
-        badge.className = "font-mono text-[0.68rem] uppercase";
-        badge.style.letterSpacing = "0.14em";
-        badge.style.opacity = "0.7";
-        badge.textContent = entry.item.type;
-
-        link.appendChild(info);
-        link.appendChild(badge);
-        group.appendChild(link);
-      });
-
-      list.appendChild(group);
-    };
-
-    const renderResults = (results) => {
-      if (!list) return;
-      list.innerHTML = "";
-      currentResults = [];
-
-      if (!results.length) {
-        const empty = document.createElement("div");
-        empty.className = "font-mono text-sm";
-        empty.style.padding = "1.5rem 0.75rem";
-        empty.style.color = "var(--fg-muted)";
-        empty.textContent = "No matches. Try a different search.";
-        list.appendChild(empty);
-        return;
-      }
-
-      const grouped = {
-        Page: [],
-        Article: [],
-        Project: [],
-        Theme: [],
-      };
-
-      results.forEach((item, index) => {
-        grouped[item.type]?.push({ item, index });
-      });
-
-      const displayResults = [];
-      const registerIndex = (item) => {
-        displayResults.push(item);
-        return displayResults.length - 1;
-      };
-
-      renderGroup("Pages", grouped.Page, registerIndex);
-      renderGroup("Articles", grouped.Article, registerIndex);
-      renderGroup("Projects", grouped.Project, registerIndex);
-      renderGroup("Theme", grouped.Theme, registerIndex);
-
-      currentResults = displayResults;
-      setActive(0);
-    };
-
-    const openPalette = () => {
-      if (!palette || !input) return;
-      palette.classList.remove("hidden");
-      document.body.style.overflow = "hidden";
-      input.value = "";
-      renderResults(buildResults(""));
-      setTimeout(() => input.focus(), 0);
-    };
-
-    const closePalette = () => {
-      if (!palette) return;
-      palette.classList.add("hidden");
-      document.body.style.overflow = "";
-    };
-
-    const togglePalette = () => {
-      if (!palette) return;
-      if (palette.classList.contains("hidden")) openPalette();
-      else closePalette();
-    };
-
-    const handleGlobalKey = (event) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        togglePalette();
-        return;
-      }
-
-      if (event.key === "Escape" && palette && !palette.classList.contains("hidden")) {
-        event.preventDefault();
-        closePalette();
-      }
-    };
-
-    const handleInput = () => {
-      if (!input) return;
-      renderResults(buildResults(input.value));
-    };
-
-    const handleInputKeys = (event) => {
-      if (!list) return;
-      const max = currentResults.length - 1;
-
-      if (event.key === "ArrowDown") {
-        event.preventDefault();
-        setActive(Math.min(activeIndex + 1, max));
-      }
-
-      if (event.key === "ArrowUp") {
-        event.preventDefault();
-        setActive(Math.max(activeIndex - 1, 0));
-      }
-
-      if (event.key === "Enter" && currentResults[activeIndex]) {
-        event.preventDefault();
-        handleSelect(currentResults[activeIndex]);
-      }
-    };
-
-    const handleSelect = (item) => {
-      if (!item?.url) return;
-      if (item.url.startsWith("theme:")) {
-        const value = item.url.split(":")[1] || "system";
-        root.setAttribute("data-theme", value);
-        try {
-          localStorage.setItem(STORAGE_KEY, value);
-        } catch {}
-        closePalette();
-        return;
-      }
-
-      window.location.href = item.url;
-    };
-
-    const handleClick = (event) => {
-      const target = event.target;
-      if (target && target.matches("[data-overlay]")) {
-        closePalette();
-      }
-    };
-
-    const handleResultClick = (event) => {
-      const target = event.target;
-      const entry = target?.closest?.("[data-index]");
-      if (!entry) return;
+        localStorage.setItem("theme-preference", theme);
+      } catch {}
+      document.dispatchEvent(new Event("themechange"));
+      dialog.close();
+    } else window.location.assign(item.url);
+  };
+  const render = () => {
+    const words = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    results = items
+      .filter((item) =>
+        words.every((word) =>
+          `${item.title} ${item.subtitle ?? ""} ${item.keywords ?? ""} ${item.type}`
+            .toLowerCase()
+            .includes(word),
+        ),
+      )
+      .slice(0, 30);
+    list.replaceChildren();
+    status.textContent = `${results.length} results`;
+    if (!results.length) {
+      const empty = document.createElement("p");
+      empty.className = "empty-state";
+      empty.textContent = "No matches. Try another title, topic, or project.";
+      list.append(empty);
+    }
+    results.forEach((item, index) => {
+      const option = document.createElement("div");
+      option.className = "command-option";
+      option.id = `command-result-${index}`;
+      option.setAttribute("role", "option");
+      const info = document.createElement("div");
+      const title = document.createElement("span");
+      title.textContent = item.title;
+      const subtitle = document.createElement("small");
+      subtitle.textContent = item.subtitle ?? "";
+      info.append(title, subtitle);
+      const type = document.createElement("span");
+      type.className = "command-type";
+      type.textContent = item.type;
+      option.append(info, type);
+      option.addEventListener("click", () => choose(item));
+      option.addEventListener("pointermove", () => activate(index));
+      list.append(option);
+    });
+    activate(0);
+  };
+  const open = () => {
+    if (dialog.open) return;
+    previous = document.activeElement as HTMLElement;
+    dialog.showModal();
+    document.body.style.overflow = "hidden";
+    input.value = "";
+    render();
+    input.focus();
+  };
+  document
+    .querySelectorAll("[data-command-trigger]")
+    .forEach((button) => button.addEventListener("click", open));
+  dialog
+    .querySelector("[data-command-close]")
+    ?.addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  dialog.addEventListener("close", () => {
+    document.body.style.overflow = "";
+    previous?.focus();
+  });
+  document.addEventListener("keydown", (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
       event.preventDefault();
-      const index = Number(entry.getAttribute("data-index"));
-      const item = currentResults[index];
-      if (item) {
-        handleSelect(item);
-      }
-    };
-
-    const init = () => {
-      items = parseData();
-      document.addEventListener("keydown", handleGlobalKey);
-      input?.addEventListener("input", handleInput);
-      input?.addEventListener("keydown", handleInputKeys);
-      overlay?.addEventListener("click", handleClick);
-      list?.addEventListener("click", handleResultClick);
-    };
-
-    init();
-  </script>
-</div>
+      dialog.open ? dialog.close() : open();
+    }
+  });
+  input.addEventListener("input", render);
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      dialog.close();
+      return;
+    }
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      activate(active + (event.key === "ArrowDown" ? 1 : -1));
+    }
+    if (event.key === "Enter" && results[active]) {
+      event.preventDefault();
+      choose(results[active]);
+    }
+  });
+</script>

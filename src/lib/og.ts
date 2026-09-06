@@ -1,199 +1,54 @@
-import { renderCardArtSvg } from "./card-art";
-
-type OgAccent =
-  | "amber"
-  | "cyan"
-  | "rose"
-  | "mist"
-  | "emerald"
-  | "sky"
-  | "violet"
-  | "lime"
-  | "teal"
-  | "indigo"
-  | "fuchsia"
-  | "pink"
-  | "orange"
-  | "red"
-  | "yellow"
-  | "blue"
-  | "slate"
-  | "stone"
-  | "zinc"
-  | "neutral"
-  | "purple"
-  | "green"
-  | "indigoDeep";
-
-type OgInput = {
-  title: string;
-  description: string;
-  eyebrow?: string;
-  tags?: string[];
-  accent?: OgAccent;
-  footer?: string;
-  artSeed?: string;
-};
-
-type Palette = { primary: string; secondary: string; glow: string };
-
-const paletteMap: Record<OgAccent, Palette> = {
-  amber: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  cyan: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  rose: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  mist: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  emerald: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  sky: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  violet: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  lime: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  teal: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  indigo: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  fuchsia: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  pink: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  orange: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  red: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  yellow: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  blue: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  slate: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  stone: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  zinc: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  neutral: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  purple: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  green: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-  indigoDeep: { primary: "#2743d9", secondary: "#1d2f9e", glow: "#2743d9" },
-};
-
-const escapeHtml = (value: string) =>
-  value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-
-const wrapText = (value: string, maxChars: number, maxLines: number) => {
-  const words = value.split(/\s+/).filter(Boolean);
+import { readFileSync } from "node:fs";
+const art = `data:image/webp;base64,${readFileSync("public/images/editorial-curiosity.webp").toString("base64")}`;
+const escape = (text: string) =>
+  text.replace(
+    /[&<>"']/g,
+    (char) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
+        char
+      ]!,
+  );
+function wrap(text: string, max: number) {
   const lines: string[] = [];
-  let current = "";
-
-  for (const word of words) {
-    const test = current ? `${current} ${word}` : word;
-    if (test.length <= maxChars) {
-      current = test;
-      continue;
-    }
-
-    if (current) {
-      lines.push(current);
-      current = word;
-    } else {
-      lines.push(word.slice(0, maxChars));
-      current = word.slice(maxChars);
-    }
-
-    if (lines.length === maxLines) {
-      return lines.slice(0, maxLines).map((line, index) =>
-        index === maxLines - 1 ? `${line.replace(/\s+$/, "")}...` : line
-      );
-    }
+  let line = "";
+  for (const word of text.split(/\s+/)) {
+    if (line && `${line} ${word}`.length > max) {
+      lines.push(line);
+      line = word;
+    } else line = line ? `${line} ${word}` : word;
   }
-
-  if (current) {
-    lines.push(current);
-  }
-
-  if (lines.length > maxLines) {
-    return lines.slice(0, maxLines).map((line, index) =>
-      index === maxLines - 1 ? `${line.replace(/\s+$/, "")}...` : line
-    );
-  }
-
+  if (line) lines.push(line);
   return lines;
-};
-
-export const renderOgSvg = ({
+}
+export function renderOgSvg({
   title,
   description,
   eyebrow = "Nearbycoder",
-  tags = [],
-  accent = "cyan",
   footer,
-  artSeed,
-}: OgInput) => {
-  const palette = paletteMap[accent] ?? paletteMap.cyan;
-  const artwork = encodeURIComponent(
-    renderCardArtSvg({
-      slug: artSeed ?? `${title}-${tags.join("-") || "article"}`,
-      tags,
-      accent,
-      width: 1200,
-      height: 630,
-    })
-  );
-  const titleLines = wrapText(title, 32, 2);
-  const descriptionLines = wrapText(description, 60, 3);
-  const tagsLine = tags.slice(0, 4).map((tag) => tag.toUpperCase()).join(" | ");
-
-  const titleY = 250;
-  const titleLineHeight = 64;
-  const descriptionY = titleY + titleLines.length * titleLineHeight + 12;
-  const descriptionLineHeight = 36;
-  const tagsY = descriptionY + descriptionLines.length * descriptionLineHeight + 40;
-
-  const svg = `
-<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <clipPath id="artClip"><rect x="780" y="0" width="420" height="630" /></clipPath>
-    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
-      <path d="M 48 0 L 0 0 0 48" stroke="#17140e" stroke-opacity="0.06" stroke-width="1" />
-    </pattern>
-  </defs>
-  <rect width="1200" height="630" fill="#f5f1e6" />
-  <rect width="1200" height="630" fill="url(#grid)" />
-  <image href="data:image/svg+xml;utf8,${artwork}" width="1200" height="630" preserveAspectRatio="xMidYMid slice" clip-path="url(#artClip)" />
-  <rect x="0" y="0" width="16" height="630" fill="${palette.primary}" />
-  <line x1="60" y1="60" x2="1140" y2="60" stroke="#17140e" stroke-width="2" />
-  <line x1="60" y1="570" x2="1140" y2="570" stroke="#17140e" stroke-width="2" />
-  <circle cx="1110" cy="100" r="20" fill="none" stroke="#f4f0e7" stroke-width="2" />
-
-  <text x="72" y="110" fill="${palette.primary}" font-family="Space Grotesk, Arial, sans-serif" font-size="16" letter-spacing="3" font-weight="700">
-    ${escapeHtml(eyebrow.toUpperCase())}
-  </text>
-
-  <text x="72" y="${titleY}" fill="#17140e" font-family="Instrument Serif, Georgia, serif" font-size="64" font-weight="400">
-    ${titleLines
-      .map((line, index) => {
-        const y = titleY + index * titleLineHeight;
-        return `<tspan x="72" y="${y}">${escapeHtml(line)}</tspan>`;
-      })
-      .join("")}
-  </text>
-
-  <text x="72" y="${descriptionY}" fill="#5b5442" font-family="Space Grotesk, Arial, sans-serif" font-size="23" font-weight="400">
-    ${descriptionLines
-      .map((line, index) => {
-        const y = descriptionY + index * descriptionLineHeight;
-        return `<tspan x="72" y="${y}">${escapeHtml(line)}</tspan>`;
-      })
-      .join("")}
-  </text>
-
-  ${
-    tagsLine
-      ? `<text x="72" y="${tagsY}" fill="#2743d9" font-family="Space Grotesk, Arial, sans-serif" font-size="16" letter-spacing="2" font-weight="700">${escapeHtml(
-          tagsLine
-        )}</text>`
-      : ""
-  }
-  ${
-    footer
-      ? `<text x="72" y="540" fill="#5b5442" font-family="Space Grotesk, Arial, sans-serif" font-size="15" letter-spacing="2" font-weight="600">${escapeHtml(
-          footer
-        )}</text>`
-      : ""
-  }
-</svg>
-`;
-
-  return svg.trim();
-};
+}: {
+  title: string;
+  description: string;
+  eyebrow?: string;
+  footer?: string;
+  tags?: string[];
+  accent?: string;
+  artSeed?: string;
+}) {
+  const displayTitle =
+    title.length > 130 ? "Always curious. Still building." : title;
+  const size = displayTitle.length > 85 ? 45 : 56;
+  const lines = wrap(displayTitle, size === 45 ? 29 : 24);
+  const descriptionY = 192 + lines.length * (size + 5) + 28;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><rect width="1200" height="630" fill="#f8f9fb"/><image href="${art}" x="810" y="0" width="390" height="630" preserveAspectRatio="xMidYMid slice"/><g font-family="Arial,sans-serif"><text x="48" y="65" fill="#2743d9" font-size="21" font-weight="700">NEARBYCODER</text><text x="48" y="130" fill="#596270" font-size="16">${escape(eyebrow.toUpperCase())}</text>${lines.map((line, index) => `<text x="48" y="${192 + index * (size + 5)}" fill="#19202b" font-size="${size}" letter-spacing="-2">${escape(line)}</text>`).join("")}${wrap(
+    description,
+    58,
+  )
+    .slice(0, 2)
+    .map(
+      (line, index) =>
+        `<text x="48" y="${descriptionY + index * 28}" fill="#596270" font-size="21">${escape(line)}</text>`,
+    )
+    .join(
+      "",
+    )}<path d="M48 550H760" stroke="#d3d8e1"/><text x="48" y="592" fill="#596270" font-size="17">${escape(footer || "Josh Hamilton")}</text><text x="760" y="592" text-anchor="end" fill="#596270" font-size="17">nearbycoder.com</text></g></svg>`;
+}

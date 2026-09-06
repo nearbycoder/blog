@@ -1,27 +1,35 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+import ShareArticle from "../../components/ShareArticle.astro";
 import { getCollection, render } from "astro:content";
-import { isArticlePublished, resolveArticleAccent } from "../../lib/articles";
-import { renderCardArtSvg } from "../../lib/card-art";
-
+import {
+  isArticlePublished,
+  compareArticlesByPublishDateDesc,
+} from "../../lib/articles";
+import { articleImage, formatDate } from "../../lib/media";
 export async function getStaticPaths() {
-  const includeScheduled = !import.meta.env.PROD;
-  const entries = (await getCollection("articles")) as any[];
-  return entries
-    .filter((entry: any) => isArticlePublished(entry, { includeScheduled }))
-    .map((entry: any) => ({
-      params: { slug: entry.id },
-      props: { entry },
-    }));
+  return (await getCollection("articles"))
+    .filter((entry) =>
+      isArticlePublished(entry, { includeScheduled: !import.meta.env.PROD }),
+    )
+    .map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
-
-const { entry } = Astro.props as { entry: any };
-const { Content } = await render(entry);
-const svgMarkup = renderCardArtSvg({
-  slug: entry.id,
-  tags: entry.data.tags ?? [],
-  accent: resolveArticleAccent(entry),
-});
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const related = (await getCollection("articles"))
+  .filter(
+    (item) =>
+      item.id !== entry.id &&
+      isArticlePublished(item, { includeScheduled: !import.meta.env.PROD }),
+  )
+  .sort((a, b) => {
+    const score = (item: typeof a) =>
+      item.data.tags.filter((tag) => entry.data.tags.includes(tag)).length;
+    return score(b) - score(a) || compareArticlesByPublishDateDesc(a, b);
+  })
+  .slice(0, 3);
+const toc = headings.filter((heading) => heading.depth === 2);
 ---
 
 <BaseLayout
@@ -30,34 +38,92 @@ const svgMarkup = renderCardArtSvg({
   type="article"
   imageAlt={entry.data.title}
 >
-  <article class="page-shell mx-auto max-w-4xl space-y-10">
-    <header class="page-intro">
-      <div class="flex flex-wrap items-center gap-3">
-        <a href="/articles" class="nav-link">← Articles</a>
-        <span class="dot dot-accent"></span>
-        <span class="font-mono text-xs font-bold uppercase tracking-normal" style="color: var(--fg-muted);">
-          {entry.data.date}{entry.data.readTime ? ` · ${entry.data.readTime}` : ""}
-        </span>
-      </div>
-      <div class="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.48fr)] md:items-start">
-        <div class="space-y-4">
-          <h1 class="display text-5xl md:text-7xl">{entry.data.title}</h1>
-          <p class="text-lg leading-relaxed" style="color: var(--fg-muted);">{entry.data.description}</p>
-          {entry.data.tags && entry.data.tags.length ? (
-            <div class="flex flex-wrap gap-1.5 pt-2">
-              {entry.data.tags.map((tag: string) => (
-                <span class="chip">{tag}</span>
-              ))}
-            </div>
-          ) : null}
-        </div>
-        <div class="block-box block-box-shadow overflow-hidden" style="background: var(--surface-2);">
-          <div class="aspect-[4/3]" set:html={svgMarkup}></div>
-        </div>
+  <article>
+    <header class="reading-header">
+      <a href="/articles" class="nav-link">← All articles</a><h1
+        class="display"
+      >
+        {entry.data.title}
+      </h1><p class="deck">{entry.data.description}</p><div
+        class="reading-author"
+      >
+        <img src="/images/portrait.webp" alt="" width="36" height="36" /><a
+          href="/about">Josh Hamilton</a
+        ><span aria-hidden="true">·</span><time datetime={entry.data.date}
+          >{formatDate(entry.data.date)}</time
+        ><span>{entry.data.readTime}</span>
       </div>
     </header>
-    <div class="article-content mx-auto max-w-3xl">
-      <Content />
+    <div class="reading-cover">
+      <img
+        src={articleImage(entry)}
+        alt=""
+        width="1200"
+        height="600"
+        fetchpriority="high"
+      />
+    </div>
+    <div class="reading-layout">
+      <aside class="reading-sidebar">
+        {
+          toc.length > 0 && (
+            <nav aria-label="On this page">
+              <>
+                <p class="label">On this page</p>
+                <div class="toc">
+                  {toc.map((heading) => (
+                    <a href={`#${heading.slug}`}>{heading.text}</a>
+                  ))}
+                </div>
+              </>
+            </nav>
+          )
+        }<ShareArticle />
+      </aside><div>
+        <div class="article-content"><Content /></div><div class="reading-end">
+          <div class="flex flex-wrap gap-2">
+            {entry.data.tags.map((tag) => <span class="chip">{tag}</span>)}
+          </div><a href="/articles" class="text-link">Back to all articles →</a>
+        </div>
+      </div>
     </div>
   </article>
+  {
+    related.length > 0 && (
+      <section class="home-section">
+        <>
+          <header class="section-head">
+            <h2>Keep the curiosity going</h2>
+          </header>
+          <div class="article-archive-grid">
+            {related.map((item) => (
+              <ArticleCard entry={item} />
+            ))}
+          </div>
+        </>
+      </section>
+    )
+  }
 </BaseLayout>
+<script>
+  const links = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>(".toc a"),
+  );
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          links.forEach((link) => {
+            if (link.hash === `#${entry.target.id}`)
+              link.setAttribute("aria-current", "location");
+            else link.removeAttribute("aria-current");
+          });
+        }
+      }
+    },
+    { rootMargin: "-15% 0px -65% 0px" },
+  );
+  document
+    .querySelectorAll(".article-content h2")
+    .forEach((heading) => observer.observe(heading));
+</script>

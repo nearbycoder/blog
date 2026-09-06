@@ -1,73 +1,94 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
 import { getCollection, render } from "astro:content";
-
+import { projectImage } from "../../lib/media";
 export async function getStaticPaths() {
-  const entries = (await getCollection("projects")) as any[];
-  return entries.filter((entry: any) => !entry.data.draft).map((entry: any) => ({
-    params: { slug: entry.id },
-    props: { entry },
-  }));
+  return (await getCollection("projects"))
+    .filter((entry) => !entry.data.draft)
+    .map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
-
-const { entry } = Astro.props as { entry: any };
+const { entry } = Astro.props;
 const { Content } = await render(entry);
+const image = projectImage(entry);
 ---
 
-<BaseLayout title={entry.data.title}>
-  <article class="page-shell mx-auto max-w-4xl space-y-10">
-    <header class="page-intro">
-      <div class="flex flex-wrap items-center gap-3">
-        <a href="/projects" class="nav-link">← Projects</a>
-        <span class="dot dot-accent"></span>
-        <span class="font-mono text-xs font-bold uppercase tracking-normal" style="color: var(--fg-muted);">
-          {entry.data.year} · {entry.data.role}
-        </span>
-      </div>
-      <div class="grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.42fr)] md:items-start">
-        <div class="space-y-4">
-          <h1 class="display text-5xl md:text-7xl">{entry.data.title}</h1>
-          <p class="text-lg leading-relaxed" style="color: var(--fg-muted);">{entry.data.summary}</p>
-          {entry.data.link || entry.data.githubLink ? (
-            <div class="flex flex-wrap gap-2">
-              {entry.data.link ? (
-                <a href={entry.data.link} target="_blank" rel="noreferrer" class="btn btn-accent">
-                  Visit project
-                </a>
-              ) : null}
-              {entry.data.githubLink ? (
-                <a href={entry.data.githubLink} target="_blank" rel="noreferrer" class="btn">
-                  View code
-                </a>
-              ) : null}
-            </div>
-          ) : null}
-        </div>
-        <aside class="sticker-note p-5">
-          <p class="label-strong">Project brief</p>
-          <p class="mt-3 display text-3xl leading-none">{entry.data.role}</p>
-          <p class="mt-3 font-mono text-xs font-bold uppercase tracking-normal" style="color: var(--fg-muted);">{entry.data.year}</p>
-        </aside>
+<BaseLayout title={entry.data.title} description={entry.data.summary}>
+  <article>
+    <header class="reading-header">
+      <a href="/projects" class="nav-link">← All projects</a><h1
+        class="display"
+      >
+        {entry.data.title}
+      </h1><p class="deck">{entry.data.summary}</p><div
+        class="mt-7 flex flex-wrap gap-3"
+      >
+        {
+          entry.data.link && (
+            <a
+              href={entry.data.link}
+              class="btn btn-accent"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Visit project <Icon name="external" />
+            </a>
+          )
+        }{
+          entry.data.githubLink && (
+            <a
+              href={entry.data.githubLink}
+              class="btn"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View source <Icon name="external" />
+            </a>
+          )
+        }
       </div>
     </header>
-
-    {entry.data.stack?.length ? (
-      <div class="flex flex-wrap gap-1.5">
-        {entry.data.stack.map((item: string) => (
-          <span class="chip">{item}</span>
-        ))}
+    {
+      image && (
+        <div class="reading-cover">
+          <img
+            src={image}
+            alt={`${entry.data.title} project screenshot`}
+            width="1200"
+            height="600"
+            fetchpriority="high"
+            style="object-fit:contain"
+          />
+        </div>
+      )
+    }
+    <div class="reading-layout">
+      <aside class="reading-sidebar">
+        <p class="label">Project details</p><p class="mt-4 text-sm">
+          {entry.data.role}
+        </p><p class="label mt-2">{entry.data.year}</p><div
+          class="mt-6 flex flex-wrap gap-2"
+        >
+          {entry.data.stack.map((item) => <span class="chip">{item}</span>)}
+        </div>
+      </aside><div>
+        {
+          entry.data.impact && (
+            <div
+              class="mb-8 border-l-2 pl-6"
+              style="border-color:var(--accent)"
+            >
+              <>
+                <p class="label mb-3">The outcome</p>
+                <p class="text-xl leading-relaxed">{entry.data.impact}</p>
+              </>
+            </div>
+          )
+        }<div class="article-content"><Content /></div><div class="reading-end">
+          <a href="/projects" class="text-link"
+            >Explore more projects <Icon name="arrow" /></a>
+        </div>
       </div>
-    ) : null}
-
-    {entry.data.impact ? (
-      <div class="sticker-note p-6">
-        <p class="label-strong">Impact</p>
-        <p class="mt-3 display text-3xl md:text-4xl">{entry.data.impact}</p>
-      </div>
-    ) : null}
-
-    <div class="article-content mx-auto max-w-3xl">
-      <Content />
     </div>
   </article>
 </BaseLayout>
