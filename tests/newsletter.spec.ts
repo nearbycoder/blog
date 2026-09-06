@@ -423,6 +423,14 @@ test("configured signup handles failures and confirmation requires a button clic
       "You’re subscribed.",
     );
     expect(confirmations).toBe(1);
+    await page.evaluate(() => {
+      location.hash = "token=fresh-link";
+    });
+    await expect(
+      page.getByRole("button", { name: "Confirm subscription", exact: true }),
+    ).toBeEnabled();
+    await expect(page).toHaveURL(/\/subscribe\/confirm\/$/);
+    expect(confirmations).toBe(1);
   } finally {
     rmSync(output, { recursive: true, force: true });
   }

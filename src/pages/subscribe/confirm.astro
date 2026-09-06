@@ -30,17 +30,23 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
   </section>
 </BaseLayout>
 <script>
-  const token = new URLSearchParams(location.hash.slice(1)).get("token");
-  history.replaceState(null, "", location.pathname);
+  let token: string | null = null;
   const form = document.querySelector<HTMLFormElement>(
       "#confirm-subscription",
     )!,
     button = form.querySelector<HTMLButtonElement>("button")!,
     status = document.querySelector<HTMLElement>("#confirmation-status")!;
-  if (token) {
-    button.disabled = false;
-    status.textContent = "Use the button above to confirm your subscription.";
+  function readConfirmationLink() {
+    token = new URLSearchParams(location.hash.slice(1)).get("token");
+    history.replaceState(null, "", location.pathname);
+    button.disabled = !token;
+    button.textContent = "Confirm subscription";
+    status.textContent = token
+      ? "Use the button above to confirm your subscription."
+      : "Open the confirmation link from your email to continue.";
   }
+  readConfirmationLink();
+  window.addEventListener("hashchange", readConfirmationLink);
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (button.disabled || !token) return;
