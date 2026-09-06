@@ -1,0 +1,16 @@
+{
+  "url": "http://127.0.0.1:4323/",
+  "mode": "mobile simulated throttling, local production preview",
+  "scores": {
+    "performance": 100,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "metrics": {
+    "lcp": "1.9 s",
+    "cls": "0",
+    "tbt": "0 ms"
+  },
+  "lighthouseVersion": "13.4.1"
+}

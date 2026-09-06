@@ -1,20 +1,24 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
-import Marquee from "../components/Marquee.astro";
+import Icon from "../components/Icon.astro";
+import { articleImage, formatDate } from "../lib/media";
 import ArticleCard from "../components/ArticleCard.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import LayoffEntryCard from "../components/LayoffEntryCard.astro";
 import WorkTimeline from "../components/WorkTimeline.astro";
 import { getCollection } from "astro:content";
-import { compareArticlesByPublishDateDesc, isArticlePublished } from "../lib/articles";
+import {
+  compareArticlesByPublishDateDesc,
+  isArticlePublished,
+} from "../lib/articles";
 
 const articles = (await getCollection("articles")) as any[];
 const includeScheduled = !import.meta.env.PROD;
 const sortedArticles = articles
   .filter((entry: any) => isArticlePublished(entry, { includeScheduled }))
   .sort((a: any, b: any) => compareArticlesByPublishDateDesc(a, b));
-const featuredArticles = sortedArticles.slice(0, 3);
+const featuredArticles = sortedArticles.slice(1, 4);
 
 const projects = (await getCollection("projects")) as any[];
 const pinnedProjectSlug = "easyaccessqr-com";
@@ -33,78 +37,126 @@ const selectedBuildProjectSlugs = ["agfs-dev", "dailystand-dev"];
 const selectedBuildProjectSet = new Set(selectedBuildProjectSlugs);
 const featuredProjects = [
   ...selectedBuildProjectSlugs
-    .map((slug) => sortedProjects.find((entry: any) => entry.id === slug && entry.data.featured))
+    .map((slug) =>
+      sortedProjects.find(
+        (entry: any) => entry.id === slug && entry.data.featured,
+      ),
+    )
     .filter(Boolean),
-  ...sortedProjects.filter((entry: any) => entry.data.featured && !selectedBuildProjectSet.has(entry.id)),
+  ...sortedProjects.filter(
+    (entry: any) =>
+      entry.data.featured && !selectedBuildProjectSet.has(entry.id),
+  ),
 ].slice(0, 2);
 const layoffEntries = (await getCollection("layoff")) as any[];
 const recentLayoffEntries = layoffEntries
   .filter((entry: any) => !entry.data.draft)
   .sort((a: any, b: any) => b.data.date.localeCompare(a.data.date))
   .slice(0, 2);
+const latest = sortedArticles[0];
 ---
 
 <BaseLayout>
   <Hero />
-
-  <div class="mt-10 reveal" style="--delay: 60ms;">
-    <Marquee />
-  </div>
-
-  <section class="mt-24 space-y-8 reveal" style="--delay: 80ms;">
-    <header class="section-head">
-      <div class="space-y-1">
-        <p class="label-strong">No. 01 — Field notes</p>
-        <h2 class="display text-5xl md:text-6xl">Latest <em>articles</em></h2>
-      </div>
-      <a href="/articles" class="btn">All articles</a>
-    </header>
-    <div class="article-archive-grid">
-      {featuredArticles.map((entry: any, index: number) => (
-        <ArticleCard entry={entry} index={index} />
-      ))}
-    </div>
-  </section>
-
-  <section class="mt-24 space-y-8 reveal" style="--delay: 160ms;">
-    <header class="section-head">
-      <div class="space-y-1">
-        <p class="label-strong">No. 02 — Workbench</p>
-        <h2 class="display text-5xl md:text-6xl">Selected <em>builds</em></h2>
-      </div>
-      <a href="/projects" class="btn">All projects</a>
-    </header>
-    <div class="grid gap-x-12 md:grid-cols-2">
-      {featuredProjects.map((project: any, index: number) => (
-        <ProjectCard project={project} index={index} />
-      ))}
-    </div>
-  </section>
-
-  {recentLayoffEntries.length > 0 && (
-    <section class="mt-24 space-y-8 reveal" style="--delay: 200ms;">
-      <header class="section-head">
-        <div class="space-y-1">
-          <p class="label-strong">No. 03 — Build diary</p>
-          <h2 class="display text-5xl md:text-6xl">Weekly <em>updates</em></h2>
+  {
+    latest && (
+      <section class="home-section reveal" style="--delay:80ms">
+        <header class="section-head">
+          <>
+            <h2>Fresh from the keyboard</h2>
+            <a href="/articles" class="text-link">
+              All articles <Icon name="arrow" />
+            </a>
+          </>
+        </header>
+        <div class="featured-story">
+          <a
+            href={`/articles/${latest.id}`}
+            class="story-image"
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            <img
+              src={articleImage(latest)}
+              alt=""
+              width="900"
+              height="620"
+              fetchpriority="high"
+            />
+          </a>
+          <div>
+            <>
+              <div class="meta-row">
+                <>
+                  <span class="meta-topic">Latest article</span>
+                  <time datetime={latest.data.date}>
+                    {formatDate(latest.data.date)}
+                  </time>
+                  <span>{latest.data.readTime}</span>
+                </>
+              </div>
+              <h2>
+                <a href={`/articles/${latest.id}`}>{latest.data.title}</a>
+              </h2>
+              <p>{latest.data.description}</p>
+              <a href={`/articles/${latest.id}`} class="text-link">
+                Read the story <Icon name="arrow" />
+              </a>
+            </>
+          </div>
         </div>
-        <a href="/layoff" class="btn">Full log</a>
-      </header>
-      <div class="grid gap-x-12 md:grid-cols-2">
-        {recentLayoffEntries.map((entry: any, index: number) => (
-          <LayoffEntryCard entry={entry} index={index} />
-        ))}
-      </div>
-    </section>
-  )}
-
-  <section class="mt-24 space-y-8 reveal" style="--delay: 240ms;">
+        <div class="article-archive-grid mt-12">
+          {featuredArticles.map((entry) => (
+            <ArticleCard entry={entry} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+  <section class="home-section">
     <header class="section-head">
-      <div class="space-y-1">
-        <p class="label-strong">No. 04 — Timeline</p>
-        <h2 class="display text-5xl md:text-6xl">Where I've <em>built</em></h2>
-      </div>
-    </header>
-    <WorkTimeline />
+      <h2>Ideas, made real.</h2><a href="/projects" class="text-link"
+        >All projects <Icon name="arrow" /></a>
+    </header><div class="project-grid">
+      {featuredProjects.map((project) => <ProjectCard project={project} />)}
+    </div>
+  </section>
+  {
+    recentLayoffEntries.length > 0 && (
+      <section class="home-section home-log">
+        <>
+          <div>
+            <>
+              <p class="label mb-4">The layoff log</p>
+              <h2 class="display">
+                A little uncertainty.
+                <>
+                  <br />
+                  <em>A lot of building.</em>
+                </>
+              </h2>
+              <p class="intro-copy">
+                Three weeks of experiments, shipped projects, and finding my
+                next chapter at Augment Code.
+              </p>
+              <a href="/layoff" class="text-link mt-4">
+                Follow the journey <Icon name="arrow" />
+              </a>
+            </>
+          </div>
+          <div>
+            {recentLayoffEntries.map((entry) => (
+              <LayoffEntryCard entry={entry} />
+            ))}
+          </div>
+        </>
+      </section>
+    )
+  }
+  <section class="home-section">
+    <header class="section-head">
+      <h2>A few places I’ve built</h2><a href="/resume.pdf" class="text-link"
+        >View résumé <Icon name="external" /></a>
+    </header><WorkTimeline />
   </section>
 </BaseLayout>

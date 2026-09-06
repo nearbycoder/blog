@@ -22,19 +22,19 @@ const sortedProjects = projects
   <section class="page-shell space-y-8">
     <header class="page-intro">
       <p class="paper-strip">Projects / {sortedProjects.length} builds</p>
-      <h1 class="display max-w-4xl text-6xl md:text-7xl">
-        Systems, tools <em>&amp;</em>
-        product <span class="marker">execution</span>.
-      </h1>
-      <p class="max-w-2xl text-base leading-relaxed" style="color: var(--fg-muted);">
-        A selection of platforms and features focused on reliability, clarity, and operator confidence.
+      <h1 class="display">Less talking.<br /><em>More making.</em></h1>
+      <p style="color:var(--fg-muted)">
+        Side projects, useful tools, and ideas that made it out of the notes
+        app. Built to learn, built to use, built to share.
       </p>
     </header>
 
-    <div class="grid gap-6 md:grid-cols-2">
-      {sortedProjects.map((project: any, index: number) => (
-        <ProjectCard project={project} index={index} />
-      ))}
+    <div class="project-grid">
+      {
+        sortedProjects.map((project: any, index: number) => (
+          <ProjectCard project={project} index={index} heading="h2" />
+        ))
+      }
     </div>
   </section>
 </BaseLayout>

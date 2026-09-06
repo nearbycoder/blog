@@ -5,24 +5,29 @@ import SiteFooter from "../components/SiteFooter.astro";
 import CommandPalette from "../components/CommandPalette.astro";
 import { site } from "../data/site";
 import { getCollection } from "astro:content";
-import { compareArticlesByPublishDateDesc, isArticlePublished } from "../lib/articles";
+import {
+  compareArticlesByPublishDateDesc,
+  isArticlePublished,
+} from "../lib/articles";
 import { getImagePath } from "astro-opengraph-images";
 
 const { title, description, handle } = site;
-const pageTitle = Astro.props.title ? `${Astro.props.title} · ${title}` : title;
+const pageTitle = Astro.props.title
+  ? `${Astro.props.title} · Josh Hamilton`
+  : "Josh Hamilton · Nearbycoder";
 const pageDescription = Astro.props.description ?? description;
 const ogType = Astro.props.type ?? "website";
 const imageAlt = Astro.props.imageAlt ?? pageTitle;
 const siteUrl = Astro.site ?? new URL("https://nearbycoder.com");
 const currentUrl = Astro.url ?? new URL("/", siteUrl);
-const canonicalUrl = currentUrl.toString();
+const canonicalUrl = new URL(currentUrl.pathname, siteUrl).toString();
 const rssUrl = new URL("/rss.xml", siteUrl).toString();
 const ogImageUrl = getImagePath({ url: currentUrl, site: Astro.site });
 const twitterHandle = handle ? `@${handle}` : undefined;
 const includeScheduled = !import.meta.env.PROD;
 
-const articles = ((await getCollection("articles")) as any[]).sort((a: any, b: any) =>
-  compareArticlesByPublishDateDesc(a, b)
+const articles = ((await getCollection("articles")) as any[]).sort(
+  (a: any, b: any) => compareArticlesByPublishDateDesc(a, b),
 );
 const projects = (await getCollection("projects")) as any[];
 const layoffEntries = (await getCollection("layoff")) as any[];
@@ -62,7 +67,9 @@ const searchItems = [
       type: "Article",
       title: entry.data.title,
       url: `/articles/${entry.id}`,
-      subtitle: [entry.data.date, entry.data.readTime].filter(Boolean).join(" · "),
+      subtitle: [entry.data.date, entry.data.readTime]
+        .filter(Boolean)
+        .join(" · "),
       keywords: [entry.data.description, ...(entry.data.tags ?? [])].join(" "),
     })),
   ...projects
@@ -82,7 +89,11 @@ const searchItems = [
       url: `/layoff/${entry.id}`,
       subtitle: [
         entry.data.date,
-        entry.data.week ? `Week ${entry.data.week}` : entry.data.day ? `Day ${entry.data.day}` : null,
+        entry.data.week
+          ? `Week ${entry.data.week}`
+          : entry.data.day
+            ? `Day ${entry.data.day}`
+            : null,
         entry.data.status,
       ]
         .filter(Boolean)
@@ -102,20 +113,28 @@ const searchItems = [
         try {
           const stored = localStorage.getItem("theme-preference");
           const theme =
-            stored === "light" || stored === "dark" || stored === "system" ? stored : "system";
+            stored === "light" || stored === "dark" || stored === "system"
+              ? stored
+              : "system";
           document.documentElement.setAttribute("data-theme", theme);
         } catch {}
       })();
     </script>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS Feed`} href={rssUrl} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.name} RSS Feed`}
+      href={rssUrl}
+    />
     <meta property="og:site_name" content={title} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content={imageAlt} />
@@ -127,12 +146,17 @@ const searchItems = [
     <meta name="twitter:image" content={ogImageUrl} />
     <meta name="twitter:image:alt" content={imageAlt} />
     <link rel="icon" type="image/jpeg" href="/logo.jpeg" />
-    <script defer data-domain="nearbycoder.com" src="https://tic.nrby.xyz/js/script.js"></script>
+    <script
+      is:inline
+      defer
+      data-domain="nearbycoder.com"
+      src="https://tic.nrby.xyz/js/script.js"></script>
     <title>{pageTitle}</title>
   </head>
-  <body class="min-h-screen flex flex-col">
+  <body class="flex flex-col">
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <SiteHeader />
-    <main class="relative mx-auto w-full max-w-[1240px] flex-1 px-5 pb-24 sm:px-8">
+    <main id="main-content" class="site-container site-main" tabindex="-1">
       <slot />
     </main>
     <SiteFooter />

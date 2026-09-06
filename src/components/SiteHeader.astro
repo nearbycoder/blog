@@ -1,52 +1,104 @@
 ---
 import { site } from "../data/site";
 import ThemeToggle from "./ThemeToggle.astro";
-
-const pathname = Astro.url.pathname;
-const isActive = (href: string) => href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+import Icon from "./Icon.astro";
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) =>
+  pathname === href || pathname.startsWith(`${href}/`);
 ---
 
-<header class="sticky top-0 z-30 border-b" style="border-color: var(--border); border-bottom-width: var(--rule); background: color-mix(in srgb, var(--bg) 90%, transparent); backdrop-filter: blur(14px);">
-  <div class="mx-auto grid w-full max-w-[1240px] grid-cols-[1fr_auto] items-center gap-5 px-5 py-3 sm:px-8 lg:grid-cols-[250px_1fr_auto]">
-    <a href="/" class="group flex min-w-0 items-center gap-3" aria-label="Nearbycoder home">
-      <span class="relative grid h-9 w-9 shrink-0 place-items-center border" style="border-color: var(--border); border-width: var(--rule); background: var(--surface); box-shadow: 3px 3px 0 var(--shadow-color);">
-        <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="var(--fg)" stroke-width="2" aria-hidden="true">
-          <circle cx="12" cy="12" r="7"></circle>
-          <path d="M12 1v5M12 18v5M1 12h5M18 12h5"></path>
-          <rect x="9.5" y="9.5" width="5" height="5" fill="var(--accent)" stroke="none"></rect>
-        </svg>
-      </span>
-      <span class="min-w-0 leading-none">
-        <span class="block truncate text-sm font-bold tracking-[-0.02em]">NEARBYCODER</span>
-        <span class="label mt-1 block truncate">Personal blog / 26</span>
-      </span>
+<header class="site-header">
+  <div class="site-container header-inner">
+    <a href="/" class="brand" aria-label="Nearbycoder home">
+      <svg
+        viewBox="0 0 24 24"
+        class="brand-mark"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        aria-hidden="true"
+        ><circle cx="12" cy="12" r="7"></circle><path
+          d="M12 1v5M12 18v5M1 12h5M18 12h5"></path><rect
+          x="9.5"
+          y="9.5"
+          width="5"
+          height="5"
+          fill="currentColor"
+          stroke="none"></rect></svg
+      >
+      <span>NEARBYCODER</span>
     </a>
-
-    <nav class="hidden items-center justify-center gap-7 lg:flex" aria-label="Main navigation">
-      {site.nav.map((item: { label: string; href: string }, index: number) => (
-        <a href={item.href} class="nav-link" aria-current={isActive(item.href) ? "page" : undefined}>
-          <span style="color: var(--fg-dim); margin-right: .35rem;">{String(index + 1).padStart(2, "0")}</span>{item.label}
-        </a>
-      ))}
+    <nav class="desktop-nav" aria-label="Main navigation">
+      {
+        site.nav.map((item) => (
+          <a
+            href={item.href}
+            class="nav-link"
+            aria-current={isActive(item.href) ? "page" : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
     </nav>
-
-    <div class="flex items-center justify-end gap-2">
-      <button type="button" class="btn btn-ghost hidden sm:inline-flex" data-command-trigger aria-label="Open search">
-        <span>Search</span><span style="color: var(--fg-dim);">⌘K</span>
-      </button>
+    <div class="header-actions">
+      <button
+        class="btn btn-ghost"
+        type="button"
+        data-command-trigger
+        aria-label="Open search"
+        ><Icon name="search" /><span class="search-label">Search</span><kbd
+          >⌘ K</kbd
+        ></button
+      >
       <ThemeToggle />
+      <button
+        class="btn btn-ghost icon-button menu-toggle"
+        type="button"
+        data-menu-toggle
+        aria-label="Toggle navigation"
+        aria-controls="mobile-navigation"
+        aria-expanded="false"><Icon name="menu" /></button
+      >
     </div>
   </div>
-
-  <nav class="mx-auto flex w-full max-w-[1240px] gap-5 overflow-x-auto border-t px-5 py-2 sm:px-8 lg:hidden" style="border-color: var(--border-dim);" aria-label="Mobile navigation">
-    {site.nav.map((item: { label: string; href: string }) => (
-      <a href={item.href} class="nav-link shrink-0" aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</a>
-    ))}
+  <nav
+    id="mobile-navigation"
+    class="mobile-nav"
+    aria-label="Mobile navigation"
+    hidden
+  >
+    {
+      site.nav.map((item) => (
+        <a
+          href={item.href}
+          class="nav-link"
+          aria-current={isActive(item.href) ? "page" : undefined}
+        >
+          {item.label}
+        </a>
+      ))
+    }
   </nav>
 </header>
-
-<script is:inline>
-  document.querySelectorAll("[data-command-trigger]").forEach((button) => {
-    button.addEventListener("click", () => document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })));
+<script>
+  const toggle =
+    document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const nav = document.getElementById("mobile-navigation");
+  const close = () => {
+    if (nav) nav.hidden = true;
+    toggle?.setAttribute("aria-expanded", "false");
+  };
+  toggle?.addEventListener("click", () => {
+    if (!nav) return;
+    nav.hidden = !nav.hidden;
+    toggle.setAttribute("aria-expanded", String(!nav.hidden));
   });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && nav && !nav.hidden) {
+      close();
+      toggle?.focus();
+    }
+  });
+  matchMedia("(min-width:768px)").addEventListener("change", close);
 </script>

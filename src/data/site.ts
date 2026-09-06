@@ -1,8 +1,7 @@
 export const site = {
   name: "Josh Hamilton",
   handle: "nearbycoder",
-  title:
-    "Josh Hamilton - Nearbycoder - I am a Member of Technical Staff @ Augment Code and loving husband, and a father of two girls.",
+  title: "Josh Hamilton · Nearbycoder",
   description:
     "Member of Technical Staff @ Augment Code focused on resilient systems, pragmatic leadership, and building tools that keep teams shipping.",
   location: "Tulsa, Oklahoma",
@@ -21,7 +20,8 @@ export const site = {
     { label: "Uses", href: "/uses" },
   ],
   hero: {
-    title: "Member of Technical Staff @ Augment Code, loving husband, father of two girls.",
+    title:
+      "Member of Technical Staff @ Augment Code, loving husband, father of two girls.",
     subtitle:
       "I build resilient systems, write about the messy parts of shipping, and try to keep teams calm when things get noisy.",
     ctaPrimary: { label: "Read the latest", href: "/articles" },

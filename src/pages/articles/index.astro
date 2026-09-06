@@ -1,83 +1,137 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
+import Icon from "../../components/Icon.astro";
 import { getCollection } from "astro:content";
-import { compareArticlesByPublishDateDesc, isArticlePublished } from "../../lib/articles";
-
-const articles = (await getCollection("articles")) as any[];
-const includeScheduled = !import.meta.env.PROD;
-const sortedArticles = articles
-  .filter((entry: any) => isArticlePublished(entry, { includeScheduled }))
-  .sort((a: any, b: any) => compareArticlesByPublishDateDesc(a, b));
+import {
+  compareArticlesByPublishDateDesc,
+  isArticlePublished,
+} from "../../lib/articles";
+const sortedArticles = (await getCollection("articles"))
+  .filter((entry) =>
+    isArticlePublished(entry, { includeScheduled: !import.meta.env.PROD }),
+  )
+  .sort(compareArticlesByPublishDateDesc);
+const topics = [
+  { label: "All writing", value: "" },
+  { label: "AI & agents", value: "ai" },
+  { label: "Engineering", value: "engineering" },
+  { label: "Career", value: "career" },
+  { label: "Building", value: "building" },
+];
 ---
 
-<BaseLayout title="Articles">
+<BaseLayout
+  title="Articles"
+  description="Josh Hamilton’s notes on engineering, building with AI, career changes, and the human side of shipping software."
+>
   <section class="page-shell space-y-8">
     <header class="page-intro">
-      <p class="paper-strip">Articles / {sortedArticles.length} entries</p>
-      <h1 class="display max-w-4xl text-6xl md:text-7xl">
-        Writing through <em>layoffs</em>,
-        building, and <span class="marker">adaptation</span>.
-      </h1>
-      <p class="max-w-2xl text-base leading-relaxed" style="color: var(--fg-muted);">
-        Personal notes on job searching, shipping with AI, and rebuilding momentum one project at a time.
+      <p class="paper-strip">Articles · {sortedArticles.length} stories</p><h1
+        class="display"
+      >
+        Thinking out loud.<br /><em>Writing it down.</em>
+      </h1><p style="color:var(--fg-muted)">
+        Experiments, hard lessons, and things worth sharing. Notes from a life
+        spent making software.
       </p>
     </header>
-
-    <div class="block-box block-box-shadow flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center">
-      <label for="article-search" class="label-strong shrink-0">Search /</label>
-      <input
+    <div class="search-toolbar">
+      <Icon name="search" /><label for="article-search" class="sr-only"
+        >Search articles</label
+      ><input
         id="article-search"
         type="search"
-        placeholder="Title, tag, or description…"
-        class="w-full bg-transparent font-mono text-base outline-none"
-        style="color: var(--fg);"
-      />
+        placeholder="Search by title, topic, or a passing thought…"
+      /><span class="label shrink-0" id="article-count" aria-live="polite"
+        >{sortedArticles.length} articles</span>
     </div>
-
-    <p id="articles-empty" class="hidden font-mono text-sm" style="color: var(--fg-muted);">
-      No articles match that search.
-    </p>
-
+    <div class="filter-bar" role="group" aria-label="Filter by topic">
+      {
+        topics.map((topic, index) => (
+          <button
+            type="button"
+            class="filter-button"
+            data-topic={topic.value}
+            aria-pressed={index === 0 ? "true" : "false"}
+          >
+            {topic.label}
+          </button>
+        ))
+      }
+    </div>
+    <div id="articles-empty" class="empty-state" hidden>
+      <p>No articles match those filters.</p><button
+        type="button"
+        id="clear-filters"
+        class="btn">Clear filters</button>
+    </div>
     <div id="articles-grid" class="article-archive-grid">
-      {sortedArticles.map((entry: any, index: number) => (
-        <div
-          data-article
-          data-search={`${entry.data.title} ${entry.data.description} ${entry.data.tags?.join(" ") ?? ""}`}
-          class="h-full"
-        >
-          <ArticleCard entry={entry} index={index} />
-        </div>
-      ))}
+      {
+        sortedArticles.map((entry) => (
+          <div
+            data-article
+            data-search={`${entry.data.title} ${entry.data.description} ${entry.data.tags.join(" ")}`}
+            data-tags={entry.data.tags.join(" ")}
+          >
+            <ArticleCard entry={entry} heading="h2" />
+          </div>
+        ))
+      }
     </div>
   </section>
 </BaseLayout>
-
-<script is:inline>
-  (() => {
-    const articleSearchInput = document.getElementById("article-search");
-    const articleItems = Array.from(document.querySelectorAll("[data-article]"));
-    const emptyState = document.getElementById("articles-empty");
-
-    if (!articleSearchInput || articleItems.length === 0) return;
-
-    const applyFilter = () => {
-      const query = articleSearchInput.value.trim().toLowerCase();
-      let visible = 0;
-
-      articleItems.forEach((item) => {
-        const haystack = (item.getAttribute("data-search") ?? "").toLowerCase();
-        const match = query.length === 0 || haystack.includes(query);
-        item.classList.toggle("hidden", !match);
-        if (match) visible += 1;
-      });
-
-      if (emptyState) {
-        emptyState.classList.toggle("hidden", visible !== 0);
-      }
-    };
-
-    articleSearchInput.addEventListener("input", applyFilter);
-    applyFilter();
-  })();
+<script>
+  const input = document.querySelector<HTMLInputElement>("#article-search")!;
+  const items = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-article]"),
+  );
+  const buttons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-topic]"),
+  );
+  let topic = "";
+  const matchesTopic = (tags: string) =>
+    !topic ||
+    (topic === "building"
+      ? /build|launch|project|shipping|opensource|saas/.test(tags)
+      : topic === "ai"
+        ? /\bai\b|agents|codex|claude/.test(tags)
+        : topic === "career"
+          ? /career|layoff|interview|job|motivation/.test(tags)
+          : /engineering|react|development|developer|workflow|programming|reliability/.test(
+              tags,
+            ));
+  const filter = () => {
+    const query = input.value.toLowerCase().trim();
+    let count = 0;
+    items.forEach((item) => {
+      item.hidden = !(
+        item.dataset.search!.toLowerCase().includes(query) &&
+        matchesTopic(item.dataset.tags!.toLowerCase())
+      );
+      if (!item.hidden) count++;
+    });
+    document.getElementById("articles-empty")!.hidden = count !== 0;
+    document.getElementById("article-count")!.textContent =
+      `${count} ${count === 1 ? "article" : "articles"}`;
+    buttons.forEach((button) =>
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.topic === topic),
+      ),
+    );
+  };
+  input.addEventListener("input", filter);
+  buttons.forEach((button) =>
+    button.addEventListener("click", () => {
+      topic = button.dataset.topic!;
+      filter();
+    }),
+  );
+  document.getElementById("clear-filters")?.addEventListener("click", () => {
+    topic = "";
+    input.value = "";
+    filter();
+    input.focus();
+  });
 </script>

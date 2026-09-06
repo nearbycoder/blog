@@ -1,45 +1,98 @@
+---
+import Icon from "./Icon.astro";
+---
+
 <div class="relative" data-theme-root>
-  <button type="button" class="btn btn-ghost h-11 w-11 p-0" aria-haspopup="true" aria-expanded="false" data-theme-trigger aria-label="Choose color theme">
-    <svg aria-hidden="true" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.7">
-      <circle cx="12" cy="12" r="7"></circle><path d="M12 5a7 7 0 0 1 0 14Z" fill="currentColor"></path>
-    </svg>
-  </button>
-  <div class="absolute right-0 z-40 mt-2 hidden w-48 border p-1" style="border-color: var(--border); background: var(--surface);" role="menu" data-theme-menu>
-    <button type="button" class="flex w-full items-center justify-between px-3 py-2.5 label-strong" data-theme-option="light" role="menuitem"><span>Light</span><span class="label">L</span></button>
-    <button type="button" class="flex w-full items-center justify-between px-3 py-2.5 label-strong" data-theme-option="dark" role="menuitem"><span>Dark</span><span class="label">D</span></button>
-    <button type="button" class="flex w-full items-center justify-between px-3 py-2.5 label-strong" data-theme-option="system" role="menuitem"><span>System</span><span class="label">OS</span></button>
+  <button
+    type="button"
+    class="btn btn-ghost icon-button"
+    aria-expanded="false"
+    aria-controls="theme-options"
+    data-theme-trigger
+    aria-label="Choose color theme"><Icon name="theme" /></button
+  >
+  <div
+    id="theme-options"
+    class="absolute right-0 z-40 mt-2 w-44 rounded-lg border p-1"
+    style="border-color:var(--border);background:var(--surface);box-shadow:0 10px 35px #0002"
+    data-theme-menu
+    hidden
+  >
+    <div role="group" aria-label="Color theme">
+      {
+        ["light", "dark", "system"].map((theme) => (
+          <button
+            type="button"
+            class="flex w-full rounded px-3 py-3 text-sm"
+            data-theme-option={theme}
+            aria-pressed="false"
+          >
+            {theme[0].toUpperCase() + theme.slice(1)}
+          </button>
+        ))
+      }
+    </div>
   </div>
-  <script is:inline>
-    (() => {
-      const root = document.documentElement;
-      const storageKey = "theme-preference";
-      const container = document.currentScript?.closest("[data-theme-root]");
-      if (!container) return;
-      const trigger = container.querySelector("[data-theme-trigger]");
-      const menu = container.querySelector("[data-theme-menu]");
-      const options = Array.from(container.querySelectorAll("[data-theme-option]"));
-      const close = () => { menu?.classList.add("hidden"); trigger?.setAttribute("aria-expanded", "false"); };
-      const update = () => options.forEach((button) => {
-        const active = button.getAttribute("data-theme-option") === (root.getAttribute("data-theme") || "system");
-        button.style.background = active ? "var(--accent)" : "";
-        button.style.color = active ? "var(--accent-fg)" : "";
-        button.setAttribute("aria-pressed", String(active));
-      });
-      trigger?.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const hidden = menu?.classList.contains("hidden");
-        menu?.classList.toggle("hidden", !hidden);
-        trigger.setAttribute("aria-expanded", String(hidden));
-      });
-      options.forEach((button) => button.addEventListener("click", () => {
-        const value = button.getAttribute("data-theme-option") || "system";
-        root.setAttribute("data-theme", value);
-        try { localStorage.setItem(storageKey, value); } catch {}
-        update(); close();
-      }));
-      document.addEventListener("click", (event) => { if (!container.contains(event.target)) close(); });
-      document.addEventListener("keydown", (event) => { if (event.key === "Escape") close(); });
-      update();
-    })();
-  </script>
 </div>
+<script>
+  const container = document.querySelector<HTMLElement>("[data-theme-root]")!;
+  const trigger = container.querySelector<HTMLButtonElement>(
+    "[data-theme-trigger]",
+  )!;
+  const menu = container.querySelector<HTMLElement>("[data-theme-menu]")!;
+  const options = Array.from(
+    container.querySelectorAll<HTMLButtonElement>("[data-theme-option]"),
+  );
+  const close = () => {
+    menu.hidden = true;
+    trigger.setAttribute("aria-expanded", "false");
+  };
+  const update = () =>
+    options.forEach((button) => {
+      const active =
+        button.dataset.themeOption ===
+        (document.documentElement.dataset.theme || "system");
+      button.style.background = active ? "var(--accent-soft)" : "";
+      button.style.color = active ? "var(--accent)" : "";
+      button.setAttribute("aria-pressed", String(active));
+    });
+  trigger.addEventListener("click", () => {
+    menu.hidden = !menu.hidden;
+    trigger.setAttribute("aria-expanded", String(!menu.hidden));
+    if (!menu.hidden)
+      options.find((b) => b.getAttribute("aria-pressed") === "true")?.focus();
+  });
+  options.forEach((button) =>
+    button.addEventListener("click", () => {
+      const value = button.dataset.themeOption!;
+      document.documentElement.dataset.theme = value;
+      try {
+        localStorage.setItem("theme-preference", value);
+      } catch {}
+      update();
+      close();
+      trigger.focus();
+    }),
+  );
+  document.addEventListener("click", (event) => {
+    if (!container.contains(event.target as Node)) close();
+  });
+  container.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      close();
+      trigger.focus();
+    }
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      const index = options.indexOf(
+        document.activeElement as HTMLButtonElement,
+      );
+      options[
+        (index + (event.key === "ArrowDown" ? 1 : options.length - 1)) %
+          options.length
+      ].focus();
+    }
+  });
+  document.addEventListener("themechange", update);
+  update();
+</script>

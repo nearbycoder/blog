@@ -6,16 +6,32 @@
     "dev": "astro dev --host 0.0.0.0",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "astro check",
+    "test": "playwright test",
+    "verify": "npm run check && npm run build && npm test",
+    "images:optimize": "node scripts/optimize-images.mjs",
+    "prebuild": "npm run images:optimize",
+    "predev": "npm run images:optimize"
   },
   "dependencies": {
-    "@fontsource/instrument-serif": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/space-grotesk": "^5.2.10",
+    "@tabler/icons": "^3.46.0",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.7",
     "astro-opengraph-images": "^1.14.3",
     "react": "^19.2.5",
+    "sharp": "^0.35.4",
     "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "lighthouse": "^13.4.1",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^5.9.3"
   }
 }

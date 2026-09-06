@@ -9,10 +9,7 @@ const sortedEntries = entries
   .sort((a: any, b: any) => b.data.date.localeCompare(a.data.date));
 
 const weekSections = sortedEntries.reduce(
-  (
-    sections: { key: string; label: string; entries: any[] }[],
-    entry: any
-  ) => {
+  (sections: { key: string; label: string; entries: any[] }[], entry: any) => {
     const week = entry.data.week as number | undefined;
     const key = typeof week === "number" ? `week-${week}` : "week-unassigned";
     const label = typeof week === "number" ? `Week ${week}` : "Other Updates";
@@ -26,7 +23,7 @@ const weekSections = sortedEntries.reduce(
     section.entries.push(entry);
     return sections;
   },
-  []
+  [],
 );
 ---
 
@@ -35,37 +32,49 @@ const weekSections = sortedEntries.reduce(
     <header class="page-intro">
       <p class="paper-strip">Layoff Log / Early 2026</p>
       <h1 class="display max-w-4xl text-6xl md:text-7xl">
-        Weekly build
-        <em>launch log</em>.
+        An unexpected chapter.<br />
+        <em>A fresh start.</em>
       </h1>
-      <p class="max-w-2xl text-base leading-relaxed" style="color: var(--fg-muted);">
+      <p
+        class="max-w-2xl text-base leading-relaxed"
+        style="color: var(--fg-muted);"
+      >
         What shipped, what changed, and why it matters.
       </p>
     </header>
 
-    <div class="sticker-note p-5 md:p-6" style="background: var(--accent); color: var(--accent-fg);">
-      <p class="font-mono text-xs font-bold uppercase tracking-normal" style="opacity: 0.8;">
+    <div class="sticker-note p-6 md:p-8">
+      <p
+        class="font-mono text-xs font-bold uppercase tracking-normal"
+        style="opacity: 0.8;"
+      >
         Plot twist
       </p>
-      <p class="mt-2 display text-3xl md:text-4xl" style="color: var(--accent-fg);">
-        Week 4: I joined Augment Code. This log is now the breadcrumb trail of the weird little builds that helped get me there.
+      <p class="mt-2 text-xl leading-relaxed max-w-4xl">
+        Week 4: I joined Augment Code. This log is now the breadcrumb trail of
+        the weird little builds that helped get me there.
       </p>
     </div>
 
-    {weekSections.map((section: { key: string; label: string; entries: any[] }) => (
-      <section class="space-y-5">
-        <header class="section-head">
-          <h2 class="display text-5xl md:text-6xl">{section.label}</h2>
-          <span class="chip">
-            {section.entries.length} {section.entries.length === 1 ? "update" : "updates"}
-          </span>
-        </header>
-        <div class="grid gap-6 md:grid-cols-2">
-          {section.entries.map((entry: any, index: number) => (
-            <LayoffEntryCard entry={entry} index={index} />
-          ))}
-        </div>
-      </section>
-    ))}
+    {
+      weekSections.map(
+        (section: { key: string; label: string; entries: any[] }) => (
+          <section class="space-y-5" id={section.key}>
+            <header class="section-head">
+              <h2 class="display text-5xl md:text-6xl">{section.label}</h2>
+              <span class="chip">
+                {section.entries.length}{" "}
+                {section.entries.length === 1 ? "update" : "updates"}
+              </span>
+            </header>
+            <div class="grid gap-x-12 md:grid-cols-2">
+              {section.entries.map((entry: any, index: number) => (
+                <LayoffEntryCard entry={entry} index={index} />
+              ))}
+            </div>
+          </section>
+        ),
+      )
+    }
   </section>
 </BaseLayout>

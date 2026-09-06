@@ -1,0 +1,17 @@
+---
+import search from "@tabler/icons/outline/search.svg?raw";
+import theme from "@tabler/icons/outline/sun-moon.svg?raw";
+import menu from "@tabler/icons/outline/menu-2.svg?raw";
+import close from "@tabler/icons/outline/x.svg?raw";
+import arrow from "@tabler/icons/outline/arrow-right.svg?raw";
+import external from "@tabler/icons/outline/arrow-up-right.svg?raw";
+import copy from "@tabler/icons/outline/copy.svg?raw";
+import rss from "@tabler/icons/outline/rss.svg?raw";
+const icons = { search, theme, menu, close, arrow, external, copy, rss };
+interface Props {
+  name: keyof typeof icons;
+}
+const { name } = Astro.props;
+---
+
+<span class="icon" aria-hidden="true" set:html={icons[name]} />

@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+---
+
+<BaseLayout
+  title="Page not found"
+  description="This page has moved or does not exist. Find your way back to Josh Hamilton’s writing and projects."
+>
+  <section class="page-shell">
+    <header class="page-intro">
+      <p class="paper-strip">404 · Page not found</p><h1 class="display">
+        A wrong turn.<br /><em>Still somewhere good.</em>
+      </h1><p style="color:var(--fg-muted)">
+        That page isn’t here. Head home, browse the writing, or search for what
+        brought you here.
+      </p><div class="flex flex-wrap gap-3">
+        <a href="/" class="btn btn-accent">Back home <Icon name="arrow" /></a
+        ><button type="button" class="btn" data-command-trigger
+          ><Icon name="search" /> Search the site</button>
+      </div>
+    </header>
+  </section>
+</BaseLayout>
