@@ -1,25 +1,40 @@
-# Email subscription activation
+# Resend newsletter
 
-The subscription entry point is implemented, but live email is not configured. This release must remain a draft until the real provider flow is verified. The blog does not collect addresses or claim a subscription succeeded. It links readers to the mailing service’s hosted signup page, which owns enrollment, confirmation, suppression, and unsubscribe behavior.
+The static Astro site uses three Vercel Functions in `api/`. Resend stores subscribers and sends confirmation emails and post broadcasts. The verified sender is `Josh Hamilton <newsletter@nearbycoder.com>`.
 
-## What is needed
+## Configuration
 
-Supply the existing newsletter’s public HTTPS signup URL and access to its mailing-service settings. If there is no list yet, choose and configure a service first. No email API key is needed in this static blog. Do not put a secret into `NEWSLETTER_SIGNUP_URL`; it becomes a public link.
+Set these server environment variables in Vercel. Never commit their values:
 
-Set `NEWSLETTER_SIGNUP_URL` on the Vercel project for the appropriate environment and rebuild. Missing configuration shows an honest RSS fallback on `/subscribe` and hides email invitations on articles and the homepage. Invalid URLs fail the build; the configuration also rejects a loop back to `/subscribe`.
+- `NEWSLETTER_ENABLED=true` also enables the signup UI at build time. Missing configuration leaves the RSS fallback.
+- `RESEND_API_KEY`: Full access key, required for contacts, topics, and broadcasts as well as sending.
+- `NEWSLETTER_FROM`: verified sender.
+- `NEWSLETTER_TOKEN_SECRET`: random secret of at least 32 characters, distinct for Preview and Production.
+- `RESEND_SEGMENT_ID` and `RESEND_TOPIC_ID`: dedicated newsletter segment and topic. Create the topic with `default_subscription: opt_out`.
+- `CRON_SECRET`: random production secret. Vercel includes it as the cron request’s bearer token.
 
-## New-post delivery
+Create a numeric contact property named `nearbycoder_confirmed_at` with fallback 0. Production and Preview use separate segments and topics. The feature branch’s Preview configuration uses the dedicated test segment; do not copy production segment credentials into Preview. API keys and token secrets are sensitive Vercel variables. `.env.example` contains names only.
 
-Use the blog’s existing published-only RSS feed: `https://nearbycoder.com/rss.xml`. Configure the provider’s RSS-to-email automation and a verified sender. Enable confirmation for new subscriptions and verify that every notification includes a working unsubscribe link. Start by creating drafts so old feed entries do not accidentally trigger a backlog of emails; establish the provider’s initial feed cursor before enabling new-post sends.
+## Reader flow
 
-As one supported example, Buttondown provides a [hosted signup URL](https://docs.buttondown.com/building-your-subscriber-base), [confirmation emails](https://docs.buttondown.com/transactional-emails-confirmation), and [RSS-to-email with draft or send behavior](https://docs.buttondown.com/rss-to-email). Another service with these capabilities can use the same blog configuration. No provider account or paid service has been created by this change.
+`POST /api/newsletter` validates the address, explicit consent, origin, request size, and honeypot before sending an email. A confirmation email does not add a subscriber. Encrypted, authenticated confirmation tokens expire after one hour and are passed in a URL fragment, then removed from the browser address. Opening the link does not subscribe the reader: the confirmation page requires a button click and `POST /api/newsletter-confirm`.
 
-## Release verification
+Confirmation upserts the contact into the newsletter segment and opts it into this topic. It preserves other contact details and never reverses a global unsubscribe. The stored confirmation timestamp makes replaying an already-used link harmless, including after a topic unsubscribe. A fresh link can rejoin this topic; a global opt-out must be changed in Resend’s preferences page first.
 
-1. Set the real signup URL in Preview. Open `/subscribe` on the PR deployment and follow its signup link.
-2. With an authorized test address, complete signup and confirmation. Verify the confirmed subscription in the provider.
-3. Create a test newsletter draft from the RSS feed; verify the title, excerpt, canonical article link, sender, and unsubscribe link. Do not publish a dummy blog article or send to the whole list to test.
-4. Send only to the authorized test address, verify receipt, unsubscribe, and confirm suppression from future notifications. Remove test data as appropriate.
-5. Configure the initial feed cursor and new-post delivery, set the production URL, rerun `npm run verify`, and merge only after Vercel passes.
+Signup works through a normal HTML form without JavaScript; confirmation requires JavaScript. Enhanced forms show sending, retry, failure, and success states. Success means the email service accepted the request, not proof of inbox delivery. The address is stored in Resend, never localStorage.
 
-The automated suite checks the unconfigured page, feed copy behavior, invalid configuration, and a separately built configured page using a reserved example URL. This verifies the site integration; it does not substitute for delivery and unsubscribe checks with the real service.
+Confirmation sends use Resend’s email idempotency key per address/topic/ten-minute window. A best-effort per-instance IP limiter and honeypot reduce accidental repeated requests; these are not a distributed abuse-prevention system. For higher traffic, add a shared limiter or Vercel firewall rule. Provider rate limits receive bounded retries.
+
+## New posts
+
+Vercel calls `/api/newsletter-publish` daily at 14:00 UTC. It requires the cron secret and a production environment. The endpoint reads the published-only `/newsletter-feed.json`, excludes future posts, and sends at most three new posts per run, oldest first. Notifications contain the title, excerpt, generated social image, article link, and Resend’s native unsubscribe/preferences link in both HTML and text.
+
+`src/data/newsletter-baseline.json` records the 27 posts present before activation, preventing an archive blast. Do not add new posts to that baseline. Updating an existing article does not resend it; a new article ID is a new notification.
+
+Resend broadcasts are the persistent delivery ledger, keyed by a hash of article ID and matched to the configured segment. A failed send reuses its draft. Sent or queued broadcasts are skipped. Keep those records: deleting a sent broadcast can make its article eligible again. Resend broadcast creation does not support idempotency keys, so avoid overlapping manual publisher runs; this ledger protects sequential retries, not simultaneous invocations. Inspect Resend after an ambiguous timeout before manually retrying.
+
+## Verification
+
+Run `npm run verify` before release. The suite checks all routes, social images, responsive layouts, light/dark accessibility, configured and fallback signup UI, consent validation, token integrity/expiry, opt-out preservation, used links, provider failures, baseline filtering, and broadcast retry behavior.
+
+On the Vercel Preview, use a unique `delivered+nearbycoder-<label>@resend.dev` address in the isolated test segment. Verify confirmation email acceptance/delivery events, explicit confirmation, contact topic status, a test broadcast, its preferences link, and replay after opt-out. These are Resend’s synthetic delivery addresses; a delivery event does not establish rendering or inbox placement at Gmail or another human mailbox. Never publish a fake article or send a test to the production list.

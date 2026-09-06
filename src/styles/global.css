@@ -1994,3 +1994,70 @@ a:hover .story-image img,
     gap: 18px;
   }
 }
+.subscription-form {
+  display: grid;
+  gap: 16px;
+  position: relative;
+}
+.subscription-form > label {
+  font-size: 14px;
+}
+.subscription-form > input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+}
+.subscription-form > input::placeholder {
+  color: var(--fg-muted);
+}
+.subscription-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.6;
+  color: var(--fg-muted);
+}
+.subscription-consent input {
+  accent-color: var(--accent);
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.subscription-trap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.subscription-form .btn {
+  justify-self: start;
+}
+.subscription-form button:disabled,
+.subscription-confirm button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.subscribe-layout .subscription-status {
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0;
+}
+.subscription-form .lab-hint {
+  margin: 0;
+}
+.subscription-confirm {
+  max-width: 660px;
+  padding: 36px 0;
+  font-size: 16px;
+  line-height: 1.8;
+}
+.subscription-confirm p {
+  margin-block: 20px;
+  color: var(--fg-muted);
+}

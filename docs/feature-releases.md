@@ -26,8 +26,8 @@ Data uses the versioned `nearbycoder:reading:v1` localStorage key with validatio
 
 Validation includes saves and resume after navigation/reload, read completion, cross-tab updates, malformed and blocked storage, clearing data, exact clipboard contents, and clipboard errors, in addition to the complete route, social-image, responsive, and accessibility suite.
 
-## Email subscriptions — pending provider activation
+## Email subscriptions with Resend
 
-`/subscribe` provides an RSS fallback and a configured hosted email signup link. `NEWSLETTER_SIGNUP_URL` controls activation; email invitations on the homepage and articles remain hidden without it. The URL is validated at build time. The blog does not collect addresses, invent a successful enrollment, or send mail itself.
+`/subscribe` collects explicit consent and sends a confirmation email through Resend. Expiring links require an explicit confirmation button; used links cannot reactivate a subscription. The service preserves global opt-outs, uses a dedicated newsletter topic and segment, and includes native unsubscribe links in post emails.
 
-The website portion is tested in both configured and unconfigured builds, including no-JavaScript signup navigation, theme accessibility, narrow-screen layout, and feed copying. Live enrollment, confirmation, new-post delivery, and unsubscribe verification require a real mailing service. Keep this release as a draft until the steps in `docs/newsletter-setup.md` pass.
+A production-only daily Vercel cron discovers new published article IDs, excludes the initial archive, and sends branded emails with the article’s social image. Resend broadcasts persist the delivery record and allow sequential retries to reuse drafts. Preview uses a separate test segment. Configuration, operational limits, and verification steps are in `docs/newsletter-setup.md`.

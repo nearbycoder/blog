@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/newsletter.ts": { "maxDuration": 30 },
+    "api/newsletter-confirm.ts": { "maxDuration": 30 },
+    "api/newsletter-publish.ts": { "maxDuration": 60 }
+  },
+  "crons": [{ "path": "/api/newsletter-publish", "schedule": "0 14 * * *" }]
+}

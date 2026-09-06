@@ -22,6 +22,7 @@
     "astro": "^6.1.7",
     "astro-opengraph-images": "^1.14.3",
     "react": "^19.2.5",
+    "resend": "^6.26.0",
     "sharp": "^0.35.4",
     "tailwindcss": "^4.2.2"
   },

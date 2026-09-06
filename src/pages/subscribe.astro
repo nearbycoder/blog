@@ -1,8 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
-import { resolveNewsletterUrl } from "../lib/newsletter";
-const signupUrl = resolveNewsletterUrl(import.meta.env.NEWSLETTER_SIGNUP_URL);
+import SubscriptionForm from "../components/SubscriptionForm.astro";
+const enabled = import.meta.env.NEWSLETTER_ENABLED === "true";
 ---
 
 <BaseLayout
@@ -24,27 +24,20 @@ const signupUrl = resolveNewsletterUrl(import.meta.env.NEWSLETTER_SIGNUP_URL);
     >
       <h2 id="subscribe-email-heading">
         {
-          signupUrl
+          enabled
             ? "A new post, in your inbox."
             : "Email updates are on the way."
         }
       </h2>
       {
-        signupUrl ? (
+        enabled ? (
           <>
             <>
               <p>
-                Subscribe for new writing from this blog. You’ll finish signing
-                up with the email service, where you can manage your
-                subscription or unsubscribe.
+                New writing from this blog, delivered to your inbox. No weekly
+                quota. Just a note when there’s something new to share.
               </p>
-              <a class="btn btn-accent" href={signupUrl} data-email-signup>
-                Subscribe by email <Icon name="external" />
-              </a>
-              <p class="lab-hint">
-                Your email is entered on the signup page, not stored by this
-                blog.
-              </p>
+              <SubscriptionForm />
             </>
           </>
         ) : (
@@ -71,9 +64,10 @@ const signupUrl = resolveNewsletterUrl(import.meta.env.NEWSLETTER_SIGNUP_URL);
         <code id="feed-url">https://nearbycoder.com/rss.xml</code><button
           class="btn"
           id="copy-feed"
-          disabled>Copy feed URL</button>
+          disabled>Copy feed URL</button
+        >
       </div><p id="feed-status" role="status" class="lab-hint"></p>{
-        signupUrl && (
+        enabled && (
           <a href="/rss.xml" class="text-link">
             Open the RSS feed →
           </a>

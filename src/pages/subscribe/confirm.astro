@@ -1,0 +1,77 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Confirm your subscription"
+  description="Confirm that you’d like to receive new posts from Nearbycoder."
+>
+  <section class="page-shell">
+    <header class="page-intro">
+      <p class="label">One more step</p><h1 class="display">
+        Keep the curiosity coming.
+      </h1><p>
+        Confirm that you’d like new posts from Josh Hamilton in your inbox.
+      </p>
+    </header>
+    <div class="subscription-confirm">
+      <form id="confirm-subscription">
+        <button class="btn btn-accent" type="submit" disabled
+          >Confirm subscription</button
+        >
+      </form><p id="confirmation-status" role="status" tabindex="-1">
+        Open the confirmation link from your email to continue.
+      </p><a href="/subscribe" class="text-link"
+        >Request a fresh confirmation →</a
+      ><noscript
+        ><p>Enable JavaScript to confirm using your email link.</p></noscript
+      >
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  const token = new URLSearchParams(location.hash.slice(1)).get("token");
+  history.replaceState(null, "", location.pathname);
+  const form = document.querySelector<HTMLFormElement>(
+      "#confirm-subscription",
+    )!,
+    button = form.querySelector<HTMLButtonElement>("button")!,
+    status = document.querySelector<HTMLElement>("#confirmation-status")!;
+  if (token) {
+    button.disabled = false;
+    status.textContent = "Use the button above to confirm your subscription.";
+  }
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (button.disabled || !token) return;
+    button.disabled = true;
+    button.textContent = "Confirming…";
+    try {
+      const response = await fetch("/api/newsletter-confirm", {
+        method: "POST",
+        signal: AbortSignal.timeout(20000),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
+      const result = await response.json();
+      status.textContent =
+        result.message ??
+        "We couldn’t confirm your subscription. Please try again.";
+      button.textContent = result.ok
+        ? "You’re subscribed"
+        : result.used
+          ? "Link already used"
+          : "Try again";
+      button.disabled = Boolean(result.ok || result.used);
+    } catch {
+      status.textContent =
+        "We couldn’t reach the email service. Please try again.";
+      button.textContent = "Try again";
+      button.disabled = false;
+    }
+    status.focus();
+  });
+</script>

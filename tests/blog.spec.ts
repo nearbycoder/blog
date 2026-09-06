@@ -17,6 +17,8 @@ const routes = htmlFiles.map(
 );
 const samples = [
   "/subscribe/",
+  "/subscribe/confirm/",
+  "/subscribe/check-email/",
   "/reading-list/",
   "/lab/",
   "/lab/roomba/",

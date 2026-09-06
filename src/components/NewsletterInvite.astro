@@ -1,10 +1,9 @@
 ---
-import { resolveNewsletterUrl } from "../lib/newsletter";
-const signupUrl = resolveNewsletterUrl(import.meta.env.NEWSLETTER_SIGNUP_URL);
+const enabled = import.meta.env.NEWSLETTER_ENABLED === "true";
 ---
 
 {
-  signupUrl && (
+  enabled && (
     <aside class="newsletter-invite" aria-label="Email updates">
       <>
         <h2>There’s more where that came from.</h2>

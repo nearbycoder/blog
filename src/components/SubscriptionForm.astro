@@ -1,0 +1,78 @@
+<form
+  id="subscription-form"
+  action="/api/newsletter"
+  method="post"
+  class="subscription-form"
+>
+  <label for="subscriber-email">Email address</label><input
+    id="subscriber-email"
+    name="email"
+    type="email"
+    autocomplete="email"
+    inputmode="email"
+    maxlength="254"
+    required
+    placeholder="you@example.com"
+  />
+  <div class="subscription-trap" aria-hidden="true">
+    <label for="subscriber-website">Leave this empty</label><input
+      id="subscriber-website"
+      name="website"
+      type="text"
+      tabindex="-1"
+      autocomplete="off"
+    />
+  </div>
+  <label class="subscription-consent"
+    ><input type="checkbox" name="consent" value="yes" required />Send me new
+    posts from Josh Hamilton. I can unsubscribe anytime.</label
+  >
+  <button class="btn btn-accent" type="submit">Subscribe by email →</button><p
+    class="subscription-status"
+    id="subscription-status"
+    role="status"
+    tabindex="-1"
+  >
+  </p>
+  <p class="lab-hint">
+    Check your inbox to confirm. Your address is stored with Resend and used for
+    these updates.
+  </p>
+</form>
+<script>
+  const form = document.querySelector<HTMLFormElement>("#subscription-form")!;
+  const button = form.querySelector<HTMLButtonElement>("button")!;
+  const status = document.querySelector<HTMLElement>("#subscription-status")!;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (button.disabled) return;
+    button.disabled = true;
+    button.textContent = "Sending confirmation…";
+    form.setAttribute("aria-busy", "true");
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        signal: AbortSignal.timeout(20000),
+        headers: { Accept: "application/json" },
+        body: new URLSearchParams(
+          new FormData(form) as unknown as Record<string, string>,
+        ),
+      });
+      const result = await response.json();
+      status.textContent =
+        result.message ?? "Something went wrong. Please try again.";
+      if (response.ok && result.ok) {
+        form.reset();
+        button.textContent = "Send another confirmation";
+      } else button.textContent = "Try again";
+    } catch {
+      status.textContent =
+        "We couldn’t reach the email service. Please try again.";
+      button.textContent = "Try again";
+    } finally {
+      button.disabled = false;
+      form.removeAttribute("aria-busy");
+      status.focus();
+    }
+  });
+</script>
