@@ -1,0 +1,20 @@
+---
+const enabled = import.meta.env.NEWSLETTER_ENABLED === "true";
+---
+
+{
+  enabled && (
+    <aside class="newsletter-invite" aria-label="Email updates">
+      <>
+        <h2>There’s more where that came from.</h2>
+        <p>
+          New posts on building software, following curiosity, and figuring
+          things out along the way.
+        </p>
+        <a href="/subscribe" class="text-link">
+          Get the next post by email →
+        </a>
+      </>
+    </aside>
+  )
+}

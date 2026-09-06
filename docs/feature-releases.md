@@ -25,3 +25,9 @@ Articles now offer independent saving and opt-in section bookmarks. `/reading-li
 Data uses the versioned `nearbycoder:reading:v1` localStorage key with validation and a 100-entry limit. Titles, article URLs, and allowed heading anchors come from the current published content catalog, never from storage. Corrupt storage starts empty; blocked writes show an honest error. No reading data leaves the browser. Code blocks have copy buttons with success and failure feedback.
 
 Validation includes saves and resume after navigation/reload, read completion, cross-tab updates, malformed and blocked storage, clearing data, exact clipboard contents, and clipboard errors, in addition to the complete route, social-image, responsive, and accessibility suite.
+
+## Email subscriptions with Resend
+
+`/subscribe` collects explicit consent and sends a confirmation email through Resend. Expiring links require an explicit confirmation button; used links cannot reactivate a subscription. The service preserves global opt-outs, uses a dedicated newsletter topic and segment, and includes native unsubscribe links in post emails.
+
+A production-only daily Vercel cron discovers new published article IDs, excludes the initial archive, and sends branded emails with the article’s social image. Resend broadcasts persist the delivery record and allow sequential retries to reuse drafts. Preview uses a separate test segment. Configuration, operational limits, and verification steps are in `docs/newsletter-setup.md`.

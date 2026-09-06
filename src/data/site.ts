@@ -21,6 +21,7 @@ export const site = {
     { label: "Uses", href: "/uses" },
   ],
   explore: [
+    { label: "Follow along", href: "/subscribe" },
     { label: "Reading list", href: "/reading-list" },
     { label: "Lab", href: "/lab" },
     { label: "Now", href: "/now" },
