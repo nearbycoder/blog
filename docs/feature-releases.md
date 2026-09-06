@@ -25,3 +25,9 @@ Articles now offer independent saving and opt-in section bookmarks. `/reading-li
 Data uses the versioned `nearbycoder:reading:v1` localStorage key with validation and a 100-entry limit. Titles, article URLs, and allowed heading anchors come from the current published content catalog, never from storage. Corrupt storage starts empty; blocked writes show an honest error. No reading data leaves the browser. Code blocks have copy buttons with success and failure feedback.
 
 Validation includes saves and resume after navigation/reload, read completion, cross-tab updates, malformed and blocked storage, clearing data, exact clipboard contents, and clipboard errors, in addition to the complete route, social-image, responsive, and accessibility suite.
+
+## Email subscriptions — pending provider activation
+
+`/subscribe` provides an RSS fallback and a configured hosted email signup link. `NEWSLETTER_SIGNUP_URL` controls activation; email invitations on the homepage and articles remain hidden without it. The URL is validated at build time. The blog does not collect addresses, invent a successful enrollment, or send mail itself.
+
+The website portion is tested in both configured and unconfigured builds, including no-JavaScript signup navigation, theme accessibility, narrow-screen layout, and feed copying. Live enrollment, confirmation, new-post delivery, and unsubscribe verification require a real mailing service. Keep this release as a draft until the steps in `docs/newsletter-setup.md` pass.

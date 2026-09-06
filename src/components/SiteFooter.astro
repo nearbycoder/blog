@@ -9,14 +9,14 @@ import Icon from "./Icon.astro";
       <div>
         <p class="display footer-title">
           Good things start<br />with <em>curiosity.</em>
-        </p><a href="/rss.xml" class="text-link mt-5"
-          ><Icon name="rss" /> Follow along via RSS</a
+        </p><a href="/subscribe" class="text-link mt-5"
+          ><Icon name="rss" /> Follow along</a
         >
       </div>
       <div>
         <p class="label">Explore</p><ul>
           {
-            [...site.nav,...site.explore].map((item) => (
+            [...site.nav, ...site.explore].map((item) => (
               <li>
                 <a href={item.href} class="nav-link">
                   {item.label}

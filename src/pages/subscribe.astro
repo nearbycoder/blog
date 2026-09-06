@@ -1,0 +1,106 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { resolveNewsletterUrl } from "../lib/newsletter";
+const signupUrl = resolveNewsletterUrl(import.meta.env.NEWSLETTER_SIGNUP_URL);
+---
+
+<BaseLayout
+  title="Follow along"
+  description="Follow Josh Hamilton’s latest posts on software, side projects, and the craft of shipping."
+>
+  <header class="page-intro">
+    <p class="label">Follow along</p><h1 class="display">
+      Stay curious.<br />I’ll keep writing.
+    </h1><p class="deck">
+      Notes on building software, starting over, and seeing where a side project
+      leads.
+    </p>
+  </header>
+  <div class="subscribe-layout">
+    <section
+      class="subscribe-primary"
+      aria-labelledby="subscribe-email-heading"
+    >
+      <h2 id="subscribe-email-heading">
+        {
+          signupUrl
+            ? "A new post, in your inbox."
+            : "Email updates are on the way."
+        }
+      </h2>
+      {
+        signupUrl ? (
+          <>
+            <>
+              <p>
+                Subscribe for new writing from this blog. You’ll finish signing
+                up with the email service, where you can manage your
+                subscription or unsubscribe.
+              </p>
+              <a class="btn btn-accent" href={signupUrl} data-email-signup>
+                Subscribe by email <Icon name="external" />
+              </a>
+              <p class="lab-hint">
+                Your email is entered on the signup page, not stored by this
+                blog.
+              </p>
+            </>
+          </>
+        ) : (
+          <>
+            <>
+              <p>
+                Email signups aren’t open yet. You can follow every new post
+                with the RSS feed today.
+              </p>
+              <a href="/rss.xml" class="btn btn-accent">
+                <Icon name="rss" />
+                Get the RSS feed
+              </a>
+            </>
+          </>
+        )
+      }
+    </section>
+    <section class="subscribe-rss" aria-labelledby="subscribe-rss-heading">
+      <h2 id="subscribe-rss-heading">Keep your own reading routine.</h2><p>
+        Add the feed to your favorite reader. Every published article appears
+        there, with a link back to the full story.
+      </p><div class="feed-address">
+        <code id="feed-url">https://nearbycoder.com/rss.xml</code><button
+          class="btn"
+          id="copy-feed"
+          disabled>Copy feed URL</button>
+      </div><p id="feed-status" role="status" class="lab-hint"></p>{
+        signupUrl && (
+          <a href="/rss.xml" class="text-link">
+            Open the RSS feed →
+          </a>
+        )
+      }
+    </section>
+  </div>
+  <div class="subscribe-reading">
+    <p class="label">While you’re here</p><a
+      href="/start-here"
+      class="text-link">Find a reading path →</a
+    ><a href="/articles" class="text-link">Browse the latest articles →</a>
+  </div>
+</BaseLayout>
+<script>
+  const button = document.querySelector<HTMLButtonElement>("#copy-feed")!;
+  const status = document.querySelector<HTMLElement>("#feed-status")!;
+  button.disabled = false;
+  button.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(
+        document.querySelector("#feed-url")!.textContent!,
+      );
+      status.textContent = "Feed URL copied.";
+    } catch {
+      status.textContent =
+        "Clipboard unavailable. Select the feed address above to copy it.";
+    }
+  });
+</script>
