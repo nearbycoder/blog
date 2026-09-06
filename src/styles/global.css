@@ -620,6 +620,9 @@ a:hover .story-image img,
   padding: 0 0 44px;
   border-bottom: 1px solid var(--border);
 }
+.site-main > .page-intro:first-child {
+  padding-top: 64px;
+}
 .page-intro h1 {
   font-size: clamp(42px, 6vw, 76px);
   max-width: 1000px;
@@ -1240,6 +1243,9 @@ a:hover .story-image img,
     font-size: 11px;
   }
   .page-shell {
+    padding-top: 36px;
+  }
+  .site-main > .page-intro:first-child {
     padding-top: 36px;
   }
   .page-intro {
