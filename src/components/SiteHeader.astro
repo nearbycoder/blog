@@ -69,7 +69,7 @@ const isActive = (href: string) =>
     hidden
   >
     {
-      site.nav.map((item) => (
+      [...site.nav,...site.explore].map((item) => (
         <a
           href={item.href}
           class="nav-link"

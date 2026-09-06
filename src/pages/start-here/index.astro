@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getReadingPaths } from "../../lib/discovery";
+const paths = await getReadingPaths();
+---
+
+<BaseLayout
+  title="Start here"
+  description="Curated reading paths through Josh Hamilton’s writing on AI, career changes, and shipping side projects."
+>
+  <section class="page-shell">
+    <header class="page-intro">
+      <p class="paper-strip">Start here</p><h1 class="display">
+        A few good<br /><em>places to begin.</em>
+      </h1><p>
+        Pick what you’re curious about. Each path puts the stories in an order
+        that makes sense, with a reason to read each one.
+      </p>
+    </header>
+    <div class="path-grid">
+      {
+        paths.map((path) => (
+          <a class="path-card" href={`/start-here/${path.slug}`}>
+            <>
+              <p class="label">{path.entries.length} stories</p>
+              <h2>{path.title}</h2>
+              <p>{path.description}</p>
+              <span class="text-link">Explore this path →</span>
+            </>
+          </a>
+        ))
+      }
+    </div>
+    <a href="/articles" class="text-link mt-8"
+      >Or explore the whole archive →</a>
+  </section>
+</BaseLayout>

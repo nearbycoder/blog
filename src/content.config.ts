@@ -78,7 +78,13 @@ const layoff = defineCollection({
   }),
 });
 
+const postmortems = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/postmortems" }),
+  schema: z.object({ title:z.string(), description:z.string(), date:z.string(), project:z.string(), sources:z.array(z.string()).min(1), draft:z.boolean().default(false) }),
+});
+
 export const collections = {
+  postmortems,
   articles,
   projects,
   layoff,

@@ -1,4 +1,5 @@
 ---
+import ArticleContext from "../../components/ArticleContext.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
 import ShareArticle from "../../components/ShareArticle.astro";
@@ -80,7 +81,7 @@ const toc = headings.filter((heading) => heading.depth === 2);
           )
         }<ShareArticle />
       </aside><div>
-        <div class="article-content"><Content /></div><div class="reading-end">
+        <div class="article-content"><Content /></div><ArticleContext articleId={entry.id} /><div class="reading-end">
           <div class="flex flex-wrap gap-2">
             {entry.data.tags.map((tag) => <span class="chip">{tag}</span>)}
           </div><a href="/articles" class="text-link">Back to all articles →</a>

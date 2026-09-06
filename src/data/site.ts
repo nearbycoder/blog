@@ -13,11 +13,16 @@ export const site = {
     { label: "Instagram", url: "https://www.instagram.com/nearbycoder/" },
   ],
   nav: [
+    { label: "Start here", href: "/start-here" },
     { label: "About", href: "/about" },
     { label: "Articles", href: "/articles" },
     { label: "Projects", href: "/projects" },
     { label: "Layoff Log", href: "/layoff" },
     { label: "Uses", href: "/uses" },
+  ],
+  explore: [
+    {label:"Now",href:"/now"},
+    {label:"Postmortems",href:"/postmortems"},
   ],
   hero: {
     title:
