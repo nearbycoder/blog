@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { labs } from "../../data/labs";
+import Icon from "../../components/Icon.astro";
+---
+
+<BaseLayout
+  title="The lab"
+  description="Small, hands-on experiments from the projects behind this blog."
+>
+  <header class="page-intro">
+    <p class="label">The lab</p><h1 class="display">
+      Less reading. More trying.
+    </h1><p class="deck">
+      Small experiments pulled from real projects. Turn a few knobs and see what
+      happens.
+    </p>
+  </header>
+  <div class="lab-index">
+    {
+      labs.map((lab, i) => (
+        <a href={`/lab/${lab.slug}`} class="lab-entry">
+          <>
+            <span class="lab-index-number" aria-hidden="true">
+              0{i + 1}
+            </span>
+            <div>
+              <>
+                <p class="label">{lab.kind}</p>
+                <h2>{lab.title}</h2>
+                <p>{lab.description}</p>
+              </>
+            </div>
+            <Icon name="arrow" />
+          </>
+        </a>
+      ))
+    }
+  </div>
+</BaseLayout>
