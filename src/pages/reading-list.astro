@@ -1,0 +1,174 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import { isArticlePublished } from "../lib/articles";
+const catalog = await Promise.all(
+  (await getCollection("articles"))
+    .filter((entry) =>
+      isArticlePublished(entry, { includeScheduled: !import.meta.env.PROD }),
+    )
+    .map(async (entry) => ({
+      id: entry.id,
+      title: entry.data.title,
+      description: entry.data.description,
+      readTime: entry.data.readTime,
+      headings: (await render(entry)).headings.map((h) => ({
+        slug: h.slug,
+        text: h.text,
+      })),
+    })),
+);
+---
+
+<BaseLayout
+  title="Your reading list"
+  description="Your saved articles and reading positions, kept in this browser."
+>
+  <header class="page-intro">
+    <p class="label">Just for you</p><h1 class="display">
+      Keep a little curiosity<br />for later.
+    </h1><p class="deck">
+      Saved articles and reading positions live in this browser. No account, no
+      syncing, and nothing sent to a server.
+    </p>
+  </header>
+  <div class="reading-list-toolbar">
+    <p id="reading-list-count" class="label">Your reading list</p><button
+      class="btn"
+      id="clear-reading"
+      disabled>Clear saves &amp; history</button
+    >
+  </div>
+  <div id="reading-list-empty" class="reading-empty">
+    <h2>A good story can wait.</h2><p>
+      Save an article, or turn on “Remember my place” while you read. It will
+      appear here.
+    </p><a class="btn btn-accent" href="/articles">Find something to read →</a>
+  </div>
+  <ul
+    id="saved-articles"
+    class="saved-articles"
+    aria-label="Saved and recently read articles"
+  >
+  </ul>
+  <p id="reading-list-status" role="status" class="lab-status"></p>
+  <noscript
+    ><p>
+      Your reading list needs JavaScript to access this browser’s saves.
+    </p></noscript
+  >
+  <script
+    is:inline
+    type="application/json"
+    id="reading-catalog"
+    set:html={JSON.stringify(catalog).replace(/</g, "\\u003c")}
+  />
+</BaseLayout>
+<script>
+  import {
+    readReadingState,
+    removeReadingEntry,
+    clearReadingState,
+    READING_KEY,
+  } from "../lib/reading-storage";
+  type Article = {
+    id: string;
+    title: string;
+    description: string;
+    readTime?: string;
+    headings: { slug: string; text: string }[];
+  };
+  const catalog: Article[] = JSON.parse(
+    document.querySelector("#reading-catalog")!.textContent!,
+  );
+  const list = document.querySelector<HTMLUListElement>("#saved-articles")!,
+    clear = document.querySelector<HTMLButtonElement>("#clear-reading")!,
+    status = document.querySelector<HTMLElement>("#reading-list-status")!;
+  function draw() {
+    const state = readReadingState();
+    const entries = catalog
+      .filter(
+        (a) =>
+          state[a.id] &&
+          (state[a.id].saved || state[a.id].heading || state[a.id].completed),
+      )
+      .sort((a, b) => state[b.id].updated - state[a.id].updated);
+    document.querySelector<HTMLElement>("#reading-list-empty")!.hidden =
+      entries.length > 0;
+    document.querySelector<HTMLElement>("#reading-list-count")!.textContent =
+      `${entries.length} ${entries.length === 1 ? "article" : "articles"} in your list`;
+    clear.disabled = Object.keys(state).length === 0;
+    list.replaceChildren(
+      ...entries.map((article) => {
+        const entry = state[article.id],
+          li = document.createElement("li"),
+          body = document.createElement("div"),
+          meta = document.createElement("p"),
+          h = document.createElement("h2"),
+          link = document.createElement("a"),
+          description = document.createElement("p"),
+          remove = document.createElement("button");
+        const heading = article.headings.find((h) => h.slug === entry.heading);
+        meta.className = "label";
+        meta.textContent = [
+          entry.saved ? "Saved" : null,
+          entry.completed ? "Read" : heading ? "In progress" : null,
+          article.readTime,
+        ]
+          .filter(Boolean)
+          .join(" · ");
+        link.href = `/articles/${article.id}${heading && !entry.completed ? `#${encodeURIComponent(heading.slug)}` : ""}`;
+        link.textContent = article.title;
+        h.append(link);
+        description.textContent = article.description;
+        body.append(meta, h, description);
+        if (heading && !entry.completed) {
+          const resume = document.createElement("p");
+          resume.className = "reading-list-position";
+          resume.textContent = `Continue at “${heading.text}”`;
+          body.append(resume);
+        }
+        remove.type = "button";
+        remove.className = "btn";
+        remove.textContent = "Remove";
+        remove.setAttribute("aria-label", `Remove ${article.title}`);
+        remove.addEventListener("click", () => {
+          const nextId = li.nextElementSibling
+            ?.querySelector<HTMLAnchorElement>("h2 a")
+            ?.getAttribute("href");
+          if (removeReadingEntry(article.id)) {
+            status.textContent = "Article and its reading position removed.";
+            const next =
+              Array.from(list.querySelectorAll<HTMLAnchorElement>("h2 a")).find(
+                (a) => a.getAttribute("href") === nextId,
+              ) ??
+              list.querySelector<HTMLAnchorElement>("h2 a") ??
+              document.querySelector<HTMLAnchorElement>(
+                "#reading-list-empty a",
+              );
+            next?.focus();
+          } else
+            status.textContent =
+              "Your browser could not clear this entry. Check site storage permissions.";
+        });
+        li.append(body, remove);
+        return li;
+      }),
+    );
+  }
+  clear.addEventListener("click", () => {
+    if (clearReadingState()) {
+      status.textContent = "Saved articles and reading history cleared.";
+      document
+        .querySelector<HTMLAnchorElement>("#reading-list-empty a")!
+        .focus();
+    } else
+      status.textContent =
+        "Your browser could not clear your list. Check site storage permissions.";
+  });
+  window.addEventListener("readingchange", draw);
+  window.addEventListener("storage", (e) => {
+    if (e.key === READING_KEY || e.key === null) draw();
+  });
+  draw();
+</script>

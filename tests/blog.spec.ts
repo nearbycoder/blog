@@ -16,6 +16,7 @@ const routes = htmlFiles.map(
   (file) => "/" + file.replace(/^dist\//, "").replace(/index\.html$/, ""),
 );
 const samples = [
+  "/reading-list/",
   "/lab/",
   "/lab/roomba/",
   "/lab/poll/",
@@ -225,7 +226,7 @@ test("article heading navigation and copy link share the canonical URL", async (
   await first.click();
   await expect(page).toHaveURL(new RegExp(`${href}$`));
   await page.getByRole("button", { name: "Copy link" }).click();
-  await expect(page.getByRole("status")).toContainText("Link copied");
+  await expect(page.locator("[data-copy-status]")).toContainText("Link copied");
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
     "https://nearbycoder.com/articles/building-agfs-dev-on-my-wifes-green-macbook-neo-with-ai/",
   );
