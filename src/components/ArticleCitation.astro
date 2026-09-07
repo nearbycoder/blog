@@ -1,0 +1,70 @@
+---
+const { entry } = Astro.props;
+const metadata = {
+  title: entry.data.title,
+  date: entry.data.publishedAt ?? entry.data.date,
+  id: entry.id,
+  url: `https://nearbycoder.com/articles/${entry.id}/`,
+};
+---
+
+<div id="article-citation" data-citation={JSON.stringify(metadata)}>
+  <div class="reader-controls">
+    <label
+      >Citation format<select id="citation-format"
+        ><option value="plain">Plain text</option><option value="markdown"
+          >Markdown</option
+        ><option value="bibtex">BibTeX</option></select
+      ></label>
+  </div><label for="citation-text">Article citation</label><textarea
+    class="reader-input"
+    id="citation-text"
+    rows="5"
+    readonly
+    >{
+      `Josh Hamilton. “${metadata.title}” (${metadata.date}). ${metadata.url}`
+    }</textarea
+  ><button class="btn" id="copy-citation">Copy citation</button><p
+    class="lab-hint"
+    id="citation-status"
+    role="status"
+  >
+    You can also select and copy the citation above.
+  </p>
+</div>
+<script>
+  const metadata = JSON.parse(
+    document.querySelector<HTMLElement>("#article-citation")!.dataset.citation!,
+  );
+  const format = document.querySelector<HTMLSelectElement>("#citation-format")!,
+    text = document.querySelector<HTMLTextAreaElement>("#citation-text")!,
+    status = document.querySelector<HTMLElement>("#citation-status")!;
+  const bib = (value: string) =>
+    value
+      .replace(/\\/g, "\\textbackslash{}")
+      .replace(/[{}]/g, (match) => "\\" + match)
+      .replace(/[\r\n]/g, " ");
+  function render() {
+    text.value =
+      format.value === "markdown"
+        ? `Hamilton, Josh. [${metadata.title.replace(/[\[\]]/g, "")}](${metadata.url}). ${metadata.date}.`
+        : format.value === "bibtex"
+          ? `@misc{hamilton-${metadata.id},\n  author = {Hamilton, Josh},\n  title = {${bib(metadata.title)}},\n  year = {${metadata.date.slice(0, 4)}},\n  howpublished = {${metadata.url}},\n  note = {Published ${metadata.date}}\n}`
+          : `Josh Hamilton. “${metadata.title}” (${metadata.date}). ${metadata.url}`;
+    status.textContent = "You can also select and copy the citation above.";
+  }
+  format.addEventListener("change", render);
+  document
+    .querySelector("#copy-citation")!
+    .addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(text.value);
+        status.textContent = "Citation copied.";
+      } catch {
+        text.focus();
+        text.select();
+        status.textContent =
+          "Clipboard unavailable. The citation is selected for manual copying.";
+      }
+    });
+</script>
