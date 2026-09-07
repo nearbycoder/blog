@@ -1,0 +1,137 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Search the writing"
+  description="Search inside every published article and find the passage you remember."
+  ><section class="page-shell">
+    <header class="page-intro">
+      <p class="label">Find that thought</p><h1 class="display">
+        Somewhere in<br />the writing.
+      </h1><p>
+        Search titles and the full text of published posts. Every word you enter
+        must match.
+      </p>
+    </header>
+    <form id="full-search">
+      <label for="full-query">Search article text</label><div
+        class="reader-controls"
+      >
+        <input
+          id="full-query"
+          class="reader-input"
+          type="search"
+          name="q"
+          maxlength="200"
+          required
+        /><button class="btn btn-accent">Search writing</button>
+      </div>
+    </form>
+    <p id="full-search-status" role="status">
+      Enter a word or phrase to begin.
+    </p><ol
+      id="full-results"
+      class="saved-articles"
+      aria-label="Search results"
+    >
+    </ol><noscript
+      ><p>
+        Full-text search needs JavaScript. Browse <a href="/articles/"
+          >all articles</a
+        > or <a href="/topics/">topics</a> instead.
+      </p></noscript
+    >
+  </section></BaseLayout
+>
+<script>
+  type Story = { id: string; title: string; description: string; text: string };
+  const form = document.querySelector<HTMLFormElement>("#full-search")!,
+    input = document.querySelector<HTMLInputElement>("#full-query")!,
+    status = document.querySelector<HTMLElement>("#full-search-status")!,
+    list = document.querySelector<HTMLOListElement>("#full-results")!,
+    button = form.querySelector<HTMLButtonElement>("button")!;
+  let catalog: Story[] | null = null;
+  async function search() {
+    const query = input.value.trim().slice(0, 200);
+    if (!query) return;
+    button.disabled = true;
+    status.textContent = "Searching the writing…";
+    list.replaceChildren();
+    history.replaceState(
+      null,
+      "",
+      location.pathname + "?" + new URLSearchParams({ q: query }),
+    );
+    try {
+      if (!catalog) {
+        const response = await fetch("/search-index.json", {
+          signal: AbortSignal.timeout(10000),
+        });
+        if (!response.ok) throw Error();
+        catalog = await response.json();
+      }
+      const terms = query.toLowerCase().split(/\s+/);
+      const matches = catalog!
+        .filter((s) =>
+          terms.every((t) =>
+            (s.title + " " + s.description + " " + s.text)
+              .toLowerCase()
+              .includes(t),
+          ),
+        )
+        .sort(
+          (a, b) =>
+            terms.filter((t) => b.title.toLowerCase().includes(t)).length -
+            terms.filter((t) => a.title.toLowerCase().includes(t)).length,
+        );
+      for (const story of matches) {
+        const li = document.createElement("li"),
+          body = document.createElement("div"),
+          h = document.createElement("h2"),
+          a = document.createElement("a"),
+          p = document.createElement("p");
+        a.href = `/articles/${story.id}/`;
+        a.textContent = story.title;
+        h.append(a);
+        const index = story.text.toLowerCase().indexOf(terms[0]),
+          start = Math.max(0, index - 70);
+        p.textContent =
+          (start ? "…" : "") +
+          story.text.slice(start, start + 260) +
+          (start + 260 < story.text.length ? "…" : "");
+        body.append(h, p);
+        li.append(body);
+        list.append(li);
+      }
+      status.textContent = matches.length
+        ? `${matches.length} ${matches.length === 1 ? "article" : "articles"} found.`
+        : "No articles found. Try fewer words or browse topics.";
+    } catch {
+      status.textContent =
+        "Search could not load. Check your connection and try again.";
+    } finally {
+      button.disabled = false;
+    }
+  }
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    search();
+  });
+  input.value = (new URLSearchParams(location.search).get("q") ?? "").slice(
+    0,
+    200,
+  );
+  if (input.value) search();
+  window.addEventListener("popstate", () => {
+    input.value = (new URLSearchParams(location.search).get("q") ?? "").slice(
+      0,
+      200,
+    );
+    if (input.value) search();
+    else {
+      list.replaceChildren();
+      status.textContent = "Enter a word or phrase to begin.";
+    }
+  });
+</script>
