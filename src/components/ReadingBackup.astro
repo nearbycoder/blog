@@ -12,16 +12,18 @@
         id="import-reading"
         type="file"
         accept=".json,application/json"
-      /></label>
+      /></label
+    >
   </div><p role="status" id="backup-status"></p><button
     class="btn"
     id="apply-reading-import"
-    disabled>Merge reviewed backup</button>
+    disabled>Merge reviewed backup</button
+  >
 </details>
 <script>
   import { readReadingState, READING_KEY } from "../lib/reading-storage";
   import { readNotes, NOTES_KEY } from "../lib/notes-storage";
-  import { reviewBackup } from "../lib/reading-backup";
+  import { reviewBackup, mergeReadingBackup } from "../lib/reading-backup";
   const catalog = JSON.parse(
       document.querySelector("#reading-catalog")!.textContent!,
     ),
@@ -63,6 +65,10 @@
       if (file.size > 1500000)
         throw Error("Choose a backup smaller than 1.5 MB.");
       reviewed = reviewBackup(await file.text(), catalog);
+      mergeReadingBackup(reviewed, {
+        reading: readReadingState(),
+        notes: readNotes(),
+      });
       const count =
         Object.keys(reviewed.reading).length +
         Object.keys(reviewed.notes).length;
@@ -79,39 +85,35 @@
     if (!reviewed) return;
     let oldReading: string | null = null,
       oldNotes: string | null = null;
+    let wroteReading = false;
     try {
       oldReading = localStorage.getItem(READING_KEY);
       oldNotes = localStorage.getItem(NOTES_KEY);
-      const reading = readReadingState(),
-        notes = readNotes();
-      for (const [id, entry] of Object.entries(reviewed.reading))
-        if (!reading[id] || entry.updated > reading[id].updated)
-          reading[id] = entry;
-      for (const [id, note] of Object.entries(reviewed.notes))
-        if (!notes[id] || note.updated > notes[id].updated) notes[id] = note;
-      const bound = (data: Record<string, { updated: number }>) =>
-        Object.fromEntries(
-          Object.entries(data)
-            .sort((a, b) => b[1].updated - a[1].updated)
-            .slice(0, 100),
-        );
-      localStorage.setItem(READING_KEY, JSON.stringify(bound(reading)));
-      localStorage.setItem(NOTES_KEY, JSON.stringify(bound(notes)));
+      const { reading, notes } = mergeReadingBackup(reviewed, {
+        reading: readReadingState(),
+        notes: readNotes(),
+      });
+      localStorage.setItem(READING_KEY, JSON.stringify(reading));
+      wroteReading = true;
+      localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
       window.dispatchEvent(new CustomEvent("readingchange"));
       window.dispatchEvent(new CustomEvent("noteschange"));
       status.textContent = "Backup merged. Newer local entries were preserved.";
       reviewed = null;
       apply.disabled = true;
       input.value = "";
-    } catch {
-      try {
-        if (oldReading === null) localStorage.removeItem(READING_KEY);
-        else localStorage.setItem(READING_KEY, oldReading);
-        if (oldNotes === null) localStorage.removeItem(NOTES_KEY);
-        else localStorage.setItem(NOTES_KEY, oldNotes);
-      } catch {}
+    } catch (error) {
+      if (wroteReading)
+        try {
+          if (oldReading === null) localStorage.removeItem(READING_KEY);
+          else localStorage.setItem(READING_KEY, oldReading);
+          if (oldNotes === null) localStorage.removeItem(NOTES_KEY);
+          else localStorage.setItem(NOTES_KEY, oldNotes);
+        } catch {}
       status.textContent =
-        "Import could not finish because browser storage is unavailable. Keep your backup and try again.";
+        error instanceof RangeError
+          ? error.message
+          : "Import could not finish because browser storage is unavailable. Keep your backup and try again.";
     }
   });
 </script>

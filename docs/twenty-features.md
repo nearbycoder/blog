@@ -34,3 +34,30 @@ Topic pages, archives, neighboring article links, Markdown files, glossary defin
 The JSON output follows the [JSON Feed 1.1 specification](https://www.jsonfeed.org/version/1.1/). Topic RSS and OPML are escaped XML. Feed items use excerpts and canonical article links. The existing newsletter archive baseline is unchanged.
 
 Each feature PR runs `npm run verify` before merging, then waits for Vercel Preview and Production checks and verifies its production route. The final pass also audits expanded article controls, reading-list panels, and dialogs in both themes.
+
+A follow-up capacity check prevents note saves and backup imports from silently evicting older records. Notes and reading imports have a 100-entry limit. An over-capacity operation is refused while existing records and unsaved note text remain available.
+
+## Merged feature pull requests
+
+| Feature                | Pull request                                       |
+| ---------------------- | -------------------------------------------------- |
+| Topic directory        | [#10](https://github.com/nearbycoder/blog/pull/10) |
+| Date archive           | [#11](https://github.com/nearbycoder/blog/pull/11) |
+| Reading-time discovery | [#12](https://github.com/nearbycoder/blog/pull/12) |
+| Surprise me            | [#13](https://github.com/nearbycoder/blog/pull/13) |
+| Full-text search       | [#14](https://github.com/nearbycoder/blog/pull/14) |
+| Adjacent articles      | [#15](https://github.com/nearbycoder/blog/pull/15) |
+| Reading appearance     | [#16](https://github.com/nearbycoder/blog/pull/16) |
+| Focus mode             | [#17](https://github.com/nearbycoder/blog/pull/17) |
+| Print edition          | [#18](https://github.com/nearbycoder/blog/pull/18) |
+| Markdown downloads     | [#19](https://github.com/nearbycoder/blog/pull/19) |
+| Citations              | [#20](https://github.com/nearbycoder/blog/pull/20) |
+| Image viewer           | [#21](https://github.com/nearbycoder/blog/pull/21) |
+| Private notes          | [#22](https://github.com/nearbycoder/blog/pull/22) |
+| Reading backups        | [#23](https://github.com/nearbycoder/blog/pull/23) |
+| Reading statistics     | [#24](https://github.com/nearbycoder/blog/pull/24) |
+| Reading queue          | [#25](https://github.com/nearbycoder/blog/pull/25) |
+| Glossary               | [#26](https://github.com/nearbycoder/blog/pull/26) |
+| Technology explorer    | [#27](https://github.com/nearbycoder/blog/pull/27) |
+| Keyboard help          | [#28](https://github.com/nearbycoder/blog/pull/28) |
+| Feed collection        | [#29](https://github.com/nearbycoder/blog/pull/29) |
