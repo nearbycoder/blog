@@ -4,8 +4,9 @@ const { id } = Astro.props;
 
 <details class="reader-panel" id="article-notes" data-note-id={id}>
   <summary>Your private notes</summary><p class="lab-hint">
-    Only on this device. Notes are never published or sent to a server. Save up
-    to 10,000 characters per article.
+    Only on this device. Notes are never published or sent to a server. Keep up
+    to 100 notes, with 10,000 characters per article. A full store never
+    discards an older note.
   </p><label for="article-note-text">Notes about this article</label><textarea
     class="reader-input"
     id="article-note-text"
@@ -15,7 +16,8 @@ const { id } = Astro.props;
     <button class="btn" id="save-note" disabled>Save note</button><button
       class="btn"
       id="delete-note"
-      disabled>Delete note</button>
+      disabled>Delete note</button
+    >
   </div><p class="lab-hint" id="note-status" role="status">
     Enable JavaScript to keep private notes.
   </p>
@@ -53,7 +55,7 @@ const { id } = Astro.props;
         : "Empty note removed.";
     } else
       status.textContent =
-        "Your browser could not save this note. Copy your text before leaving.";
+        "Your browser could not save this note. Storage may be full or unavailable. Copy your text before leaving; existing notes were kept.";
   });
   remove.addEventListener("click", () => {
     if (saveNote(id, "")) {

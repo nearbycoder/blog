@@ -43,3 +43,28 @@ export function reviewBackup(raw: string, catalog: BackupCatalog) {
       Object.keys(notes).length,
   };
 }
+
+export function mergeReadingBackup(
+  imported: { reading: ReadingState; notes: Notes },
+  local: { reading: ReadingState; notes: Notes },
+) {
+  const reading: ReadingState = Object.assign(
+      Object.create(null),
+      local.reading,
+    ),
+    notes: Notes = Object.assign(Object.create(null), local.notes);
+  for (const [id, entry] of Object.entries(imported.reading))
+    if (!reading[id] || entry.updated > reading[id].updated)
+      reading[id] = entry;
+  for (const [id, note] of Object.entries(imported.notes))
+    if (!notes[id] || note.updated > notes[id].updated) notes[id] = note;
+  if (Object.keys(reading).length > 100 || Object.keys(notes).length > 100)
+    throw new RangeError(
+      "This merge would exceed the 100-entry storage limit. Export a backup and remove unneeded entries before importing.",
+    );
+  if (JSON.stringify(notes).length > 1000000)
+    throw new RangeError(
+      "These notes exceed the available note capacity. Export a backup and remove unneeded notes before importing.",
+    );
+  return { reading, notes };
+}

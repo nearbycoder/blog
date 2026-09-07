@@ -34,6 +34,7 @@ export function saveNote(id: string, text: string): boolean {
   const notes = readNotes();
   if (text.trim()) notes[id] = { text, updated: Date.now() };
   else delete notes[id];
+  if (Object.keys(notes).length > 100) return false;
   const bounded = Object.fromEntries(
     Object.entries(notes)
       .sort((a, b) => b[1].updated - a[1].updated)
