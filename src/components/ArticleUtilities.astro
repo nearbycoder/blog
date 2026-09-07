@@ -14,7 +14,9 @@ const { entry } = Astro.props;
   </div><p class="lab-hint">
     Use your browser’s print dialog to print or save a PDF.
   </p>
-  <ArticleCitation entry={entry} />
+  <ArticleCitation entry={entry} /><a class="text-link" href="/glossary/"
+    >Look up a technical term →</a
+  >
 </details>
 <p class="print-attribution">
   {entry.data.title} · Josh Hamilton · {

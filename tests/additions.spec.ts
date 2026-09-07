@@ -450,3 +450,21 @@ test("reading queue reorders saved unread articles and persists its order", asyn
   await page.locator("#reading-queue summary").click();
   expect(await links.last().getAttribute("href")).toBe(first);
 });
+
+test("glossary filters definitions and keeps permanent links to terms and stories", async ({
+  page,
+}) => {
+  await page.goto("/glossary/");
+  await page
+    .getByRole("searchbox", { name: "Find a term" })
+    .fill("idempotency");
+  await expect(page.locator(".glossary-entry:visible")).toHaveCount(1);
+  await page.locator("#idempotency h2 a").click();
+  await expect(page).toHaveURL(/#idempotency$/);
+  await page
+    .getByRole("searchbox", { name: "Find a term" })
+    .fill("unfindable-xyz");
+  await expect(page.locator("#glossary-status")).toContainText(
+    "No matching terms",
+  );
+});
