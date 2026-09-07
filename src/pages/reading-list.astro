@@ -1,5 +1,6 @@
 ---
 import ReadingBackup from "../components/ReadingBackup.astro";
+import ReadingStats from "../components/ReadingStats.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
 import { isArticlePublished } from "../lib/articles";
@@ -13,6 +14,9 @@ const catalog = await Promise.all(
       title: entry.data.title,
       description: entry.data.description,
       readTime: entry.data.readTime,
+      minutes:
+        parseInt(entry.data.readTime ?? "") ||
+        Math.max(1, Math.ceil((entry.body ?? "").split(/\s+/).length / 220)),
       headings: (await render(entry)).headings.map((h) => ({
         slug: h.slug,
         text: h.text,
@@ -53,7 +57,7 @@ const catalog = await Promise.all(
   >
   </ul>
   <p id="reading-list-status" role="status" class="lab-status"></p>
-  <ReadingBackup />
+  <ReadingStats /><ReadingBackup />
   <noscript
     ><p>
       Your reading list needs JavaScript to access this browser’s saves.
