@@ -1,0 +1,84 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getTopics } from "../../lib/topics";
+const topics = await getTopics();
+---
+
+<BaseLayout
+  title="Feeds for curious readers"
+  description="Follow all writing or individual topics with RSS, JSON Feed, and OPML."
+  ><section class="page-shell">
+    <header class="page-intro">
+      <p class="label">Your reader, your rhythm</p><h1 class="display">
+        Follow the threads<br />you care about.
+      </h1><p>
+        Read new posts in your own feed reader. Follow everything, or subscribe
+        to individual topics.
+      </p>
+    </header><div class="reader-controls">
+      <a class="btn" href="/rss.xml">All writing RSS</a><a
+        class="btn"
+        href="/feed.json">JSON Feed</a
+      ><a class="btn" href="/feeds.opml" download="nearbycoder-feeds.opml"
+        >Download OPML</a>
+    </div><p class="lab-hint">
+      OPML imports all feeds into a reader. Choose the topics you want there;
+      subscribing to overlapping topics can show the same article more than
+      once.
+    </p><div class="reader-controls">
+      <label
+        >Choose a feed<select id="feed-choice"
+          ><option value="/rss.xml">All writing</option>{
+            topics.map((t) => (
+              <option value={`/feeds/${t.slug}.xml`}>{t.tag}</option>
+            ))
+          }</select
+        ></label>
+    </div><label for="chosen-feed">Feed address</label><input
+      id="chosen-feed"
+      class="reader-input"
+      readonly
+      value="https://nearbycoder.com/rss.xml"
+    /><button class="btn" id="copy-chosen-feed">Copy feed address</button><p
+      id="chosen-feed-status"
+      role="status"
+      class="lab-hint"
+    >
+    </p><ul class="topic-directory">
+      {
+        topics.map((t) => (
+          <li>
+            <a href={`/feeds/${t.slug}.xml`}>
+              <>
+                <span>{t.tag}</span>
+                <span class="label">RSS →</span>
+              </>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section></BaseLayout
+>
+<script>
+  const choice = document.querySelector<HTMLSelectElement>("#feed-choice")!,
+    input = document.querySelector<HTMLInputElement>("#chosen-feed")!,
+    status = document.querySelector<HTMLElement>("#chosen-feed-status")!;
+  choice.addEventListener("change", () => {
+    input.value = "https://nearbycoder.com" + choice.value;
+    status.textContent = "";
+  });
+  document
+    .querySelector("#copy-chosen-feed")!
+    .addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(input.value);
+        status.textContent = "Feed address copied.";
+      } catch {
+        input.focus();
+        input.select();
+        status.textContent =
+          "Clipboard unavailable. Copy the selected address manually.";
+      }
+    });
+</script>

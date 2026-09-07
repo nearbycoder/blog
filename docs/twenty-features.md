@@ -24,3 +24,13 @@ Each feature is built and verified separately, with its own pull request and mer
 20. Feed collection: topic RSS, JSON Feed, and an OPML subscription export.
 
 Related articles already exist; full-text search adds a new capability in slot 5.
+
+## Operation and verification
+
+All twenty additions use existing build output or browser APIs. No new provider, account, database, or paid service is required. Reading saves, notes, appearance, queue order, and keyboard preferences are device-local. The backup flow transfers saves, positions, and notes; appearance and queue order remain device-specific. Private files should be kept private. Clearing browser data removes local records.
+
+Topic pages, archives, neighboring article links, Markdown files, glossary definitions, project technology collections, and feeds are generated from published content. Interactive features have empty/error states and avoid inventing crowds, reading activity, or search intelligence.
+
+The JSON output follows the [JSON Feed 1.1 specification](https://www.jsonfeed.org/version/1.1/). Topic RSS and OPML are escaped XML. Feed items use excerpts and canonical article links. The existing newsletter archive baseline is unchanged.
+
+Each feature PR runs `npm run verify` before merging, then waits for Vercel Preview and Production checks and verifies its production route. The final pass also audits expanded article controls, reading-list panels, and dialogs in both themes.
