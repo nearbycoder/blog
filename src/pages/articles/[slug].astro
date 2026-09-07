@@ -97,7 +97,7 @@ const toc = headings.filter((heading) => heading.depth === 2);
           >
         </div><ArticleContext articleId={entry.id} /><div class="reading-end">
           <div class="flex flex-wrap gap-2">
-            {entry.data.tags.map((tag) => <span class="chip">{tag}</span>)}
+            {entry.data.tags.map((tag) => <a class="chip" href={`/topics/${encodeURIComponent(tag.toLowerCase())}/`}>{tag}</a>)}
           </div><a href="/articles" class="text-link">Back to all articles →</a>
         </div>
       </div>

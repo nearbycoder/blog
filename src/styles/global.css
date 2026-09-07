@@ -2061,3 +2061,7 @@ a:hover .story-image img,
   margin-block: 20px;
   color: var(--fg-muted);
 }
+
+.topic-directory { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)); gap:0 40px; list-style:none; padding:0; margin:36px 0 80px; }
+.topic-directory a { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0; border-bottom:1px solid var(--border); color:var(--fg); overflow-wrap:anywhere; }
+.topic-directory a:hover { color:var(--accent); }
