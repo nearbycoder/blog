@@ -4,6 +4,11 @@ const { entry } = Astro.props;
 
 <details class="reader-panel article-utilities">
   <summary>Keep or share this article</summary><div class="reader-controls">
+    <a
+      class="btn"
+      href={`/downloads/${entry.id}.md`}
+      download={`${entry.id}.md`}>Download Markdown</a
+    >
     <button class="btn" id="print-article" hidden>Print article</button>
   </div><p class="lab-hint">
     Use your browser’s print dialog to print or save a PDF.

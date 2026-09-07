@@ -204,3 +204,27 @@ test("print edition retains article and source while hiding interactive chrome",
   await expect(page.locator(".site-footer")).toBeHidden();
   await expect(page.locator(".article-utilities")).toBeHidden();
 });
+
+test("Markdown download contains the complete published body and canonical source", async ({
+  page,
+  request,
+}) => {
+  await page.goto("/articles/ai-has-changed-the-way-i-code/");
+  await page.locator(".article-utilities summary").click();
+  const link = page.getByRole("link", {
+    name: "Download Markdown",
+    exact: true,
+  });
+  await expect(link).toHaveAttribute(
+    "download",
+    "ai-has-changed-the-way-i-code.md",
+  );
+  const response = await request.get((await link.getAttribute("href"))!);
+  expect(response.ok()).toBe(true);
+  const text = await response.text();
+  expect(text).toContain("# AI has changed the way I code");
+  expect(text).toContain(
+    "Source: https://nearbycoder.com/articles/ai-has-changed-the-way-i-code/",
+  );
+  expect(text.length).toBeGreaterThan(1000);
+});
