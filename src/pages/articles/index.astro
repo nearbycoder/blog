@@ -63,6 +63,10 @@ const topics = [
         ))
       }
     </div>
+    <div class="reader-controls">
+      <label>Reading time<select id="article-budget"><option value="0">Any length</option><option value="5">Up to 5 minutes</option><option value="10">Up to 10 minutes</option><option value="15">Up to 15 minutes</option></select></label>
+      <label>Sort articles<select id="article-sort"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="shortest">Shortest first</option><option value="title">Title A–Z</option></select></label>
+    </div>
     <div id="articles-empty" class="empty-state" hidden>
       <p>No articles match those filters.</p><button
         type="button"
@@ -74,6 +78,8 @@ const topics = [
         sortedArticles.map((entry) => (
           <div
             data-article
+            data-minutes={parseInt(entry.data.readTime ?? '') || Math.max(1,Math.ceil((entry.body ?? '').split(/\s+/).length/220))}
+            data-title={entry.data.title}
             data-search={`${entry.data.title} ${entry.data.description} ${entry.data.tags.join(" ")}`}
             data-tags={entry.data.tags.join(" ")}
           >
@@ -92,7 +98,17 @@ const topics = [
   const buttons = Array.from(
     document.querySelectorAll<HTMLButtonElement>("[data-topic]"),
   );
+  const budget = document.querySelector<HTMLSelectElement>("#article-budget")!;
+  const sort = document.querySelector<HTMLSelectElement>("#article-sort")!;
   let topic = "";
+  function restore() {
+    const params = new URLSearchParams(location.search);
+    input.value = (params.get('q') ?? '').slice(0,200);
+    topic = ['', 'ai','engineering','career','building'].includes(params.get('topic') ?? '') ? params.get('topic') ?? '' : '';
+    budget.value = ['0','5','10','15'].includes(params.get('minutes') ?? '') ? params.get('minutes')! : '0';
+    sort.value = ['newest','oldest','shortest','title'].includes(params.get('sort') ?? '') ? params.get('sort')! : 'newest';
+  }
+  restore();
   const matchesTopic = (tags: string) =>
     !topic ||
     (topic === "building"
@@ -110,13 +126,21 @@ const topics = [
     items.forEach((item) => {
       item.hidden = !(
         item.dataset.search!.toLowerCase().includes(query) &&
-        matchesTopic(item.dataset.tags!.toLowerCase())
+        matchesTopic(item.dataset.tags!.toLowerCase()) && (!Number(budget.value) || Number(item.dataset.minutes) <= Number(budget.value))
       );
       if (!item.hidden) count++;
     });
     document.getElementById("articles-empty")!.hidden = count !== 0;
     document.getElementById("article-count")!.textContent =
       `${count} ${count === 1 ? "article" : "articles"}`;
+    const ordered = [...items].sort((a,b) => sort.value === 'oldest' ? items.indexOf(b)-items.indexOf(a) : sort.value === 'shortest' ? Number(a.dataset.minutes)-Number(b.dataset.minutes) : sort.value === 'title' ? a.dataset.title!.localeCompare(b.dataset.title!) : items.indexOf(a)-items.indexOf(b));
+    document.querySelector('#articles-grid')!.append(...ordered);
+    const params = new URLSearchParams();
+    if(input.value.trim()) params.set('q',input.value.trim());
+    if(topic) params.set('topic',topic);
+    if(budget.value !== '0') params.set('minutes',budget.value);
+    if(sort.value !== 'newest') params.set('sort',sort.value);
+    history.replaceState(null,'',location.pathname+(params.size ? '?'+params : ''));
     buttons.forEach((button) =>
       button.setAttribute(
         "aria-pressed",
@@ -124,6 +148,10 @@ const topics = [
       ),
     );
   };
+  budget.addEventListener('change',filter);
+  sort.addEventListener('change',filter);
+  window.addEventListener('popstate',()=>{restore();filter();});
+  filter();
   input.addEventListener("input", filter);
   buttons.forEach((button) =>
     button.addEventListener("click", () => {
@@ -133,6 +161,8 @@ const topics = [
   );
   document.getElementById("clear-filters")?.addEventListener("click", () => {
     topic = "";
+    budget.value = "0";
+    sort.value = "newest";
     input.value = "";
     filter();
     input.focus();

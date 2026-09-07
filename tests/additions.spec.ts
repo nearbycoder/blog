@@ -24,3 +24,13 @@ test('date archive exposes each published article once and provides year anchors
  expect(dates).toEqual([...dates].sort().reverse());
  await page.getByRole('navigation',{name:'Archive years'}).getByRole('link').last().click();await expect(page).toHaveURL(/#year-\d{4}$/);
 });
+
+test('reading budgets and sorting survive reload and clear together',async({page})=>{
+ await page.goto('/articles/?minutes=5&sort=shortest');
+ await expect(page.getByRole('combobox',{name:'Reading time',exact:true})).toHaveValue('5');
+ const minutes=await page.locator('[data-article]:visible').evaluateAll(nodes=>nodes.map(n=>Number((n as HTMLElement).dataset.minutes)));
+ expect(minutes.length).toBeGreaterThan(0);expect(minutes.every(n=>n<=5)).toBe(true);expect(minutes).toEqual([...minutes].sort((a,b)=>a-b));
+ await page.getByRole('combobox',{name:'Sort articles',exact:true}).selectOption('title');await page.reload();await expect(page.getByRole('combobox',{name:'Sort articles',exact:true})).toHaveValue('title');
+ await page.getByRole('searchbox',{name:'Search articles'}).fill('nothing-found-xyz');await page.getByRole('button',{name:'Clear filters'}).click();
+ await expect(page.getByRole('combobox',{name:'Reading time',exact:true})).toHaveValue('0');await expect(page).not.toHaveURL(/\?/);
+});
