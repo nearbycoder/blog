@@ -265,3 +265,24 @@ test("citations switch formats, copy exactly and offer a manual fallback", async
     page.getByLabel("Article citation", { exact: true }),
   ).toBeFocused();
 });
+
+test("article image viewer opens, supports Escape and restores keyboard focus", async ({
+  page,
+}) => {
+  await page.goto("/articles/building-soloagent-to-understand-ai-harnesses/");
+  const button = page.getByRole("button", { name: /Enlarge image 1:/ });
+  await button.click();
+  await expect(
+    page.getByRole("dialog", { name: "Article image", exact: true }),
+  ).toBeVisible();
+  await expect(page.locator("#image-viewer-image")).toHaveJSProperty(
+    "complete",
+    true,
+  );
+  await expect(page.locator("#image-viewer-status")).toContainText(
+    "Image 1 of",
+  );
+  await page.keyboard.press("Escape");
+  await expect(button).toBeFocused();
+  await expect(page.locator("#article-image-dialog")).not.toBeVisible();
+});
