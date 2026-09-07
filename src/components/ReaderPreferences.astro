@@ -1,21 +1,34 @@
+---
+import CustomSelect from "./CustomSelect.astro";
+---
+
 <details class="reader-panel" id="reader-preferences">
   <summary>Reading appearance</summary><div class="reader-controls">
-    <label
-      >Text size<select id="reader-size"
-        ><option value="17">Standard</option><option value="19">Large</option
-        ><option value="21">Extra large</option></select
-      ></label
-    ><label
-      >Line spacing<select id="reader-spacing"
-        ><option value="1.85">Standard</option><option value="1.65"
-          >Compact</option
-        ><option value="2.1">Roomy</option></select
-      ></label
-    ><label
-      >Reading width<select id="reader-width"
-        ><option value="720">Standard</option><option value="600">Narrow</option
-        ><option value="840">Wide</option></select
-      ></label>
+    <CustomSelect
+      id="reader-size"
+      label="Text size"
+      options={[
+        { value: "17", label: "Standard" },
+        { value: "19", label: "Large" },
+        { value: "21", label: "Extra large" },
+      ]}
+    /><CustomSelect
+      id="reader-spacing"
+      label="Line spacing"
+      options={[
+        { value: "1.85", label: "Standard" },
+        { value: "1.65", label: "Compact" },
+        { value: "2.1", label: "Roomy" },
+      ]}
+    /><CustomSelect
+      id="reader-width"
+      label="Reading width"
+      options={[
+        { value: "720", label: "Standard" },
+        { value: "600", label: "Narrow" },
+        { value: "840", label: "Wide" },
+      ]}
+    />
   </div><button class="btn" id="reader-reset">Reset appearance</button><p
     class="lab-hint"
     id="reader-preference-status"
@@ -25,10 +38,12 @@
   </p>
 </details>
 <script>
+  import "../lib/custom-select";
+  import type { CustomSelectElement } from "../lib/custom-select";
   const key = "nearbycoder:appearance:v1";
-  const size = document.querySelector<HTMLSelectElement>("#reader-size")!,
-    spacing = document.querySelector<HTMLSelectElement>("#reader-spacing")!,
-    width = document.querySelector<HTMLSelectElement>("#reader-width")!,
+  const size = document.querySelector<CustomSelectElement>("#reader-size")!,
+    spacing = document.querySelector<CustomSelectElement>("#reader-spacing")!,
+    width = document.querySelector<CustomSelectElement>("#reader-width")!,
     status = document.querySelector<HTMLElement>("#reader-preference-status")!;
   const controls = { size, spacing, width };
   function apply() {
