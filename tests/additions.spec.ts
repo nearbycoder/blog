@@ -1,3 +1,4 @@
+import { chooseOption } from "./helpers/custom-select";
 import { test, expect } from "@playwright/test";
 test.use({ actionTimeout: 10000 });
 test("topic directory counts published articles and article tags lead back to topic pages", async ({
@@ -39,7 +40,7 @@ test("reading budgets and sorting survive reload and clear together", async ({
   await page.goto("/articles/?minutes=5&sort=shortest");
   await expect(
     page.getByRole("combobox", { name: "Reading time", exact: true }),
-  ).toHaveValue("5");
+  ).toHaveText("Up to 5 minutes");
   const minutes = await page
     .locator("[data-article]:visible")
     .evaluateAll((nodes) =>
@@ -48,20 +49,18 @@ test("reading budgets and sorting survive reload and clear together", async ({
   expect(minutes.length).toBeGreaterThan(0);
   expect(minutes.every((n) => n <= 5)).toBe(true);
   expect(minutes).toEqual([...minutes].sort((a, b) => a - b));
-  await page
-    .getByRole("combobox", { name: "Sort articles", exact: true })
-    .selectOption("title");
+  await chooseOption(page, "Sort articles", "Title A–Z");
   await page.reload();
   await expect(
     page.getByRole("combobox", { name: "Sort articles", exact: true }),
-  ).toHaveValue("title");
+  ).toHaveText("Title A–Z");
   await page
     .getByRole("searchbox", { name: "Search articles" })
     .fill("nothing-found-xyz");
   await page.getByRole("button", { name: "Clear filters" }).click();
   await expect(
     page.getByRole("combobox", { name: "Reading time", exact: true }),
-  ).toHaveValue("0");
+  ).toHaveText("Any length");
   await expect(page).not.toHaveURL(/\?/);
 });
 
@@ -69,12 +68,8 @@ test("discovery respects time and topic choices and avoids repeats", async ({
   page,
 }) => {
   await page.goto("/discover/");
-  await page
-    .getByRole("combobox", { name: "Topic", exact: true })
-    .selectOption("ai");
-  await page
-    .getByRole("combobox", { name: "Time available", exact: true })
-    .selectOption("10");
+  await chooseOption(page, "Topic", "ai");
+  await chooseOption(page, "Time available", "10 minutes");
   await page.getByRole("button", { name: "Find a story", exact: true }).click();
   const first = await page.locator("#discover-link").getAttribute("href");
   await expect(page.locator("#discover-meta")).toContainText("ai");
@@ -143,12 +138,8 @@ test("reading appearance persists, resets, and rejects corrupt storage", async (
 }) => {
   await page.goto("/articles/ai-has-changed-the-way-i-code/");
   await page.locator("#reader-preferences summary").click();
-  await page
-    .getByRole("combobox", { name: "Text size", exact: true })
-    .selectOption("21");
-  await page
-    .getByRole("combobox", { name: "Reading width", exact: true })
-    .selectOption("600");
+  await chooseOption(page, "Text size", "Extra large");
+  await chooseOption(page, "Reading width", "Narrow");
   await expect(page.locator(".article-content")).toHaveCSS("font-size", "21px");
   await page.reload();
   await expect(page.locator(".article-content")).toHaveCSS("font-size", "21px");
@@ -236,9 +227,7 @@ test("citations switch formats, copy exactly and offer a manual fallback", async
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("/articles/ai-has-changed-the-way-i-code/");
   await page.locator(".article-utilities summary").click();
-  await page
-    .getByRole("combobox", { name: "Citation format", exact: true })
-    .selectOption("bibtex");
+  await chooseOption(page, "Citation format", "BibTeX");
   await expect(
     page.getByLabel("Article citation", { exact: true }),
   ).toHaveValue(/@misc/);
@@ -573,9 +562,7 @@ test("reader feeds are valid, published-only, and expose copyable topic subscrip
   expect(valid.errors).toBe(0);
   expect(valid.items).toBeGreaterThan(0);
   expect(valid.outlines).toBeGreaterThan(1);
-  await page
-    .getByRole("combobox", { name: "Choose a feed", exact: true })
-    .selectOption("/feeds/ai.xml");
+  await chooseOption(page, "Choose a feed", "ai");
   await page
     .getByRole("button", { name: "Copy feed address", exact: true })
     .click();

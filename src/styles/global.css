@@ -1700,17 +1700,6 @@ a:hover .story-image img,
   height: 14px;
   accent-color: var(--accent);
 }
-.lab-select {
-  display: block;
-  width: 100%;
-  color: var(--fg);
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 12px;
-  margin: 10px 0 20px;
-  font: inherit;
-}
 .agent-transcript {
   list-style: decimal;
   padding-left: 24px;
@@ -2133,7 +2122,6 @@ a:hover .story-image img,
   color: var(--fg-muted);
   font-size: 13px;
 }
-.reader-controls select,
 .reader-input {
   color: var(--fg);
   background: var(--bg);

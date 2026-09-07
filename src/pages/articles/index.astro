@@ -1,4 +1,5 @@
 ---
+import CustomSelect from "../../components/CustomSelect.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
 import Icon from "../../components/Icon.astro";
@@ -67,24 +68,26 @@ const topics = [
       }
     </div>
     <div class="reader-controls">
-      <label
-        >Reading time<select id="article-budget"
-          ><option value="0">Any length</option><option value="5"
-            >Up to 5 minutes</option
-          ><option value="10">Up to 10 minutes</option><option value="15"
-            >Up to 15 minutes</option
-          ></select
-        ></label
-      >
-      <label
-        >Sort articles<select id="article-sort"
-          ><option value="newest">Newest first</option><option value="oldest"
-            >Oldest first</option
-          ><option value="shortest">Shortest first</option><option value="title"
-            >Title A–Z</option
-          ></select
-        ></label
-      >
+      <CustomSelect
+        id="article-budget"
+        label="Reading time"
+        options={[
+          { value: "0", label: "Any length" },
+          { value: "5", label: "Up to 5 minutes" },
+          { value: "10", label: "Up to 10 minutes" },
+          { value: "15", label: "Up to 15 minutes" },
+        ]}
+      />
+      <CustomSelect
+        id="article-sort"
+        label="Sort articles"
+        options={[
+          { value: "newest", label: "Newest first" },
+          { value: "oldest", label: "Oldest first" },
+          { value: "shortest", label: "Shortest first" },
+          { value: "title", label: "Title A–Z" },
+        ]}
+      />
     </div>
     <div id="articles-empty" class="empty-state" hidden>
       <p>No articles match those filters.</p><button
@@ -117,6 +120,8 @@ const topics = [
   </section>
 </BaseLayout>
 <script>
+  import "../../lib/custom-select";
+  import type { CustomSelectElement } from "../../lib/custom-select";
   const input = document.querySelector<HTMLInputElement>("#article-search")!;
   const items = Array.from(
     document.querySelectorAll<HTMLElement>("[data-article]"),
@@ -124,8 +129,9 @@ const topics = [
   const buttons = Array.from(
     document.querySelectorAll<HTMLButtonElement>("[data-topic]"),
   );
-  const budget = document.querySelector<HTMLSelectElement>("#article-budget")!;
-  const sort = document.querySelector<HTMLSelectElement>("#article-sort")!;
+  const budget =
+    document.querySelector<CustomSelectElement>("#article-budget")!;
+  const sort = document.querySelector<CustomSelectElement>("#article-sort")!;
   let topic = "";
   function restore() {
     const params = new URLSearchParams(location.search);

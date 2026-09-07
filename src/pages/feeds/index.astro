@@ -1,4 +1,5 @@
 ---
+import CustomSelect from "../../components/CustomSelect.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getTopics } from "../../lib/topics";
 const topics = await getTopics();
@@ -20,20 +21,24 @@ const topics = await getTopics();
         class="btn"
         href="/feed.json">JSON Feed</a
       ><a class="btn" href="/feeds.opml" download="nearbycoder-feeds.opml"
-        >Download OPML</a>
+        >Download OPML</a
+      >
     </div><p class="lab-hint">
       OPML imports all feeds into a reader. Choose the topics you want there;
       subscribing to overlapping topics can show the same article more than
       once.
     </p><div class="reader-controls">
-      <label
-        >Choose a feed<select id="feed-choice"
-          ><option value="/rss.xml">All writing</option>{
-            topics.map((t) => (
-              <option value={`/feeds/${t.slug}.xml`}>{t.tag}</option>
-            ))
-          }</select
-        ></label>
+      <CustomSelect
+        id="feed-choice"
+        label="Choose a feed"
+        options={[
+          { value: "/rss.xml", label: "All writing" },
+          ...topics.map((t) => ({
+            value: `/feeds/${t.slug}.xml`,
+            label: t.tag,
+          })),
+        ]}
+      />
     </div><label for="chosen-feed">Feed address</label><input
       id="chosen-feed"
       class="reader-input"
@@ -61,7 +66,9 @@ const topics = await getTopics();
   </section></BaseLayout
 >
 <script>
-  const choice = document.querySelector<HTMLSelectElement>("#feed-choice")!,
+  import "../../lib/custom-select";
+  import type { CustomSelectElement } from "../../lib/custom-select";
+  const choice = document.querySelector<CustomSelectElement>("#feed-choice")!,
     input = document.querySelector<HTMLInputElement>("#chosen-feed")!,
     status = document.querySelector<HTMLElement>("#chosen-feed-status")!;
   choice.addEventListener("change", () => {

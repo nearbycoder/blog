@@ -20,7 +20,8 @@
     ><input type="checkbox" id="enable-shortcuts" />Enable ? and Alt shortcuts</label
   ><p id="shortcut-status" class="lab-hint" role="status"></p><button
     class="btn"
-    id="keyboard-help-close">Close shortcuts</button>
+    id="keyboard-help-close">Close shortcuts</button
+  >
 </dialog>
 <script>
   const dialog = document.querySelector<HTMLDialogElement>("#keyboard-help")!,
@@ -42,7 +43,14 @@
   document
     .querySelector("#keyboard-help-close")!
     .addEventListener("click", () => dialog.close());
-  dialog.addEventListener("close", () => previous?.focus());
+  dialog.addEventListener("close", () => {
+    // Do not steal focus if the reader has already moved to another control.
+    if (
+      document.activeElement === document.body ||
+      dialog.contains(document.activeElement)
+    )
+      previous?.focus();
+  });
   checkbox.addEventListener("change", () => {
     try {
       localStorage.setItem(key, String(checkbox.checked));
@@ -57,7 +65,9 @@
   document.addEventListener("keydown", (event) => {
     const target = event.target as HTMLElement;
     if (
-      target.closest('input,textarea,select,[contenteditable="true"]') ||
+      target.closest(
+        'input,textarea,select,[role="combobox"],[contenteditable="true"]',
+      ) ||
       event.repeat
     )
       return;

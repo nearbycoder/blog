@@ -1,4 +1,5 @@
 ---
+import CustomSelect from "./CustomSelect.astro";
 const { entry } = Astro.props;
 const metadata = {
   title: entry.data.title,
@@ -10,12 +11,15 @@ const metadata = {
 
 <div id="article-citation" data-citation={JSON.stringify(metadata)}>
   <div class="reader-controls">
-    <label
-      >Citation format<select id="citation-format"
-        ><option value="plain">Plain text</option><option value="markdown"
-          >Markdown</option
-        ><option value="bibtex">BibTeX</option></select
-      ></label>
+    <CustomSelect
+      id="citation-format"
+      label="Citation format"
+      options={[
+        { value: "plain", label: "Plain text" },
+        { value: "markdown", label: "Markdown" },
+        { value: "bibtex", label: "BibTeX" },
+      ]}
+    />
   </div><label for="citation-text">Article citation</label><textarea
     class="reader-input"
     id="citation-text"
@@ -33,10 +37,13 @@ const metadata = {
   </p>
 </div>
 <script>
+  import "../lib/custom-select";
+  import type { CustomSelectElement } from "../lib/custom-select";
   const metadata = JSON.parse(
     document.querySelector<HTMLElement>("#article-citation")!.dataset.citation!,
   );
-  const format = document.querySelector<HTMLSelectElement>("#citation-format")!,
+  const format =
+      document.querySelector<CustomSelectElement>("#citation-format")!,
     text = document.querySelector<HTMLTextAreaElement>("#citation-text")!,
     status = document.querySelector<HTMLElement>("#citation-status")!;
   const bib = (value: string) =>

@@ -1,12 +1,18 @@
+---
+import CustomSelect from "../CustomSelect.astro";
+---
+
 <div class="lab-workbench" id="agent-lab">
   <div class="lab-controls">
     <h2>A small task, several decisions.</h2>
-    <label for="agent-scenario">Choose a scenario</label>
-    <select id="agent-scenario" class="lab-select"
-      ><option value="test">Investigate a failing test</option><option
-        value="artifact">Share a build artifact</option
-      ></select
-    >
+    <CustomSelect
+      id="agent-scenario"
+      label="Choose a scenario"
+      options={[
+        { value: "test", label: "Investigate a failing test" },
+        { value: "artifact", label: "Share a build artifact" },
+      ]}
+    />
     <label class="poll-option"
       ><input type="checkbox" id="agent-failure" />Make the first tool call fail</label
     >
@@ -32,9 +38,11 @@
   </ol>
 </div>
 <script>
+  import "../../lib/custom-select";
+  import type { CustomSelectElement } from "../../lib/custom-select";
   type Step = { title: string; body: string };
   const scenario =
-      document.querySelector<HTMLSelectElement>("#agent-scenario")!,
+      document.querySelector<CustomSelectElement>("#agent-scenario")!,
     failure = document.querySelector<HTMLInputElement>("#agent-failure")!;
   const next = document.querySelector<HTMLButtonElement>("#agent-next")!,
     reset = document.querySelector<HTMLButtonElement>("#agent-reset")!;

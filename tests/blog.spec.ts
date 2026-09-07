@@ -57,6 +57,7 @@ test("every generated route has a single main heading, local canonical, working 
 }) => {
   for (const route of routes) {
     const response = await page.goto(route);
+    await expect(page.locator("select")).toHaveCount(0);
     expect(response?.status(), route).toBe(200);
     await expect(page.locator("h1"), route).toHaveCount(1);
     await expect(page.locator("main")).toBeVisible();

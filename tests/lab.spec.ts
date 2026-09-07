@@ -1,3 +1,4 @@
+import { chooseOption } from "./helpers/custom-select";
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { initialRobot, move } from "../src/lib/roomba";
@@ -95,7 +96,7 @@ test("agent walkthrough exposes failures and changing scenarios resets its state
   await expect(
     page.getByRole("button", { name: "Walkthrough complete" }),
   ).toBeDisabled();
-  await page.getByLabel("Choose a scenario").selectOption("artifact");
+  await chooseOption(page, "Choose a scenario", "Share a build artifact");
   await expect(page.locator("#agent-transcript")).not.toContainText(
     "test runner",
   );
