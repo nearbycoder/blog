@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getTechnologies } from "../../lib/technologies";
+const technologies = await getTechnologies();
+---
+
+<BaseLayout
+  title="Project technologies"
+  description="Explore the tools and technologies declared in published projects."
+  ><section class="page-shell">
+    <header class="page-intro">
+      <p class="label">Under the hood</p><h1 class="display">
+        The tools<br />behind the builds.
+      </h1><p>
+        Explore projects by their declared stack. Versions and names follow the
+        original project notes.
+      </p>
+    </header><ul class="topic-directory">
+      {
+        technologies.map((tech) => (
+          <li>
+            <a href={`/technologies/${tech.slug}/`}>
+              <>
+                <span>{tech.name}</span>
+                <span class="label">
+                  {tech.projects.length}{" "}
+                  {tech.projects.length === 1 ? "project" : "projects"} →
+                </span>
+              </>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section></BaseLayout
+>
