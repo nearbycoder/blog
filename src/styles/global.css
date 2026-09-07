@@ -2065,3 +2065,5 @@ a:hover .story-image img,
 .topic-directory { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)); gap:0 40px; list-style:none; padding:0; margin:36px 0 80px; }
 .topic-directory a { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0; border-bottom:1px solid var(--border); color:var(--fg); overflow-wrap:anywhere; }
 .topic-directory a:hover { color:var(--accent); }
+
+.archive-year { margin:64px 0; scroll-margin-top:110px; } .archive-year > h2 { font-size:40px; margin-bottom:28px; } .archive-month { margin:32px 0; scroll-margin-top:110px; } .archive-month h3 { color:var(--accent); margin-bottom:16px; } .archive-month ol { list-style:none; padding:0; } .archive-month li { display:grid; grid-template-columns:120px minmax(0,1fr) 80px; gap:20px; padding:16px 0; } .archive-month time { color:var(--fg-muted); font-size:13px; } @media(max-width:640px) { .archive-month li { grid-template-columns:1fr; gap:5px; } }
