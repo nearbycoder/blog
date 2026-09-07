@@ -34,3 +34,10 @@ test('reading budgets and sorting survive reload and clear together',async({page
  await page.getByRole('searchbox',{name:'Search articles'}).fill('nothing-found-xyz');await page.getByRole('button',{name:'Clear filters'}).click();
  await expect(page.getByRole('combobox',{name:'Reading time',exact:true})).toHaveValue('0');await expect(page).not.toHaveURL(/\?/);
 });
+
+test('discovery respects time and topic choices and avoids repeats',async({page})=>{
+ await page.goto('/discover/');await page.getByRole('combobox',{name:'Topic',exact:true}).selectOption('ai');await page.getByRole('combobox',{name:'Time available',exact:true}).selectOption('10');
+ await page.getByRole('button',{name:'Find a story',exact:true}).click();const first=await page.locator('#discover-link').getAttribute('href');await expect(page.locator('#discover-meta')).toContainText('ai');
+ await page.getByRole('button',{name:'Find a story',exact:true}).click();expect(await page.locator('#discover-link').getAttribute('href')).not.toBe(first);
+ await page.getByRole('button',{name:'Start over',exact:true}).click();await expect(page.locator('#discover-result')).toBeHidden();await expect(page.getByRole('button',{name:'Find a story',exact:true})).toBeEnabled();
+});
