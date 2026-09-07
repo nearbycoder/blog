@@ -10,7 +10,7 @@ test("topic directory counts published articles and article tags lead back to to
   expect(count).toBeGreaterThan(1);
   await expect(page.locator(".page-intro")).toContainText(`${count} stories`);
   await page.locator(".article-archive-grid a.article-card").first().click();
-  await page.locator(".reading-end a.chip").filter({ hasText: /^ai$/ }).click();
+  await page.locator('.reading-end a[href="/topics/ai/"]').click();
   await expect(page).toHaveURL(/\/topics\/ai\/$/);
 });
 
@@ -115,4 +115,25 @@ test("full-text search finds a body-only phrase and handles empty results and re
   await expect(page.locator("#full-search-status")).toContainText(
     "No articles found",
   );
+});
+
+test("chronological neighbors link both ways and newest article has a boundary message", async ({
+  page,
+  request,
+}) => {
+  const feed = await (await request.get("/newsletter-feed.json")).json();
+  feed.sort(
+    (a: any, b: any) =>
+      Date.parse(b.publishedAt) - Date.parse(a.publishedAt) ||
+      b.id.localeCompare(a.id),
+  );
+  await page.goto(`/articles/${feed[0].id}/`);
+  const nav = page.getByRole("navigation", {
+    name: "Chronological article navigation",
+  });
+  await expect(nav).toContainText("newest story");
+  await nav.locator("a[rel=prev]").click();
+  await expect(page).toHaveURL(new RegExp(feed[1].id));
+  await page.locator(".adjacent-articles a[rel=next]").click();
+  await expect(page).toHaveURL(new RegExp(feed[0].id));
 });
