@@ -757,7 +757,7 @@ a:hover .story-image img,
 }
 .reading-layout {
   display: grid;
-  grid-template-columns: 200px minmax(0, 720px);
+  grid-template-columns: 200px minmax(0, var(--reading-width, 720px));
   gap: 64px;
   justify-content: center;
   margin-top: 58px;

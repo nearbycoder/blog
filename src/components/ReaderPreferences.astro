@@ -1,0 +1,84 @@
+<details class="reader-panel" id="reader-preferences">
+  <summary>Reading appearance</summary><div class="reader-controls">
+    <label
+      >Text size<select id="reader-size"
+        ><option value="17">Standard</option><option value="19">Large</option
+        ><option value="21">Extra large</option></select
+      ></label
+    ><label
+      >Line spacing<select id="reader-spacing"
+        ><option value="1.85">Standard</option><option value="1.65"
+          >Compact</option
+        ><option value="2.1">Roomy</option></select
+      ></label
+    ><label
+      >Reading width<select id="reader-width"
+        ><option value="720">Standard</option><option value="600">Narrow</option
+        ><option value="840">Wide</option></select
+      ></label>
+  </div><button class="btn" id="reader-reset">Reset appearance</button><p
+    class="lab-hint"
+    id="reader-preference-status"
+    role="status"
+  >
+    Preferences stay in this browser.
+  </p>
+</details>
+<script>
+  const key = "nearbycoder:appearance:v1";
+  const size = document.querySelector<HTMLSelectElement>("#reader-size")!,
+    spacing = document.querySelector<HTMLSelectElement>("#reader-spacing")!,
+    width = document.querySelector<HTMLSelectElement>("#reader-width")!,
+    status = document.querySelector<HTMLElement>("#reader-preference-status")!;
+  const controls = { size, spacing, width };
+  function apply() {
+    const content = document.querySelector<HTMLElement>(".article-content")!,
+      layout = document.querySelector<HTMLElement>(".reading-layout")!;
+    content.style.fontSize = size.value + "px";
+    content.style.lineHeight = spacing.value;
+    layout.style.setProperty("--reading-width", width.value + "px");
+  }
+  function restore() {
+    try {
+      const stored = JSON.parse(localStorage.getItem(key) ?? "{}");
+      for (const [name, control] of Object.entries(controls)) {
+        const candidate = stored?.[name];
+        control.value = Array.from(control.options).some(
+          (o) => o.value === candidate,
+        )
+          ? candidate
+          : control.options[0].value;
+      }
+    } catch {
+      for (const control of Object.values(controls)) control.selectedIndex = 0;
+    }
+    apply();
+  }
+  function save() {
+    apply();
+    try {
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          size: size.value,
+          spacing: spacing.value,
+          width: width.value,
+        }),
+      );
+      status.textContent = "Reading appearance saved on this device.";
+    } catch {
+      status.textContent =
+        "Appearance applied for this page. Browser storage is unavailable.";
+    }
+  }
+  for (const control of Object.values(controls))
+    control.addEventListener("change", save);
+  document.querySelector("#reader-reset")!.addEventListener("click", () => {
+    for (const control of Object.values(controls)) control.selectedIndex = 0;
+    save();
+  });
+  window.addEventListener("storage", (event) => {
+    if (event.key === key || event.key === null) restore();
+  });
+  restore();
+</script>
