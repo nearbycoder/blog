@@ -1,0 +1,117 @@
+<details class="reader-panel" id="reading-backup">
+  <summary>Back up or restore your reading data</summary><p class="lab-hint">
+    Export saves, reading positions, and private notes. Imported data is
+    reviewed first and merged by the most recent saved timestamp; newer local
+    entries are kept. Files stay on your device.
+  </p><button class="btn" id="export-reading">Export backup</button><div
+    class="reader-controls"
+  >
+    <label
+      >Choose a reading backup<input
+        class="reader-input"
+        id="import-reading"
+        type="file"
+        accept=".json,application/json"
+      /></label>
+  </div><p role="status" id="backup-status"></p><button
+    class="btn"
+    id="apply-reading-import"
+    disabled>Merge reviewed backup</button>
+</details>
+<script>
+  import { readReadingState, READING_KEY } from "../lib/reading-storage";
+  import { readNotes, NOTES_KEY } from "../lib/notes-storage";
+  import { reviewBackup } from "../lib/reading-backup";
+  const catalog = JSON.parse(
+      document.querySelector("#reading-catalog")!.textContent!,
+    ),
+    input = document.querySelector<HTMLInputElement>("#import-reading")!,
+    apply = document.querySelector<HTMLButtonElement>("#apply-reading-import")!,
+    status = document.querySelector<HTMLElement>("#backup-status")!;
+  let reviewed: ReturnType<typeof reviewBackup> | null = null;
+  document.querySelector("#export-reading")!.addEventListener("click", () => {
+    const blob = new Blob(
+      [
+        JSON.stringify(
+          {
+            version: 1,
+            exportedAt: new Date().toISOString(),
+            reading: readReadingState(),
+            notes: readNotes(),
+          },
+          null,
+          2,
+        ),
+      ],
+      { type: "application/json" },
+    );
+    const url = URL.createObjectURL(blob),
+      a = document.createElement("a");
+    a.href = url;
+    a.download = "nearbycoder-reading-backup.json";
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    status.textContent =
+      "Backup download created. Keep it somewhere private; it includes your notes.";
+  });
+  input.addEventListener("change", async () => {
+    reviewed = null;
+    apply.disabled = true;
+    try {
+      const file = input.files?.[0];
+      if (!file) return;
+      if (file.size > 1500000)
+        throw Error("Choose a backup smaller than 1.5 MB.");
+      reviewed = reviewBackup(await file.text(), catalog);
+      const count =
+        Object.keys(reviewed.reading).length +
+        Object.keys(reviewed.notes).length;
+      status.textContent = `Ready to merge ${Object.keys(reviewed.reading).length} reading entries and ${Object.keys(reviewed.notes).length} notes. ${reviewed.skipped} unsupported entries skipped. Nothing has changed yet.`;
+      apply.disabled = !count;
+    } catch (error) {
+      status.textContent =
+        error instanceof Error
+          ? error.message
+          : "That backup could not be read.";
+    }
+  });
+  apply.addEventListener("click", () => {
+    if (!reviewed) return;
+    let oldReading: string | null = null,
+      oldNotes: string | null = null;
+    try {
+      oldReading = localStorage.getItem(READING_KEY);
+      oldNotes = localStorage.getItem(NOTES_KEY);
+      const reading = readReadingState(),
+        notes = readNotes();
+      for (const [id, entry] of Object.entries(reviewed.reading))
+        if (!reading[id] || entry.updated > reading[id].updated)
+          reading[id] = entry;
+      for (const [id, note] of Object.entries(reviewed.notes))
+        if (!notes[id] || note.updated > notes[id].updated) notes[id] = note;
+      const bound = (data: Record<string, { updated: number }>) =>
+        Object.fromEntries(
+          Object.entries(data)
+            .sort((a, b) => b[1].updated - a[1].updated)
+            .slice(0, 100),
+        );
+      localStorage.setItem(READING_KEY, JSON.stringify(bound(reading)));
+      localStorage.setItem(NOTES_KEY, JSON.stringify(bound(notes)));
+      window.dispatchEvent(new CustomEvent("readingchange"));
+      window.dispatchEvent(new CustomEvent("noteschange"));
+      status.textContent = "Backup merged. Newer local entries were preserved.";
+      reviewed = null;
+      apply.disabled = true;
+      input.value = "";
+    } catch {
+      try {
+        if (oldReading === null) localStorage.removeItem(READING_KEY);
+        else localStorage.setItem(READING_KEY, oldReading);
+        if (oldNotes === null) localStorage.removeItem(NOTES_KEY);
+        else localStorage.setItem(NOTES_KEY, oldNotes);
+      } catch {}
+      status.textContent =
+        "Import could not finish because browser storage is unavailable. Keep your backup and try again.";
+    }
+  });
+</script>

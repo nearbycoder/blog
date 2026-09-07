@@ -1,4 +1,5 @@
 ---
+import ReadingBackup from "../components/ReadingBackup.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
 import { isArticlePublished } from "../lib/articles";
@@ -52,6 +53,7 @@ const catalog = await Promise.all(
   >
   </ul>
   <p id="reading-list-status" role="status" class="lab-status"></p>
+  <ReadingBackup />
   <noscript
     ><p>
       Your reading list needs JavaScript to access this browser’s saves.
