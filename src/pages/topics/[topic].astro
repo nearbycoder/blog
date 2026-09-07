@@ -1,0 +1,35 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+import { getTopics } from "../../lib/topics";
+export async function getStaticPaths() {
+  return (await getTopics()).map((topic) => ({
+    params: { topic: topic.slug },
+    props: { topic },
+  }));
+}
+const { topic } = Astro.props;
+---
+
+<BaseLayout
+  title={`${topic.tag} articles`}
+  description={`Published stories about ${topic.tag}, newest first.`}
+>
+  <section class="page-shell">
+    <header class="page-intro">
+      <a href="/topics/" class="text-link">← All topics</a><h1 class="display">
+        {topic.tag}
+      </h1><p>
+        {topic.articles.length}
+        {topic.articles.length === 1 ? "story" : "stories"}, newest first.
+      </p>
+    </header>
+    <div class="article-archive-grid">
+      {
+        topic.articles.map((entry) => (
+          <ArticleCard entry={entry} heading="h2" />
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>

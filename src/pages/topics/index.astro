@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getTopics } from "../../lib/topics";
+const topics = await getTopics();
+---
+
+<BaseLayout
+  title="Topics"
+  description="Explore the themes running through Josh Hamilton’s writing."
+>
+  <section class="page-shell">
+    <header class="page-intro">
+      <p class="label">Follow a thread</p><h1 class="display">
+        What are you<br />curious about?
+      </h1><p>
+        Browse every topic in the published archive. Each count is a story you
+        can read now.
+      </p>
+    </header>
+    <ul class="topic-directory">
+      {
+        topics.map((topic) => (
+          <li>
+            <a href={`/topics/${topic.slug}/`}>
+              <>
+                <span>{topic.tag}</span>
+                <span class="label">
+                  {topic.articles.length}{" "}
+                  {topic.articles.length === 1 ? "story" : "stories"} →
+                </span>
+              </>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section></BaseLayout
+>
