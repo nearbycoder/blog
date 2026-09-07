@@ -76,7 +76,7 @@ export async function publishPosts(
     if (result.error) throw new Error("Could not read the broadcast ledger");
     broadcasts.push(...result.data.data);
     if (!result.data.has_more) break;
-    after = result.data.data.at(-1)?.id;
+    after = result.data.data[result.data.data.length - 1]?.id;
     if (!after || page === 99)
       throw new Error("Could not finish reading the broadcast ledger");
   }

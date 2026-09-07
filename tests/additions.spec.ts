@@ -530,3 +530,135 @@ test("keyboard help is discoverable, input-safe, and enables opt-in navigation",
     page.getByRole("button", { name: "Keyboard shortcuts", exact: true }),
   ).toBeFocused();
 });
+
+test("reader feeds are valid, published-only, and expose copyable topic subscriptions", async ({
+  page,
+  request,
+  context,
+}) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  const feed = await (await request.get("/feed.json")).json();
+  const published = await (await request.get("/newsletter-feed.json")).json();
+  expect(feed.version).toBe("https://jsonfeed.org/version/1.1");
+  expect(feed.items.length).toBe(published.length);
+  expect(new Set(feed.items.map((i: any) => i.id)).size).toBe(
+    feed.items.length,
+  );
+  expect(
+    feed.items.every(
+      (i: any) =>
+        i.content_text &&
+        i.image &&
+        Number.isFinite(Date.parse(i.date_published)),
+    ),
+  ).toBe(true);
+  const rss = await (await request.get("/feeds/ai.xml")).text(),
+    opml = await (await request.get("/feeds.opml")).text();
+  await page.goto("/feeds/");
+  const valid = await page.evaluate(
+    ({ rss, opml }) => {
+      const parser = new DOMParser(),
+        r = parser.parseFromString(rss, "application/xml"),
+        o = parser.parseFromString(opml, "application/xml");
+      return {
+        errors:
+          r.querySelectorAll("parsererror").length +
+          o.querySelectorAll("parsererror").length,
+        items: r.querySelectorAll("item").length,
+        outlines: o.querySelectorAll("outline").length,
+      };
+    },
+    { rss, opml },
+  );
+  expect(valid.errors).toBe(0);
+  expect(valid.items).toBeGreaterThan(0);
+  expect(valid.outlines).toBeGreaterThan(1);
+  await page
+    .getByRole("combobox", { name: "Choose a feed", exact: true })
+    .selectOption("/feeds/ai.xml");
+  await page
+    .getByRole("button", { name: "Copy feed address", exact: true })
+    .click();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    "https://nearbycoder.com/feeds/ai.xml",
+  );
+});
+
+test("expanded reader controls and reading-list panels pass both themes at phone and desktop sizes", async ({
+  page,
+}) => {
+  const { default: AxeBuilder } = await import("@axe-core/playwright");
+  for (const route of [
+    "/articles/ai-has-changed-the-way-i-code/",
+    "/reading-list/",
+    "/discover/",
+    "/feeds/",
+  ]) {
+    await page.goto(route);
+    await page
+      .locator("details.reader-panel")
+      .evaluateAll((nodes) =>
+        nodes.forEach((node) => ((node as HTMLDetailsElement).open = true)),
+      );
+    for (const theme of ["light", "dark"]) {
+      await page.evaluate(
+        (theme) => (document.documentElement.dataset.theme = theme),
+        theme,
+      );
+      expect(
+        (
+          await new AxeBuilder({ page })
+            .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+            .analyze()
+        ).violations,
+        route + " " + theme,
+      ).toEqual([]);
+    }
+    for (const width of [320, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth > innerWidth,
+        ),
+        route,
+      ).toBe(false);
+    }
+  }
+});
+test("image and keyboard dialogs pass accessibility in both themes", async ({
+  page,
+}) => {
+  const { default: AxeBuilder } = await import("@axe-core/playwright");
+  await page.goto("/articles/building-soloagent-to-understand-ai-harnesses/");
+  await page.getByRole("button", { name: /Enlarge image 1:/ }).click();
+  for (const theme of ["light", "dark"]) {
+    await page.evaluate(
+      (theme) => (document.documentElement.dataset.theme = theme),
+      theme,
+    );
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+          .analyze()
+      ).violations,
+    ).toEqual([]);
+  }
+  await page.keyboard.press("Escape");
+  await page
+    .getByRole("button", { name: "Keyboard shortcuts", exact: true })
+    .click();
+  for (const theme of ["light", "dark"]) {
+    await page.evaluate(
+      (theme) => (document.documentElement.dataset.theme = theme),
+      theme,
+    );
+    expect(
+      (
+        await new AxeBuilder({ page })
+          .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+          .analyze()
+      ).violations,
+    ).toEqual([]);
+  }
+});

@@ -24,6 +24,9 @@ const { topic } = Astro.props;
         {topic.articles.length === 1 ? "story" : "stories"}, newest first.
       </p>
     </header>
+    <a class="text-link" href={`/feeds/${topic.slug}.xml`}
+      >Follow this topic with RSS →</a
+    >
     <div class="article-archive-grid">
       {
         topic.articles.map((entry) => (
