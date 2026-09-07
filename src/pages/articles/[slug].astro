@@ -1,5 +1,6 @@
 ---
 import AdjacentArticles from "../../components/AdjacentArticles.astro";
+import ReaderPreferences from "../../components/ReaderPreferences.astro";
 import NewsletterInvite from "../../components/NewsletterInvite.astro";
 import ReadingTools from "../../components/ReadingTools.astro";
 import CopyCode from "../../components/CopyCode.astro";
@@ -90,9 +91,9 @@ const toc = headings.filter((heading) => heading.depth === 2);
             class="text-link"
             href="#main-content">Continue reading →</a
           >
-        </div><div class="article-content"><Content /></div><div
-          class="reading-finish"
-        >
+        </div><ReaderPreferences /><div class="article-content">
+          <Content />
+        </div><div class="reading-finish">
           <button id="mark-reading-complete" class="btn" disabled
             >Mark as read</button
           >

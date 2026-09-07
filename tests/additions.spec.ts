@@ -137,3 +137,29 @@ test("chronological neighbors link both ways and newest article has a boundary m
   await page.locator(".adjacent-articles a[rel=next]").click();
   await expect(page).toHaveURL(new RegExp(feed[0].id));
 });
+
+test("reading appearance persists, resets, and rejects corrupt storage", async ({
+  page,
+}) => {
+  await page.goto("/articles/ai-has-changed-the-way-i-code/");
+  await page.locator("#reader-preferences summary").click();
+  await page
+    .getByRole("combobox", { name: "Text size", exact: true })
+    .selectOption("21");
+  await page
+    .getByRole("combobox", { name: "Reading width", exact: true })
+    .selectOption("600");
+  await expect(page.locator(".article-content")).toHaveCSS("font-size", "21px");
+  await page.reload();
+  await expect(page.locator(".article-content")).toHaveCSS("font-size", "21px");
+  await page.locator("#reader-preferences summary").click();
+  await page
+    .getByRole("button", { name: "Reset appearance", exact: true })
+    .click();
+  await expect(page.locator(".article-content")).toHaveCSS("font-size", "17px");
+  await page.evaluate(() =>
+    localStorage.setItem("nearbycoder:appearance:v1", "null"),
+  );
+  await page.reload();
+  await expect(page.locator(".article-content")).toHaveCSS("font-size", "17px");
+});
