@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { isArticlePublished, compareArticlesByPublishDateDesc } from '../lib/articles';
+import { formatDate } from '../lib/media';
+const articles = (await getCollection('articles')).filter(e=>isArticlePublished(e)).sort(compareArticlesByPublishDateDesc);
+const date = (entry: typeof articles[number]) => (entry.data.publishedAt ?? entry.data.date).slice(0,10);
+const years = [...new Set(articles.map(e=>date(e).slice(0,4)))];
+const months = [...new Set(articles.map(e=>date(e).slice(0,7)))];
+---
+<BaseLayout title="Writing archive" description="Every published story, organized by year and month."><section class="page-shell">
+<header class="page-intro"><p class="label">The long view</p><h1 class="display">A little history<br/>of figuring it out.</h1><p>{articles.length} published stories, organized by their publication date.</p></header>
+<nav class="filter-bar" aria-label="Archive years">{years.map(year=><a class="btn" href={`#year-${year}`}>{year} · {articles.filter(e=>date(e).startsWith(year)).length}</a>)}</nav>
+{years.map(year=><section class="archive-year" id={`year-${year}`}><h2>{year}</h2>{months.filter(month=>month.startsWith(year)).map(month=><section class="archive-month" id={`month-${month}`}><h3><a href={`#month-${month}`}>{new Date(`${month}-01T12:00:00Z`).toLocaleDateString('en-US',{month:'long',timeZone:'UTC'})}</a></h3><ol>{articles.filter(e=>date(e).startsWith(month)).map(entry=><li><time datetime={date(entry)}>{formatDate(date(entry))}</time><a href={`/articles/${entry.id}/`}>{entry.data.title}</a><span class="label">{entry.data.readTime}</span></li>)}</ol></section>)}</section>)}
+</section></BaseLayout>

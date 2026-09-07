@@ -16,3 +16,11 @@ test("topic directory counts published articles and article tags lead back to to
   await page.locator(".reading-end a.chip").filter({ hasText: /^ai$/ }).click();
   await expect(page).toHaveURL(/\/topics\/ai\/$/);
 });
+
+test('date archive exposes each published article once and provides year anchors',async({page,request})=>{
+ await page.goto('/archive/'); const feed=await (await request.get('/newsletter-feed.json')).json();
+ await expect(page.locator('.archive-month li')).toHaveCount(feed.length);
+ const dates=await page.locator('.archive-month time').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('datetime')!));
+ expect(dates).toEqual([...dates].sort().reverse());
+ await page.getByRole('navigation',{name:'Archive years'}).getByRole('link').last().click();await expect(page).toHaveURL(/#year-\d{4}$/);
+});

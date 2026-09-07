@@ -16,6 +16,7 @@ const routes = htmlFiles.map(
   (file) => "/" + file.replace(/^dist\//, "").replace(/index\.html$/, ""),
 );
 const samples = [
+  "/archive/",
   "/topics/",
   "/topics/ai/",
   "/subscribe/",
