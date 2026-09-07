@@ -490,3 +490,43 @@ test("project stack labels connect back to technology collections", async ({
   await page.locator('a.chip[href="/technologies/typescript/"]').click();
   await expect(page).toHaveURL(/\/technologies\/typescript\/$/);
 });
+
+test("keyboard help is discoverable, input-safe, and enables opt-in navigation", async ({
+  page,
+}) => {
+  await page.goto("/articles/");
+  await page.getByRole("searchbox", { name: "Search articles" }).fill("?");
+  await expect(page.locator("#keyboard-help")).not.toBeVisible();
+  await page.locator("h1").click();
+  await page.keyboard.press("?");
+  await expect(page.locator("#keyboard-help")).not.toBeVisible();
+  await page
+    .getByRole("button", { name: "Keyboard shortcuts", exact: true })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Keyboard shortcuts", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("checkbox", { name: "Enable ? and Alt shortcuts" })
+    .check();
+  await page
+    .getByRole("button", { name: "Close shortcuts", exact: true })
+    .click();
+  await page.getByRole("searchbox", { name: "Search articles" }).focus();
+  const editingUrl = page.url();
+  await page.keyboard.press("Alt+r");
+  await expect(page).toHaveURL(editingUrl);
+  await page.locator("h1").click();
+  await page.keyboard.press("?");
+  await expect(page.locator("#keyboard-help")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await page.keyboard.press("Alt+r");
+  await expect(page).toHaveURL(/\/reading-list\/$/);
+  await page
+    .getByRole("button", { name: "Keyboard shortcuts", exact: true })
+    .click();
+  await page.keyboard.press("Escape");
+  await expect(
+    page.getByRole("button", { name: "Keyboard shortcuts", exact: true }),
+  ).toBeFocused();
+});

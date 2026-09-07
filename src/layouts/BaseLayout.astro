@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import KeyboardHelp from "../components/KeyboardHelp.astro";
 import { labs } from "../data/labs";
 import { getReadingPaths } from "../lib/discovery";
 import SiteHeader from "../components/SiteHeader.astro";
@@ -187,6 +188,6 @@ const searchItems = [
       <slot />
     </main>
     <SiteFooter />
-    <CommandPalette items={searchItems} />
+    <CommandPalette items={searchItems} /><KeyboardHelp />
   </body>
 </html>
