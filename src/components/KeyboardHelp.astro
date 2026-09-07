@@ -1,0 +1,95 @@
+<dialog
+  id="keyboard-help"
+  class="keyboard-help"
+  aria-labelledby="keyboard-help-title"
+>
+  <h2 id="keyboard-help-title">Keyboard shortcuts</h2><p>
+    Shortcuts stay out of text fields. Extra shortcuts are off until you enable
+    them on this device. Ctrl or Command K is always available.
+  </p><dl class="shortcut-list">
+    <div><dt><kbd>?</kbd></dt><dd>Open this help</dd></div><div>
+      <dt><kbd>Ctrl / ⌘ K</kbd></dt><dd>Open site search</dd>
+    </div><div><dt><kbd>Alt A</kbd></dt><dd>Browse articles</dd></div><div>
+      <dt><kbd>Alt R</kbd></dt><dd>Open your reading list</dd>
+    </div><div><dt><kbd>Alt T</kbd></dt><dd>Browse topics</dd></div><div>
+      <dt><kbd>Escape</kbd></dt><dd>
+        Close dialogs or leave article focus mode
+      </dd>
+    </div>
+  </dl><label class="reading-remember"
+    ><input type="checkbox" id="enable-shortcuts" />Enable ? and Alt shortcuts</label
+  ><p id="shortcut-status" class="lab-hint" role="status"></p><button
+    class="btn"
+    id="keyboard-help-close">Close shortcuts</button>
+</dialog>
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>("#keyboard-help")!,
+    checkbox = document.querySelector<HTMLInputElement>("#enable-shortcuts")!,
+    status = document.querySelector<HTMLElement>("#shortcut-status")!,
+    key = "nearbycoder:shortcuts:v1";
+  let previous: HTMLElement | null = null;
+  try {
+    checkbox.checked = localStorage.getItem(key) === "true";
+  } catch {}
+  function open() {
+    if (document.querySelector("dialog[open]")) return;
+    previous = document.activeElement as HTMLElement;
+    dialog.showModal();
+  }
+  document
+    .querySelectorAll("[data-keyboard-help]")
+    .forEach((button) => button.addEventListener("click", open));
+  document
+    .querySelector("#keyboard-help-close")!
+    .addEventListener("click", () => dialog.close());
+  dialog.addEventListener("close", () => previous?.focus());
+  checkbox.addEventListener("change", () => {
+    try {
+      localStorage.setItem(key, String(checkbox.checked));
+      status.textContent = checkbox.checked
+        ? "Navigation shortcuts enabled."
+        : "Navigation shortcuts disabled.";
+    } catch {
+      status.textContent =
+        "Preference applies to this page only; browser storage is unavailable.";
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    const target = event.target as HTMLElement;
+    if (
+      target.closest('input,textarea,select,[contenteditable="true"]') ||
+      event.repeat
+    )
+      return;
+    if (
+      checkbox.checked &&
+      event.key === "?" &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !event.altKey
+    ) {
+      event.preventDefault();
+      open();
+      return;
+    }
+    if (
+      !checkbox.checked ||
+      !event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      document.querySelector("dialog[open]")
+    )
+      return;
+    const url = (
+      { a: "/articles/", r: "/reading-list/", t: "/topics/" } as Record<
+        string,
+        string
+      >
+    )[event.key.toLowerCase()];
+    if (url) {
+      event.preventDefault();
+      location.assign(url);
+    }
+  });
+</script>
