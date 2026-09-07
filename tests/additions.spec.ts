@@ -468,3 +468,25 @@ test("glossary filters definitions and keeps permanent links to terms and storie
     "No matching terms",
   );
 });
+
+test("technology directory leads to real project collections", async ({
+  page,
+}) => {
+  await page.goto("/technologies/");
+  await page
+    .locator('.topic-directory a[href="/technologies/typescript/"]')
+    .click();
+  await expect(page.locator("h1")).toHaveText("TypeScript");
+  expect(await page.locator(".project-grid > *").count()).toBeGreaterThan(1);
+  await expect(page.locator(".page-intro")).toContainText(
+    "projects using this technology",
+  );
+});
+
+test("project stack labels connect back to technology collections", async ({
+  page,
+}) => {
+  await page.goto("/projects/agfs-dev/");
+  await page.locator('a.chip[href="/technologies/typescript/"]').click();
+  await expect(page).toHaveURL(/\/technologies\/typescript\/$/);
+});

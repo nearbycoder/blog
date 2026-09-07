@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import { getTechnologies } from "../../lib/technologies";
+export async function getStaticPaths() {
+  return (await getTechnologies()).map((technology) => ({
+    params: { technology: technology.slug },
+    props: { technology },
+  }));
+}
+const { technology } = Astro.props;
+---
+
+<BaseLayout
+  title={`${technology.name} projects`}
+  description={`Published projects built with ${technology.name}.`}
+  ><section class="page-shell">
+    <header class="page-intro">
+      <a class="text-link" href="/technologies/">← All technologies</a><h1
+        class="display"
+      >
+        {technology.name}
+      </h1><p>
+        {technology.projects.length}
+        {technology.projects.length === 1 ? "project" : "projects"} using this technology,
+        based on the original build notes.
+      </p>
+    </header><div class="project-grid">
+      {
+        technology.projects.map((project, index) => (
+          <ProjectCard project={project} index={index} heading="h2" />
+        ))
+      }
+    </div>
+  </section></BaseLayout
+>

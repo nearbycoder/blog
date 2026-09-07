@@ -1,4 +1,5 @@
 ---
+import { technologySlug } from "../../lib/technologies";
 import { labs } from "../../data/labs";
 import ProjectStory from "../../components/ProjectStory.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -72,7 +73,13 @@ const lab = labs.find((lab) => lab.project === entry.id);
         </p><p class="label mt-2">{entry.data.year}</p><div
           class="mt-6 flex flex-wrap gap-2"
         >
-          {entry.data.stack.map((item) => <span class="chip">{item}</span>)}
+          {
+            entry.data.stack.map((item) => (
+              <a class="chip" href={`/technologies/${technologySlug(item)}/`}>
+                {item}
+              </a>
+            ))
+          }
         </div>
       </aside><div>
         {
