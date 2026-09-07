@@ -4,6 +4,7 @@ import ReaderPreferences from "../../components/ReaderPreferences.astro";
 import FocusReading from "../../components/FocusReading.astro";
 import ArticleUtilities from "../../components/ArticleUtilities.astro";
 import ArticleImages from "../../components/ArticleImages.astro";
+import ArticleNotes from "../../components/ArticleNotes.astro";
 import NewsletterInvite from "../../components/NewsletterInvite.astro";
 import ReadingTools from "../../components/ReadingTools.astro";
 import CopyCode from "../../components/CopyCode.astro";
@@ -102,9 +103,9 @@ const toc = headings.filter((heading) => heading.depth === 2);
           <button id="mark-reading-complete" class="btn" disabled
             >Mark as read</button
           >
-        </div><AdjacentArticles id={entry.id} /><ArticleContext
-          articleId={entry.id}
-        /><div class="reading-end">
+        </div><ArticleNotes id={entry.id} /><AdjacentArticles
+          id={entry.id}
+        /><ArticleContext articleId={entry.id} /><div class="reading-end">
           <div class="flex flex-wrap gap-2">
             {
               entry.data.tags.map((tag) => (
