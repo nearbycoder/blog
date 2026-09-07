@@ -1,65 +1,108 @@
 ---
 import { site } from "../data/site";
 import Icon from "./Icon.astro";
+const groups = [
+  {
+    title: "Browse",
+    links: [
+      "/start-here",
+      "/articles",
+      "/topics/",
+      "/archive/",
+      "/search/",
+      "/discover/",
+    ],
+  },
+  {
+    title: "Build & learn",
+    links: [
+      "/projects",
+      "/lab",
+      "/postmortems",
+      "/technologies/",
+      "/glossary",
+      "/uses",
+    ],
+  },
+  {
+    title: "Personal",
+    links: ["/about", "/now", "/layoff", "/reading-list", "/feeds/"],
+  },
+].map((group) => ({
+  ...group,
+  links: group.links.map((href) =>
+    [...site.nav, ...site.explore].find(
+      (link) => link.href.replace(/\/$/, "") === href.replace(/\/$/, ""),
+    )!,
+  ),
+}));
 ---
 
 <footer class="site-footer">
   <div class="site-container">
     <div class="footer-top">
-      <div>
+      <div class="footer-intro">
         <p class="display footer-title">
           Good things start<br />with <em>curiosity.</em>
         </p><a href="/subscribe" class="text-link mt-5"
           ><Icon name="rss" /> Follow along</a
         >
       </div>
-      <div>
-        <p class="label">Explore</p><ul>
-          {
-            [...site.nav, ...site.explore].map((item) => (
-              <li>
-                <a href={item.href} class="nav-link">
-                  {item.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-      <div>
-        <p class="label">Elsewhere</p><ul>
-          {
-            site.socials.map((social) => (
-              <li>
-                <a
-                  href={social.url}
-                  class="nav-link"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {social.label}
-                  <Icon name="external" />
-                </a>
-              </li>
-            ))
-          }<li>
-            <a
-              href="/resume.pdf"
-              class="nav-link"
-              target="_blank"
-              rel="noreferrer">Resume <Icon name="external" /></a
-            >
-          </li>
-        </ul>
-      </div>
+      <nav class="footer-navigation" aria-label="Footer">
+        {
+          groups.map((group) => (
+            <div class="footer-group">
+              <>
+                <h2 class="label">{group.title}</h2>
+                <ul>
+                  {group.links.map((item) => (
+                    <li>
+                      <a href={item.href} class="nav-link">
+                        {item.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            </div>
+          ))
+        }
+        <div class="footer-group">
+          <h2 class="label">Elsewhere</h2><ul>
+            {
+              site.socials.map((social) => (
+                <li>
+                  <a
+                    href={social.url}
+                    class="nav-link"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {social.label}
+                    <Icon name="external" />
+                  </a>
+                </li>
+              ))
+            }<li>
+              <a
+                href="/resume.pdf"
+                class="nav-link"
+                target="_blank"
+                rel="noreferrer">Resume <Icon name="external" /></a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
     </div>
-    <button class="text-link" type="button" data-keyboard-help
-      >Keyboard shortcuts</button
-    >
     <div class="footer-bottom">
       <p>© {new Date().getFullYear()} Josh Hamilton</p><p>
         Made with care. Shared with curiosity.
-      </p><a href="#main-content">Back to top ↑</a>
+      </p><div class="footer-utilities">
+        <button class="text-link" type="button" data-keyboard-help
+          >Keyboard shortcuts</button
+        ><a href="#main-content">Back to top ↑</a>
+      </div>
     </div>
   </div>
 </footer>

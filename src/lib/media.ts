@@ -3,10 +3,15 @@ export function optimizedImage(src: string) {
     .replace("/images/", "/images/optimized/")
     .replace(/\.(png|jpg|jpeg)$/, ".webp");
 }
-/** Existing content imagery takes precedence over the editorial fallback. */
+/** Each published article has explicitly selected cover art. */
 export function articleImage(entry: { id: string; body?: string }) {
+  const cover = artwork[entry.id as keyof typeof artwork];
+  if (cover) return cover.src;
   const image = entry.body?.match(/!\[[^\]]*\]\((\/images\/[^)]+)\)/)?.[1];
   return image ? optimizedImage(image) : "/images/editorial-curiosity.webp";
+}
+export function articleImageAlt(entry: { id: string }) {
+  return artwork[entry.id as keyof typeof artwork]?.alt ?? "";
 }
 const projectImages: Record<string, string> = {
   "agfs-dev": "/images/agfs.png",
@@ -38,3 +43,4 @@ export function formatDate(value: string) {
     timeZone: "UTC",
   }).format(new Date(value));
 }
+import artwork from "../data/article-artwork.json";

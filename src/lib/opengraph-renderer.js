@@ -1,25 +1,37 @@
 import React from "react";
 import { readFileSync } from "node:fs";
 import sharp from "sharp";
+import artwork from "../data/article-artwork.json" with { type: "json" };
 
 const h = React.createElement;
 // Embedded local art keeps builds deterministic and independent of external image hosts.
-const art = `data:image/png;base64,${(
-  await sharp(
-    readFileSync(
-      new URL("../../public/images/editorial-curiosity.webp", import.meta.url),
-    ),
-  )
-    .resize(540, 630, { fit: "cover" })
-    .png()
-    .toBuffer()
-).toString("base64")}`;
+const artCache = new Map();
+async function coverData(src) {
+  if (!artCache.has(src)) {
+    artCache.set(
+      src,
+      sharp(readFileSync(new URL(`../../public${src}`, import.meta.url)))
+        .resize(480, 630, { fit: "cover" })
+        .png()
+        .toBuffer()
+        .then((buffer) => `data:image/png;base64,${buffer.toString("base64")}`),
+    );
+  }
+  return artCache.get(src);
+}
 
 /** @type {import("astro-opengraph-images").RenderFunction} */
 export async function renderNearbycoderOg({ title, description, pathname }) {
   const path =
     "/" + (pathname || "").replace(/^\/+/, "").replace(/index\.html$/, "");
   const home = path === "/";
+  const articleId = path.match(/^\/articles\/([^/]+)\/?$/)?.[1];
+  const articleArt = articleId
+    ? artwork[decodeURIComponent(articleId)]
+    : undefined;
+  const art = await coverData(
+    articleArt?.src ?? "/images/editorial-curiosity.webp",
+  );
   const displayTitle = home
     ? "Always curious. Still building."
     : title.replace(/ · Josh Hamilton$/, "");
