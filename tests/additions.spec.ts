@@ -228,3 +228,40 @@ test("Markdown download contains the complete published body and canonical sourc
   );
   expect(text.length).toBeGreaterThan(1000);
 });
+
+test("citations switch formats, copy exactly and offer a manual fallback", async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.goto("/articles/ai-has-changed-the-way-i-code/");
+  await page.locator(".article-utilities summary").click();
+  await page
+    .getByRole("combobox", { name: "Citation format", exact: true })
+    .selectOption("bibtex");
+  await expect(
+    page.getByLabel("Article citation", { exact: true }),
+  ).toHaveValue(/@misc/);
+  await page
+    .getByRole("button", { name: "Copy citation", exact: true })
+    .click();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    await page.getByLabel("Article citation", { exact: true }).inputValue(),
+  );
+  await page.evaluate(() =>
+    Object.defineProperty(navigator.clipboard, "writeText", {
+      value: async () => {
+        throw Error("blocked");
+      },
+    }),
+  );
+  await page
+    .getByRole("button", { name: "Copy citation", exact: true })
+    .click();
+  await expect(page.locator("#citation-status")).toContainText(
+    "manual copying",
+  );
+  await expect(
+    page.getByLabel("Article citation", { exact: true }),
+  ).toBeFocused();
+});
