@@ -421,3 +421,32 @@ test("reading statistics count local completion without inventing tracked time",
     .click();
   await expect(page.locator("#stat-completed")).toHaveText("0");
 });
+
+test("reading queue reorders saved unread articles and persists its order", async ({
+  page,
+}) => {
+  await page.goto("/reading-list/");
+  await page.evaluate(() => {
+    const entry = { saved: true, completed: false, heading: "", updated: 1 };
+    localStorage.setItem(
+      "nearbycoder:reading:v1",
+      JSON.stringify({
+        "ai-has-changed-the-way-i-code": entry,
+        "building-soloagent-to-understand-ai-harnesses": entry,
+      }),
+    );
+    window.dispatchEvent(new CustomEvent("readingchange"));
+  });
+  await page.locator("#reading-queue summary").click();
+  const links = page.locator("#reading-queue-items li > a");
+  const first = await links.first().getAttribute("href");
+  await page
+    .locator("#reading-queue-items li")
+    .first()
+    .getByRole("button", { name: /Move down:/ })
+    .click();
+  expect(await links.last().getAttribute("href")).toBe(first);
+  await page.reload();
+  await page.locator("#reading-queue summary").click();
+  expect(await links.last().getAttribute("href")).toBe(first);
+});
