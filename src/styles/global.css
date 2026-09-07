@@ -2204,3 +2204,104 @@ a:hover .story-image img,
   padding: 12px 0;
   background: var(--bg);
 }
+
+.print-attribution {
+  display: none;
+}
+@media print {
+  html {
+    --fg: #000 !important;
+    --fg-muted: #333 !important;
+    --bg: #fff !important;
+    --bg-alt: #f3f3f3 !important;
+    --surface: #fff !important;
+    --accent: #000 !important;
+    --border: #ccc !important;
+  }
+  .article-content pre * {
+    color: #000 !important;
+    background: transparent !important;
+  }
+  .reading-header > a {
+    display: none !important;
+  }
+  @page {
+    margin: 18mm;
+  }
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  body {
+    display: block !important;
+  }
+  .site-header,
+  .site-footer,
+  .skip-link,
+  dialog,
+  .reading-sidebar,
+  .reading-cover,
+  .reader-panel,
+  .reader-focus-controls,
+  .reading-finish,
+  .reading-end,
+  .adjacent-articles,
+  main > section,
+  .reading-resume,
+  .article-context,
+  .code-toolbar {
+    display: none !important;
+  }
+  .site-main,
+  .site-container,
+  .reading-header {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .reading-layout {
+    display: block !important;
+    margin-top: 20px !important;
+  }
+  .article-content {
+    color: black !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+  }
+  .article-content h2,
+  .article-content h3 {
+    break-after: avoid;
+  }
+  .article-content p,
+  .article-content li {
+    orphans: 3;
+    widows: 3;
+  }
+  .article-content pre {
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere;
+    color: black !important;
+    background: #f3f3f3 !important;
+    border: 1px solid #ccc;
+    break-inside: auto;
+  }
+  .article-content img {
+    max-height: 180mm;
+    object-fit: contain;
+    break-inside: avoid;
+  }
+  .article-content a {
+    color: black !important;
+    text-decoration: underline;
+  }
+  .reading-header h1 {
+    font-size: 26pt !important;
+  }
+  .print-attribution {
+    display: block;
+    font-size: 9pt;
+    overflow-wrap: anywhere;
+    margin: 20px 0;
+  }
+}

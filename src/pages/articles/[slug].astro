@@ -2,6 +2,7 @@
 import AdjacentArticles from "../../components/AdjacentArticles.astro";
 import ReaderPreferences from "../../components/ReaderPreferences.astro";
 import FocusReading from "../../components/FocusReading.astro";
+import ArticleUtilities from "../../components/ArticleUtilities.astro";
 import NewsletterInvite from "../../components/NewsletterInvite.astro";
 import ReadingTools from "../../components/ReadingTools.astro";
 import CopyCode from "../../components/CopyCode.astro";
@@ -92,7 +93,9 @@ const toc = headings.filter((heading) => heading.depth === 2);
             class="text-link"
             href="#main-content">Continue reading →</a
           >
-        </div><FocusReading /><ReaderPreferences /><div class="article-content">
+        </div><FocusReading /><ReaderPreferences /><ArticleUtilities
+          entry={entry}
+        /><div class="article-content">
           <Content />
         </div><div class="reading-finish">
           <button id="mark-reading-complete" class="btn" disabled

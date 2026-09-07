@@ -1,0 +1,21 @@
+---
+const { entry } = Astro.props;
+---
+
+<details class="reader-panel article-utilities">
+  <summary>Keep or share this article</summary><div class="reader-controls">
+    <button class="btn" id="print-article" hidden>Print article</button>
+  </div><p class="lab-hint">
+    Use your browser’s print dialog to print or save a PDF.
+  </p>
+</details>
+<p class="print-attribution">
+  {entry.data.title} · Josh Hamilton · {
+    entry.data.publishedAt ?? entry.data.date
+  }<br />https://nearbycoder.com/articles/{entry.id}/
+</p>
+<script>
+  const button = document.querySelector<HTMLButtonElement>("#print-article")!;
+  button.hidden = false;
+  button.addEventListener("click", () => window.print());
+</script>

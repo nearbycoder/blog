@@ -184,3 +184,23 @@ test("focus mode hides distractions and Escape restores the article controls", a
     "",
   );
 });
+
+test("print edition retains article and source while hiding interactive chrome", async ({
+  page,
+}) => {
+  await page.goto("/articles/ai-has-changed-the-way-i-code/");
+  await page.evaluate(() => (document.documentElement.dataset.theme = "dark"));
+  await page.emulateMedia({ media: "print" });
+  await expect(page.locator(".reading-header .deck")).toHaveCSS(
+    "color",
+    "rgb(51, 51, 51)",
+  );
+  await expect(page.locator(".print-attribution")).toBeVisible();
+  await expect(page.locator(".print-attribution")).toContainText(
+    "https://nearbycoder.com/articles/ai-has-changed-the-way-i-code/",
+  );
+  await expect(page.locator(".article-content")).toBeVisible();
+  await expect(page.locator(".reading-sidebar")).toBeHidden();
+  await expect(page.locator(".site-footer")).toBeHidden();
+  await expect(page.locator(".article-utilities")).toBeHidden();
+});
