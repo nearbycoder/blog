@@ -1,0 +1,79 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { glossary } from "../data/glossary";
+import { getCollection } from "astro:content";
+import {
+  isArticlePublished,
+  compareArticlesByPublishDateDesc,
+} from "../lib/articles";
+const articles = (await getCollection("articles"))
+  .filter((e) => isArticlePublished(e))
+  .sort(compareArticlesByPublishDateDesc);
+---
+
+<BaseLayout
+  title="A builder’s glossary"
+  description="Plain-language definitions for technical terms, connected to stories from the blog."
+  ><section class="page-shell">
+    <header class="page-intro">
+      <p class="label">A little context</p><h1 class="display">
+        Words builders<br />throw around.
+      </h1><p>
+        Plain-language definitions, with published stories where you can explore
+        the ideas.
+      </p>
+    </header><label for="glossary-filter">Find a term</label><input
+      class="reader-input"
+      id="glossary-filter"
+      type="search"
+      maxlength="100"
+    /><p id="glossary-status" role="status" class="lab-hint">
+      {glossary.length} terms
+    </p>
+    <div id="glossary-entries">
+      {
+        glossary.map((term) => (
+          <section
+            class="reader-panel glossary-entry"
+            id={term.slug}
+            data-term={`${term.term} ${term.definition}`}
+          >
+            <>
+              <h2>
+                <a href={`#${term.slug}`}>{term.term}</a>
+              </h2>
+              <p>{term.definition}</p>
+              <ul>
+                {articles
+                  .filter((e) => e.data.tags.some((t) => term.tags.includes(t)))
+                  .slice(0, 3)
+                  .map((entry) => (
+                    <li>
+                      <a class="text-link" href={`/articles/${entry.id}/`}>
+                        {entry.data.title} →
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </>
+          </section>
+        ))
+      }
+    </div>
+  </section></BaseLayout
+>
+<script>
+  const input = document.querySelector<HTMLInputElement>("#glossary-filter")!,
+    entries = Array.from(document.querySelectorAll<HTMLElement>("[data-term]"));
+  input.addEventListener("input", () => {
+    const query = input.value.toLowerCase().trim();
+    let count = 0;
+    for (const entry of entries) {
+      entry.hidden = !entry.dataset.term!.toLowerCase().includes(query);
+      if (!entry.hidden) count++;
+    }
+    document.querySelector("#glossary-status")!.textContent = count
+      ? `${count} matching terms.`
+      : "No matching terms. Try a shorter search.";
+  });
+</script>
