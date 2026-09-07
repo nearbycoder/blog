@@ -1,0 +1,29 @@
+<div class="reader-focus-controls">
+  <button class="btn" id="focus-reading" aria-pressed="false" hidden
+    >Enter focus mode</button
+  ><span class="lab-hint" id="focus-hint" role="status"></span>
+</div>
+<script>
+  const button = document.querySelector<HTMLButtonElement>("#focus-reading")!,
+    hint = document.querySelector<HTMLElement>("#focus-hint")!;
+  function setFocus(enabled: boolean) {
+    document.documentElement.toggleAttribute("data-reading-focus", enabled);
+    button.setAttribute("aria-pressed", String(enabled));
+    button.textContent = enabled ? "Exit focus mode" : "Enter focus mode";
+    hint.textContent = enabled ? "Focus mode is on. Press Escape to exit." : "";
+  }
+  button.hidden = false;
+  button.addEventListener("click", () =>
+    setFocus(button.getAttribute("aria-pressed") !== "true"),
+  );
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Escape" &&
+      !document.querySelector("dialog[open]") &&
+      document.documentElement.hasAttribute("data-reading-focus")
+    ) {
+      setFocus(false);
+      button.focus();
+    }
+  });
+</script>
