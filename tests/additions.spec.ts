@@ -327,3 +327,63 @@ test("a failed private-note save preserves the unsaved text and reports the prob
     "Keep this text if storage fails.",
   );
 });
+
+test("reading backup validates, previews and merges only supported content", async ({
+  page,
+}) => {
+  await page.goto("/reading-list/");
+  await page.locator("#reading-backup summary").click();
+  const upload = page.getByLabel("Choose a reading backup");
+  await upload.setInputFiles({
+    name: "bad.json",
+    mimeType: "application/json",
+    buffer: Buffer.from('{"version":99}'),
+  });
+  await expect(page.locator("#backup-status")).toContainText("version 1");
+  await expect(
+    page.getByRole("button", { name: "Merge reviewed backup", exact: true }),
+  ).toBeDisabled();
+  const id = "ai-has-changed-the-way-i-code";
+  await upload.setInputFiles({
+    name: "backup.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        version: 1,
+        reading: {
+          [id]: {
+            saved: true,
+            completed: false,
+            heading: "evil-anchor",
+            updated: 1,
+          },
+          unknown: { saved: true, completed: false, heading: "", updated: 1 },
+        },
+        notes: { [id]: { text: "Imported private note", updated: 1 } },
+      }),
+    ),
+  });
+  await expect(page.locator("#backup-status")).toContainText(
+    "Nothing has changed yet",
+  );
+  await expect(page.locator("#saved-articles li")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Merge reviewed backup", exact: true })
+    .click();
+  await expect(page.locator("#saved-articles li")).toHaveCount(1);
+  expect(
+    await page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("nearbycoder:reading:v1")!)[
+          "ai-has-changed-the-way-i-code"
+        ].heading,
+    ),
+  ).toBe("");
+  const downloadPromise = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export backup", exact: true })
+    .click();
+  expect((await downloadPromise).suggestedFilename()).toBe(
+    "nearbycoder-reading-backup.json",
+  );
+});
