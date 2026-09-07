@@ -17,7 +17,7 @@ import {
   isArticlePublished,
   compareArticlesByPublishDateDesc,
 } from "../../lib/articles";
-import { articleImage, formatDate } from "../../lib/media";
+import { articleImage, articleImageAlt, formatDate } from "../../lib/media";
 export async function getStaticPaths() {
   return (await getCollection("articles"))
     .filter((entry) =>
@@ -67,7 +67,7 @@ const toc = headings.filter((heading) => heading.depth === 2);
     <div class="reading-cover">
       <img
         src={articleImage(entry)}
-        alt=""
+        alt={articleImageAlt(entry)}
         width="1200"
         height="600"
         fetchpriority="high"
