@@ -286,3 +286,44 @@ test("article image viewer opens, supports Escape and restores keyboard focus", 
   await expect(button).toBeFocused();
   await expect(page.locator("#article-image-dialog")).not.toBeVisible();
 });
+
+test("private notes persist only when saved, render as text and can be deleted", async ({
+  page,
+}) => {
+  await page.goto("/articles/ai-has-changed-the-way-i-code/");
+  await page.locator("#article-notes summary").click();
+  await page
+    .getByLabel("Notes about this article")
+    .fill("<img src=x onerror=alert(1)> A private thought");
+  await page.getByRole("button", { name: "Save note", exact: true }).click();
+  await page.reload();
+  await page.locator("#article-notes summary").click();
+  await expect(page.getByLabel("Notes about this article")).toHaveValue(
+    "<img src=x onerror=alert(1)> A private thought",
+  );
+  await expect(page.locator("#article-notes img")).toHaveCount(0);
+  await page.getByRole("button", { name: "Delete note", exact: true }).click();
+  await expect(page.getByLabel("Notes about this article")).toHaveValue("");
+});
+
+test("a failed private-note save preserves the unsaved text and reports the problem", async ({
+  page,
+}) => {
+  await page.goto("/articles/ai-has-changed-the-way-i-code/");
+  await page.locator("#article-notes summary").click();
+  await page
+    .getByLabel("Notes about this article")
+    .fill("Keep this text if storage fails.");
+  await page.evaluate(() =>
+    Object.defineProperty(Storage.prototype, "setItem", {
+      value: () => {
+        throw Error("blocked");
+      },
+    }),
+  );
+  await page.getByRole("button", { name: "Save note", exact: true }).click();
+  await expect(page.locator("#note-status")).toContainText("could not save");
+  await expect(page.getByLabel("Notes about this article")).toHaveValue(
+    "Keep this text if storage fails.",
+  );
+});

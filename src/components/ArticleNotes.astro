@@ -1,0 +1,79 @@
+---
+const { id } = Astro.props;
+---
+
+<details class="reader-panel" id="article-notes" data-note-id={id}>
+  <summary>Your private notes</summary><p class="lab-hint">
+    Only on this device. Notes are never published or sent to a server. Save up
+    to 10,000 characters per article.
+  </p><label for="article-note-text">Notes about this article</label><textarea
+    class="reader-input"
+    id="article-note-text"
+    rows="6"
+    maxlength="10000"
+    disabled></textarea><div class="reader-controls">
+    <button class="btn" id="save-note" disabled>Save note</button><button
+      class="btn"
+      id="delete-note"
+      disabled>Delete note</button>
+  </div><p class="lab-hint" id="note-status" role="status">
+    Enable JavaScript to keep private notes.
+  </p>
+</details>
+<script>
+  import { readNotes, saveNote, NOTES_KEY } from "../lib/notes-storage";
+  const id =
+      document.querySelector<HTMLElement>("#article-notes")!.dataset.noteId!,
+    input = document.querySelector<HTMLTextAreaElement>("#article-note-text")!,
+    save = document.querySelector<HTMLButtonElement>("#save-note")!,
+    remove = document.querySelector<HTMLButtonElement>("#delete-note")!,
+    status = document.querySelector<HTMLElement>("#note-status")!;
+  let dirty = false;
+  function restore() {
+    const note = readNotes()[id];
+    input.value = note?.text ?? "";
+    remove.disabled = !note;
+    status.textContent = note
+      ? "Saved on " + new Date(note.updated).toLocaleString() + "."
+      : "No note saved yet.";
+    dirty = false;
+  }
+  input.disabled = false;
+  save.disabled = false;
+  restore();
+  input.addEventListener("input", () => {
+    dirty = true;
+    status.textContent = `Unsaved changes · ${input.value.length.toLocaleString()} / 10,000 characters`;
+  });
+  save.addEventListener("click", () => {
+    if (saveNote(id, input.value)) {
+      restore();
+      status.textContent = input.value
+        ? "Note saved on this device."
+        : "Empty note removed.";
+    } else
+      status.textContent =
+        "Your browser could not save this note. Copy your text before leaving.";
+  });
+  remove.addEventListener("click", () => {
+    if (saveNote(id, "")) {
+      restore();
+      status.textContent = "Note deleted.";
+      input.focus();
+    } else status.textContent = "Your browser could not delete the note.";
+  });
+  window.addEventListener("beforeunload", (event) => {
+    if (dirty) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+  });
+  window.addEventListener("storage", (event) => {
+    if (event.key === NOTES_KEY || event.key === null) {
+      if (dirty)
+        status.textContent =
+          "Notes changed in another tab. Your unsaved text is still here; save to keep it.";
+      else restore();
+    }
+  });
+</script>
