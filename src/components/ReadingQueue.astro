@@ -1,0 +1,92 @@
+<details class="reader-panel" id="reading-queue">
+  <summary>Plan your next reads</summary><p class="lab-hint">
+    An ordered queue of saved articles you haven’t marked as read. Reorder with
+    buttons; changes stay on this device.
+  </p><ol
+    id="reading-queue-items"
+    class="saved-articles"
+    aria-label="Ordered reading queue"
+  >
+  </ol><p id="reading-queue-status" class="lab-hint" role="status"></p>
+</details>
+<script>
+  import { readReadingState, READING_KEY } from "../lib/reading-storage";
+  const key = "nearbycoder:queue:v1",
+    catalog: { id: string; title: string }[] = JSON.parse(
+      document.querySelector("#reading-catalog")!.textContent!,
+    ),
+    list = document.querySelector<HTMLOListElement>("#reading-queue-items")!,
+    status = document.querySelector<HTMLElement>("#reading-queue-status")!;
+  function order() {
+    const state = readReadingState(),
+      eligible = catalog
+        .filter((a) => state[a.id]?.saved && !state[a.id]?.completed)
+        .map((a) => a.id);
+    let stored: unknown = [];
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw && raw.length < 25000) stored = JSON.parse(raw);
+    } catch {}
+    return [
+      ...new Set([
+        ...(Array.isArray(stored)
+          ? stored.filter(
+              (id) => typeof id === "string" && eligible.includes(id),
+            )
+          : []),
+        ...eligible,
+      ]),
+    ];
+  }
+  function draw(focusId?: string) {
+    const ids = order();
+    list.replaceChildren();
+    status.textContent = ids.length
+      ? `${ids.length} unread saved articles in your queue.`
+      : "Save an unread article to start your queue.";
+    ids.forEach((id, index) => {
+      const story = catalog.find((a) => a.id === id)!,
+        li = document.createElement("li"),
+        link = document.createElement("a"),
+        controls = document.createElement("div");
+      link.href = `/articles/${id}/`;
+      link.textContent = `${index + 1}. ${story.title}`;
+      controls.className = "reader-controls";
+      for (const [label, delta] of [
+        ["Move up", -1],
+        ["Move down", 1],
+      ] as const) {
+        const button = document.createElement("button");
+        button.className = "btn";
+        button.textContent = label;
+        button.setAttribute("aria-label", `${label}: ${story.title}`);
+        button.disabled = index + delta < 0 || index + delta >= ids.length;
+        button.addEventListener("click", () => {
+          const next = [...ids];
+          [next[index], next[index + delta]] = [
+            next[index + delta],
+            next[index],
+          ];
+          try {
+            localStorage.setItem(key, JSON.stringify(next));
+            draw(id);
+            status.textContent = `Moved ${story.title} to position ${index + delta + 1}.`;
+          } catch {
+            status.textContent =
+              "Your browser could not save this order. Nothing was changed.";
+          }
+        });
+        controls.append(button);
+      }
+      li.append(link, controls);
+      list.append(li);
+      if (id === focusId) link.focus();
+    });
+  }
+  window.addEventListener("readingchange", () => draw());
+  window.addEventListener("storage", (event) => {
+    if (event.key === key || event.key === READING_KEY || event.key === null)
+      draw();
+  });
+  draw();
+</script>
