@@ -163,3 +163,24 @@ test("reading appearance persists, resets, and rejects corrupt storage", async (
   await page.reload();
   await expect(page.locator(".article-content")).toHaveCSS("font-size", "17px");
 });
+
+test("focus mode hides distractions and Escape restores the article controls", async ({
+  page,
+}) => {
+  await page.goto("/articles/ai-has-changed-the-way-i-code/");
+  const button = page.getByRole("button", {
+    name: "Enter focus mode",
+    exact: true,
+  });
+  await button.click();
+  await expect(page.locator(".reading-sidebar")).toBeHidden();
+  await expect(page.locator(".site-footer")).toBeHidden();
+  await expect(page.locator(".article-content")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(button).toBeFocused();
+  await expect(page.locator(".reading-sidebar")).toBeVisible();
+  await expect(page.locator("html")).not.toHaveAttribute(
+    "data-reading-focus",
+    "",
+  );
+});

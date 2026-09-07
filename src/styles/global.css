@@ -2175,3 +2175,32 @@ a:hover .story-image img,
     grid-template-columns: 1fr;
   }
 }
+
+.reader-focus-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+[data-reading-focus] .site-header,
+[data-reading-focus] .site-footer,
+[data-reading-focus] .reading-cover,
+[data-reading-focus] .reading-sidebar,
+[data-reading-focus] main > section,
+[data-reading-focus] .reading-end,
+[data-reading-focus] .adjacent-articles,
+[data-reading-focus] .article-context,
+[data-reading-focus] .reader-panel {
+  display: none;
+}
+[data-reading-focus] .reading-layout {
+  grid-template-columns: minmax(0, var(--reading-width, 720px));
+}
+[data-reading-focus] .reader-focus-controls {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 12px 0;
+  background: var(--bg);
+}
