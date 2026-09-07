@@ -3,6 +3,7 @@ import AdjacentArticles from "../../components/AdjacentArticles.astro";
 import ReaderPreferences from "../../components/ReaderPreferences.astro";
 import FocusReading from "../../components/FocusReading.astro";
 import ArticleUtilities from "../../components/ArticleUtilities.astro";
+import ArticleImages from "../../components/ArticleImages.astro";
 import NewsletterInvite from "../../components/NewsletterInvite.astro";
 import ReadingTools from "../../components/ReadingTools.astro";
 import CopyCode from "../../components/CopyCode.astro";
@@ -136,7 +137,7 @@ const toc = headings.filter((heading) => heading.depth === 2);
       </section>
     )
   }
-  <NewsletterInvite /><CopyCode /></BaseLayout
+  <ArticleImages /><NewsletterInvite /><CopyCode /></BaseLayout
 >
 <script>
   const links = Array.from(

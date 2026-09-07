@@ -1,0 +1,97 @@
+<dialog
+  id="article-image-dialog"
+  class="image-viewer"
+  aria-labelledby="image-viewer-title"
+>
+  <div class="image-viewer-toolbar">
+    <h2 id="image-viewer-title">Article image</h2><button
+      class="btn"
+      id="image-viewer-close">Close image</button>
+  </div><div id="image-viewer-frame"></div><p id="image-viewer-caption"></p><div
+    class="reader-controls"
+  >
+    <button class="btn" id="image-viewer-previous">Previous image</button
+    ><button class="btn" id="image-viewer-next">Next image</button><a
+      class="text-link"
+      id="image-viewer-original"
+      target="_blank"
+      rel="noreferrer">Open original image ↗</a>
+  </div><p role="status" id="image-viewer-status"></p>
+</dialog>
+<script>
+  const images = Array.from(
+    document.querySelectorAll<HTMLImageElement>(".article-content img"),
+  );
+  const dialog = document.querySelector<HTMLDialogElement>(
+      "#article-image-dialog",
+    )!,
+    picture = document.createElement("img"),
+    caption = document.querySelector<HTMLElement>("#image-viewer-caption")!,
+    status = document.querySelector<HTMLElement>("#image-viewer-status")!,
+    previous = document.querySelector<HTMLButtonElement>(
+      "#image-viewer-previous",
+    )!,
+    next = document.querySelector<HTMLButtonElement>("#image-viewer-next")!;
+  let index = 0,
+    trigger: HTMLButtonElement | null = null;
+  function show(at: number) {
+    index = at;
+    const image = images[index];
+    picture.src = image.currentSrc || image.src;
+    picture.alt = image.alt;
+    picture.id = "image-viewer-image";
+    document.querySelector("#image-viewer-frame")!.replaceChildren(picture);
+    caption.textContent =
+      image.closest("figure")?.querySelector("figcaption")?.textContent ||
+      image.alt ||
+      "No caption supplied.";
+    status.textContent = `Image ${index + 1} of ${images.length}. Use the arrow keys to browse.`;
+    document.querySelector<HTMLAnchorElement>("#image-viewer-original")!.href =
+      picture.src;
+    previous.disabled = index === 0;
+    next.disabled = index === images.length - 1;
+  }
+  images.forEach((image, i) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "btn image-enlarge";
+    button.textContent = "Enlarge image";
+    button.setAttribute(
+      "aria-label",
+      `Enlarge image ${i + 1}: ${image.alt || "Article image"}`,
+    );
+    const target = image.closest("a") ?? image;
+    target.insertAdjacentElement("afterend", button);
+    button.addEventListener("click", () => {
+      trigger = button;
+      show(i);
+      dialog.showModal();
+    });
+  });
+  previous.addEventListener("click", () => {
+    if (index > 0) show(index - 1);
+  });
+  next.addEventListener("click", () => {
+    if (index < images.length - 1) show(index + 1);
+  });
+  document
+    .querySelector("#image-viewer-close")!
+    .addEventListener("click", () => dialog.close());
+  dialog.addEventListener("close", () => trigger?.focus());
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft" && index > 0) {
+      event.preventDefault();
+      show(index - 1);
+    }
+    if (event.key === "ArrowRight" && index < images.length - 1) {
+      event.preventDefault();
+      show(index + 1);
+    }
+  });
+  picture.addEventListener(
+    "error",
+    () =>
+      (status.textContent =
+        "This image could not load. Try opening the original image."),
+  );
+</script>

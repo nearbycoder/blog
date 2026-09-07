@@ -2305,3 +2305,41 @@ a:hover .story-image img,
     margin: 20px 0;
   }
 }
+
+.image-viewer {
+  width: min(1100px, 94vw);
+  max-height: 94dvh;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: auto;
+}
+.image-viewer::backdrop {
+  background: rgb(0 0 0 / 0.8);
+}
+.image-viewer-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.image-viewer img {
+  width: 100%;
+  max-height: 65dvh;
+  object-fit: contain;
+}
+.image-viewer h2 {
+  font-size: 20px;
+}
+.image-enlarge {
+  margin: 12px 0;
+  font-size: 12px;
+}
+@media print {
+  .image-enlarge {
+    display: none !important;
+  }
+}
