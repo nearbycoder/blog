@@ -1,0 +1,56 @@
+<section
+  class="reading-stats reader-panel"
+  aria-labelledby="reading-stats-heading"
+>
+  <h2 id="reading-stats-heading">Your reading, at a glance</h2><p
+    class="lab-hint"
+  >
+    Based only on articles you saved or marked as read on this device. Reading
+    minutes are article-length estimates, not tracked time.
+  </p><dl id="reading-stats" class="reading-stat-grid">
+    <div><dt>Completed stories</dt><dd id="stat-completed">0</dd></div><div>
+      <dt>Saved for later</dt><dd id="stat-unread">0</dd>
+    </div><div>
+      <dt>Estimated minutes read</dt><dd id="stat-minutes">0</dd>
+    </div><div><dt>Private notes</dt><dd id="stat-notes">0</dd></div>
+  </dl><p id="reading-stats-summary" class="lab-hint" role="status"></p>
+</section>
+<script>
+  import { readReadingState, READING_KEY } from "../lib/reading-storage";
+  import { readNotes, NOTES_KEY } from "../lib/notes-storage";
+  const catalog: { id: string; minutes: number }[] = JSON.parse(
+    document.querySelector("#reading-catalog")!.textContent!,
+  );
+  function draw() {
+    const state = readReadingState(),
+      notes = readNotes(),
+      completed = catalog.filter((a) => state[a.id]?.completed),
+      unread = catalog.filter(
+        (a) => state[a.id]?.saved && !state[a.id]?.completed,
+      ),
+      minutes = completed.reduce((sum, a) => sum + a.minutes, 0),
+      noted = catalog.filter((a) => notes[a.id]?.text.trim());
+    for (const [key, value] of Object.entries({
+      completed: completed.length,
+      unread: unread.length,
+      minutes,
+      notes: noted.length,
+    }))
+      document.querySelector("#stat-" + key)!.textContent = String(value);
+    document.querySelector("#reading-stats-summary")!.textContent =
+      completed.length
+        ? `${completed.length} of ${catalog.length} published stories marked as read.`
+        : "Mark an article as read to start your personal reading record.";
+  }
+  for (const event of ["readingchange", "noteschange"])
+    window.addEventListener(event, draw);
+  window.addEventListener("storage", (event) => {
+    if (
+      event.key === READING_KEY ||
+      event.key === NOTES_KEY ||
+      event.key === null
+    )
+      draw();
+  });
+  draw();
+</script>

@@ -2343,3 +2343,19 @@ a:hover .story-image img,
     display: none !important;
   }
 }
+
+.reading-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 24px;
+  margin: 24px 0;
+}
+.reading-stat-grid dt {
+  color: var(--fg-muted);
+  font-size: 13px;
+}
+.reading-stat-grid dd {
+  font-size: 36px;
+  color: var(--accent);
+  margin-top: 8px;
+}

@@ -387,3 +387,37 @@ test("reading backup validates, previews and merges only supported content", asy
     "nearbycoder-reading-backup.json",
   );
 });
+
+test("reading statistics count local completion without inventing tracked time", async ({
+  page,
+}) => {
+  await page.goto("/reading-list/");
+  await expect(page.locator("#stat-completed")).toHaveText("0");
+  await page.evaluate(() => {
+    localStorage.setItem(
+      "nearbycoder:reading:v1",
+      JSON.stringify({
+        "ai-has-changed-the-way-i-code": {
+          saved: true,
+          completed: true,
+          heading: "",
+          updated: 1,
+        },
+        unknown: { saved: true, completed: true, heading: "", updated: 1 },
+      }),
+    );
+    window.dispatchEvent(new CustomEvent("readingchange"));
+  });
+  await expect(page.locator("#stat-completed")).toHaveText("1");
+  expect(
+    Number(await page.locator("#stat-minutes").innerText()),
+  ).toBeGreaterThan(0);
+  await expect(page.locator("#stat-unread")).toHaveText("0");
+  await expect(page.locator(".reading-stats")).toContainText(
+    "not tracked time",
+  );
+  await page
+    .getByRole("button", { name: "Clear saves & history", exact: true })
+    .click();
+  await expect(page.locator("#stat-completed")).toHaveText("0");
+});
