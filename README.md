@@ -112,7 +112,7 @@ Windows last for the current visit; refreshing resets the workspace. Only the ex
 
 Open **Arcade** from the desktop shortcut or the gamepad in the dock. **Memory** has six pairs, a move counter, and a fresh-deal button. **Bug Sweep** is an 8×8 board with ten bugs, a safe first reveal, flood clearing, and flags via right-click or the touch-friendly Flag mode. Arrow keys move between squares; Enter plays. Games retain their state when minimized or switched, and reset when the Arcade window closes or the page reloads.
 
-The **Terminal** is a pretend shell: it never runs system commands or sends input anywhere. Try `help`, `sudo make coffee`, `cat README.txt`, `42`, or `party`. The last command toggles the after-hours wallpaper. The classic **↑ ↑ ↓ ↓ ← → ← → B A** sequence also toggles it on the desktop, outside inputs and games. The terminal’s expandable hint makes the surprises available to touch and assistive-technology users too. No sound, flashing effects, or background game loops are used.
+The **Terminal** is a pretend shell: it never runs system commands or sends input anywhere. Try `help`, `sudo make coffee`, `cat README.txt`, `42`, or `party`. The last command toggles the after-hours wallpaper. The classic **↑ ↑ ↓ ↓ ← → ← → B A** sequence also toggles it on the desktop, outside inputs and games. The terminal’s expandable hint makes the surprises available to touch and assistive-technology users too. Memory, Bug Sweep, and the terminal secrets use no sound, flashing effects, or background game loops.
 
 Run `npx playwright test tests/desktop-arcade.spec.ts tests/desktop.spec.ts` after a build to check game rules, complete Memory play, restart/minimize behavior, the secrets, keyboard controls, and both-theme mobile accessibility.
 
@@ -132,3 +132,11 @@ npm run verify
 `verify` runs Astro type checks, a production build, and browser regression tests against the built site. `npm test` expects an existing production build. Images are optimized automatically before development and production builds.
 
 See [the redesign notes and screenshot gallery](docs/redesign.md) for the visual direction, route coverage, accessibility scope, and measured performance.
+
+### DOOM in the desktop
+
+Open **Arcade → DOOM → Play DOOM**, or search **DOOM** in the desktop launcher. This runs the original v1.9 shareware Episode One through js-dos 8.4.1. The emulator is loaded from jsDelivr only after Play; the complete shareware bundle is hosted with the site. The first launch needs an internet connection.
+
+Arrow keys move/turn, Ctrl fires, Space opens doors, Shift runs, 1–7 select weapons, and Escape opens the game menu. On-screen buttons support touch controls. Sound starts muted and can be enabled with **Sound on**. Switching activities, minimizing, switching windows, or hiding the browser tab pauses the game; **Resume** continues. **Stop game**, closing Arcade, or reloading discards the game session and releases the emulator. In-game saves are limited to that session.
+
+Source, credits, release checksum, and reproduction notes are in [`public/games/doom/README.txt`](public/games/doom/README.txt). Existing desktop tests cover lazy loading, retries, controls, and lifecycle through a stubbed emulator; actual emulator boot and gameplay are also checked manually in-browser before release.

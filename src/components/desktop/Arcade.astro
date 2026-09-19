@@ -60,6 +60,12 @@ import DesktopIcon from "./DesktopIcon.astro";
         >
         <button
           type="button"
+          data-arcade-select="doom"
+          aria-pressed="false"
+          aria-controls="arcade-doom"><DesktopIcon name="game" />DOOM</button
+        >
+        <button
+          type="button"
           data-arcade-select="terminal"
           aria-pressed="false"
           aria-controls="arcade-terminal"
@@ -75,7 +81,8 @@ import DesktopIcon from "./DesktopIcon.astro";
           <h3 id="memory-title">Match the syntax</h3><button
             type="button"
             class="arcade-button"
-            data-memory-reset>New deal</button>
+            data-memory-reset>New deal</button
+          >
         </div>
         <p class="game-instructions">
           Flip two cards. Find all six pairs in as few moves as you can.
@@ -99,7 +106,8 @@ import DesktopIcon from "./DesktopIcon.astro";
           <h3 id="sweep-title">Ship without bugs</h3><button
             type="button"
             class="arcade-button"
-            data-sweep-reset>New board</button>
+            data-sweep-reset>New board</button
+          >
         </div>
         <p class="game-instructions">
           Ten bugs are hiding here. Numbers count neighboring bugs. Reveal all
@@ -129,6 +137,98 @@ import DesktopIcon from "./DesktopIcon.astro";
         </p>
       </section>
       <section
+        id="arcade-doom"
+        data-arcade-panel="doom"
+        aria-labelledby="doom-title"
+        hidden
+      >
+        <div class="game-heading">
+          <h3 id="doom-title">Yes, it runs DOOM.</h3><span
+            class="terminal-badge">1993 / id Software</span
+          >
+        </div>
+        <p class="game-instructions">
+          Knee-Deep in the Dead. The original shareware episode, right here on
+          your desktop.
+        </p>
+        <div class="doom-toolbar">
+          <button type="button" class="arcade-button" data-doom-play
+            >Play DOOM</button
+          >
+          <button
+            type="button"
+            class="arcade-button"
+            data-doom-pause
+            aria-pressed="false"
+            hidden>Pause</button
+          >
+          <button
+            type="button"
+            class="arcade-button"
+            data-doom-sound
+            aria-pressed="false"
+            hidden>Sound on</button
+          >
+          <button type="button" class="arcade-button" data-doom-stop hidden
+            >Stop game</button
+          >
+        </div>
+        <p class="game-status" data-doom-status role="status">
+          Shareware Episode One · Loads only when you play.
+        </p>
+        <div class="doom-host" data-doom-host hidden></div>
+        <div
+          class="doom-controls"
+          data-doom-controls
+          role="group"
+          aria-label="DOOM touch controls"
+          hidden
+        >
+          <div class="doom-dpad">
+            <button type="button" data-doom-key="265" aria-label="Move forward"
+              >↑</button
+            >
+            <button type="button" data-doom-key="263" aria-label="Turn left"
+              >←</button
+            >
+            <button type="button" data-doom-key="264" aria-label="Move backward"
+              >↓</button
+            >
+            <button type="button" data-doom-key="262" aria-label="Turn right"
+              >→</button
+            >
+          </div>
+          <div class="doom-actions">
+            <button type="button" data-doom-key="341">Fire</button><button
+              type="button"
+              data-doom-key="32">Use</button
+            >
+            <button type="button" data-doom-key="257">Enter</button><button
+              type="button"
+              data-doom-key="256">Menu</button
+            >
+          </div>
+        </div>
+        <details class="doom-help">
+          <summary>Controls & session</summary>
+          <p class="game-instructions">
+            Arrow keys move / turn · Ctrl fires · Space opens doors · Shift runs
+            · 1–7 switch weapons · Esc opens the menu. On touch screens, use the
+            buttons below the game. Sound starts muted. Switching away pauses;
+            Resume continues. Closing or stopping resets this session.
+          </p>
+        </details>
+        <p class="doom-credits">
+          <a href="/games/doom/README.txt" target="_blank" rel="noopener"
+            >Game credits & source</a
+          > · Powered by <a
+            href="https://js-dos.com/"
+            target="_blank"
+            rel="noopener">js-dos</a
+          >
+        </p>
+      </section>
+      <section
         id="arcade-terminal"
         data-arcade-panel="terminal"
         aria-labelledby="terminal-title"
@@ -136,7 +236,8 @@ import DesktopIcon from "./DesktopIcon.astro";
       >
         <div class="game-heading">
           <h3 id="terminal-title">Pocket terminal</h3><span
-            class="terminal-badge">guest session</span>
+            class="terminal-badge">guest session</span
+          >
         </div>
         <p class="game-instructions">
           A few commands. A few secrets. Start with <code>help</code>.
@@ -177,8 +278,9 @@ import DesktopIcon from "./DesktopIcon.astro";
       </section>
     </div>
     <footer class="library-status">
-      <span>Local games. Zero stakes.</span><span
-        >Take a break. You’ve earned it.</span>
+      <span>Small games. Zero stakes.</span><span
+        >Take a break. You’ve earned it.</span
+      >
     </footer>
   </section>
 </template>

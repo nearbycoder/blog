@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DOOM shareware player</title>
+    <style>
+      html,
+      body,
+      #dos {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #090d10;
+      }
+      #status {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: #e6eeeb;
+        padding: 20px;
+        font: 14px system-ui;
+        text-align: center;
+      }
+      #status[hidden] {
+        display: none;
+      }
+      canvas:focus-visible {
+        outline: 2px solid #56d9b1;
+        outline-offset: -2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dos" aria-label="DOOM game display"></div>
+    <p id="status" role="status">Loading DOOM…</p>
+    <script>
+      (() => {
+        const origin = parent.location.origin;
+        // Keyboard Lock is restricted to top-level documents. Normal keyboard
+        // events still work here, while browser/desktop shortcuts remain available.
+        if ("keyboard" in navigator)
+          Object.defineProperty(navigator, "keyboard", { value: undefined });
+        const prefix = "https://cdn.jsdelivr.net/npm/js-dos@8.4.1/dist/";
+        let player,
+          ci,
+          paused = false,
+          muted = true,
+          failed = false;
+        const notify = (state, message) =>
+          parent.postMessage({ type: "nearby-doom", state, message }, origin);
+        function fail() {
+          if (failed) return;
+          failed = true;
+          clearTimeout(timeout);
+          document.getElementById("status").hidden = false;
+          document.getElementById("status").textContent =
+            "Could not load DOOM. Check your connection and try again.";
+          notify("error");
+          player?.stop().catch(() => {});
+        }
+        const timeout = setTimeout(fail, 60000);
+        const css = document.createElement("link");
+        css.rel = "stylesheet";
+        css.href = prefix + "js-dos.css";
+        document.head.append(css);
+        const script = document.createElement("script");
+        script.src = prefix + "js-dos.js";
+        script.onerror = fail;
+        script.onload = () => {
+          if (failed) return;
+          try {
+            player = Dos(document.getElementById("dos"), {
+              url: new URL("/games/doom/shareware.jsdos", origin).href,
+              pathPrefix: prefix + "emulators/",
+              theme: "dark",
+              lang: "en",
+              backend: "dosbox",
+              backendLocked: true,
+              autoStart: true,
+              kiosk: true,
+              workerThread: true,
+              mouseCapture: false,
+              renderBackend: "canvas",
+              renderAspect: "4/3",
+              volume: 0,
+              autoSave: false,
+              fsChanges: { local: false },
+              onEvent(event, value) {
+                if (event !== "ci-ready" || failed) return;
+                ci = value;
+                clearTimeout(timeout);
+                ci.mute();
+                if (paused) ci.pause();
+                document.getElementById("status").hidden = true;
+                const canvas = document.querySelector("canvas");
+                if (canvas) {
+                  canvas.tabIndex = 0;
+                  canvas.setAttribute(
+                    "aria-label",
+                    "DOOM game. Arrow keys move, Control fires, Space opens doors, Escape opens the game menu.",
+                  );
+                }
+                ci.events().onExit(() => notify("exited"));
+                notify("ready");
+              },
+            });
+            player.setNoCloud(true);
+          } catch {
+            fail();
+          }
+        };
+        document.head.append(script);
+        addEventListener("message", (event) => {
+          if (
+            event.source !== parent ||
+            event.origin !== origin ||
+            event.data?.type !== "nearby-doom-control"
+          )
+            return;
+          const data = event.data;
+          if (data.action === "pause") {
+            paused = true;
+            ci?.pause();
+          }
+          if (data.action === "resume") {
+            paused = false;
+            ci?.resume();
+            if (muted) ci?.mute();
+          }
+          if (data.action === "mute") {
+            muted = Boolean(data.value);
+            player?.setVolume(muted ? 0 : 0.6);
+            if (muted) ci?.mute();
+            else ci?.unmute();
+          }
+          if (data.action === "key" && Number.isInteger(data.code) && !paused)
+            ci?.sendKeyEvent(data.code, Boolean(data.pressed));
+          if (data.action === "focus")
+            document.querySelector("canvas")?.focus();
+        });
+        // Let desktop shortcuts escape the emulator without intercepting game keys.
+        addEventListener(
+          "keydown",
+          (event) => {
+            if (
+              (event.ctrlKey && event.key === "Escape") ||
+              ((event.ctrlKey || event.metaKey) &&
+                event.key.toLowerCase() === "k")
+            ) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+              notify(
+                "shortcut",
+                event.key === "Escape" ? "launcher" : "library",
+              );
+            }
+          },
+          true,
+        );
+        addEventListener("pointerdown", () => notify("focus"), true);
+        addEventListener("pagehide", () => {
+          clearTimeout(timeout);
+          player?.stop().catch(() => {});
+        });
+      })();
+    </script>
+  </body>
+</html>

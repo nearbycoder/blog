@@ -3,6 +3,7 @@ type ShellActions = {
   folder: (id: string) => void;
   arcade: () => void;
   terminal: () => void;
+  doom: () => void;
   file: (link: HTMLAnchorElement) => void;
 };
 
@@ -27,7 +28,7 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
     },
     {
       title: "Arcade",
-      description: "Memory, Bug Sweep & Easter eggs",
+      description: "Memory, Bug Sweep, DOOM & Easter eggs",
       keywords: "games play",
       action: actions.arcade,
     },
@@ -36,6 +37,12 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
       description: "Pocket shell · type help to explore",
       keywords: "console commands coffee",
       action: actions.terminal,
+    },
+    {
+      title: "DOOM",
+      description: "Shareware Episode One · id Software",
+      keywords: "doom shooter game",
+      action: actions.doom,
     },
   ];
   function closeLauncher(focus = false) {
@@ -56,11 +63,17 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
     list.replaceChildren();
     if (!query) return;
     const matches = [
-      ...applications.filter((app) =>
-        `${app.title} ${app.description} ${app.keywords}`
-          .toLowerCase()
-          .includes(query),
-      ),
+      ...applications
+        .filter((app) =>
+          `${app.title} ${app.description} ${app.keywords}`
+            .toLowerCase()
+            .includes(query),
+        )
+        .sort(
+          (a, b) =>
+            Number(b.title.toLowerCase().startsWith(query)) -
+            Number(a.title.toLowerCase().startsWith(query)),
+        ),
       ...sources
         .filter((link) =>
           link

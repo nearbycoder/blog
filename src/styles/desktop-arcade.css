@@ -285,3 +285,111 @@
     padding-bottom: 12px;
   }
 }
+
+.doom-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.doom-host {
+  margin-top: 12px;
+  background: #090d10;
+  border: 1px solid var(--desk-line);
+  aspect-ratio: 4 / 3;
+  position: relative;
+}
+.doom-host iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.doom-host[data-paused="true"]::after {
+  content: "PAUSED";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #07131ac9;
+  color: #eff3f4;
+  font: 16px var(--font-mono);
+  pointer-events: none;
+}
+.doom-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+}
+.doom-dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 38px);
+  gap: 4px;
+}
+.doom-dpad button:first-child {
+  grid-column: 2;
+}
+.doom-dpad button:nth-child(2) {
+  grid-column: 1;
+}
+.doom-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(42px, 1fr));
+  gap: 4px;
+}
+.desktop-environment .doom-controls button {
+  min-height: 36px;
+  padding: 5px 10px;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  background: var(--desk-selected);
+  color: var(--desk-ink);
+  touch-action: none;
+  user-select: none;
+}
+.doom-controls button:active {
+  filter: brightness(1.35);
+}
+.doom-credits {
+  color: var(--desk-muted);
+  font-size: 10px;
+  margin-top: 12px;
+}
+.doom-credits a {
+  text-decoration: underline;
+}
+@media (max-width: 760px) {
+  .arcade-selector {
+    flex-wrap: wrap;
+  }
+  .arcade-selector button {
+    min-width: calc(50% - 4px);
+  }
+}
+.arcade-content:has([data-arcade-panel="doom"]:not([hidden])) .arcade-intro {
+  display: none;
+}
+.arcade-content:has([data-arcade-panel="doom"]:not([hidden])) .arcade-selector {
+  margin-top: 0;
+}
+.doom-host {
+  max-height: 360px;
+}
+.doom-help {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--desk-muted);
+}
+.doom-help summary {
+  cursor: pointer;
+  color: var(--desk-ink);
+}
+@media (min-width: 761px) {
+  .doom-host {
+    max-height: 300px;
+  }
+  .arcade-window.is-maximized .doom-host {
+    max-height: calc(100dvh - 430px);
+  }
+}
