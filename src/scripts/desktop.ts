@@ -1,3 +1,5 @@
+import { mountArcade } from "./desktop-arcade";
+
 const desktop = document.querySelector<HTMLElement>("[data-desktop]");
 
 if (desktop) {
@@ -12,6 +14,7 @@ if (desktop) {
   const status = desktop.querySelector<HTMLElement>("[data-desktop-status]")!;
   const files = [...desktop.querySelectorAll<HTMLElement>("[data-file]")];
   const windows = new Map<string, HTMLElement>([["library", library]]);
+  const cleanups = new Map<string, () => void>();
   const mobile = matchMedia("(max-width: 760px)");
   let nextId = 0;
   let layer = 1;
@@ -89,6 +92,8 @@ if (desktop) {
               .querySelector(`[data-task="${win.dataset.window}"]`)
               ?.setAttribute("aria-pressed", "false");
             if (action === "close" && win !== library) {
+              cleanups.get(win.dataset.window!)?.();
+              cleanups.delete(win.dataset.window!);
               resizeObserver.unobserve(win);
               windows.delete(win.dataset.window!);
               tasks
@@ -189,6 +194,109 @@ if (desktop) {
     activate(library);
   }
 
+  function addTask(win: HTMLElement, id: string, title: string) {
+    const task = document.createElement("button");
+    task.type = "button";
+    task.dataset.task = id;
+    task.textContent = title;
+    task.title = title;
+    task.setAttribute("aria-label", `Show ${title}`);
+    task.addEventListener("click", () => activate(win, true));
+    tasks.append(task);
+    return task;
+  }
+
+  function toggleParty() {
+    const enabled = desktop!.dataset.afterHours !== "true";
+    desktop!.dataset.afterHours = String(enabled);
+    const wallpaper = desktop!.querySelector<HTMLElement>(
+      ".desktop-wallpaper-copy strong",
+    )!;
+    wallpaper.style.whiteSpace = "pre-line";
+    wallpaper.textContent = enabled
+      ? "Welcome to\nthe night shift."
+      : "Make yourself\nat home.";
+    const message = enabled
+      ? "Secret unlocked: after-hours wallpaper. Enter party again to return."
+      : "Back to the day shift. After-hours wallpaper off.";
+    announce(message);
+    return message;
+  }
+
+  function openArcade() {
+    const existing = windows.get("arcade");
+    if (existing) {
+      activate(existing, true);
+      return;
+    }
+    const template = document.getElementById(
+      "desktop-arcade-template",
+    ) as HTMLTemplateElement;
+    const win = template.content.firstElementChild!.cloneNode(
+      true,
+    ) as HTMLElement;
+    win.dataset.window = "arcade";
+    win.dataset.title = "Arcade";
+    win.style.left = "230px";
+    win.style.top = "20px";
+    windows.set("arcade", win);
+    addTask(win, "arcade", "Arcade");
+    workspace.append(win);
+    cleanups.set("arcade", mountArcade(win, toggleParty));
+    attachWindow(win);
+    constrain(win);
+    activate(win, true);
+    announce("Arcade opened. Choose Memory, Bug Sweep, or Terminal.");
+  }
+
+  // Ignore typing, games, held keys, and shortcuts: ordinary browsing stays ordinary.
+  const cheatCode = [
+    "ArrowUp",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowLeft",
+    "ArrowRight",
+    "b",
+    "a",
+  ];
+  let cheatIndex = 0,
+    lastCheatKey = 0;
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.repeat ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.altKey ||
+      (event.target as Element).closest(
+        "input, textarea, select, [contenteditable], [data-arcade]",
+      )
+    ) {
+      cheatIndex = 0;
+      return;
+    }
+    if (Date.now() - lastCheatKey > 5000) cheatIndex = 0;
+    lastCheatKey = Date.now();
+    const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+    cheatIndex =
+      key === cheatCode[cheatIndex]
+        ? cheatIndex + 1
+        : key === cheatCode[0]
+          ? 1
+          : 0;
+    if (cheatIndex === cheatCode.length) {
+      cheatIndex = 0;
+      toggleParty();
+    }
+  });
+  desktop
+    .querySelectorAll<HTMLButtonElement>("[data-open-arcade]")
+    .forEach((button) => {
+      button.addEventListener("click", openArcade);
+    });
+
   function openFile(link: HTMLAnchorElement) {
     const existing = [...windows.values()].find(
       (win) => win.dataset.source === link.pathname.replace(/\/$/, ""),
@@ -226,14 +334,7 @@ if (desktop) {
           `${action[0].toUpperCase()}${action.slice(1)} ${title}`,
         );
       });
-    const task = document.createElement("button");
-    task.type = "button";
-    task.dataset.task = id;
-    task.textContent = title;
-    task.title = title;
-    task.setAttribute("aria-label", `Show ${title}`);
-    task.addEventListener("click", () => activate(win, true));
-    tasks.append(task);
+    const task = addTask(win, id, title);
     windows.set(id, win);
     win.style.left = `${160 + ((nextId - 1) % 5) * 28}px`;
     win.style.top = `${28 + ((nextId - 1) % 5) * 28}px`;

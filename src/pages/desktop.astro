@@ -1,4 +1,6 @@
 ---
+import Arcade from "../components/desktop/Arcade.astro";
+import "../styles/desktop-arcade.css";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import DesktopIcon from "../components/desktop/DesktopIcon.astro";
 import { desktopFolders, getDesktopFiles } from "../lib/desktop";
@@ -55,10 +57,16 @@ const folderFor = (id: string) =>
               </button>
             ))
         }
+        <button type="button" data-open-arcade>
+          <span class="shortcut-art shortcut-arcade"
+            ><DesktopIcon name="game" /></span
+          ><span>Arcade</span>
+        </button>
       </nav>
       <div class="desktop-wallpaper-copy" aria-hidden="true">
         <span>A little corner of the internet.</span><strong
-          >Make yourself<br />at home.</strong>
+          >Make yourself<br />at home.</strong
+        >
       </div>
       <section
         class="desktop-window library-window is-active"
@@ -105,7 +113,8 @@ const folderFor = (id: string) =>
               placeholder="Search everything…"
               data-desktop-search
               autocomplete="off"
-            /><kbd>⌘ K</kbd></label>
+            /><kbd>⌘ K</kbd></label
+          >
         </div>
         <div class="library-body">
           <nav class="library-sidebar" aria-label="Library folders">
@@ -196,6 +205,13 @@ const folderFor = (id: string) =>
         aria-label="Open Library"
         ><DesktopIcon name="folder" /><span>Library</span></button
       >
+      <button
+        type="button"
+        class="dock-library dock-arcade"
+        data-open-arcade
+        aria-label="Open Arcade"
+        title="Open Arcade"><DesktopIcon name="game" /></button
+      >
       <span class="dock-divider" aria-hidden="true"></span>
       <div class="desktop-tasks" data-desktop-tasks></div>
       <span class="dock-hint">Your curiosity, organized.</span>
@@ -208,6 +224,7 @@ const folderFor = (id: string) =>
       </p></noscript
     >
   </div>
+  <Arcade />
   <template id="desktop-reader-template">
     <section class="desktop-window reader-window" role="region" tabindex="-1">
       <div class="window-titlebar" data-drag-handle>
@@ -233,7 +250,8 @@ const folderFor = (id: string) =>
         <span data-reader-location></span><a
           data-reader-original
           target="_blank"
-          rel="noopener">Open in a tab <DesktopIcon name="external" /></a>
+          rel="noopener">Open in a tab <DesktopIcon name="external" /></a
+        >
       </div>
       <p class="reader-loading" data-reader-loading role="status">
         Opening page… If it doesn’t load, use “Open in a tab”.

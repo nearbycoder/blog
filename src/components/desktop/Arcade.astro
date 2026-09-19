@@ -1,0 +1,184 @@
+---
+import DesktopIcon from "./DesktopIcon.astro";
+---
+
+<template id="desktop-arcade-template">
+  <section
+    class="desktop-window arcade-window"
+    role="region"
+    aria-label="Arcade window"
+    tabindex="-1"
+    data-arcade
+  >
+    <div class="window-titlebar" data-drag-handle>
+      <span class="window-title"
+        ><DesktopIcon name="game" /><strong>Arcade</strong><span
+          class="window-subtitle"
+        >
+          / just one more round</span
+        ></span
+      >
+      <div class="window-controls">
+        <button
+          type="button"
+          data-window-action="minimize"
+          aria-label="Minimize Arcade"><DesktopIcon name="minimize" /></button
+        >
+        <button
+          type="button"
+          data-window-action="maximize"
+          aria-label="Maximize Arcade"
+          aria-pressed="false"><DesktopIcon name="maximize" /></button
+        >
+        <button
+          type="button"
+          data-window-action="close"
+          aria-label="Close Arcade"><DesktopIcon name="close" /></button
+        >
+      </div>
+    </div>
+    <div class="arcade-content">
+      <header class="arcade-intro">
+        <p class="desktop-eyebrow">A perfectly good use of five minutes</p><h2>
+          Small games.<br />Big “one more try” energy.
+        </h2><p>No coins needed. Pick a distraction.</p>
+      </header>
+      <nav class="arcade-selector" aria-label="Choose an arcade activity">
+        <button
+          type="button"
+          data-arcade-select="memory"
+          aria-pressed="true"
+          aria-controls="arcade-memory"
+          ><DesktopIcon name="cards" />Memory</button
+        >
+        <button
+          type="button"
+          data-arcade-select="sweep"
+          aria-pressed="false"
+          aria-controls="arcade-sweep"
+          ><DesktopIcon name="bug" />Bug Sweep</button
+        >
+        <button
+          type="button"
+          data-arcade-select="terminal"
+          aria-pressed="false"
+          aria-controls="arcade-terminal"
+          ><DesktopIcon name="terminal" />Terminal</button
+        >
+      </nav>
+      <section
+        id="arcade-memory"
+        data-arcade-panel="memory"
+        aria-labelledby="memory-title"
+      >
+        <div class="game-heading">
+          <h3 id="memory-title">Match the syntax</h3><button
+            type="button"
+            class="arcade-button"
+            data-memory-reset>New deal</button>
+        </div>
+        <p class="game-instructions">
+          Flip two cards. Find all six pairs in as few moves as you can.
+        </p>
+        <div
+          class="memory-board"
+          data-memory-board
+          role="group"
+          aria-label="Memory cards"
+        >
+        </div>
+        <p class="game-status" data-memory-status role="status"></p>
+      </section>
+      <section
+        id="arcade-sweep"
+        data-arcade-panel="sweep"
+        aria-labelledby="sweep-title"
+        hidden
+      >
+        <div class="game-heading">
+          <h3 id="sweep-title">Ship without bugs</h3><button
+            type="button"
+            class="arcade-button"
+            data-sweep-reset>New board</button>
+        </div>
+        <p class="game-instructions">
+          Ten bugs are hiding here. Numbers count neighboring bugs. Reveal all
+          safe squares to win. Your first reveal is always safe.
+        </p>
+        <div class="sweep-tools">
+          <button
+            type="button"
+            class="arcade-button"
+            data-sweep-flag
+            aria-pressed="false"><DesktopIcon name="flag" />Flag mode</button
+          ><span data-sweep-count>0 / 10 flagged</span>
+        </div>
+        <div
+          class="sweep-board"
+          data-sweep-board
+          role="group"
+          aria-label="Bug Sweep board"
+        >
+        </div>
+        <p class="game-status" data-sweep-status role="status">
+          Pick a square to begin.
+        </p>
+        <p class="game-instructions">
+          Use arrow keys to move and Enter to play. Turn on Flag mode to mark a
+          square, or right-click it.
+        </p>
+      </section>
+      <section
+        id="arcade-terminal"
+        data-arcade-panel="terminal"
+        aria-labelledby="terminal-title"
+        hidden
+      >
+        <div class="game-heading">
+          <h3 id="terminal-title">Pocket terminal</h3><span
+            class="terminal-badge">guest session</span>
+        </div>
+        <p class="game-instructions">
+          A few commands. A few secrets. Start with <code>help</code>.
+        </p>
+        <div class="pocket-terminal">
+          <div
+            class="terminal-output"
+            role="log"
+            aria-label="Terminal output"
+            aria-live="polite"
+            tabindex="0"
+            data-terminal-output
+          >
+          </div>
+          <form data-terminal-form>
+            <label for="arcade-command"
+              ><span aria-hidden="true">~ $</span><span class="sr-only"
+                >Terminal command</span
+              ></label
+            ><input
+              id="arcade-command"
+              name="command"
+              maxlength="120"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              placeholder="help"
+            /><button type="submit">Run</button>
+          </form>
+        </div>
+        <details class="arcade-secrets">
+          <summary>A small hint, if you’re curious</summary><p>
+            Try <code>sudo make coffee</code> or <code>cat README.txt</code>.
+            For a change of scenery, enter <code>party</code>. On the desktop,
+            the old ↑ ↑ ↓ ↓ ← → ← → B A code works too.
+          </p>
+        </details>
+      </section>
+    </div>
+    <footer class="library-status">
+      <span>Local games. Zero stakes.</span><span
+        >Take a break. You’ve earned it.</span>
+    </footer>
+  </section>
+</template>
