@@ -106,6 +106,14 @@ Click a file to read the original interactive page in a window. Drag a title bar
 
 Windows last for the current visit; refreshing resets the workspace. Only the existing theme preference is saved. Without JavaScript, the Library still provides ordinary links to every indexed page. Run `npx playwright test tests/desktop.spec.ts` after a build for the desktop interaction and accessibility checks.
 
+### Arcade and desktop secrets
+
+Open **Arcade** from the desktop shortcut or the gamepad in the dock. **Memory** has six pairs, a move counter, and a fresh-deal button. **Bug Sweep** is an 8×8 board with ten bugs, a safe first reveal, flood clearing, and flags via right-click or the touch-friendly Flag mode. Arrow keys move between squares; Enter plays. Games retain their state when minimized or switched, and reset when the Arcade window closes or the page reloads.
+
+The **Terminal** is a pretend shell: it never runs system commands or sends input anywhere. Try `help`, `sudo make coffee`, `cat README.txt`, `42`, or `party`. The last command toggles the after-hours wallpaper. The classic **↑ ↑ ↓ ↓ ← → ← → B A** sequence also toggles it on the desktop, outside inputs and games. The terminal’s expandable hint makes the surprises available to touch and assistive-technology users too. No sound, flashing effects, or background game loops are used.
+
+Run `npx playwright test tests/desktop-arcade.spec.ts tests/desktop.spec.ts` after a build to check game rules, complete Memory play, restart/minimize behavior, the secrets, keyboard controls, and both-theme mobile accessibility.
+
 ### Content
 
 - `easyaccessqr-com` is placed last in the projects archive, preserving the existing archive order.
