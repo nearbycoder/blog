@@ -244,13 +244,15 @@ if (desktop) {
     return message;
   }
 
-  function openArcade(activity?: "terminal") {
+  function openArcade(activity?: "terminal" | "doom") {
     const existing = windows.get("arcade");
     if (existing) {
       activate(existing, true);
       if (activity)
         existing
-          .querySelector<HTMLButtonElement>('[data-arcade-select="terminal"]')!
+          .querySelector<HTMLButtonElement>(
+            `[data-arcade-select="${activity}"]`,
+          )!
           .click();
       return;
     }
@@ -269,13 +271,25 @@ if (desktop) {
     workspace.append(win);
     cleanups.set("arcade", mountArcade(win, toggleParty));
     attachWindow(win);
+    win.addEventListener("desktop-game-focus", () => {
+      shell.closePopups();
+      activate(win);
+    });
+    win.addEventListener("desktop-game-shortcut", (event) => {
+      if ((event as CustomEvent).detail === "launcher") shell.toggleLauncher();
+      else {
+        shell.closePopups();
+        activate(library);
+        search.focus();
+      }
+    });
     constrain(win);
     activate(win, true);
     if (activity)
       win
-        .querySelector<HTMLButtonElement>('[data-arcade-select="terminal"]')!
+        .querySelector<HTMLButtonElement>(`[data-arcade-select="${activity}"]`)!
         .click();
-    announce("Arcade opened. Choose Memory, Bug Sweep, or Terminal.");
+    announce("Arcade opened. Choose Memory, Bug Sweep, DOOM, or Terminal.");
   }
 
   // Ignore typing, games, held keys, and shortcuts: ordinary browsing stays ordinary.
@@ -480,6 +494,7 @@ if (desktop) {
     },
     arcade: () => openArcade(),
     terminal: () => openArcade("terminal"),
+    doom: () => openArcade("doom"),
     file: openFile,
   });
   showDesktopButton.addEventListener("click", () => {

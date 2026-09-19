@@ -1,3 +1,4 @@
+import { mountDoom } from "./desktop-doom";
 import {
   flagCell,
   newSweep,
@@ -13,6 +14,7 @@ export function mountArcade(
 ): () => void {
   const controller = new AbortController();
   const events = { signal: controller.signal };
+  const disposeDoom = mountDoom(root, events);
   const find = <T extends HTMLElement = HTMLElement>(selector: string) =>
     root.querySelector<T>(selector)!;
   root
@@ -308,7 +310,7 @@ export function mountArcade(
           break;
         case "ls":
           response =
-            "memory.game   bug-sweep.game   README.txt\nOpen games with the buttons above.";
+            "memory.game   bug-sweep.game   doom.exe   README.txt\nOpen games with the buttons above.";
           break;
         case "whoami":
           response =
@@ -342,6 +344,7 @@ export function mountArcade(
     events,
   );
   return () => {
+    disposeDoom();
     clearTimeout(mismatch);
     controller.abort();
   };
