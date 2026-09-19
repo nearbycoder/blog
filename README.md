@@ -15,6 +15,7 @@ Personal site for Josh Hamilton (`nearbycoder`) built with Astro. The app combin
 - Article topic filters, heading navigation, related stories, and copy-link sharing
 - Mobile navigation and an accessible search dialog, including layoff entries
 - Optimized WebP cover images and a custom 404 page
+- Experimental `/desktop` workspace with searchable content folders, movable and resizable reading windows, and a dock
 
 ## Stack
 
@@ -71,12 +72,12 @@ The dev server runs on `0.0.0.0:4321`.
 
 ## Commands
 
-| Command | Action |
-| :-- | :-- |
-| `npm run dev` | Start the local Astro dev server |
-| `npm run build` | Build the production site |
-| `npm run preview` | Preview the production build locally |
-| `npm run astro -- --help` | Run Astro CLI commands |
+| Command                   | Action                               |
+| :------------------------ | :----------------------------------- |
+| `npm run dev`             | Start the local Astro dev server     |
+| `npm run build`           | Build the production site            |
+| `npm run preview`         | Preview the production build locally |
+| `npm run astro -- --help` | Run Astro CLI commands               |
 
 ## Project structure
 
@@ -96,6 +97,16 @@ The dev server runs on `0.0.0.0:4321`.
 ```
 
 ## Notes
+
+### Experimental desktop
+
+Visit `/desktop` (also linked in the footer and command palette) to browse the same published content as a desktop. The Library indexes articles, projects, layoff logs, postmortems, labs, reading paths, topics, technologies, and site pages at build time. It follows the existing draft and scheduled-publication rules; article and project bodies are searchable too.
+
+Click a file to read the original interactive page in a window. Drag a title bar to move, drag a lower corner to resize, or use the minimize, maximize, and close controls. The dock restores open pages, `Cmd/Ctrl + K` focuses Library search, and **Arrange windows** recovers the layout. On phones, the dock switches between full-width windows. **Open in a tab** and **Back to blog** provide ordinary browsing at any time.
+
+Windows last for the current visit; refreshing resets the workspace. Only the existing theme preference is saved. Without JavaScript, the Library still provides ordinary links to every indexed page. Run `npx playwright test tests/desktop.spec.ts` after a build for the desktop interaction and accessibility checks.
+
+### Content
 
 - `easyaccessqr-com` is placed last in the projects archive, preserving the existing archive order.
 - The articles page has its own client-side search input in addition to the global command palette.

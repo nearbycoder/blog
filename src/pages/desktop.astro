@@ -1,0 +1,247 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import DesktopIcon from "../components/desktop/DesktopIcon.astro";
+import { desktopFolders, getDesktopFiles } from "../lib/desktop";
+import "../styles/desktop.css";
+const files = await getDesktopFiles();
+const folderFor = (id: string) =>
+  desktopFolders.find((folder) => folder.id === id)!;
+---
+
+<BaseLayout
+  desktop
+  title="Desktop"
+  description="An experimental desktop for exploring Josh Hamilton’s writing, projects, and experiments."
+>
+  <div class="desktop-environment" data-desktop>
+    <header class="desktop-menubar">
+      <a href="/" class="desktop-brand" aria-label="Nearbycoder home"
+        ><DesktopIcon name="desktop" /><strong>nearbycoder</strong></a
+      >
+      <span class="desktop-mode">Desktop <span>experimental</span></span>
+      <div class="desktop-menu-actions">
+        <button
+          type="button"
+          data-desktop-reset
+          title="Arrange windows"
+          aria-label="Arrange windows"><DesktopIcon name="reset" /></button
+        >
+        <button
+          type="button"
+          data-desktop-theme
+          title="Toggle color theme"
+          aria-label="Toggle color theme"><DesktopIcon name="moon" /></button
+        >
+        <a href="/" class="desktop-exit"
+          >Back to blog <DesktopIcon name="external" /></a
+        >
+      </div>
+    </header>
+    <div class="desktop-workspace" data-workspace>
+      <nav class="desktop-shortcuts" aria-label="Desktop shortcuts">
+        {
+          desktopFolders
+            .filter((folder) =>
+              ["articles", "projects", "lab", "pages"].includes(folder.id),
+            )
+            .map((folder) => (
+              <button type="button" data-open-folder={folder.id}>
+                <span class:list={["shortcut-art", `shortcut-${folder.id}`]}>
+                  <DesktopIcon name={folder.icon} />
+                </span>
+                <span>
+                  {folder.id === "pages" ? "About & more" : folder.label}
+                </span>
+              </button>
+            ))
+        }
+      </nav>
+      <div class="desktop-wallpaper-copy" aria-hidden="true">
+        <span>A little corner of the internet.</span><strong
+          >Make yourself<br />at home.</strong>
+      </div>
+      <section
+        class="desktop-window library-window is-active"
+        data-window="library"
+        role="region"
+        aria-label="Library window"
+        tabindex="-1"
+      >
+        <div class="window-titlebar" data-drag-handle>
+          <span class="window-title"
+            ><DesktopIcon name="folder" /><strong>Library</strong><span
+              class="window-subtitle"
+            >
+              / nearbycoder</span
+            ></span
+          >
+          <div class="window-controls">
+            <button
+              type="button"
+              data-window-action="minimize"
+              aria-label="Minimize Library"
+              ><DesktopIcon name="minimize" /></button
+            >
+            <button
+              type="button"
+              data-window-action="maximize"
+              aria-label="Maximize Library"
+              aria-pressed="false"><DesktopIcon name="maximize" /></button
+            >
+            <button
+              type="button"
+              data-window-action="close"
+              aria-label="Close Library"><DesktopIcon name="close" /></button
+            >
+          </div>
+        </div>
+        <div class="library-toolbar">
+          <span class="library-location">Josh’s corner of the web</span><label
+            class="desktop-search"
+            ><DesktopIcon name="search" /><span class="sr-only"
+              >Search desktop files</span
+            ><input
+              type="search"
+              placeholder="Search everything…"
+              data-desktop-search
+              autocomplete="off"
+            /><kbd>⌘ K</kbd></label>
+        </div>
+        <div class="library-body">
+          <nav class="library-sidebar" aria-label="Library folders">
+            <p>Library</p>
+            {
+              desktopFolders.map((folder) => (
+                <button
+                  type="button"
+                  data-folder={folder.id}
+                  aria-pressed={folder.id === "all"}
+                >
+                  <>
+                    <DesktopIcon name={folder.icon} />
+                    <span>{folder.label}</span>
+                    <small>
+                      {folder.id === "all"
+                        ? files.length
+                        : files.filter((file) => file.folder === folder.id)
+                            .length}
+                    </small>
+                  </>
+                </button>
+              ))
+            }
+            <div class="library-sidebar-note">
+              Built things.<br />Learned things.<br />Wrote them down.
+            </div>
+          </nav>
+          <div class="library-content">
+            <div class="library-intro">
+              <p class="desktop-eyebrow">
+                Same blog. Different perspective.
+              </p><h1 data-folder-title>All files</h1><p>
+                Open something interesting. Stay a while.
+              </p>
+            </div>
+            <div class="file-list-head" aria-hidden="true">
+              <span>Name</span><span>Kind</span>
+            </div>
+            <ul class="desktop-files">
+              {
+                files.map((file) => (
+                  <li
+                    data-file
+                    data-file-folder={file.folder}
+                    data-file-search={`${file.title} ${file.description} ${file.keywords}`.toLowerCase()}
+                  >
+                    <a
+                      href={file.url}
+                      data-desktop-file
+                      data-file-title={file.title}
+                    >
+                      <span
+                        class:list={["file-icon", `file-icon-${file.folder}`]}
+                      >
+                        <DesktopIcon name={folderFor(file.folder).icon} />
+                      </span>
+                      <span class="file-copy">
+                        <>
+                          <strong>{file.title}</strong>
+                          <span>{file.description}</span>
+                        </>
+                      </span>
+                      <span class="file-kind">{file.kind}</span>
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+            <div class="desktop-empty" data-desktop-empty hidden>
+              <DesktopIcon name="search" /><h2>No files found</h2><p>
+                Try another phrase or choose All files.
+              </p><button type="button" data-clear-search>Clear search</button>
+            </div>
+          </div>
+        </div>
+        <footer class="library-status">
+          <span data-file-count aria-live="polite">{files.length} files</span
+          ><span>Click to open · Drag a title bar to move</span>
+        </footer>
+      </section>
+    </div>
+    <nav class="desktop-dock" aria-label="Open windows">
+      <button
+        type="button"
+        class="dock-library"
+        data-show-library
+        aria-label="Open Library"
+        ><DesktopIcon name="folder" /><span>Library</span></button
+      >
+      <span class="dock-divider" aria-hidden="true"></span>
+      <div class="desktop-tasks" data-desktop-tasks></div>
+      <span class="dock-hint">Your curiosity, organized.</span>
+    </nav>
+    <p class="sr-only" role="status" data-desktop-status></p>
+    <noscript
+      ><p class="desktop-noscript">
+        Enable JavaScript to move windows and search. All file links still open
+        normally, or <a href="/">return to the blog</a>.
+      </p></noscript
+    >
+  </div>
+  <template id="desktop-reader-template">
+    <section class="desktop-window reader-window" role="region" tabindex="-1">
+      <div class="window-titlebar" data-drag-handle>
+        <span class="window-title"
+          ><DesktopIcon name="writing" /><strong data-reader-title
+          ></strong></span
+        >
+        <div class="window-controls">
+          <button type="button" data-window-action="minimize"
+            ><DesktopIcon name="minimize" /></button
+          >
+          <button
+            type="button"
+            data-window-action="maximize"
+            aria-pressed="false"><DesktopIcon name="maximize" /></button
+          >
+          <button type="button" data-window-action="close"
+            ><DesktopIcon name="close" /></button
+          >
+        </div>
+      </div>
+      <div class="reader-toolbar">
+        <span data-reader-location></span><a
+          data-reader-original
+          target="_blank"
+          rel="noopener">Open in a tab <DesktopIcon name="external" /></a>
+      </div>
+      <p class="reader-loading" data-reader-loading role="status">
+        Opening page… If it doesn’t load, use “Open in a tab”.
+      </p>
+      <iframe data-desktop-reader></iframe>
+    </section>
+  </template>
+</BaseLayout>
+<script>
+  import "../scripts/desktop";
+</script>

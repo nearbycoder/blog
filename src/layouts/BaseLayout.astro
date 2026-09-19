@@ -15,6 +15,7 @@ import {
 import { getImagePath } from "astro-opengraph-images";
 
 const { title, description, handle } = site;
+const desktop = Astro.props.desktop ?? false;
 const pageTitle = Astro.props.title
   ? `${Astro.props.title} · Josh Hamilton`
   : "Josh Hamilton · Nearbycoder";
@@ -139,6 +140,11 @@ const searchItems = [
     <script is:inline>
       (() => {
         try {
+          if (window.frameElement?.hasAttribute("data-desktop-reader")) {
+            document.documentElement.dataset.desktopReader = "true";
+          }
+        } catch {}
+        try {
           const stored = localStorage.getItem("theme-preference");
           const theme =
             stored === "light" || stored === "dark" || stored === "system"
@@ -187,13 +193,28 @@ const searchItems = [
       src="https://tic.nrby.xyz/js/script.js"></script>
     <title>{pageTitle}</title>
   </head>
-  <body class="flex flex-col">
+  <body class:list={["flex flex-col", { "desktop-shell": desktop }]}>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <SiteHeader />
-    <main id="main-content" class="site-container site-main" tabindex="-1">
+    {!desktop && <SiteHeader />}
+    <main
+      id="main-content"
+      class={desktop ? "desktop-main" : "site-container site-main"}
+      tabindex="-1"
+    >
       <slot />
     </main>
-    <SiteFooter />
-    <CommandPalette items={searchItems} /><KeyboardHelp />
+    {!desktop && <SiteFooter />}
+    {!desktop && <CommandPalette items={searchItems} />}
+    {!desktop && <KeyboardHelp />}
   </body>
 </html>
+
+<style is:global>
+  html[data-desktop-reader] .site-header,
+  html[data-desktop-reader] .site-footer {
+    display: none;
+  }
+  html[data-desktop-reader] .site-main {
+    padding-top: 28px;
+  }
+</style>
