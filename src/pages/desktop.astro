@@ -1,4 +1,6 @@
 ---
+import Ghostty from "../components/desktop/Ghostty.astro";
+import "../styles/desktop-ghostty.css";
 import Arcade from "../components/desktop/Arcade.astro";
 import "../styles/desktop-arcade.css";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -41,6 +43,11 @@ const folderFor = (id: string) =>
           <span class="shortcut-art shortcut-arcade"
             ><DesktopIcon name="game" /></span
           ><span>Arcade</span>
+        </button>
+        <button type="button" data-open-ghostty>
+          <span class="shortcut-art shortcut-ghostty"
+            ><DesktopIcon name="terminal" /></span
+          ><span>Ghostty</span>
         </button>
       </nav>
       <div class="desktop-wallpaper-copy" aria-hidden="true">
@@ -374,6 +381,7 @@ const folderFor = (id: string) =>
     >
   </div>
   <Arcade />
+  <Ghostty />
   <template id="desktop-reader-template">
     <section class="desktop-window reader-window" role="region" tabindex="-1">
       <div class="window-titlebar" data-drag-handle>

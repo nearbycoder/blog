@@ -21,6 +21,7 @@
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.7",
     "astro-opengraph-images": "^1.14.3",
+    "ghostty-web": "0.4.0",
     "react": "^19.2.5",
     "resend": "^6.26.0",
     "sharp": "^0.35.4",

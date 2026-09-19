@@ -144,3 +144,7 @@ Open **Arcade → DOOM → Play DOOM**, or search **DOOM** in the desktop launch
 Arrow keys move/turn, Ctrl fires, Space opens doors, Shift runs, 1–7 select weapons, and Escape opens the game menu. On-screen buttons support touch controls. Sound starts muted and can be enabled with **Sound on**. Switching activities, minimizing, switching windows, or hiding the browser tab pauses the game; **Resume** continues. **Stop game**, closing Arcade, or reloading discards the game session and releases the emulator. In-game saves are limited to that session.
 
 Source, credits, release checksum, and reproduction notes are in [`public/games/doom/README.txt`](public/games/doom/README.txt). Existing desktop tests cover lazy loading, retries, controls, and lifecycle through a stubbed emulator; actual emulator boot and gameplay are also checked manually in-browser before release.
+
+### Connected Ghostty terminal
+
+Open **Ghostty** from the `/desktop` shortcut or launcher search for a real terminal with tabs and split panes. It connects over authenticated WebSockets to the included shell/SSH bridge; its engine and WASM load only when opened. Each pane has independent input, output, and sizing. Tokens stay in memory, and closing ends connections. A production endpoint must be configured before connecting to your own server. See [terminal setup and verification](docs/desktop-terminal.md).
