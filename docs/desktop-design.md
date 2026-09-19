@@ -41,6 +41,8 @@ Only the active wallpaper is requested by the desktop's CSS. Both assets stay ou
 
 ## Window snapping
 
-Drag a title bar to the left or right edge for a half-screen window, a corner for a quarter-screen window, or the top edge to maximize. An emerald preview shows the exact release bounds. Drag a snapped/maximized window away to restore its floating size. Escape or a canceled pointer gesture restores the starting layout; minimizing keeps the chosen layout and Arrange windows clears it.
+Drag a title bar until the pane touches the left or right desktop boundary for a half-screen window, two boundaries at a corner for a quarter-screen window, or only the top boundary to maximize. Contact is measured from the pane’s edges, not the cursor, with a 4px tolerance around the desktop’s 8px gutter. An emerald preview shows the exact release bounds, labeled ½, ¼, or Full screen. Drag a snapped/maximized window away to restore its floating size. Escape or a canceled pointer gesture restores the starting layout; minimizing keeps the chosen layout and Arrange windows clears it.
+
+Every window can be resized from all four edges and four corners. Resizing a snapped pane detaches it at its current size, keeps the opposite edge fixed, and respects minimum sizes and workspace bounds. Escape, pointer cancellation, or loss of focus restores the original geometry and snap state. Resize handles are hidden on phones.
 
 Ctrl+Alt+Left/Right snaps the active window to a half, Up maximizes, and Down restores. Connected terminal input retains its own keyboard events. Layouts resize with the workspace; narrow Library and Arcade windows adapt their controls. Phones keep their full-screen app switching behavior, and returning to a desktop-sized viewport restores the chosen layout.

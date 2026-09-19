@@ -79,7 +79,7 @@ test("Browser Ghostty runs real independent shells, creates files, resizes and c
       .boundingBox();
     await page.mouse.move(bar.x + 120, bar.y + 20);
     await page.mouse.down();
-    await page.mouse.move(1438, 400, { steps: 8 });
+    await page.mouse.move(1438, 150, { steps: 8 });
     await page.mouse.up();
     await expect(page.locator("[data-ghostty]")).toHaveAttribute(
       "data-snap",
@@ -96,6 +96,29 @@ test("Browser Ghostty runs real independent shells, creates files, resizes and c
     );
     // Narrow windows stack panes, so columns can grow even as the window shrinks.
     assert.ok(resizedColumns > 0 && resizedColumns !== priorColumns);
+    assert.equal(bridge.sessionCount(), 2);
+
+    const beforeResize = await canvas.getAttribute("width");
+    const grip = await page
+      .locator('[data-ghostty] [data-resize="w"]')
+      .boundingBox();
+    await page.mouse.move(grip.x + 3, grip.y + 60);
+    await page.mouse.down();
+    await page.mouse.move(grip.x + 103, grip.y + 60, { steps: 8 });
+    await page.mouse.up();
+    await expect(page.locator("[data-ghostty]")).not.toHaveAttribute(
+      "data-snap",
+    );
+    await expect
+      .poll(() => canvas.getAttribute("width"))
+      .not.toBe(beforeResize);
+    await command(panes.nth(1), "printf 'DRAG_SIZE '; stty size");
+    await expect(panes.nth(1).locator("pre")).toContainText(
+      /DRAG_SIZE \d+ \d+/,
+    );
+    const dragOutput = await panes.nth(1).locator("pre").textContent();
+    const dragColumns = Number(dragOutput.match(/DRAG_SIZE (\d+) (\d+)/)?.[2]);
+    assert.ok(dragColumns > 0 && dragColumns !== resizedColumns);
     assert.equal(bridge.sessionCount(), 2);
 
     await command(
