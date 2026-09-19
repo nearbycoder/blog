@@ -3,6 +3,7 @@ type ShellActions = {
   folder: (id: string) => void;
   arcade: () => void;
   terminal: () => void;
+  ghostty: () => void;
   doom: () => void;
   game: (activity: "snake" | "pong" | "puzzle") => void;
   file: (link: HTMLAnchorElement) => void;
@@ -32,6 +33,12 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
       description: "Six games & a pocket terminal",
       keywords: "games play",
       action: actions.arcade,
+    },
+    {
+      title: "Ghostty",
+      description: "Connected terminal · tabs & split panes",
+      keywords: "ghosty ssh terminal multiplexer shell remote",
+      action: actions.ghostty,
     },
     {
       title: "Terminal",

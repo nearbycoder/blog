@@ -1,0 +1,21 @@
+{
+  "name": "nearby-desktop-terminal",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test server.test.mjs",
+    "test:browser": "node --test browser.test.mjs"
+  },
+  "dependencies": {
+    "node-pty": "1.1.0",
+    "ws": "8.21.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "allowScripts": {
+    "node-pty@1.1.0": true
+  }
+}

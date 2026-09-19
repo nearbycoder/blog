@@ -1,0 +1,8 @@
+{
+  "shell": {
+    "command": "/bin/bash",
+    "args": ["--noprofile", "--norc"],
+    "cwd": "/home/node",
+    "home": "/home/node"
+  }
+}

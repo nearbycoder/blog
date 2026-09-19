@@ -1,0 +1,44 @@
+---
+import DesktopIcon from "./DesktopIcon.astro";
+---
+
+<template id="desktop-ghostty-template">
+  <section
+    class="desktop-window ghostty-window"
+    role="region"
+    aria-label="Ghostty window"
+    tabindex="-1"
+    data-ghostty
+  >
+    <div class="window-titlebar" data-drag-handle>
+      <span class="window-title"
+        ><DesktopIcon name="terminal" /><strong>Ghostty</strong><span
+          class="window-subtitle"
+        >
+          / connections</span
+        ></span
+      >
+      <div class="window-controls">
+        <button
+          type="button"
+          data-window-action="minimize"
+          aria-label="Minimize Ghostty"><DesktopIcon name="minimize" /></button
+        >
+        <button
+          type="button"
+          data-window-action="maximize"
+          aria-label="Maximize Ghostty"
+          aria-pressed="false"><DesktopIcon name="maximize" /></button
+        >
+        <button
+          type="button"
+          data-window-action="close"
+          aria-label="Close Ghostty"><DesktopIcon name="close" /></button
+        >
+      </div>
+    </div>
+    <div class="ghostty-content" data-ghostty-content>
+      <p class="ghostty-status" role="status">Opening Ghostty…</p>
+    </div>
+  </section>
+</template>

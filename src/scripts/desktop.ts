@@ -244,6 +244,56 @@ if (desktop) {
     return message;
   }
 
+  function openGhostty() {
+    const existing = windows.get("ghostty");
+    if (existing) {
+      activate(existing, true);
+      return;
+    }
+    const template = document.getElementById(
+      "desktop-ghostty-template",
+    ) as HTMLTemplateElement;
+    const win = template.content.firstElementChild!.cloneNode(
+      true,
+    ) as HTMLElement;
+    win.dataset.window = "ghostty";
+    win.dataset.title = "Ghostty";
+    win.style.left = "110px";
+    win.style.top = "25px";
+    windows.set("ghostty", win);
+    addTask(win, "ghostty", "Ghostty");
+    workspace.append(win);
+    attachWindow(win);
+    constrain(win);
+    activate(win, true);
+    let disposed = false;
+    let dispose: (() => void) | undefined;
+    cleanups.set("ghostty", () => {
+      disposed = true;
+      dispose?.();
+    });
+    import("./desktop-ghostty")
+      .then(async ({ mountGhostty }) => {
+        if (disposed) return;
+        // Closing while WASM is loading must never create a late terminal.
+        dispose = await mountGhostty(win);
+        if (disposed) dispose();
+      })
+      .catch(() => {
+        if (disposed) return;
+        const status = win.querySelector<HTMLElement>("[role=status]")!;
+        status.textContent = "Ghostty couldn’t load. ";
+        const reload = document.createElement("a");
+        reload.href = location.href;
+        reload.textContent = "Reload the desktop to try again.";
+        status.append(reload);
+      });
+    announce("Ghostty opened.");
+  }
+  desktop
+    .querySelectorAll("[data-open-ghostty]")
+    .forEach((button) => button.addEventListener("click", openGhostty));
+
   function openArcade(activity?: ArcadeActivity) {
     const existing = windows.get("arcade");
     if (existing) {
@@ -508,6 +558,8 @@ if (desktop) {
       shell.toggleLauncher();
       return;
     }
+    // Connected shells own their editing shortcuts, including Ctrl+K.
+    if ((event.target as Element | null)?.closest?.(".ghostty-surface")) return;
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
       event.preventDefault();
       event.stopImmediatePropagation();
@@ -529,6 +581,7 @@ if (desktop) {
     },
     arcade: () => openArcade(),
     terminal: () => openArcade("terminal"),
+    ghostty: openGhostty,
     doom: () => openArcade("doom"),
     game: (activity) => openArcade(activity),
     file: openFile,
