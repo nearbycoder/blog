@@ -4,6 +4,7 @@ type ShellActions = {
   arcade: () => void;
   terminal: () => void;
   doom: () => void;
+  game: (activity: "snake" | "pong" | "puzzle") => void;
   file: (link: HTMLAnchorElement) => void;
 };
 
@@ -28,7 +29,7 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
     },
     {
       title: "Arcade",
-      description: "Memory, Bug Sweep, DOOM & Easter eggs",
+      description: "Six games & a pocket terminal",
       keywords: "games play",
       action: actions.arcade,
     },
@@ -44,6 +45,18 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
       keywords: "doom shooter game",
       action: actions.doom,
     },
+    ...(
+      [
+        ["snake", "Snake", "Eat, grow, avoid your tail"],
+        ["pong", "Pong", "You versus the computer · first to seven"],
+        ["puzzle", "15 Puzzle", "Slide fifteen tiles into order"],
+      ] as const
+    ).map(([id, title, description]) => ({
+      title,
+      description,
+      keywords: "classic games play arcade",
+      action: () => actions.game(id),
+    })),
   ];
   function closeLauncher(focus = false) {
     launcher.hidden = true;

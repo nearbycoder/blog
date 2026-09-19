@@ -1,5 +1,5 @@
 import { mountDesktopShell } from "./desktop-shell";
-import { mountArcade } from "./desktop-arcade";
+import type { ArcadeActivity } from "./desktop-arcade";
 
 const desktop = document.querySelector<HTMLElement>("[data-desktop]");
 
@@ -244,10 +244,11 @@ if (desktop) {
     return message;
   }
 
-  function openArcade(activity?: "terminal" | "doom") {
+  function openArcade(activity?: ArcadeActivity) {
     const existing = windows.get("arcade");
     if (existing) {
       activate(existing, true);
+      if (activity) existing.dataset.arcadeActivity = activity;
       if (activity)
         existing
           .querySelector<HTMLButtonElement>(
@@ -269,7 +270,41 @@ if (desktop) {
     windows.set("arcade", win);
     addTask(win, "arcade", "Arcade");
     workspace.append(win);
-    cleanups.set("arcade", mountArcade(win, toggleParty));
+    win.dataset.arcadeActivity = activity ?? "memory";
+    const content = win.querySelector<HTMLElement>(".arcade-content")!;
+    content.inert = true;
+    const loading = document.createElement("p");
+    loading.className = "game-status arcade-loading";
+    loading.setAttribute("role", "status");
+    loading.textContent = "Opening Arcade…";
+    content.before(loading);
+    let disposed = false;
+    let disposeArcade: (() => void) | undefined;
+    cleanups.set("arcade", () => {
+      disposed = true;
+      disposeArcade?.();
+    });
+    // Only /desktop imports this entry; game code is fetched on demand.
+    import("./desktop-arcade")
+      .then(({ mountArcade }) => {
+        if (disposed) return;
+        disposeArcade = mountArcade(win, toggleParty);
+        content.inert = false;
+        loading.remove();
+        win
+          .querySelector<HTMLButtonElement>(
+            `[data-arcade-select="${win.dataset.arcadeActivity}"]`,
+          )!
+          .click();
+      })
+      .catch(() => {
+        if (disposed) return;
+        loading.textContent = "Arcade couldn’t load. ";
+        const reload = document.createElement("a");
+        reload.href = location.href;
+        reload.textContent = "Reload the desktop to try again.";
+        loading.append(reload);
+      });
     attachWindow(win);
     win.addEventListener("desktop-game-focus", () => {
       shell.closePopups();
@@ -289,7 +324,7 @@ if (desktop) {
       win
         .querySelector<HTMLButtonElement>(`[data-arcade-select="${activity}"]`)!
         .click();
-    announce("Arcade opened. Choose Memory, Bug Sweep, DOOM, or Terminal.");
+    announce("Arcade opened. Choose a game or explore Terminal.");
   }
 
   // Ignore typing, games, held keys, and shortcuts: ordinary browsing stays ordinary.
@@ -495,6 +530,7 @@ if (desktop) {
     arcade: () => openArcade(),
     terminal: () => openArcade("terminal"),
     doom: () => openArcade("doom"),
+    game: (activity) => openArcade(activity),
     file: openFile,
   });
   showDesktopButton.addEventListener("click", () => {

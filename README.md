@@ -112,9 +112,13 @@ Windows last for the current visit; refreshing resets the workspace. Only the ex
 
 Open **Arcade** from the desktop shortcut or the gamepad in the dock. **Memory** has six pairs, a move counter, and a fresh-deal button. **Bug Sweep** is an 8×8 board with ten bugs, a safe first reveal, flood clearing, and flags via right-click or the touch-friendly Flag mode. Arrow keys move between squares; Enter plays. Games retain their state when minimized or switched, and reset when the Arcade window closes or the page reloads.
 
+**Snake**, **Pong**, and **15 Puzzle** are also available in Arcade and launcher search. Snake uses arrow keys or direction buttons; Pong uses up/down keys or held buttons and ends at seven points. Start explicitly, use Space or Pause to pause, and choose New game to reset. Both pause when their activity or window becomes hidden/inactive, the tab is hidden, or the browser loses focus. The sliding puzzle supports tap/click, arrow keys to move the gap, undo, and solvable shuffled deals. These three games run locally without downloads from external services.
+
+Loading stays inside `/desktop`: its route script dynamically imports Arcade when the window opens, then imports Snake, Pong, 15 Puzzle, or the DOOM player only when selected. DOOM's emulator and shareware still wait for Play. Keep game imports out of shared layouts and site-wide scripts. `tests/desktop-classics.spec.ts` checks all built regular pages, browser network requests, loading failures/races, game rules, controls, and mobile accessibility. Game CSS belongs to the desktop route too.
+
 The **Terminal** is a pretend shell: it never runs system commands or sends input anywhere. Try `help`, `sudo make coffee`, `cat README.txt`, `42`, or `party`. The last command toggles the after-hours wallpaper. The classic **↑ ↑ ↓ ↓ ← → ← → B A** sequence also toggles it on the desktop, outside inputs and games. The terminal’s expandable hint makes the surprises available to touch and assistive-technology users too. Memory, Bug Sweep, and the terminal secrets use no sound, flashing effects, or background game loops.
 
-Run `npx playwright test tests/desktop-arcade.spec.ts tests/desktop.spec.ts` after a build to check game rules, complete Memory play, restart/minimize behavior, the secrets, keyboard controls, and both-theme mobile accessibility.
+Run `npx playwright test tests/desktop-arcade.spec.ts tests/desktop-classics.spec.ts tests/desktop-doom.spec.ts tests/desktop.spec.ts` after a build to check game rules, complete Memory play, restart/minimize behavior, the secrets, keyboard controls, and both-theme mobile accessibility.
 
 ### Content
 

@@ -1,4 +1,3 @@
-import { mountDoom } from "./desktop-doom";
 import {
   flagCell,
   newSweep,
@@ -8,13 +7,53 @@ import {
   SWEEP_SIZE,
 } from "../lib/desktop-games";
 
+export type ArcadeActivity =
+  "memory" | "sweep" | "doom" | "snake" | "pong" | "puzzle" | "terminal";
+
 export function mountArcade(
   root: HTMLElement,
   party: () => string,
 ): () => void {
   const controller = new AbortController();
   const events = { signal: controller.signal };
-  const disposeDoom = mountDoom(root, events);
+  const disposers: (() => void)[] = [];
+  const loaded = new Set<string>();
+  const loaders = {
+    doom: async () => (await import("./desktop-doom")).mountDoom,
+    snake: async () => (await import("./desktop-snake")).mountGame,
+    pong: async () => (await import("./desktop-pong")).mountGame,
+    puzzle: async () => (await import("./desktop-puzzle")).mountGame,
+  };
+  async function loadGame(id: keyof typeof loaders) {
+    if (loaded.has(id)) return;
+    loaded.add(id);
+    const panel = root.querySelector<HTMLElement>(
+      `[data-arcade-panel="${id}"]`,
+    )!;
+    panel.inert = true;
+    panel.setAttribute("aria-busy", "true");
+    try {
+      const mount = await loaders[id]();
+      if (controller.signal.aborted) return;
+      disposers.push(mount(root, events));
+      panel.inert = false;
+      panel.removeAttribute("aria-busy");
+    } catch {
+      if (controller.signal.aborted) return;
+      panel.inert = false;
+      panel.removeAttribute("aria-busy");
+      panel.replaceChildren();
+      const message = document.createElement("p");
+      message.className = "game-status";
+      message.setAttribute("role", "status");
+      message.textContent = "This game couldn’t load. ";
+      const reload = document.createElement("a");
+      reload.href = location.href;
+      reload.textContent = "Reload the desktop to try again.";
+      message.append(reload);
+      panel.append(message);
+    }
+  }
   const find = <T extends HTMLElement = HTMLElement>(selector: string) =>
     root.querySelector<T>(selector)!;
   root
@@ -34,7 +73,14 @@ export function mountArcade(
               panel.hidden =
                 panel.dataset.arcadePanel !== button.dataset.arcadeSelect;
             });
-          if (button.dataset.arcadeSelect === "terminal")
+          const id = button.dataset.arcadeSelect!;
+          if (Object.hasOwn(loaders, id))
+            void loadGame(id as keyof typeof loaders);
+          if (
+            button.dataset.arcadeSelect === "terminal" &&
+            !root.hidden &&
+            root.classList.contains("is-active")
+          )
             find<HTMLInputElement>("#arcade-command").focus();
         },
         events,
@@ -310,7 +356,7 @@ export function mountArcade(
           break;
         case "ls":
           response =
-            "memory.game   bug-sweep.game   doom.exe   README.txt\nOpen games with the buttons above.";
+            "memory.game   bug-sweep.game   doom.exe\nsnake.game   pong.game   15-puzzle.game   README.txt\nOpen games with the buttons above.";
           break;
         case "whoami":
           response =
@@ -344,7 +390,7 @@ export function mountArcade(
     events,
   );
   return () => {
-    disposeDoom();
+    disposers.forEach((dispose) => dispose());
     clearTimeout(mismatch);
     controller.abort();
   };

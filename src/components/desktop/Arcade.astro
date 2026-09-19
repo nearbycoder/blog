@@ -64,6 +64,23 @@ import DesktopIcon from "./DesktopIcon.astro";
           aria-pressed="false"
           aria-controls="arcade-doom"><DesktopIcon name="game" />DOOM</button
         >
+        {
+          [
+            ["snake", "Snake"],
+            ["pong", "Pong"],
+            ["puzzle", "15 Puzzle"],
+          ].map(([id, title]) => (
+            <button
+              type="button"
+              data-arcade-select={id}
+              aria-pressed="false"
+              aria-controls={`arcade-${id}`}
+            >
+              <DesktopIcon name="game" />
+              {title}
+            </button>
+          ))
+        }
         <button
           type="button"
           data-arcade-select="terminal"
@@ -72,6 +89,24 @@ import DesktopIcon from "./DesktopIcon.astro";
           ><DesktopIcon name="terminal" />Terminal</button
         >
       </nav>
+      {
+        [
+          ["snake", "Snake"],
+          ["pong", "Pong"],
+          ["puzzle", "15 Puzzle"],
+        ].map(([id, title]) => (
+          <section
+            id={`arcade-${id}`}
+            data-arcade-panel={id}
+            aria-label={title}
+            hidden
+          >
+            <p class="game-status" role="status">
+              Opening {title}…
+            </p>
+          </section>
+        ))
+      }
       <section
         id="arcade-memory"
         data-arcade-panel="memory"
