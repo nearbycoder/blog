@@ -142,6 +142,16 @@ const searchItems = [
         try {
           if (window.frameElement?.hasAttribute("data-desktop-reader")) {
             document.documentElement.dataset.desktopReader = "true";
+            // Notify the shell before slow images or third-party embeds finish.
+            document.addEventListener(
+              "DOMContentLoaded",
+              () => {
+                window.frameElement?.dispatchEvent(
+                  new Event("desktop-reader-ready"),
+                );
+              },
+              { once: true },
+            );
           }
         } catch {}
         try {

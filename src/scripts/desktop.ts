@@ -1,3 +1,4 @@
+import { mountDesktopShell } from "./desktop-shell";
 import { mountArcade } from "./desktop-arcade";
 
 const desktop = document.querySelector<HTMLElement>("[data-desktop]");
@@ -19,13 +20,32 @@ if (desktop) {
   let nextId = 0;
   let layer = 1;
   let folder = "all";
+  let desktopSnapshot:
+    { windows: HTMLElement[]; active?: HTMLElement } | undefined;
+  const showDesktopButton = desktop.querySelector<HTMLButtonElement>(
+    "[data-show-desktop]",
+  )!;
+  if (document.documentElement.dataset.theme === "system")
+    document.documentElement.dataset.theme = "dark";
+  function updatePanel() {
+    desktop!.querySelector<HTMLElement>(
+      "[data-show-library]",
+    )!.dataset.running = String(!library.hidden);
+    desktop!.querySelector<HTMLElement>(
+      ".desktop-dock [data-open-arcade]",
+    )!.dataset.running = String(windows.has("arcade"));
+  }
 
   function announce(message: string) {
     status.textContent = message;
   }
 
   function activate(win: HTMLElement, focus = false) {
+    desktopSnapshot = undefined;
+    showDesktopButton.setAttribute("aria-pressed", "false");
+    win.dataset.opened = "true";
     win.hidden = false;
+    updatePanel();
     windows.forEach((item) => item.classList.toggle("is-active", item === win));
     win.style.zIndex = String(++layer);
     tasks.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {
@@ -104,6 +124,7 @@ if (desktop) {
             announce(
               `${title} ${action === "close" ? "closed" : "minimized"}.`,
             );
+            updatePanel();
             focusRemaining();
           }
         });
@@ -188,6 +209,8 @@ if (desktop) {
         )!.textContent;
       }
     });
+    desktop!.querySelector<HTMLElement>("[data-breadcrumb]")!.textContent =
+      desktop!.querySelector<HTMLElement>("[data-folder-title]")!.textContent;
     search.value = "";
     filterFiles();
     desktop!.querySelector(".library-content")!.scrollTop = 0;
@@ -213,9 +236,7 @@ if (desktop) {
       ".desktop-wallpaper-copy strong",
     )!;
     wallpaper.style.whiteSpace = "pre-line";
-    wallpaper.textContent = enabled
-      ? "Welcome to\nthe night shift."
-      : "Make yourself\nat home.";
+    wallpaper.textContent = enabled ? "after hours" : "nearby";
     const message = enabled
       ? "Secret unlocked: after-hours wallpaper. Enter party again to return."
       : "Back to the day shift. After-hours wallpaper off.";
@@ -223,10 +244,14 @@ if (desktop) {
     return message;
   }
 
-  function openArcade() {
+  function openArcade(activity?: "terminal") {
     const existing = windows.get("arcade");
     if (existing) {
       activate(existing, true);
+      if (activity)
+        existing
+          .querySelector<HTMLButtonElement>('[data-arcade-select="terminal"]')!
+          .click();
       return;
     }
     const template = document.getElementById(
@@ -246,6 +271,10 @@ if (desktop) {
     attachWindow(win);
     constrain(win);
     activate(win, true);
+    if (activity)
+      win
+        .querySelector<HTMLButtonElement>('[data-arcade-select="terminal"]')!
+        .click();
     announce("Arcade opened. Choose Memory, Bug Sweep, or Terminal.");
   }
 
@@ -294,7 +323,7 @@ if (desktop) {
   desktop
     .querySelectorAll<HTMLButtonElement>("[data-open-arcade]")
     .forEach((button) => {
-      button.addEventListener("click", openArcade);
+      button.addEventListener("click", () => openArcade());
     });
 
   function openFile(link: HTMLAnchorElement) {
@@ -338,17 +367,26 @@ if (desktop) {
     windows.set(id, win);
     win.style.left = `${160 + ((nextId - 1) % 5) * 28}px`;
     win.style.top = `${28 + ((nextId - 1) % 5) * 28}px`;
-    iframe.addEventListener("load", () => {
+    const connectedDocuments = new WeakSet<Document>();
+    const connectReader = () => {
       win.querySelector<HTMLElement>("[data-reader-loading]")!.hidden = true;
       try {
         const doc = iframe.contentDocument;
-        if (!doc) return;
+        if (!doc || connectedDocuments.has(doc)) return;
+        connectedDocuments.add(doc);
         doc.documentElement.dataset.theme =
           document.documentElement.dataset.theme;
         // Existing pages remain complete, interactive documents with their own scripts.
-        doc.addEventListener("pointerdown", () => activate(win), {
-          capture: true,
-        });
+        doc.addEventListener(
+          "pointerdown",
+          () => {
+            shell.closePopups();
+            activate(win);
+          },
+          {
+            capture: true,
+          },
+        );
         doc.addEventListener("focusin", () => activate(win));
         doc.addEventListener("keydown", onShortcut, { capture: true });
         const url = iframe.contentWindow!.location;
@@ -404,7 +442,9 @@ if (desktop) {
       } catch {
         /* The original-page link stays available if a frame navigates away. */
       }
-    });
+    };
+    iframe.addEventListener("desktop-reader-ready", connectReader);
+    iframe.addEventListener("load", connectReader);
     workspace.append(win);
     attachWindow(win);
     constrain(win);
@@ -413,9 +453,16 @@ if (desktop) {
   }
 
   function onShortcut(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === "Escape") {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      shell.toggleLauncher();
+      return;
+    }
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
       event.preventDefault();
       event.stopImmediatePropagation();
+      shell.closePopups();
       activate(library);
       search.focus();
       search.select();
@@ -423,7 +470,47 @@ if (desktop) {
   }
 
   attachWindow(library);
-  activate(library);
+  library.hidden = true;
+  library.classList.remove("is-active");
+  const shell = mountDesktopShell(desktop, {
+    library: () => activate(library, true),
+    folder: (id) => {
+      selectFolder(id);
+      library.focus();
+    },
+    arcade: () => openArcade(),
+    terminal: () => openArcade("terminal"),
+    file: openFile,
+  });
+  showDesktopButton.addEventListener("click", () => {
+    if (desktopSnapshot) {
+      const saved = desktopSnapshot;
+      desktopSnapshot = undefined;
+      saved.windows.forEach((win) => {
+        win.hidden = false;
+      });
+      if (saved.active) activate(saved.active, true);
+      showDesktopButton.setAttribute("aria-pressed", "false");
+      announce("Windows restored.");
+    } else {
+      const visible = [...windows.values()].filter((win) => !win.hidden);
+      if (!visible.length) return;
+      desktopSnapshot = {
+        windows: visible,
+        active: visible.find((win) => win.classList.contains("is-active")),
+      };
+      visible.forEach((win) => {
+        win.hidden = true;
+        win.classList.remove("is-active");
+      });
+      tasks
+        .querySelectorAll("button")
+        .forEach((button) => button.setAttribute("aria-pressed", "false"));
+      showDesktopButton.setAttribute("aria-pressed", "true");
+      announce("Desktop shown. Press Show desktop again to restore windows.");
+    }
+    updatePanel();
+  });
   search.addEventListener("input", filterFiles);
   desktop
     .querySelectorAll<HTMLButtonElement>("[data-folder]")

@@ -102,9 +102,11 @@ The dev server runs on `0.0.0.0:4321`.
 
 Visit `/desktop` (also linked in the footer and command palette) to browse the same published content as a desktop. The Library indexes articles, projects, layoff logs, postmortems, labs, reading paths, topics, technologies, and site pages at build time. It follows the existing draft and scheduled-publication rules; article and project bodies are searchable too.
 
-Click a file to read the original interactive page in a window. Drag a title bar to move, drag a lower corner to resize, or use the minimize, maximize, and close controls. The dock restores open pages, `Cmd/Ctrl + K` focuses Library search, and **Arrange windows** recovers the layout. On phones, the dock switches between full-width windows. **Open in a tab** and **Back to blog** provide ordinary browsing at any time.
+Click a file to read the original interactive page in a window. Drag a title bar to move, drag a lower corner to resize, or use the minimize, maximize, and close controls. The bottom panel restores open pages, `Cmd/Ctrl + K` focuses Library search, and **Arrange windows** recovers the layout. On phones, the panel switches between full-width windows. **Open in a tab** and **Back to blog** provide ordinary browsing at any time.
 
-Windows last for the current visit; refreshing resets the workspace. Only the existing theme preference is saved. Without JavaScript, the Library still provides ordinary links to every indexed page. Run `npx playwright test tests/desktop.spec.ts` after a build for the desktop interaction and accessibility checks.
+The CachyOS/KDE-inspired shell opens onto an empty desktop. Open **Files** from the panel or use **Ctrl + Esc** for the application launcher. Search apps and all blog content, choose **Details** or **Icons** in Library, open the clock for a local calendar, or use **Show desktop** to hide and restore visible windows. The Terminal is also pinned to the panel on larger screens and available in the launcher everywhere. [Design and wallpaper notes](docs/desktop-design.md).
+
+Windows last for the current visit; refreshing resets the workspace. Only the existing theme preference is saved. Without JavaScript, the Library still provides ordinary links to every indexed page. Run `npx playwright test tests/desktop.spec.ts tests/desktop-shell.spec.ts` after a build for the desktop interaction and accessibility checks.
 
 ### Arcade and desktop secrets
 
