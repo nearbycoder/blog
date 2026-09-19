@@ -1,0 +1,131 @@
+.sketchpad-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  container-type: inline-size;
+  background: var(--desk-sidebar);
+}
+
+.sketchpad-toolbar,
+.sketchpad-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.sketchpad-tools,
+.sketchpad-palette {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.utility-window .sketchpad-tools button[aria-pressed="true"] {
+  background: var(--desk-selected);
+  color: var(--desk-accent);
+  border-color: transparent;
+}
+
+.utility-window .sketchpad-app .sketchpad-swatch {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+  border: 3px solid var(--desk-paper);
+  border-radius: 50%;
+  background: var(--sketch-color);
+  box-shadow: 0 0 0 1px var(--desk-line);
+}
+
+.utility-window .sketchpad-app .sketchpad-swatch:hover,
+.utility-window .sketchpad-app .sketchpad-swatch[aria-pressed="true"] {
+  background: var(--sketch-color);
+}
+
+.utility-window .sketchpad-app .sketchpad-swatch[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px var(--desk-ink);
+}
+
+.sketchpad-size {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+
+.sketchpad-app .sketchpad-size input {
+  width: 74px;
+  min-height: 24px;
+  padding: 0;
+  accent-color: var(--desk-accent);
+}
+
+.sketchpad-size output {
+  width: 2ch;
+  font-variant-numeric: tabular-nums;
+}
+
+.sketchpad-actions {
+  gap: 6px;
+}
+
+.sketchpad-actions [data-sketch-action="export"] {
+  margin-left: auto;
+}
+
+.sketchpad-stage {
+  display: flex;
+  flex: 1;
+  min-height: 70px;
+  min-width: 0;
+  padding: 14px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-image: radial-gradient(var(--desk-line) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+.sketchpad-stage canvas {
+  display: block;
+  flex-shrink: 0;
+  background: #fff;
+  box-shadow: 0 1px 8px #0002;
+  cursor: crosshair;
+  touch-action: none;
+}
+
+.sketchpad-stage canvas[data-tool="eraser"] {
+  cursor: cell;
+}
+
+.sketchpad-stage canvas:focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 3px;
+}
+
+.sketchpad-status {
+  display: block;
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+
+.sketchpad-status p {
+  margin: 2px 0 0;
+  font-size: 10px;
+  color: var(--desk-muted);
+}
+
+@container (max-width: 560px) {
+  .sketchpad-toolbar {
+    gap: 9px 12px;
+  }
+
+  .sketchpad-stage {
+    padding: 9px;
+  }
+}
