@@ -1,0 +1,60 @@
+.desktop-context-menu {
+  position: absolute;
+  z-index: 2147483647;
+  min-width: 218px;
+  width: max-content;
+  overflow: auto;
+  padding: 5px;
+  border: 1px solid var(--desk-line);
+  border-radius: 9px;
+  background: var(--desk-paper);
+  color: var(--desk-ink);
+  box-shadow:
+    0 12px 32px var(--desk-shadow),
+    0 2px 5px var(--desk-shadow-soft);
+  user-select: none;
+  overscroll-behavior: contain;
+}
+
+.desktop-context-menu button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 34px;
+  padding: 7px 10px;
+  border-radius: 5px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.desktop-context-menu button:hover:not(:disabled),
+.desktop-context-menu button:focus-visible {
+  background: var(--desk-selected);
+  color: var(--desk-ink);
+}
+
+.desktop-context-menu button:disabled {
+  color: var(--desk-muted);
+  opacity: 0.6;
+}
+
+.desktop-context-shortcut {
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+
+.desktop-context-divider {
+  height: 1px;
+  margin: 5px 4px;
+  background: var(--desk-line);
+}
+
+@media (pointer: coarse) {
+  .desktop-context-menu button {
+    min-height: 44px;
+  }
+}
