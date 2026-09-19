@@ -227,4 +227,9 @@ const searchItems = [
   html[data-desktop-reader] .site-main {
     padding-top: 28px;
   }
+  @media (max-width: 760px), (pointer: coarse) {
+    html[data-desktop-reader] :is(input, textarea, select) {
+      font-size: 16px;
+    }
+  }
 </style>

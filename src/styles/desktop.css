@@ -998,6 +998,12 @@
 .desktop-noscript a {
   text-decoration: underline;
 }
+/* Keep editable text at iOS's non-zooming size, including landscape phones. */
+@media (max-width: 760px), (pointer: coarse) {
+  .desktop-environment :is(input, textarea, select) {
+    font-size: 16px;
+  }
+}
 @media (max-width: 760px) {
   .desktop-shortcuts {
     left: 10px;
