@@ -27,3 +27,20 @@ The shell retains its original wallpaper and Plasma-style bottom panel. Shared s
 Arcade uses a game sidebar in wide windows and a compact game grid in narrow ones. Ghostty uses named icon controls, a centered connection form, and a visible launcher favorite. Container queries adapt both apps when their windows are resized, as well as on phones. Editable mobile text remains at least 16px to avoid focus zoom.
 
 All styling belongs to `/desktop`. Game engines and Ghostty still load only when their respective apps or games are opened. The normal blog does not import desktop styles or scripts.
+
+## Complete desktop themes
+
+Light mode uses a paired daylight wallpaper, pale icon tiles with darker colored glyphs, dark shortcut labels, and softer window/popup shadows. Dark mode retains the midnight wallpaper and illuminated glyphs. Desktop shortcuts, task-panel apps, launcher favorites, and file icons share theme tokens, including the after-hours wallpaper caption. Native controls and scrollbars use the matching `color-scheme`.
+
+- Light asset: [`public/images/desktop/emerald-glass-light.webp`](../public/images/desktop/emerald-glass-light.webp).
+- Provenance: built-in image generation, editing the original `emerald-glass.webp` without replacing it; converted to WebP with Sharp at quality 88.
+- Edit brief: preserve the folded glass planes and diagonal composition; replace midnight lighting with pale glacier blue, pearly white, misty mint, emerald edges, soft daylight and translucent frosted glass. Keep the left side light and quiet, with no text, icons, logos or additional objects.
+
+Only the active wallpaper is requested by the desktop's CSS. Both assets stay outside the normal blog bundle; the chosen theme persists through the existing preference setting.
+
+
+## Window snapping
+
+Drag a title bar to the left or right edge for a half-screen window, a corner for a quarter-screen window, or the top edge to maximize. An emerald preview shows the exact release bounds. Drag a snapped/maximized window away to restore its floating size. Escape or a canceled pointer gesture restores the starting layout; minimizing keeps the chosen layout and Arrange windows clears it.
+
+Ctrl+Alt+Left/Right snaps the active window to a half, Up maximizes, and Down restores. Connected terminal input retains its own keyboard events. Layouts resize with the workspace; narrow Library and Arcade windows adapt their controls. Phones keep their full-screen app switching behavior, and returning to a desktop-sized viewport restores the chosen layout.

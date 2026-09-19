@@ -17,11 +17,31 @@
   --desk-panel: #1c242eef;
   --desk-hover: #ffffff09;
   --desk-radius: 8px;
+  --desk-wallpaper: url("/images/desktop/emerald-glass.webp");
+  --desk-wallpaper-base: #071d29;
+  --desk-wallpaper-ink: #c0ded8;
+  --desk-shortcut-ink: #ffffff;
+  --desk-shortcut-text-shadow: 0 1px 3px #000, 0 0 8px #001019;
+  --desk-shortcut-hover: #4aceb72b;
+  --desk-shortcut-outline: #86ffdf66;
+  --desk-icon-tile: linear-gradient(145deg, #324959dc, #122731ed);
+  --desk-icon-shadow: inset 0 1px #ffffff24, 0 4px 10px #0003;
+  --desk-icon-files: #70dcc5;
+  --desk-icon-files-fill: #26675d;
+  --desk-icon-projects: #96c5ff;
+  --desk-icon-lab: #e1c18b;
+  --desk-icon-pages: #d5dde6;
+  --desk-icon-arcade: #cfb7f0;
+  --desk-icon-arcade-fill: #68557e;
+  --desk-shadow: #0008;
+  --desk-shadow-soft: #0004;
+  --desk-party-ink: #b9f2d5;
+  color-scheme: dark;
   height: 100%;
   position: relative;
   isolation: isolate;
   color: var(--desk-ink);
-  background: #071d29;
+  background: var(--desk-wallpaper-base);
   font:
     13px/1.5 system-ui,
     sans-serif;
@@ -33,7 +53,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: url("/images/desktop/emerald-glass.webp") center / cover;
+  background: var(--desk-wallpaper) center / cover;
 }
 :root[data-theme="light"] .desktop-environment {
   --desk-paper: #ffffff;
@@ -45,6 +65,26 @@
   --desk-accent: #11775a;
   --desk-panel: #f3f5f7f5;
   --desk-hover: #172b3b06;
+  --desk-wallpaper: url("/images/desktop/emerald-glass-light.webp");
+  --desk-wallpaper-base: #e5f1f2;
+  --desk-wallpaper-ink: #335e67;
+  --desk-shortcut-ink: #183b46;
+  --desk-shortcut-text-shadow: 0 1px 2px #ffffffcc;
+  --desk-shortcut-hover: #ffffff80;
+  --desk-shortcut-outline: #397c7766;
+  --desk-icon-tile: linear-gradient(145deg, #ffffffef, #e6f0f4ed);
+  --desk-icon-shadow: inset 0 1px #fff, 0 4px 10px #28535624;
+  --desk-icon-files: #196d5e;
+  --desk-icon-files-fill: #b9e3d5;
+  --desk-icon-projects: #315d9b;
+  --desk-icon-lab: #885617;
+  --desk-icon-pages: #4c6076;
+  --desk-icon-arcade: #71508e;
+  --desk-icon-arcade-fill: #e1d2f0;
+  --desk-shadow: #18384c35;
+  --desk-shadow-soft: #18384c1a;
+  --desk-party-ink: #474f7d;
+  color-scheme: light;
 }
 .desktop-environment button,
 .desktop-environment a,
@@ -95,34 +135,29 @@
 }
 .desktop-shortcuts button {
   background: transparent;
-  color: #fff;
+  color: var(--desk-shortcut-ink);
   display: grid;
   justify-items: center;
   gap: 8px;
   padding: 7px 2px;
   border-radius: var(--desk-radius);
   font-size: 12px;
-  text-shadow:
-    0 1px 3px #000,
-    0 0 8px #001019;
+  text-shadow: var(--desk-shortcut-text-shadow);
 }
 .desktop-shortcuts button:hover,
 .desktop-shortcuts button:focus-visible {
-  background: #4aceb72b;
-  box-shadow: inset 0 0 0 1px #86ffdf66;
+  background: var(--desk-shortcut-hover);
+  box-shadow: inset 0 0 0 1px var(--desk-shortcut-outline);
 }
 .shortcut-art {
   height: 48px;
   width: 52px;
   display: grid;
   place-items: center;
-  color: #70dcc5;
-  filter: drop-shadow(0 2px 2px #00151c99);
+  color: var(--desk-icon-files);
   border-radius: 12px;
-  background: linear-gradient(145deg, #324959dc, #122731ed);
-  box-shadow:
-    inset 0 1px #ffffff24,
-    0 4px 10px #0003;
+  background: var(--desk-icon-tile);
+  box-shadow: var(--desk-icon-shadow);
 }
 .shortcut-art svg {
   width: 30px;
@@ -131,22 +166,22 @@
   fill: none;
 }
 .shortcut-projects {
-  color: #96c5ff;
+  color: var(--desk-icon-projects);
 }
 
 .shortcut-lab {
-  color: #e1c18b;
+  color: var(--desk-icon-lab);
 }
 
 .shortcut-pages {
-  color: #d5dde6;
+  color: var(--desk-icon-pages);
 }
 
 .desktop-wallpaper-copy {
   position: absolute;
   bottom: 36px;
   right: 42px;
-  color: #d7f4ed99;
+  color: var(--desk-wallpaper-ink);
   pointer-events: none;
   text-align: right;
 }
@@ -183,14 +218,14 @@
   border-radius: 10px;
   background: var(--desk-paper);
   box-shadow:
-    0 18px 50px #0005,
-    0 2px 6px #0004;
+    0 18px 50px var(--desk-shadow-soft),
+    0 2px 6px var(--desk-shadow-soft);
 }
 .desktop-window.is-active {
   border-color: color-mix(in srgb, var(--desk-accent) 35%, var(--desk-line));
   box-shadow:
-    0 24px 70px #0008,
-    0 3px 10px #0005;
+    0 24px 70px var(--desk-shadow),
+    0 3px 10px var(--desk-shadow-soft);
 }
 .desktop-window:focus {
   outline: none;
@@ -484,11 +519,8 @@
 .file-icon {
   display: grid;
   place-items: center;
-  color: #7ac7b7;
+  color: var(--desk-icon-files);
   flex-shrink: 0;
-}
-:root[data-theme="light"] .file-icon {
-  color: #297b68;
 }
 .file-icon svg {
   width: 19px;
@@ -599,7 +631,7 @@
   border: 1px solid var(--desk-line);
   border-radius: 10px;
   z-index: 2;
-  box-shadow: 0 3px 12px #0005;
+  box-shadow: 0 3px 12px var(--desk-shadow-soft);
   backdrop-filter: blur(22px);
 }
 .desktop-dock > button,
@@ -636,16 +668,16 @@
   height: 28px;
 }
 .app-files {
-  color: #77d7c0;
+  color: var(--desk-icon-files);
 }
 .app-files svg {
-  fill: #26675d;
+  fill: var(--desk-icon-files-fill);
 }
 .app-arcade {
-  color: #ccb2ec;
+  color: var(--desk-icon-arcade);
 }
 .app-arcade svg {
-  fill: #68557e;
+  fill: var(--desk-icon-arcade-fill);
 }
 .app-terminal {
   color: var(--desk-muted);
@@ -737,7 +769,7 @@
   background: var(--desk-panel);
   border: 1px solid var(--desk-line);
   border-radius: 12px;
-  box-shadow: 0 12px 40px #0008;
+  box-shadow: 0 12px 40px var(--desk-shadow);
   backdrop-filter: blur(30px);
   max-height: calc(100% - 94px);
   overflow-y: auto;
@@ -1191,5 +1223,75 @@
       opacity: 1;
       transform: translateY(0);
     }
+  }
+}
+
+/* Snap targets and previews share geometry so release matches the preview. */
+.desktop-snap-preview {
+  position: absolute;
+  pointer-events: none;
+  border: 2px solid var(--desk-accent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--desk-accent) 18%, transparent);
+  box-shadow:
+    inset 0 0 0 1px var(--desk-paper),
+    0 8px 30px var(--desk-shadow-soft);
+}
+@media (min-width: 761px) {
+  :is(.desktop-window, .desktop-snap-preview)[data-snap] {
+    left: 8px !important;
+    top: 8px !important;
+    width: calc(50% - 12px) !important;
+    height: calc(100% - 16px) !important;
+    min-width: 0;
+    min-height: 0;
+    resize: none;
+  }
+  :is(.desktop-window, .desktop-snap-preview)[data-snap$="right"] {
+    left: calc(50% + 4px) !important;
+  }
+  :is(.desktop-window, .desktop-snap-preview):is(
+    [data-snap^="top-"],
+    [data-snap^="bottom-"]
+  ) {
+    height: calc(50% - 12px) !important;
+  }
+  :is(.desktop-window, .desktop-snap-preview)[data-snap^="bottom-"] {
+    top: calc(50% + 4px) !important;
+  }
+  :is(.desktop-window, .desktop-snap-preview)[data-snap="maximized"] {
+    width: calc(100% - 16px) !important;
+  }
+}
+.library-window {
+  container-type: inline-size;
+}
+@container (max-width: 560px) {
+  .library-location,
+  .desktop-search kbd,
+  .library-intro > span,
+  .file-kind,
+  .file-date,
+  .file-list-head > :not(:first-child) {
+    display: none;
+  }
+  .desktop-search {
+    width: 100%;
+  }
+  .library-body {
+    grid-template-columns: 140px minmax(0, 1fr);
+  }
+  .library-sidebar {
+    padding-inline: 5px;
+  }
+  .library-sidebar button {
+    padding-inline: 7px;
+    font-size: 12px;
+  }
+  .library-intro {
+    padding-inline: 14px;
+  }
+  .file-list-head {
+    grid-template-columns: 1fr;
   }
 }

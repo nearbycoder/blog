@@ -1,3 +1,4 @@
+import { mountWindowLayout } from "./desktop-window-layout";
 import { mountDesktopShell } from "./desktop-shell";
 import type { ArcadeActivity } from "./desktop-arcade";
 
@@ -66,8 +67,20 @@ if (desktop) {
       desktop!.querySelector<HTMLButtonElement>("[data-show-library]")!.focus();
   }
 
+  const layouts = mountWindowLayout(workspace, {
+    isMobile: () => mobile.matches,
+    activate,
+    constrain,
+    announce,
+  });
+
   function constrain(win: HTMLElement) {
-    if (mobile.matches || win.classList.contains("is-maximized") || win.hidden)
+    if (
+      mobile.matches ||
+      win.dataset.snap ||
+      win.classList.contains("is-maximized") ||
+      win.hidden
+    )
       return;
     const bounds = workspace.getBoundingClientRect();
     const rect = win.getBoundingClientRect();
@@ -97,11 +110,9 @@ if (desktop) {
           const action = button.dataset.windowAction;
           const title = win.dataset.title ?? "Library";
           if (action === "maximize") {
-            const maximized = win.classList.toggle("is-maximized");
-            button.setAttribute("aria-pressed", String(maximized));
-            button.setAttribute(
-              "aria-label",
-              `${maximized ? "Restore" : "Maximize"} ${title}`,
+            layouts.setLayout(
+              win,
+              win.classList.contains("is-maximized") ? undefined : "maximized",
             );
             activate(win);
             constrain(win);
@@ -129,50 +140,7 @@ if (desktop) {
           }
         });
       });
-    const handle = win.querySelector<HTMLElement>("[data-drag-handle]")!;
-    let drag:
-      | { pointer: number; x: number; y: number; left: number; top: number }
-      | undefined;
-    handle.addEventListener("pointerdown", (event) => {
-      if (
-        mobile.matches ||
-        win.classList.contains("is-maximized") ||
-        event.button !== 0 ||
-        (event.target as HTMLElement).closest("button, a")
-      )
-        return;
-      const rect = win.getBoundingClientRect();
-      const bounds = workspace.getBoundingClientRect();
-      drag = {
-        pointer: event.pointerId,
-        x: event.clientX,
-        y: event.clientY,
-        left: rect.left - bounds.left,
-        top: rect.top - bounds.top,
-      };
-      handle.setPointerCapture(event.pointerId);
-      desktop!.classList.add("is-dragging");
-      event.preventDefault();
-    });
-    handle.addEventListener("pointermove", (event) => {
-      if (!drag || drag.pointer !== event.pointerId) return;
-      win.style.left = `${Math.max(8, Math.min(workspace.clientWidth - win.offsetWidth - 8, drag.left + event.clientX - drag.x))}px`;
-      win.style.top = `${Math.max(8, Math.min(workspace.clientHeight - win.offsetHeight - 8, drag.top + event.clientY - drag.y))}px`;
-    });
-    const endDrag = () => {
-      drag = undefined;
-      desktop!.classList.remove("is-dragging");
-    };
-    handle.addEventListener("lostpointercapture", endDrag);
-    handle.addEventListener("pointercancel", endDrag);
-    handle.addEventListener("pointerup", endDrag);
-    handle.addEventListener("dblclick", (event) => {
-      if (!(event.target as HTMLElement).closest("button, a")) {
-        win
-          .querySelector<HTMLButtonElement>('[data-window-action="maximize"]')!
-          .click();
-      }
-    });
+    layouts.attach(win);
     resizeObserver.observe(win);
   }
 
@@ -560,6 +528,15 @@ if (desktop) {
     }
     // Connected shells own their editing shortcuts, including Ctrl+K.
     if ((event.target as Element | null)?.closest?.(".ghostty-surface")) return;
+    if (
+      layouts.shortcut(
+        event,
+        workspace.querySelector<HTMLElement>(
+          ".desktop-window.is-active:not([hidden])",
+        ) ?? undefined,
+      )
+    )
+      return;
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
       event.preventDefault();
       event.stopImmediatePropagation();
@@ -661,7 +638,7 @@ if (desktop) {
     .querySelector<HTMLButtonElement>("[data-desktop-reset]")!
     .addEventListener("click", () => {
       windows.forEach((win, id) => {
-        win.classList.remove("is-maximized");
+        layouts.setLayout(win, undefined);
         win.removeAttribute("style");
         const maximize = win.querySelector<HTMLButtonElement>(
           '[data-window-action="maximize"]',
