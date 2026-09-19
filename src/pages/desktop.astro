@@ -15,30 +15,10 @@ const folderFor = (id: string) =>
   title="Desktop"
   description="An experimental desktop for exploring Josh Hamilton’s writing, projects, and experiments."
 >
+  <script is:inline>
+    document.documentElement.classList.add("has-desktop-js");
+  </script>
   <div class="desktop-environment" data-desktop>
-    <header class="desktop-menubar">
-      <a href="/" class="desktop-brand" aria-label="Nearbycoder home"
-        ><DesktopIcon name="desktop" /><strong>nearbycoder</strong></a
-      >
-      <span class="desktop-mode">Desktop <span>experimental</span></span>
-      <div class="desktop-menu-actions">
-        <button
-          type="button"
-          data-desktop-reset
-          title="Arrange windows"
-          aria-label="Arrange windows"><DesktopIcon name="reset" /></button
-        >
-        <button
-          type="button"
-          data-desktop-theme
-          title="Toggle color theme"
-          aria-label="Toggle color theme"><DesktopIcon name="moon" /></button
-        >
-        <a href="/" class="desktop-exit"
-          >Back to blog <DesktopIcon name="external" /></a
-        >
-      </div>
-    </header>
     <div class="desktop-workspace" data-workspace>
       <nav class="desktop-shortcuts" aria-label="Desktop shortcuts">
         {
@@ -64,9 +44,7 @@ const folderFor = (id: string) =>
         </button>
       </nav>
       <div class="desktop-wallpaper-copy" aria-hidden="true">
-        <span>A little corner of the internet.</span><strong
-          >Make yourself<br />at home.</strong
-        >
+        <strong>nearby</strong><span>DESKTOP</span>
       </div>
       <section
         class="desktop-window library-window is-active"
@@ -80,7 +58,7 @@ const folderFor = (id: string) =>
             ><DesktopIcon name="folder" /><strong>Library</strong><span
               class="window-subtitle"
             >
-              / nearbycoder</span
+              — File Manager</span
             ></span
           >
           <div class="window-controls">
@@ -104,21 +82,48 @@ const folderFor = (id: string) =>
           </div>
         </div>
         <div class="library-toolbar">
-          <span class="library-location">Josh’s corner of the web</span><label
-            class="desktop-search"
+          <button
+            class="toolbar-home"
+            type="button"
+            data-open-folder="all"
+            aria-label="Go to all files"
+            title="All files"><DesktopIcon name="home" /></button
+          >
+          <div class="library-location">
+            <span>Home</span><DesktopIcon name="chevronRight" /><span
+              data-breadcrumb>All files</span
+            >
+          </div>
+          <label class="desktop-search"
             ><DesktopIcon name="search" /><span class="sr-only"
               >Search desktop files</span
             ><input
               type="search"
-              placeholder="Search everything…"
+              placeholder="Search files…"
               data-desktop-search
               autocomplete="off"
-            /><kbd>⌘ K</kbd></label
+            /><kbd>Ctrl K</kbd></label
           >
+          <div class="file-view-controls" role="group" aria-label="File view">
+            <button
+              type="button"
+              data-file-view="list"
+              aria-label="Details view"
+              aria-pressed="true"
+              title="Details view"><DesktopIcon name="list" /></button
+            >
+            <button
+              type="button"
+              data-file-view="grid"
+              aria-label="Icons view"
+              aria-pressed="false"
+              title="Icons view"><DesktopIcon name="grid" /></button
+            >
+          </div>
         </div>
         <div class="library-body">
           <nav class="library-sidebar" aria-label="Library folders">
-            <p>Library</p>
+            <p>Places</p>
             {
               desktopFolders.map((folder) => (
                 <button
@@ -140,19 +145,16 @@ const folderFor = (id: string) =>
               ))
             }
             <div class="library-sidebar-note">
-              Built things.<br />Learned things.<br />Wrote them down.
+              <DesktopIcon name="drive" /><span>nearbycoder.com</span>
             </div>
           </nav>
           <div class="library-content">
             <div class="library-intro">
-              <p class="desktop-eyebrow">
-                Same blog. Different perspective.
-              </p><h1 data-folder-title>All files</h1><p>
-                Open something interesting. Stay a while.
-              </p>
+              <h1 data-folder-title>All files</h1><span>Home / nearbycoder</span
+              >
             </div>
             <div class="file-list-head" aria-hidden="true">
-              <span>Name</span><span>Kind</span>
+              <span>Name</span><span>Type</span><span>Details</span>
             </div>
             <ul class="desktop-files">
               {
@@ -166,6 +168,7 @@ const folderFor = (id: string) =>
                       href={file.url}
                       data-desktop-file
                       data-file-title={file.title}
+                      title={file.description}
                     >
                       <span
                         class:list={["file-icon", `file-icon-${file.folder}`]}
@@ -179,6 +182,7 @@ const folderFor = (id: string) =>
                         </>
                       </span>
                       <span class="file-kind">{file.kind}</span>
+                      <span class="file-date">{file.detail || "—"}</span>
                     </a>
                   </li>
                 ))
@@ -197,24 +201,169 @@ const folderFor = (id: string) =>
         </footer>
       </section>
     </div>
+    <section
+      id="desktop-launcher"
+      class="shell-popup desktop-launcher"
+      aria-label="Application launcher"
+      hidden
+    >
+      <header class="launcher-heading">
+        <span class="user-avatar">N</span><div>
+          <strong>nearbycoder</strong><span>Applications & places</span>
+        </div>
+      </header>
+      <label class="launcher-search"
+        ><DesktopIcon name="search" /><span class="sr-only"
+          >Search applications and files</span
+        ><input
+          type="search"
+          data-launcher-search
+          placeholder="Search applications and files…"
+          autocomplete="off"
+        /></label
+      >
+      <div data-launcher-default>
+        <p class="launcher-section-label">Favorites</p>
+        <div class="launcher-apps">
+          <button type="button" data-launch-action="library"
+            ><span class="app-glyph app-files"
+              ><DesktopIcon name="folder" /></span
+            ><strong>Files</strong><span>Browse the blog</span></button
+          >
+          <button type="button" data-launch-action="arcade"
+            ><span class="app-glyph app-arcade"
+              ><DesktopIcon name="game" /></span
+            ><strong>Arcade</strong><span>Games & surprises</span></button
+          >
+          <button type="button" data-launch-action="terminal"
+            ><span class="app-glyph app-terminal"
+              ><DesktopIcon name="terminal" /></span
+            ><strong>Terminal</strong><span>Pocket shell</span></button
+          >
+        </div>
+        <p class="launcher-section-label">Places</p>
+        <div class="launcher-places">
+          {
+            desktopFolders
+              .filter((folder) =>
+                ["articles", "projects", "pages"].includes(folder.id),
+              )
+              .map((folder) => (
+                <button type="button" data-launch-folder={folder.id}>
+                  <DesktopIcon name={folder.icon} />
+                  {folder.label}
+                  <DesktopIcon name="chevronRight" />
+                </button>
+              ))
+          }
+        </div>
+      </div>
+      <div class="launcher-results" data-launcher-results hidden>
+        <p data-launcher-count aria-live="polite"></p><ul></ul>
+      </div>
+      <footer class="launcher-footer">
+        <span><DesktopIcon name="desktop" />Nearby Desktop</span><a
+          href="/"
+          aria-label="Return to blog"
+          ><DesktopIcon name="logout" />Leave desktop</a
+        >
+      </footer>
+    </section>
+    <section
+      id="desktop-calendar"
+      class="shell-popup desktop-calendar"
+      aria-label="Calendar"
+      hidden
+    >
+      <header>
+        <button
+          type="button"
+          data-calendar-step="-1"
+          aria-label="Previous month"><DesktopIcon name="chevronLeft" /></button
+        ><h2 data-calendar-month></h2><button
+          type="button"
+          data-calendar-step="1"
+          aria-label="Next month"><DesktopIcon name="chevronRight" /></button
+        >
+      </header>
+      <div class="calendar-weekdays" aria-hidden="true">
+        {["S", "M", "T", "W", "T", "F", "S"].map((day) => <span>{day}</span>)}
+      </div>
+      <div class="calendar-days" data-calendar-days></div><button
+        type="button"
+        class="calendar-today"
+        data-calendar-today>Today</button
+      >
+    </section>
     <nav class="desktop-dock" aria-label="Open windows">
       <button
         type="button"
-        class="dock-library"
+        class="panel-launcher"
+        data-launcher-toggle
+        aria-controls="desktop-launcher"
+        aria-expanded="false"
+        aria-label="Open application launcher"
+        title="Application launcher (Ctrl+Esc)"
+        ><DesktopIcon name="apps" /></button
+      >
+      <span class="dock-divider" aria-hidden="true"></span>
+      <button
+        type="button"
+        class="dock-library panel-app app-files"
         data-show-library
         aria-label="Open Library"
-        ><DesktopIcon name="folder" /><span>Library</span></button
+        title="File Manager"><DesktopIcon name="folder" /></button
       >
       <button
         type="button"
-        class="dock-library dock-arcade"
+        class="panel-app app-arcade"
         data-open-arcade
         aria-label="Open Arcade"
-        title="Open Arcade"><DesktopIcon name="game" /></button
+        title="Arcade"><DesktopIcon name="game" /></button
       >
-      <span class="dock-divider" aria-hidden="true"></span>
+      <button
+        type="button"
+        class="panel-app app-terminal"
+        data-open-terminal
+        aria-label="Open Terminal"
+        title="Terminal"><DesktopIcon name="terminal" /></button
+      >
       <div class="desktop-tasks" data-desktop-tasks></div>
-      <span class="dock-hint">Your curiosity, organized.</span>
+      <div class="panel-tray">
+        <button
+          type="button"
+          data-desktop-reset
+          title="Arrange windows"
+          aria-label="Arrange windows"><DesktopIcon name="reset" /></button
+        >
+        <button
+          type="button"
+          data-desktop-theme
+          title="Toggle color theme"
+          aria-label="Toggle color theme"><DesktopIcon name="moon" /></button
+        >
+        <a href="/" title="Back to blog" aria-label="Back to blog"
+          ><DesktopIcon name="globe" /></a
+        >
+        <button
+          type="button"
+          class="panel-clock"
+          data-calendar-toggle
+          aria-label="Open calendar"
+          aria-controls="desktop-calendar"
+          aria-expanded="false"
+          ><time data-panel-time>--:--</time><span data-panel-date
+          ></span></button
+        >
+      </div>
+      <button
+        type="button"
+        class="panel-show-desktop"
+        data-show-desktop
+        aria-label="Show desktop"
+        aria-pressed="false"
+        title="Show desktop"><DesktopIcon name="desktop" /></button
+      >
     </nav>
     <p class="sr-only" role="status" data-desktop-status></p>
     <noscript

@@ -10,6 +10,7 @@ test("desktop indexes every published collection entry and opens real content", 
   request,
 }) => {
   await page.goto("/desktop/");
+  await page.getByRole("button", { name: "Open Library", exact: true }).click();
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("All files");
   // Compare to the generated public routes, including every dynamic content family.
   const hrefs = await page
@@ -66,6 +67,7 @@ test("search, empty state, folder selection, and keyboard launcher work", async 
   page,
 }) => {
   await page.goto("/desktop/");
+  await page.getByRole("button", { name: "Open Library", exact: true }).click();
   const search = page.getByRole("searchbox", { name: "Search desktop files" });
   await page.keyboard.press("Control+k");
   await expect(search).toBeFocused();
@@ -99,6 +101,7 @@ test("windows drag, resize, minimize, restore, maximize, and close", async ({
 }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/desktop/");
+  await page.getByRole("button", { name: "Open Library", exact: true }).click();
   const win = page.locator(library);
   const before = (await win.boundingBox())!;
   const bar = (await win.locator("[data-drag-handle]").boundingBox())!;
@@ -156,6 +159,7 @@ test("mobile can switch windows, read content, and recover an empty desktop", as
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/desktop/");
+  await page.getByRole("button", { name: "Open Library", exact: true }).click();
   await page.locator('[data-folder="projects"]').click();
   await page.locator("[data-desktop-file]:visible").first().click();
   await expect(page.locator(library)).toBeHidden();
@@ -206,6 +210,7 @@ test("desktop is accessible in both themes and works without browser storage", a
     };
   });
   await page.goto("/desktop/");
+  await page.getByRole("button", { name: "Open Library", exact: true }).click();
   for (const theme of ["light", "dark"]) {
     await page.evaluate(
       (theme) => (document.documentElement.dataset.theme = theme),
@@ -219,7 +224,7 @@ test("desktop is accessible in both themes and works without browser storage", a
   await page.getByRole("button", { name: "Toggle color theme" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.locator('[data-folder="pages"]').click();
-  await page.getByRole("link", { name: /^About Explore/ }).click();
+  await page.getByRole("link", { name: /^About Page/ }).click();
   await expect(
     page.frameLocator("[data-desktop-reader]").locator("h1"),
   ).toBeVisible();
@@ -249,6 +254,7 @@ test("reader navigation updates its window and the search shortcut escapes the f
   page,
 }) => {
   await page.goto("/desktop/");
+  await page.getByRole("button", { name: "Open Library", exact: true }).click();
   await page.locator('[data-folder="pages"]').click();
   await page.locator('[data-desktop-file][href="/articles"]').click();
   const frame = page.frameLocator("[data-desktop-reader]");

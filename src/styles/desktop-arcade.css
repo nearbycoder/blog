@@ -1,5 +1,8 @@
 .shortcut-art.shortcut-arcade {
-  background: #dfd0f5;
+  color: #cfb7f0;
+}
+.shortcut-arcade svg {
+  fill: #574571;
 }
 .dock-arcade {
   padding-inline: 10px;
@@ -47,7 +50,7 @@
 }
 .arcade-selector button[aria-pressed="true"] {
   background: var(--desk-selected);
-  box-shadow: inset 0 -2px #697cd4;
+  box-shadow: inset 0 -2px var(--desk-accent);
 }
 .arcade-selector svg {
   width: 17px;
@@ -80,7 +83,7 @@
 }
 .desktop-environment .arcade-button[aria-pressed="true"] {
   background: var(--desk-selected);
-  border-color: #697cd4;
+  border-color: var(--desk-accent);
 }
 .arcade-button:hover,
 .arcade-selector button:hover {
@@ -117,7 +120,7 @@
 }
 .desktop-environment .memory-board button[data-state="face-up"] {
   background: var(--desk-paper);
-  border-color: #697cd4;
+  border-color: var(--desk-accent);
 }
 .desktop-environment .memory-board button[data-state="matched"] {
   background: #d4e9dd;
@@ -233,14 +236,8 @@
 .arcade-secrets code {
   color: var(--desk-ink);
 }
-.desktop-environment[data-after-hours="true"] .desktop-workspace {
-  background-color: #152b35;
-  background-image:
-    radial-gradient(#b8ebda66 1px, transparent 1px),
-    linear-gradient(155deg, #152b35 30%, #24434e);
-  background-size:
-    31px 31px,
-    100% 100%;
+.desktop-environment[data-after-hours="true"]::before {
+  filter: hue-rotate(70deg) saturate(1.2);
 }
 .desktop-environment[data-after-hours="true"] .desktop-wallpaper-copy {
   color: #b9f2d5;
