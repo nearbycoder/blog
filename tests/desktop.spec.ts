@@ -112,11 +112,11 @@ test("windows drag, resize, minimize, restore, maximize, and close", async ({
   const moved = (await win.boundingBox())!;
   expect(moved.x).toBeGreaterThan(before.x + 80);
   expect(moved.y).toBeGreaterThan(before.y + 50);
-  await page.mouse.move(moved.x + moved.width - 3, moved.y + moved.height - 3);
+  await page.mouse.move(moved.x + moved.width - 7, moved.y + moved.height - 7);
   await page.mouse.down();
   await page.mouse.move(
-    moved.x + moved.width + 47,
-    moved.y + moved.height + 47,
+    moved.x + moved.width + 43,
+    moved.y + moved.height + 43,
     { steps: 8 },
   );
   await page.mouse.up();

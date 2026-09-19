@@ -213,7 +213,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  resize: both;
+  resize: none;
   border: 1px solid var(--desk-line);
   border-radius: 10px;
   background: var(--desk-paper);
@@ -1031,7 +1031,8 @@
 .is-dragging * {
   cursor: grabbing !important;
 }
-.is-dragging iframe {
+.is-dragging iframe,
+.is-resizing iframe {
   pointer-events: none;
 }
 .desktop-noscript {
@@ -1074,8 +1075,8 @@
     height: calc(100% - 12px) !important;
     max-width: none;
     max-height: none;
-    min-width: 0;
-    min-height: 0;
+    min-width: 0 !important;
+    min-height: 0 !important;
     resize: none;
     border-radius: 5px;
   }
@@ -1243,8 +1244,8 @@
     top: 8px !important;
     width: calc(50% - 12px) !important;
     height: calc(100% - 16px) !important;
-    min-width: 0;
-    min-height: 0;
+    min-width: 0 !important;
+    min-height: 0 !important;
     resize: none;
   }
   :is(.desktop-window, .desktop-snap-preview)[data-snap$="right"] {
@@ -1294,4 +1295,88 @@
   .file-list-head {
     grid-template-columns: 1fr;
   }
+}
+
+/* Inside-border hit areas keep every edge usable without covering window controls. */
+.window-resize-handle {
+  position: absolute;
+  z-index: 20;
+  touch-action: none;
+}
+.window-resize-handle[data-resize="n"],
+.window-resize-handle[data-resize="s"] {
+  left: 14px;
+  right: 14px;
+  height: 6px;
+  cursor: ns-resize;
+}
+.window-resize-handle[data-resize="n"] {
+  top: 0;
+}
+.window-resize-handle[data-resize="s"] {
+  bottom: 0;
+}
+.window-resize-handle[data-resize="e"],
+.window-resize-handle[data-resize="w"] {
+  top: 14px;
+  bottom: 14px;
+  width: 6px;
+  cursor: ew-resize;
+}
+.window-resize-handle[data-resize="e"] {
+  right: 0;
+}
+.window-resize-handle[data-resize="w"] {
+  left: 0;
+}
+.window-resize-handle[data-resize="ne"],
+.window-resize-handle[data-resize="se"],
+.window-resize-handle[data-resize="sw"],
+.window-resize-handle[data-resize="nw"] {
+  width: 14px;
+  height: 14px;
+}
+.window-resize-handle[data-resize="ne"] {
+  top: 0;
+  right: 0;
+  cursor: nesw-resize;
+}
+.window-resize-handle[data-resize="se"] {
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+}
+.window-resize-handle[data-resize="sw"] {
+  bottom: 0;
+  left: 0;
+  cursor: nesw-resize;
+}
+.window-resize-handle[data-resize="nw"] {
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
+}
+.is-resizing,
+.is-resizing * {
+  cursor: var(--resize-cursor) !important;
+  user-select: none !important;
+}
+.desktop-snap-preview {
+  display: grid;
+  place-items: center;
+  color: var(--desk-accent);
+  font-size: 48px;
+  font-weight: 500;
+}
+.desktop-snap-preview[data-snap="maximized"] {
+  font-size: 24px;
+}
+@media (max-width: 760px) {
+  .window-resize-handle {
+    display: none;
+  }
+}
+
+.desktop-snap-preview[hidden] {
+  display: none;
 }
