@@ -1,0 +1,94 @@
+.classic-screen {
+  position: relative;
+  width: 100%;
+  max-width: min(480px, calc(clamp(140px, 100dvh - 480px, 360px) * 4 / 3));
+  margin-inline: auto;
+  aspect-ratio: 4 / 3;
+  background: #0a191e;
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.classic-screen canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.classic-screen canvas:focus-visible {
+  outline: 3px solid #9bedc8;
+  outline-offset: -3px;
+}
+.classic-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: #0a191eb8;
+  color: #effcf5;
+  font: 18px var(--font-mono);
+  text-align: center;
+}
+.classic-screen[data-state="running"] .classic-overlay {
+  display: none;
+}
+.classic-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.classic-controls {
+  display: flex;
+  gap: 5px;
+}
+.desktop-environment .classic-controls button {
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 20px;
+  touch-action: none;
+  user-select: none;
+}
+.classic-caption {
+  font-size: 11px;
+  color: var(--desk-muted);
+}
+.sliding-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  max-width: 350px;
+  margin-inline: auto;
+}
+.desktop-environment .sliding-board button {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  border: 1px solid var(--desk-line);
+  background: var(--desk-selected);
+  color: var(--desk-ink);
+  font: 24px var(--font-mono);
+  box-shadow: 0 3px 0 var(--desk-line);
+}
+.desktop-environment .sliding-board button[data-correct="true"] {
+  border-color: var(--desk-accent);
+}
+.desktop-environment .sliding-board button[data-empty="true"] {
+  background: transparent;
+  border-style: dashed;
+  box-shadow: none;
+}
+.sliding-board button[aria-disabled="true"] {
+  cursor: default;
+}
+@media (max-width: 760px) {
+  .classic-toolbar {
+    gap: 8px;
+  }
+  .desktop-environment .classic-controls button {
+    min-width: 40px;
+    padding-inline: 7px;
+  }
+}

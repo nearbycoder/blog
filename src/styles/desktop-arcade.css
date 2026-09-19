@@ -32,6 +32,7 @@
 }
 .arcade-selector {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   margin: 22px 0;
   padding-bottom: 16px;
@@ -364,7 +365,7 @@
     flex-wrap: wrap;
   }
   .arcade-selector button {
-    min-width: calc(50% - 4px);
+    min-width: calc(33.333% - 4px);
   }
 }
 .arcade-content:has([data-arcade-panel="doom"]:not([hidden])) .arcade-intro {
@@ -392,4 +393,32 @@
   .arcade-window.is-maximized .doom-host {
     max-height: calc(100dvh - 430px);
   }
+}
+
+.arcade-loading {
+  padding: 12px 24px;
+}
+.arcade-loading a,
+.game-status a {
+  text-decoration: underline;
+}
+.arcade-content:has(
+    :is(
+      [data-arcade-panel="snake"],
+      [data-arcade-panel="pong"],
+      [data-arcade-panel="puzzle"]
+    ):not([hidden])
+  )
+  .arcade-intro {
+  display: none;
+}
+.arcade-content:has(
+    :is(
+      [data-arcade-panel="snake"],
+      [data-arcade-panel="pong"],
+      [data-arcade-panel="puzzle"]
+    ):not([hidden])
+  )
+  .arcade-selector {
+  margin-top: 0;
 }
