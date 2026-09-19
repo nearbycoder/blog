@@ -7,21 +7,23 @@
   min-height: 0;
 }
 .desktop-environment {
-  --desk-paper: #23292d;
-  --desk-sidebar: #2c3236;
-  --desk-line: #454e53;
-  --desk-ink: #eff3f4;
-  --desk-muted: #b0bec4;
-  --desk-selected: #25594f;
-  --desk-accent: #56d9b1;
-  --desk-panel: #20292eee;
+  --desk-paper: #191f26;
+  --desk-sidebar: #222a33;
+  --desk-line: #37424d;
+  --desk-ink: #edf2f7;
+  --desk-muted: #a7b5c4;
+  --desk-selected: #284a43;
+  --desk-accent: #83dfbd;
+  --desk-panel: #1c242eef;
+  --desk-hover: #ffffff09;
+  --desk-radius: 8px;
   height: 100%;
   position: relative;
   isolation: isolate;
   color: var(--desk-ink);
   background: #071d29;
   font:
-    12px/1.4 system-ui,
+    13px/1.5 system-ui,
     sans-serif;
   display: flex;
   flex-direction: column;
@@ -34,14 +36,15 @@
   background: url("/images/desktop/emerald-glass.webp") center / cover;
 }
 :root[data-theme="light"] .desktop-environment {
-  --desk-paper: #fcfcfc;
-  --desk-sidebar: #eff1f2;
-  --desk-line: #c5cdd1;
-  --desk-ink: #20282e;
-  --desk-muted: #56636b;
-  --desk-selected: #c7e9df;
+  --desk-paper: #ffffff;
+  --desk-sidebar: #f3f5f7;
+  --desk-line: #d9dfe5;
+  --desk-ink: #202b38;
+  --desk-muted: #596777;
+  --desk-selected: #dceee7;
   --desk-accent: #11775a;
-  --desk-panel: #eff3f4f5;
+  --desk-panel: #f3f5f7f5;
+  --desk-hover: #172b3b06;
 }
 .desktop-environment button,
 .desktop-environment a,
@@ -56,6 +59,13 @@
 .desktop-environment :focus-visible {
   outline: 2px solid var(--desk-accent);
   outline-offset: -2px;
+}
+.desktop-environment {
+  scrollbar-width: thin;
+  scrollbar-color: var(--desk-line) transparent;
+}
+.desktop-environment button:disabled {
+  cursor: default;
 }
 .desktop-environment [hidden] {
   display: none !important;
@@ -77,20 +87,20 @@
 }
 .desktop-shortcuts {
   position: absolute;
-  top: 20px;
-  left: 18px;
+  top: 26px;
+  left: 20px;
   width: 92px;
   display: grid;
-  gap: 12px;
+  gap: 16px;
 }
 .desktop-shortcuts button {
   background: transparent;
   color: #fff;
   display: grid;
   justify-items: center;
-  gap: 4px;
+  gap: 8px;
   padding: 7px 2px;
-  border-radius: 3px;
+  border-radius: var(--desk-radius);
   font-size: 12px;
   text-shadow:
     0 1px 3px #000,
@@ -102,37 +112,36 @@
   box-shadow: inset 0 0 0 1px #86ffdf66;
 }
 .shortcut-art {
-  height: 45px;
-  width: 56px;
+  height: 48px;
+  width: 52px;
   display: grid;
   place-items: center;
   color: #70dcc5;
   filter: drop-shadow(0 2px 2px #00151c99);
+  border-radius: 12px;
+  background: linear-gradient(145deg, #324959dc, #122731ed);
+  box-shadow:
+    inset 0 1px #ffffff24,
+    0 4px 10px #0003;
 }
 .shortcut-art svg {
-  width: 43px;
-  height: 43px;
-  stroke-width: 1.3;
-  fill: #176f72;
+  width: 30px;
+  height: 30px;
+  stroke-width: 1.6;
+  fill: none;
 }
 .shortcut-projects {
   color: #96c5ff;
 }
-.shortcut-projects svg {
-  fill: #274c83;
-}
+
 .shortcut-lab {
   color: #e1c18b;
 }
-.shortcut-lab svg {
-  fill: #6c5438;
-}
+
 .shortcut-pages {
   color: #d5dde6;
 }
-.shortcut-pages svg {
-  fill: #546d7d;
-}
+
 .desktop-wallpaper-copy {
   position: absolute;
   bottom: 36px;
@@ -158,10 +167,10 @@
 }
 .desktop-window {
   position: absolute;
-  top: 65px;
+  top: 62px;
   left: 155px;
-  width: min(880px, calc(100% - 185px));
-  height: min(550px, calc(100% - 95px));
+  width: min(960px, calc(100% - 185px));
+  height: min(630px, calc(100% - 95px));
   min-width: 360px;
   min-height: 280px;
   max-width: calc(100% - 16px);
@@ -171,16 +180,16 @@
   overflow: hidden;
   resize: both;
   border: 1px solid var(--desk-line);
-  border-radius: 5px;
+  border-radius: 10px;
   background: var(--desk-paper);
   box-shadow:
-    0 14px 35px #0005,
+    0 18px 50px #0005,
     0 2px 6px #0004;
 }
 .desktop-window.is-active {
-  border-color: #72958c;
+  border-color: color-mix(in srgb, var(--desk-accent) 35%, var(--desk-line));
   box-shadow:
-    0 20px 55px #0008,
+    0 24px 70px #0008,
     0 3px 10px #0005;
 }
 .desktop-window:focus {
@@ -198,26 +207,27 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding-left: 9px;
-  height: 32px;
-  min-height: 32px;
+  padding-left: 14px;
+  height: 42px;
+  min-height: 42px;
   background: var(--desk-sidebar);
   user-select: none;
   touch-action: none;
   cursor: grab;
+  border-bottom: 1px solid var(--desk-line);
 }
 .window-title {
   display: flex;
   align-items: center;
-  gap: 7px;
-  font-size: 12px;
+  gap: 9px;
+  font-size: 13px;
   overflow: hidden;
   white-space: nowrap;
   min-width: 0;
   flex: 1;
 }
 .window-title > .desktop-icon {
-  margin-right: auto;
+  margin-right: 0;
   color: var(--desk-accent);
 }
 .window-title strong {
@@ -241,7 +251,7 @@
   flex-shrink: 0;
 }
 .window-controls button {
-  width: 30px;
+  width: 38px;
   background: transparent;
   display: grid;
   place-items: center;
@@ -260,8 +270,8 @@
 }
 .library-toolbar {
   display: flex;
-  padding: 6px 8px;
-  gap: 8px;
+  padding: 10px 14px;
+  gap: 10px;
   align-items: center;
   border-bottom: 1px solid var(--desk-line);
   background: var(--desk-sidebar);
@@ -270,9 +280,9 @@
 .file-view-controls button {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 3px;
+  width: 32px;
+  height: 32px;
+  border-radius: 5px;
   background: transparent;
   color: var(--desk-ink);
   flex-shrink: 0;
@@ -289,7 +299,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--desk-muted);
   white-space: nowrap;
 }
@@ -306,13 +316,13 @@
   gap: 7px;
   background: var(--desk-paper);
   border: 1px solid var(--desk-line);
-  border-radius: 3px;
-  padding: 5px 8px;
+  border-radius: 6px;
+  padding: 7px 10px;
   color: var(--desk-muted);
 }
 .desktop-search {
   margin-left: auto;
-  width: min(285px, 43%);
+  width: min(330px, 45%);
 }
 .desktop-search svg,
 .launcher-search svg {
@@ -327,7 +337,7 @@
   min-width: 0;
   background: transparent;
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--desk-ink);
 }
 .desktop-search input::placeholder,
@@ -345,25 +355,30 @@
 }
 .desktop-search kbd {
   white-space: nowrap;
-  font: 9px system-ui;
+  font: 10px system-ui;
+  border: 1px solid var(--desk-line);
+  border-radius: 3px;
+  padding: 2px 4px;
 }
 .library-body {
   display: grid;
-  grid-template-columns: 157px minmax(0, 1fr);
+  grid-template-columns: 190px minmax(0, 1fr);
   min-height: 0;
   flex: 1;
 }
 .library-sidebar {
-  padding: 12px 5px;
+  padding: 18px 10px;
   border-right: 1px solid var(--desk-line);
   background: var(--desk-sidebar);
   overflow-y: auto;
 }
 .library-sidebar > p {
   color: var(--desk-muted);
-  font-size: 11px;
+  font-size: 10px;
   padding: 0 9px;
-  margin: 0 0 8px;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
 }
 .library-sidebar button {
   display: flex;
@@ -371,12 +386,12 @@
   gap: 8px;
   width: 100%;
   text-align: left;
-  padding: 6px 9px;
+  padding: 9px 10px;
   background: transparent;
-  border-radius: 3px;
+  border-radius: 6px;
   color: var(--desk-ink);
-  font-size: 12px;
-  margin-bottom: 1px;
+  font-size: 13px;
+  margin-bottom: 3px;
 }
 .library-sidebar button .desktop-icon {
   color: var(--desk-accent);
@@ -388,7 +403,8 @@
 .library-sidebar button small {
   margin-left: auto;
   color: var(--desk-muted);
-  font-size: 10px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
 }
 .library-sidebar button[aria-pressed="true"],
 .library-sidebar button:hover {
@@ -415,15 +431,15 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 12px 14px;
+  padding: 20px 20px 16px;
 }
 .library-intro h1 {
-  font-size: 13px;
+  font-size: 18px;
   font-weight: 600;
   margin: 0;
 }
 .library-intro > span {
-  font-size: 10px;
+  font-size: 11px;
   color: var(--desk-muted);
 }
 .desktop-eyebrow {
@@ -437,9 +453,9 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 70px 100px;
   gap: 12px;
-  padding: 5px 14px;
+  padding: 9px 20px;
   border-block: 1px solid var(--desk-line);
-  background: var(--desk-sidebar);
+  background: var(--desk-paper);
   font-size: 11px;
   color: var(--desk-muted);
   position: sticky;
@@ -448,18 +464,18 @@
 }
 .desktop-files {
   list-style: none;
-  padding: 4px 5px;
+  padding: 4px 10px 12px;
   margin: 0;
 }
 .desktop-files a {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 7px 9px;
-  border-radius: 2px;
+  gap: 12px;
+  padding: 11px 10px;
+  border-radius: 6px;
 }
 .desktop-files li:nth-child(even) > a {
-  background: #8a9ba308;
+  background: var(--desk-hover);
 }
 .desktop-files a:hover,
 .desktop-files a:focus-visible {
@@ -483,7 +499,7 @@
   flex: 1;
 }
 .file-copy strong {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 400;
   display: block;
   overflow: hidden;
@@ -497,7 +513,7 @@
 .file-date {
   flex-shrink: 0;
   color: var(--desk-muted);
-  font-size: 10px;
+  font-size: 11px;
 }
 .file-kind {
   width: 73px;
@@ -510,17 +526,18 @@
 }
 .library-content[data-view="grid"] .desktop-files {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 8px;
-  padding: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+  gap: 12px;
+  padding: 16px;
 }
 .library-content[data-view="grid"] .desktop-files a {
   flex-direction: column;
   text-align: center;
-  padding: 12px 8px;
+  padding: 18px 10px;
   height: 100%;
-  background: transparent;
-  gap: 8px;
+  background: var(--desk-hover);
+  gap: 14px;
+  border: 1px solid var(--desk-line);
 }
 .library-content[data-view="grid"] .file-icon svg {
   width: 38px;
@@ -541,11 +558,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  min-height: 26px;
+  min-height: 30px;
   padding: 4px 12px;
   border-top: 1px solid var(--desk-line);
   background: var(--desk-sidebar);
-  font-size: 10px;
+  font-size: 11px;
   color: var(--desk-muted);
 }
 .desktop-empty {
@@ -574,13 +591,13 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  flex: 0 0 48px;
-  height: 48px;
-  padding: 5px 7px;
-  margin: 0 8px 8px;
+  flex: 0 0 56px;
+  height: 56px;
+  padding: 6px 10px;
+  margin: 0 12px 12px;
   background: var(--desk-panel);
   border: 1px solid var(--desk-line);
-  border-radius: 5px;
+  border-radius: 10px;
   z-index: 2;
   box-shadow: 0 3px 12px #0005;
   backdrop-filter: blur(22px);
@@ -590,13 +607,13 @@
 .panel-tray > a {
   display: grid;
   place-items: center;
-  border-radius: 3px;
+  border-radius: 6px;
   background: transparent;
-  height: 36px;
+  height: 40px;
   flex-shrink: 0;
 }
 .desktop-dock > button {
-  width: 37px;
+  width: 42px;
 }
 .desktop-dock button:hover,
 .panel-tray a:hover {
@@ -631,7 +648,7 @@
   fill: #68557e;
 }
 .app-terminal {
-  color: #c6d3d8;
+  color: var(--desk-muted);
 }
 .app-terminal svg {
   fill: none;
@@ -654,11 +671,11 @@
   scrollbar-width: thin;
 }
 .desktop-tasks button {
-  padding: 9px 12px;
-  border-radius: 3px;
+  padding: 10px 14px;
+  border-radius: 6px;
   background: transparent;
   color: var(--desk-ink);
-  font-size: 11px;
+  font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -716,24 +733,24 @@
 .shell-popup {
   position: absolute;
   z-index: 3;
-  bottom: 64px;
+  bottom: 78px;
   background: var(--desk-panel);
   border: 1px solid var(--desk-line);
-  border-radius: 5px;
+  border-radius: 12px;
   box-shadow: 0 12px 40px #0008;
   backdrop-filter: blur(30px);
-  max-height: calc(100% - 80px);
+  max-height: calc(100% - 94px);
   overflow-y: auto;
 }
 .desktop-launcher {
-  left: 8px;
-  width: min(430px, calc(100% - 16px));
+  left: 12px;
+  width: min(460px, calc(100% - 24px));
 }
 .launcher-heading {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 19px 20px 16px;
+  padding: 22px 22px 18px;
 }
 .user-avatar {
   display: grid;
@@ -768,19 +785,19 @@
 }
 .launcher-apps {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   padding: 0 12px;
-  gap: 4px;
+  gap: 6px;
 }
 .launcher-apps button {
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 10px 3px;
-  gap: 5px;
-  background: transparent;
+  padding: 14px 3px;
+  gap: 8px;
+  background: var(--desk-hover);
   color: var(--desk-ink);
-  border-radius: 3px;
+  border-radius: 8px;
 }
 .launcher-apps button:hover,
 .launcher-places button:hover,
@@ -801,7 +818,7 @@
   font-weight: 500;
 }
 .launcher-apps button > span:last-child {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--desk-muted);
 }
 .launcher-places {
@@ -812,10 +829,10 @@
   align-items: center;
   width: 100%;
   gap: 10px;
-  padding: 8px;
+  padding: 10px;
   background: transparent;
   color: var(--desk-ink);
-  border-radius: 3px;
+  border-radius: 6px;
   text-align: left;
 }
 .launcher-places button > .desktop-icon:first-child {
@@ -865,28 +882,28 @@
 .launcher-results button {
   display: block;
   width: 100%;
-  padding: 9px 8px;
+  padding: 12px 10px;
   background: transparent;
   text-align: left;
   color: var(--desk-ink);
-  border-radius: 3px;
+  border-radius: 6px;
 }
 .launcher-results strong {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
 }
 .launcher-results button span {
   display: block;
   color: var(--desk-muted);
-  font-size: 10px;
+  font-size: 11px;
   margin-top: 3px;
   overflow-wrap: anywhere;
 }
 .desktop-calendar {
-  right: 8px;
+  right: 12px;
   width: min(304px, calc(100% - 16px));
-  padding: 16px;
+  padding: 20px;
 }
 .desktop-calendar header {
   display: flex;
@@ -922,7 +939,7 @@
 }
 .calendar-days time {
   padding: 8px 0;
-  border-radius: 3px;
+  border-radius: 6px;
   font-variant-numeric: tabular-nums;
 }
 .calendar-days [aria-current="date"] {
@@ -940,14 +957,14 @@
   height: min(720px, calc(100% - 48px));
 }
 .reader-toolbar {
-  min-height: 34px;
+  min-height: 40px;
   padding: 7px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
   border-bottom: 1px solid var(--desk-line);
-  font-size: 10px;
+  font-size: 12px;
 }
 .reader-toolbar > span {
   overflow: hidden;
@@ -1044,14 +1061,14 @@
     display: none;
   }
   .window-titlebar {
-    height: 38px;
-    min-height: 38px;
+    height: 44px;
+    min-height: 44px;
     padding-left: 10px;
     cursor: default;
     gap: 5px;
   }
   .window-controls button {
-    width: 34px;
+    width: 40px;
   }
   .window-controls button[data-window-action="maximize"] {
     display: none;
@@ -1061,6 +1078,7 @@
     gap: 5px;
   }
   .desktop-search {
+    min-height: 40px;
     width: 100%;
     margin: 0;
   }
@@ -1078,6 +1096,7 @@
     border-bottom: 1px solid var(--desk-line);
   }
   .library-sidebar button {
+    min-height: 40px;
     white-space: nowrap;
     width: auto;
     margin: 0;
@@ -1095,7 +1114,8 @@
     padding: 10px 12px;
   }
   .desktop-files a {
-    padding: 9px 7px;
+    min-height: 48px;
+    padding: 10px 7px;
     gap: 9px;
   }
   .library-status {
@@ -1109,8 +1129,8 @@
     margin: 0 5px 5px;
     padding: 4px;
     gap: 2px;
-    height: 46px;
-    flex-basis: 46px;
+    height: 50px;
+    flex-basis: 50px;
   }
   .desktop-dock > button {
     width: 32px;
@@ -1138,7 +1158,10 @@
     margin: 0 2px;
   }
   .shell-popup {
-    bottom: 58px;
+    bottom: 62px;
+  }
+  .launcher-apps {
+    grid-template-columns: repeat(2, 1fr);
   }
   .launcher-heading {
     padding: 15px;

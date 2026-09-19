@@ -38,12 +38,8 @@ import DesktopIcon from "./DesktopIcon.astro";
       </div>
     </div>
     <div class="arcade-content">
-      <header class="arcade-intro">
-        <p class="desktop-eyebrow">A perfectly good use of five minutes</p><h2>
-          Small games.<br />Big “one more try” energy.
-        </h2><p>No coins needed. Pick a distraction.</p>
-      </header>
       <nav class="arcade-selector" aria-label="Choose an arcade activity">
+        <p class="desktop-eyebrow">Game library</p>
         <button
           type="button"
           data-arcade-select="memory"
@@ -76,7 +72,7 @@ import DesktopIcon from "./DesktopIcon.astro";
               aria-pressed="false"
               aria-controls={`arcade-${id}`}
             >
-              <DesktopIcon name="game" />
+              <DesktopIcon name={id as "snake" | "pong" | "puzzle"} />
               {title}
             </button>
           ))
@@ -89,228 +85,234 @@ import DesktopIcon from "./DesktopIcon.astro";
           ><DesktopIcon name="terminal" />Terminal</button
         >
       </nav>
-      {
-        [
-          ["snake", "Snake"],
-          ["pong", "Pong"],
-          ["puzzle", "15 Puzzle"],
-        ].map(([id, title]) => (
-          <section
-            id={`arcade-${id}`}
-            data-arcade-panel={id}
-            aria-label={title}
-            hidden
-          >
-            <p class="game-status" role="status">
-              Opening {title}…
-            </p>
-          </section>
-        ))
-      }
-      <section
-        id="arcade-memory"
-        data-arcade-panel="memory"
-        aria-labelledby="memory-title"
-      >
-        <div class="game-heading">
-          <h3 id="memory-title">Match the syntax</h3><button
-            type="button"
-            class="arcade-button"
-            data-memory-reset>New deal</button
-          >
-        </div>
-        <p class="game-instructions">
-          Flip two cards. Find all six pairs in as few moves as you can.
-        </p>
-        <div
-          class="memory-board"
-          data-memory-board
-          role="group"
-          aria-label="Memory cards"
+      <div class="arcade-main">
+        {
+          [
+            ["snake", "Snake"],
+            ["pong", "Pong"],
+            ["puzzle", "15 Puzzle"],
+          ].map(([id, title]) => (
+            <section
+              id={`arcade-${id}`}
+              data-arcade-panel={id}
+              aria-label={title}
+              hidden
+            >
+              <p class="game-status" role="status">
+                Opening {title}…
+              </p>
+            </section>
+          ))
+        }
+        <section
+          id="arcade-memory"
+          data-arcade-panel="memory"
+          aria-labelledby="memory-title"
         >
-        </div>
-        <p class="game-status" data-memory-status role="status"></p>
-      </section>
-      <section
-        id="arcade-sweep"
-        data-arcade-panel="sweep"
-        aria-labelledby="sweep-title"
-        hidden
-      >
-        <div class="game-heading">
-          <h3 id="sweep-title">Ship without bugs</h3><button
-            type="button"
-            class="arcade-button"
-            data-sweep-reset>New board</button
+          <div class="game-heading">
+            <h3 id="memory-title">Match the syntax</h3><button
+              type="button"
+              class="arcade-button"
+              data-memory-reset>New deal</button
+            >
+          </div>
+          <p class="game-instructions">
+            Flip two cards. Find all six pairs in as few moves as you can.
+          </p>
+          <div
+            class="memory-board"
+            data-memory-board
+            role="group"
+            aria-label="Memory cards"
           >
-        </div>
-        <p class="game-instructions">
-          Ten bugs are hiding here. Numbers count neighboring bugs. Reveal all
-          safe squares to win. Your first reveal is always safe.
-        </p>
-        <div class="sweep-tools">
-          <button
-            type="button"
-            class="arcade-button"
-            data-sweep-flag
-            aria-pressed="false"><DesktopIcon name="flag" />Flag mode</button
-          ><span data-sweep-count>0 / 10 flagged</span>
-        </div>
-        <div
-          class="sweep-board"
-          data-sweep-board
-          role="group"
-          aria-label="Bug Sweep board"
-        >
-        </div>
-        <p class="game-status" data-sweep-status role="status">
-          Pick a square to begin.
-        </p>
-        <p class="game-instructions">
-          Use arrow keys to move and Enter to play. Turn on Flag mode to mark a
-          square, or right-click it.
-        </p>
-      </section>
-      <section
-        id="arcade-doom"
-        data-arcade-panel="doom"
-        aria-labelledby="doom-title"
-        hidden
-      >
-        <div class="game-heading">
-          <h3 id="doom-title">Yes, it runs DOOM.</h3><span
-            class="terminal-badge">1993 / id Software</span
-          >
-        </div>
-        <p class="game-instructions">
-          Knee-Deep in the Dead. The original shareware episode, right here on
-          your desktop.
-        </p>
-        <div class="doom-toolbar">
-          <button type="button" class="arcade-button" data-doom-play
-            >Play DOOM</button
-          >
-          <button
-            type="button"
-            class="arcade-button"
-            data-doom-pause
-            aria-pressed="false"
-            hidden>Pause</button
-          >
-          <button
-            type="button"
-            class="arcade-button"
-            data-doom-sound
-            aria-pressed="false"
-            hidden>Sound on</button
-          >
-          <button type="button" class="arcade-button" data-doom-stop hidden
-            >Stop game</button
-          >
-        </div>
-        <p class="game-status" data-doom-status role="status">
-          Shareware Episode One · Loads only when you play.
-        </p>
-        <div class="doom-host" data-doom-host hidden></div>
-        <div
-          class="doom-controls"
-          data-doom-controls
-          role="group"
-          aria-label="DOOM touch controls"
+          </div>
+          <p class="game-status" data-memory-status role="status"></p>
+        </section>
+        <section
+          id="arcade-sweep"
+          data-arcade-panel="sweep"
+          aria-labelledby="sweep-title"
           hidden
         >
-          <div class="doom-dpad">
-            <button type="button" data-doom-key="265" aria-label="Move forward"
-              >↑</button
-            >
-            <button type="button" data-doom-key="263" aria-label="Turn left"
-              >←</button
-            >
-            <button type="button" data-doom-key="264" aria-label="Move backward"
-              >↓</button
-            >
-            <button type="button" data-doom-key="262" aria-label="Turn right"
-              >→</button
+          <div class="game-heading">
+            <h3 id="sweep-title">Ship without bugs</h3><button
+              type="button"
+              class="arcade-button"
+              data-sweep-reset>New board</button
             >
           </div>
-          <div class="doom-actions">
-            <button type="button" data-doom-key="341">Fire</button><button
-              type="button"
-              data-doom-key="32">Use</button
-            >
-            <button type="button" data-doom-key="257">Enter</button><button
-              type="button"
-              data-doom-key="256">Menu</button
-            >
-          </div>
-        </div>
-        <details class="doom-help">
-          <summary>Controls & session</summary>
           <p class="game-instructions">
-            Arrow keys move / turn · Ctrl fires · Space opens doors · Shift runs
-            · 1–7 switch weapons · Esc opens the menu. On touch screens, use the
-            buttons below the game. Sound starts muted. Switching away pauses;
-            Resume continues. Closing or stopping resets this session.
+            Ten bugs are hiding here. Numbers count neighboring bugs. Reveal all
+            safe squares to win. Your first reveal is always safe.
           </p>
-        </details>
-        <p class="doom-credits">
-          <a href="/games/doom/README.txt" target="_blank" rel="noopener"
-            >Game credits & source</a
-          > · Powered by <a
-            href="https://js-dos.com/"
-            target="_blank"
-            rel="noopener">js-dos</a
-          >
-        </p>
-      </section>
-      <section
-        id="arcade-terminal"
-        data-arcade-panel="terminal"
-        aria-labelledby="terminal-title"
-        hidden
-      >
-        <div class="game-heading">
-          <h3 id="terminal-title">Pocket terminal</h3><span
-            class="terminal-badge">guest session</span
-          >
-        </div>
-        <p class="game-instructions">
-          A few commands. A few secrets. Start with <code>help</code>.
-        </p>
-        <div class="pocket-terminal">
+          <div class="sweep-tools">
+            <button
+              type="button"
+              class="arcade-button"
+              data-sweep-flag
+              aria-pressed="false"><DesktopIcon name="flag" />Flag mode</button
+            ><span data-sweep-count>0 / 10 flagged</span>
+          </div>
           <div
-            class="terminal-output"
-            role="log"
-            aria-label="Terminal output"
-            aria-live="polite"
-            tabindex="0"
-            data-terminal-output
+            class="sweep-board"
+            data-sweep-board
+            role="group"
+            aria-label="Bug Sweep board"
           >
           </div>
-          <form data-terminal-form>
-            <label for="arcade-command"
-              ><span aria-hidden="true">~ $</span><span class="sr-only"
-                >Terminal command</span
-              ></label
-            ><input
-              id="arcade-command"
-              name="command"
-              maxlength="120"
-              autocomplete="off"
-              autocapitalize="off"
-              spellcheck="false"
-              placeholder="help"
-            /><button type="submit">Run</button>
-          </form>
-        </div>
-        <details class="arcade-secrets">
-          <summary>A small hint, if you’re curious</summary><p>
-            Try <code>sudo make coffee</code> or <code>cat README.txt</code>.
-            For a change of scenery, enter <code>party</code>. On the desktop,
-            the old ↑ ↑ ↓ ↓ ← → ← → B A code works too.
+          <p class="game-status" data-sweep-status role="status">
+            Pick a square to begin.
           </p>
-        </details>
-      </section>
+          <p class="game-instructions">
+            Use arrow keys to move and Enter to play. Turn on Flag mode to mark
+            a square, or right-click it.
+          </p>
+        </section>
+        <section
+          id="arcade-doom"
+          data-arcade-panel="doom"
+          aria-labelledby="doom-title"
+          hidden
+        >
+          <div class="game-heading">
+            <h3 id="doom-title">Yes, it runs DOOM.</h3><span
+              class="terminal-badge">1993 / id Software</span
+            >
+          </div>
+          <p class="game-instructions">
+            Knee-Deep in the Dead. The original shareware episode, right here on
+            your desktop.
+          </p>
+          <div class="doom-toolbar">
+            <button type="button" class="arcade-button" data-doom-play
+              >Play DOOM</button
+            >
+            <button
+              type="button"
+              class="arcade-button"
+              data-doom-pause
+              aria-pressed="false"
+              hidden>Pause</button
+            >
+            <button
+              type="button"
+              class="arcade-button"
+              data-doom-sound
+              aria-pressed="false"
+              hidden>Sound on</button
+            >
+            <button type="button" class="arcade-button" data-doom-stop hidden
+              >Stop game</button
+            >
+          </div>
+          <p class="game-status" data-doom-status role="status">
+            Shareware Episode One · Loads only when you play.
+          </p>
+          <div class="doom-host" data-doom-host hidden></div>
+          <div
+            class="doom-controls"
+            data-doom-controls
+            role="group"
+            aria-label="DOOM touch controls"
+            hidden
+          >
+            <div class="doom-dpad">
+              <button
+                type="button"
+                data-doom-key="265"
+                aria-label="Move forward">↑</button
+              >
+              <button type="button" data-doom-key="263" aria-label="Turn left"
+                >←</button
+              >
+              <button
+                type="button"
+                data-doom-key="264"
+                aria-label="Move backward">↓</button
+              >
+              <button type="button" data-doom-key="262" aria-label="Turn right"
+                >→</button
+              >
+            </div>
+            <div class="doom-actions">
+              <button type="button" data-doom-key="341">Fire</button><button
+                type="button"
+                data-doom-key="32">Use</button
+              >
+              <button type="button" data-doom-key="257">Enter</button><button
+                type="button"
+                data-doom-key="256">Menu</button
+              >
+            </div>
+          </div>
+          <details class="doom-help">
+            <summary>Controls & session</summary>
+            <p class="game-instructions">
+              Arrow keys move / turn · Ctrl fires · Space opens doors · Shift
+              runs · 1–7 switch weapons · Esc opens the menu. On touch screens,
+              use the buttons below the game. Sound starts muted. Switching away
+              pauses; Resume continues. Closing or stopping resets this session.
+            </p>
+          </details>
+          <p class="doom-credits">
+            <a href="/games/doom/README.txt" target="_blank" rel="noopener"
+              >Game credits & source</a
+            > · Powered by <a
+              href="https://js-dos.com/"
+              target="_blank"
+              rel="noopener">js-dos</a
+            >
+          </p>
+        </section>
+        <section
+          id="arcade-terminal"
+          data-arcade-panel="terminal"
+          aria-labelledby="terminal-title"
+          hidden
+        >
+          <div class="game-heading">
+            <h3 id="terminal-title">Pocket terminal</h3><span
+              class="terminal-badge">guest session</span
+            >
+          </div>
+          <p class="game-instructions">
+            A few commands. A few secrets. Start with <code>help</code>.
+          </p>
+          <div class="pocket-terminal">
+            <div
+              class="terminal-output"
+              role="log"
+              aria-label="Terminal output"
+              aria-live="polite"
+              tabindex="0"
+              data-terminal-output
+            >
+            </div>
+            <form data-terminal-form>
+              <label for="arcade-command"
+                ><span aria-hidden="true">~ $</span><span class="sr-only"
+                  >Terminal command</span
+                ></label
+              ><input
+                id="arcade-command"
+                name="command"
+                maxlength="120"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+                placeholder="help"
+              /><button type="submit">Run</button>
+            </form>
+          </div>
+          <details class="arcade-secrets">
+            <summary>A small hint, if you’re curious</summary><p>
+              Try <code>sudo make coffee</code> or <code>cat README.txt</code>.
+              For a change of scenery, enter <code>party</code>. On the desktop,
+              the old ↑ ↑ ↓ ↓ ← → ← → B A code works too.
+            </p>
+          </details>
+        </section>
+      </div>
     </div>
     <footer class="library-status">
       <span>Small games. Zero stakes.</span><span

@@ -1,3 +1,10 @@
+import plusIcon from "@tabler/icons/outline/plus.svg?raw";
+import splitRightIcon from "@tabler/icons/outline/layout-columns.svg?raw";
+import splitDownIcon from "@tabler/icons/outline/layout-rows.svg?raw";
+import closeIcon from "@tabler/icons/outline/x.svg?raw";
+import connectIcon from "@tabler/icons/outline/plug-connected.svg?raw";
+import disconnectIcon from "@tabler/icons/outline/plug-connected-x.svg?raw";
+import outputIcon from "@tabler/icons/outline/align-left.svg?raw";
 import { Ghostty, Terminal, FitAddon } from "ghostty-web";
 import {
   connectionSettings,
@@ -5,6 +12,9 @@ import {
   MAX_TABS,
   serverMessage,
 } from "../lib/terminal/protocol";
+
+const icon = (svg: string) =>
+  `<span class="ghostty-icon" aria-hidden="true">${svg}</span>`;
 
 let engine: Promise<Ghostty> | undefined;
 const getEngine = () =>
@@ -42,14 +52,15 @@ export async function mountGhostty(root: HTMLElement): Promise<() => void> {
   const content = root.querySelector<HTMLElement>("[data-ghostty-content]")!;
   content.innerHTML = `
     <div class="ghostty-toolbar" role="group" aria-label="Terminal workspace">
-      <button type="button" data-mux="tab">New tab</button>
-      <button type="button" data-mux="right">Split right</button>
-      <button type="button" data-mux="down">Split down</button>
-      <button type="button" data-mux="close-tab">Close tab</button>
-      <button type="button" data-mux="connect">Connect…</button>
+      <button type="button" data-mux="tab">${icon(plusIcon)}<span>New tab</span></button>
+      <button type="button" data-mux="right">${icon(splitRightIcon)}<span>Split right</span></button>
+      <button type="button" data-mux="down">${icon(splitDownIcon)}<span>Split down</span></button>
+      <button type="button" data-mux="close-tab" aria-label="Close tab" title="Close tab">${icon(closeIcon)}</button>
+      <button type="button" data-mux="connect" aria-label="Connect…" title="Connect">${icon(connectIcon)}<span>Connect…</span></button>
     </div>
     <div class="ghostty-tabs" role="tablist" aria-label="Terminal tabs"></div>
     <form class="ghostty-connection" aria-label="Connect a terminal" hidden>
+      <span class="ghostty-connection-icon" aria-hidden="true">${icon(connectIcon)}</span>
       <h3>Open a connection</h3>
       <p>Connect this pane to a terminal service you control. Access tokens stay in this window and are never saved. <a href="https://github.com/nearbycoder/blog/blob/main/docs/desktop-terminal.md" target="_blank" rel="noopener noreferrer">Connection setup</a></p>
       <div class="ghostty-fields">
@@ -163,7 +174,7 @@ export async function mountGhostty(root: HTMLElement): Promise<() => void> {
     const element = document.createElement("section");
     element.className = "ghostty-pane";
     element.setAttribute("aria-label", `Terminal pane ${id}`);
-    element.innerHTML = `<div class="ghostty-pane-bar"><strong>Session ${id}</strong><button type="button" data-pane-connect>Connect</button><button type="button" data-pane-disconnect>Disconnect</button><button type="button" data-pane-output aria-pressed="false">Read output</button><button type="button" data-pane-close aria-label="Close terminal pane ${id}">×</button></div><div class="ghostty-surface"></div><pre class="ghostty-transcript" tabindex="0" aria-label="Terminal output ${id}" hidden></pre><p class="ghostty-status" role="status">Not connected</p>`;
+    element.innerHTML = `<div class="ghostty-pane-bar"><strong>Session ${id}</strong><button type="button" data-pane-connect aria-label="Connect" title="Connect">${icon(connectIcon)}</button><button type="button" data-pane-disconnect aria-label="Disconnect" title="Disconnect">${icon(disconnectIcon)}</button><button type="button" data-pane-output aria-label="Read output" title="Read output" aria-pressed="false">${icon(outputIcon)}</button><button type="button" data-pane-close aria-label="Close terminal pane ${id}" title="Close pane">${icon(closeIcon)}</button></div><div class="ghostty-surface"></div><pre class="ghostty-transcript" tabindex="0" aria-label="Terminal output ${id}" hidden></pre><p class="ghostty-status" role="status">Not connected</p>`;
     tab.element.append(element);
     const surface = element.querySelector<HTMLElement>(".ghostty-surface")!;
     const term = new Terminal({

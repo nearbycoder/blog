@@ -1,6 +1,7 @@
 .desktop-window.ghostty-window {
-  width: min(960px, calc(100% - 32px));
-  height: min(700px, calc(100% - 32px));
+  container-type: inline-size;
+  width: min(1020px, calc(100% - 32px));
+  height: min(720px, calc(100% - 32px));
   min-width: 290px;
 }
 .ghostty-content {
@@ -18,54 +19,89 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-shrink: 0;
 }
 .ghostty-toolbar {
   flex-wrap: wrap;
-  padding: 9px 12px;
+  padding: 8px 12px;
   background: var(--desk-sidebar);
   border-bottom: 1px solid var(--desk-line);
 }
 .desktop-environment .ghostty-content button {
-  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
   padding: 6px 10px;
-  border: 1px solid var(--desk-line);
-  border-radius: 4px;
-  background: var(--desk-paper);
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
   color: var(--desk-ink);
-  font: 11px var(--font-mono);
-}
-.ghostty-content button:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-.ghostty-tabs {
-  overflow-x: auto;
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--desk-line);
-  flex-shrink: 0;
-}
-.ghostty-tabs button {
+  font: inherit;
+  font-size: 12px;
   white-space: nowrap;
 }
-.ghostty-content button[aria-selected="true"] {
+.ghostty-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+.ghostty-icon svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 1.6;
+}
+.desktop-environment .ghostty-content button:hover:not(:disabled) {
   background: var(--desk-selected);
-  border-color: var(--desk-accent);
+}
+.ghostty-content button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.desktop-environment .ghostty-toolbar [data-mux="connect"] {
+  margin-left: auto;
+  background: var(--desk-selected);
+  color: var(--desk-accent);
+}
+.ghostty-tabs {
+  gap: 4px;
+  overflow-x: auto;
+  padding: 6px 12px 0;
+  border-bottom: 1px solid var(--desk-line);
+  background: var(--desk-sidebar);
+}
+.desktop-environment .ghostty-tabs button {
+  min-width: 128px;
+  justify-content: flex-start;
+  padding: 9px 14px;
+  border-radius: 6px 6px 0 0;
+  color: var(--desk-muted);
+}
+.desktop-environment .ghostty-content button[aria-selected="true"] {
+  background: var(--desk-paper);
+  color: var(--desk-ink);
+  box-shadow: inset 0 2px var(--desk-accent);
 }
 .ghostty-sessions {
   flex: 1;
   min-height: 0;
   display: flex;
 }
+.ghostty-sessions[inert] {
+  opacity: 0.3;
+}
 .ghostty-tab {
   display: flex;
   flex: 1;
-  gap: 3px;
+  gap: 6px;
+  padding: 6px;
   min-width: 0;
   min-height: 0;
-  background: var(--desk-line);
+  background: var(--desk-paper);
 }
 .ghostty-tab[data-axis="down"] {
   flex-direction: column;
+  overflow-y: auto;
 }
 .ghostty-pane {
   display: flex;
@@ -74,20 +110,35 @@
   min-width: 0;
   min-height: 0;
   background: #0a171d;
-  border: 1px solid transparent;
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  overflow: hidden;
 }
 .ghostty-pane[data-active="true"] {
-  border-color: var(--desk-accent);
+  border-color: color-mix(in srgb, var(--desk-accent) 55%, var(--desk-line));
 }
 .ghostty-pane-bar {
-  padding: 5px 8px;
+  gap: 2px;
+  padding: 4px 6px 4px 12px;
   background: var(--desk-sidebar);
   flex-wrap: wrap;
+  border-bottom: 1px solid var(--desk-line);
 }
 .ghostty-pane-bar strong {
   flex: 1;
+  min-width: 65px;
   font-size: 11px;
   font-weight: 500;
+}
+.desktop-environment .ghostty-pane-bar button {
+  width: 30px;
+  min-height: 30px;
+  padding: 5px;
+  color: var(--desk-muted);
+}
+.desktop-environment .ghostty-pane-bar button[aria-pressed="true"] {
+  background: var(--desk-selected);
+  color: var(--desk-accent);
 }
 .ghostty-surface {
   position: relative;
@@ -95,63 +146,85 @@
   min-width: 0;
   flex: 1;
   overflow: hidden;
-  padding: 6px;
+  padding: 10px;
 }
 .ghostty-surface textarea {
   font-size: 16px !important;
 }
 .ghostty-status {
+  flex-shrink: 0;
   margin: 0;
-  padding: 8px 12px;
-  font: 11px/1.6 var(--font-mono);
+  padding: 7px 12px;
+  font-size: 11px;
+  line-height: 1.6;
   color: var(--desk-muted);
+  background: var(--desk-paper);
+}
+.ghostty-pane > .ghostty-status {
+  border-top: 1px solid var(--desk-line);
 }
 .ghostty-keys {
   padding: 6px 12px;
   flex-wrap: wrap;
   border-top: 1px solid var(--desk-line);
+  background: var(--desk-sidebar);
 }
-.ghostty-keys button {
+.desktop-environment .ghostty-keys button {
   min-width: 36px;
+  min-height: 30px;
+  padding: 3px 8px;
+  background: var(--desk-paper);
+  border-color: var(--desk-line);
+  font: 11px var(--font-mono);
   touch-action: manipulation;
 }
 .ghostty-connection {
   position: absolute;
   z-index: 2;
-  top: 95px;
-  left: 12px;
-  right: 12px;
-  max-height: calc(100% - 110px);
-  background: var(--desk-sidebar);
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(500px, calc(100% - 32px));
+  max-height: calc(100% - 116px);
+  background: var(--desk-paper);
   border: 1px solid var(--desk-line);
-  border-radius: 6px;
-  box-shadow: 0 12px 40px #0006;
-  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px #0006;
+  padding: 24px;
   overflow-y: auto;
-  flex-shrink: 0;
-
-  border-bottom: 1px solid var(--desk-line);
+}
+.ghostty-connection-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 14px;
+  border-radius: 9px;
+  background: var(--desk-selected);
+  color: var(--desk-accent);
 }
 .ghostty-connection h3 {
-  margin: 0 0 6px;
-  font-size: 17px;
+  margin: 0 0 8px;
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
 }
 .ghostty-connection p {
   font-size: 12px;
-  line-height: 1.6;
+  line-height: 1.7;
   color: var(--desk-muted);
-  margin: 6px 0 12px;
+  margin: 8px 0 20px;
 }
 .ghostty-fields {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 10px;
+  gap: 16px 12px;
 }
 .ghostty-fields label {
-  font-size: 11px;
+  font-size: 12px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 7px;
 }
 .ghostty-fields label:first-child {
   grid-column: 1 / -1;
@@ -159,39 +232,40 @@
 .ghostty-fields input {
   width: 100%;
   min-width: 0;
-  padding: 8px;
+  padding: 10px 12px;
   border: 1px solid var(--desk-line);
-  border-radius: 4px;
-  background: var(--desk-paper);
+  border-radius: 6px;
+  background: var(--desk-sidebar);
   color: var(--desk-ink);
   font-size: 16px;
 }
+.ghostty-fields input::placeholder {
+  color: var(--desk-muted);
+  font-size: 12px;
+}
 .ghostty-connection-actions {
   display: flex;
+  flex-direction: row-reverse;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 20px;
 }
-.ghostty-content [hidden] {
-  display: none !important;
+.desktop-environment .ghostty-connection-actions button {
+  min-height: 38px;
+  padding-inline: 18px;
+  border-color: var(--desk-line);
 }
-@media (max-width: 760px) {
-  .ghostty-tab {
-    flex-direction: column;
-  }
-  .ghostty-connection {
-    top: 130px;
-    max-height: calc(100% - 145px);
-  }
-  .ghostty-fields {
-    grid-template-columns: 1fr;
-  }
-  .ghostty-toolbar {
-    gap: 4px;
-    padding: 6px 8px;
-  }
-  .desktop-environment .ghostty-content button {
-    min-height: 36px;
-  }
+.desktop-environment .ghostty-connection-actions [type="submit"] {
+  background: var(--desk-accent);
+  color: var(--desk-paper);
+  border-color: transparent;
+  font-weight: 600;
+}
+.desktop-environment .ghostty-connection-actions [type="submit"]:hover {
+  background: var(--desk-accent);
+  filter: brightness(0.95);
+}
+.ghostty-connect-error:empty {
+  display: none;
 }
 .ghostty-transcript {
   flex: 1;
@@ -205,39 +279,74 @@
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-
-.ghostty-tab[data-axis="down"] {
-  overflow-y: auto;
-}
 .ghostty-tab[data-axis="down"] .ghostty-pane {
   min-height: 180px;
 }
-@media (max-width: 760px) {
-  .ghostty-tab {
-    overflow-y: auto;
-  }
-  .ghostty-pane {
-    min-height: 240px;
-    flex-shrink: 0;
-  }
-}
 .shortcut-ghostty svg {
   fill: none;
-}
-.ghostty-pane-bar,
-.ghostty-keys,
-.ghostty-status {
-  flex-shrink: 0;
-}
-@media (max-width: 760px) {
-  .ghostty-tab .ghostty-pane,
-  .ghostty-tab[data-axis] .ghostty-pane {
-    min-height: 260px;
-    flex-shrink: 0;
-  }
 }
 .ghostty-connection a,
 .ghostty-status a {
   color: var(--desk-ink);
   text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ghostty-content [hidden] {
+  display: none !important;
+}
+@container (max-width: 760px) {
+  .ghostty-tab {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .ghostty-tab .ghostty-pane,
+  .ghostty-tab[data-axis] .ghostty-pane {
+    min-height: 260px;
+    flex-shrink: 0;
+  }
+  .ghostty-toolbar {
+    gap: 3px;
+    padding: 6px;
+  }
+  .desktop-environment .ghostty-toolbar button {
+    padding-inline: 7px;
+    font-size: 11px;
+    min-height: 38px;
+  }
+  .ghostty-toolbar [data-mux="right"] .ghostty-icon,
+  .ghostty-toolbar [data-mux="down"] .ghostty-icon {
+    display: none;
+  }
+  .ghostty-connection {
+    top: 96px;
+    max-height: calc(100% - 108px);
+    width: calc(100% - 24px);
+    padding: 20px;
+  }
+  .ghostty-connection-icon {
+    display: none;
+  }
+  .ghostty-fields {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .ghostty-keys {
+    gap: 4px;
+    padding: 6px;
+  }
+  .desktop-environment .ghostty-keys button {
+    min-width: 30px;
+    min-height: 36px;
+    padding-inline: 6px;
+  }
+  .desktop-environment .ghostty-pane-bar button {
+    min-height: 36px;
+    width: 34px;
+  }
+}
+
+@container (max-width: 360px) {
+  .ghostty-toolbar [data-mux="connect"] > span:not(.ghostty-icon) {
+    display: none;
+  }
 }

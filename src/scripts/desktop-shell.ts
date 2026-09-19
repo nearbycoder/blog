@@ -165,7 +165,7 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
       button.addEventListener("click", () => {
         closeLauncher();
         const action = button.dataset.launchAction as
-          "library" | "arcade" | "terminal";
+          "library" | "arcade" | "terminal" | "ghostty";
         actions[action]();
       });
     });
