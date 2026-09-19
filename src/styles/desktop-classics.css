@@ -1,12 +1,12 @@
 .classic-screen {
   position: relative;
   width: 100%;
-  max-width: min(480px, calc(clamp(140px, 100dvh - 480px, 360px) * 4 / 3));
+  max-width: min(480px, calc(clamp(140px, 100cqh - 330px, 360px) * 4 / 3));
   margin-inline: auto;
   aspect-ratio: 4 / 3;
   background: #0a191e;
   border: 1px solid var(--desk-line);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
 }
 .classic-screen canvas {
@@ -65,7 +65,7 @@
 }
 .desktop-environment .sliding-board button {
   aspect-ratio: 1;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid var(--desk-line);
   background: var(--desk-selected);
   color: var(--desk-ink);
@@ -83,7 +83,10 @@
 .sliding-board button[aria-disabled="true"] {
   cursor: default;
 }
-@media (max-width: 760px) {
+@container (max-width: 560px) {
+  .classic-screen {
+    max-width: min(480px, calc(clamp(140px, 100cqh - 470px, 360px) * 4 / 3));
+  }
   .classic-toolbar {
     gap: 8px;
   }
