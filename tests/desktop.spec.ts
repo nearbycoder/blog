@@ -240,6 +240,7 @@ test("without JavaScript the library still links to every page", async ({
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto("http://127.0.0.1:4322/desktop/");
+  await expect(page.locator(".desktop-shortcuts")).toBeVisible();
   await expect(page.locator(".desktop-noscript")).toContainText(
     "All file links still open normally",
   );

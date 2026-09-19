@@ -309,6 +309,7 @@ export function mountDesktopIcons(
     reflow();
   });
   reflow();
+  shortcuts.dataset.iconsReady = "true";
 
   return {
     reset(id?: string) {

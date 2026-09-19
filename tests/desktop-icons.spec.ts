@@ -14,6 +14,64 @@ const iconIds = [
 const icon = (page: Page, id: string) =>
   page.locator(`.desktop-shortcuts [data-desktop-icon="${id}"]`);
 
+for (const viewport of [
+  { width: 1440, height: 1000, profile: "wide" },
+  { width: 390, height: 844, profile: "compact" },
+]) {
+  test(`saved ${viewport.profile} icons never paint in their default positions while scripts load`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(viewport);
+    await page.addInitScript(
+      ({ key, profile }) => {
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            version: 1,
+            layouts: { [profile]: { articles: { column: 2, row: 1 } } },
+          }),
+        );
+      },
+      { key: storageKey, profile: viewport.profile },
+    );
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    await page.route("**/_astro/*.js", async (route) => {
+      await gate;
+      await route.continue();
+    });
+    try {
+      await page.goto("/desktop/", { waitUntil: "commit" });
+      const shortcuts = page.locator(".desktop-shortcuts");
+      await expect(shortcuts).toBeAttached();
+      await expect(page.locator("html")).toHaveClass(/has-desktop-js/);
+      await expect(shortcuts).toHaveCSS("visibility", "hidden");
+      await expect(shortcuts).not.toHaveAttribute("data-icons-ready");
+      release();
+      await expect(shortcuts).toHaveAttribute("data-icons-ready", "true");
+      await expect(icon(page, "articles")).toBeVisible();
+      const expected = await shortcuts.evaluate((element) => {
+        const style = getComputedStyle(element);
+        const n = (name: string) => parseFloat(style.getPropertyValue(name));
+        return {
+          x: n("--desktop-icon-inset-x") + 2 * n("--desktop-icon-step-x"),
+          y: n("--desktop-icon-inset-y") + n("--desktop-icon-step-y"),
+        };
+      });
+      const workspace = (await page.locator("[data-workspace]").boundingBox())!;
+      const box = (await icon(page, "articles").boundingBox())!;
+      expect(box.x).toBe(workspace.x + expected.x);
+      expect(box.y).toBe(workspace.y + expected.y);
+      await icon(page, "articles").click();
+      await expect(page.locator('[data-window="library"]')).toBeVisible();
+    } finally {
+      release();
+    }
+  });
+}
+
 async function open(page: Page) {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/desktop/");
