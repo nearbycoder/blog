@@ -189,7 +189,7 @@
   background: var(--desk-paper);
   border: 1px solid var(--desk-line);
   border-radius: 12px;
-  box-shadow: 0 20px 60px #0006;
+  box-shadow: 0 20px 60px var(--desk-shadow);
   padding: 24px;
   overflow-y: auto;
 }

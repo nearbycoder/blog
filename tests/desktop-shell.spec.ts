@@ -206,3 +206,60 @@ test("shell popups fit mobile and pass accessibility checks in both themes", asy
     ).toBe(false);
   }
 });
+
+test("theme toggle updates the wallpaper, shortcut tiles and app icons and survives reload", async ({
+  page,
+}) => {
+  const wallpapers: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("/images/desktop/"))
+      wallpapers.push(request.url());
+  });
+  await page.goto("/");
+  expect(wallpapers).toEqual([]);
+  await page.goto("/desktop/");
+  const appearance = () =>
+    page.evaluate(() => {
+      const desktop = document.querySelector("[data-desktop]")!;
+      const style = (selector: string) =>
+        getComputedStyle(document.querySelector(selector)!);
+      return {
+        wallpaper: getComputedStyle(desktop, "::before").backgroundImage,
+        label: style(".desktop-shortcuts button").color,
+        tile: style(".shortcut-art").backgroundImage,
+        glyphs: [...document.querySelectorAll(".shortcut-art")].map(
+          (el) => getComputedStyle(el).color,
+        ),
+        files: style(".app-files").color,
+        arcade: style(".app-arcade").color,
+        scheme: getComputedStyle(desktop).colorScheme,
+      };
+    });
+  const dark = await appearance();
+  expect(dark.scheme).toBe("dark");
+  expect(dark.wallpaper).toContain("emerald-glass.webp");
+  expect(wallpapers.some((url) => url.includes("emerald-glass-light"))).toBe(
+    false,
+  );
+  await page.getByRole("button", { name: "Toggle color theme" }).click();
+  const light = await appearance();
+  expect(light.scheme).toBe("light");
+  expect(light.wallpaper).toContain("emerald-glass-light.webp");
+  for (const key of ["label", "tile", "files", "arcade"] as const)
+    expect(light[key]).not.toEqual(dark[key]);
+  light.glyphs.forEach((color, i) => expect(color).not.toBe(dark.glyphs[i]));
+  // Decode the selected asset: a CSS URL alone would miss a broken wallpaper.
+  await page.evaluate(async () => {
+    const value = getComputedStyle(
+      document.querySelector("[data-desktop]")!,
+      "::before",
+    ).backgroundImage;
+    const image = new Image();
+    image.src = value.slice(5, -2);
+    await image.decode();
+  });
+  await page.reload();
+  expect(await appearance()).toEqual(light);
+  await page.getByRole("button", { name: "Toggle color theme" }).click();
+  expect(await appearance()).toEqual(dark);
+});

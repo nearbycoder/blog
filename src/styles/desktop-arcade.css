@@ -1,5 +1,5 @@
 .shortcut-art.shortcut-arcade {
-  color: #cfb7f0;
+  color: var(--desk-icon-arcade);
 }
 .shortcut-arcade svg {
   fill: none;
@@ -246,7 +246,7 @@
   filter: hue-rotate(70deg) saturate(1.2);
 }
 .desktop-environment[data-after-hours="true"] .desktop-wallpaper-copy {
-  color: #b9f2d5;
+  color: var(--desk-party-ink);
 }
 @container (max-width: 560px) {
   .arcade-content {
