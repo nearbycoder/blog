@@ -1,0 +1,43 @@
+---
+import files from "@tabler/icons/outline/files.svg?raw";
+import folder from "@tabler/icons/outline/folder.svg?raw";
+import writing from "@tabler/icons/outline/file-text.svg?raw";
+import code from "@tabler/icons/outline/code.svg?raw";
+import journal from "@tabler/icons/outline/notebook.svg?raw";
+import lab from "@tabler/icons/outline/flask.svg?raw";
+import globe from "@tabler/icons/outline/world.svg?raw";
+import close from "@tabler/icons/outline/x.svg?raw";
+import minimize from "@tabler/icons/outline/minus.svg?raw";
+import maximize from "@tabler/icons/outline/square.svg?raw";
+import search from "@tabler/icons/outline/search.svg?raw";
+import external from "@tabler/icons/outline/arrow-up-right.svg?raw";
+import desktop from "@tabler/icons/outline/device-desktop.svg?raw";
+import reset from "@tabler/icons/outline/layout.svg?raw";
+import moon from "@tabler/icons/outline/sun-moon.svg?raw";
+const icons = {
+  files,
+  folder,
+  writing,
+  code,
+  journal,
+  lab,
+  globe,
+  close,
+  minimize,
+  maximize,
+  search,
+  external,
+  desktop,
+  reset,
+  moon,
+};
+interface Props {
+  name: keyof typeof icons;
+}
+---
+
+<span
+  class="desktop-icon"
+  aria-hidden="true"
+  set:html={icons[Astro.props.name]}
+/>
