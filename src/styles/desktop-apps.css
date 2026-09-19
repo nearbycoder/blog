@@ -1,0 +1,75 @@
+.utility-window {
+  --desk-text: var(--desk-ink);
+  width: min(760px, calc(100% - 80px));
+  height: min(600px, calc(100% - 64px));
+  min-width: 290px;
+  min-height: 300px;
+  container-type: inline-size;
+}
+.desktop-app-content {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  color: var(--desk-ink);
+  background: var(--desk-paper);
+  font-size: 14px;
+}
+:where(.utility-window .desktop-app-content) :is(input, textarea, select) {
+  box-sizing: border-box;
+  max-width: 100%;
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  background: var(--desk-paper);
+  color: var(--desk-ink);
+  font: inherit;
+  padding: 8px 10px;
+}
+:where(.utility-window .desktop-app-content) button {
+  min-height: 36px;
+  padding: 7px 12px;
+  border-radius: 6px;
+  color: var(--desk-ink);
+  background: var(--desk-sidebar);
+  font: inherit;
+}
+:where(.utility-window .desktop-app-content) button:hover {
+  background: var(--desk-selected);
+}
+:where(.utility-window .desktop-app-content) button:disabled {
+  opacity: 0.5;
+}
+:where(.utility-window .desktop-app-content) button[aria-pressed="true"] {
+  background: var(--desk-selected);
+  color: var(--desk-accent);
+}
+.desk-app-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid var(--desk-line);
+}
+.desk-app-status {
+  margin: 0;
+  padding: 10px 14px;
+  color: var(--desk-muted);
+  font-size: 12px;
+}
+.utility-loading {
+  padding: 24px;
+  margin: 0;
+}
+.utility-loading button {
+  margin-top: 12px;
+  display: block;
+}
+@media (max-width: 760px), (pointer: coarse) {
+  .utility-window .desktop-app-content :is(input, textarea, select) {
+    font-size: 16px;
+  }
+  .utility-window .desktop-app-content button {
+    min-height: 44px;
+  }
+}

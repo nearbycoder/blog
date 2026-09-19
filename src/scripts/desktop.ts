@@ -1,3 +1,4 @@
+import { desktopApps, type DesktopAppId } from "../lib/desktop-apps";
 import { mountWindowLayout } from "./desktop-window-layout";
 import { mountDesktopShell } from "./desktop-shell";
 import type { ArcadeActivity } from "./desktop-arcade";
@@ -211,6 +212,73 @@ if (desktop) {
     announce(message);
     return message;
   }
+
+  function openApp(id: DesktopAppId) {
+    const app = desktopApps.find((item) => item.id === id);
+    if (!app) return;
+    const existing = windows.get(id);
+    if (existing) {
+      activate(existing, true);
+      return;
+    }
+    const template = document.getElementById(
+      `desktop-app-${id}-template`,
+    ) as HTMLTemplateElement;
+    const win = template.content.firstElementChild!.cloneNode(
+      true,
+    ) as HTMLElement;
+    win.dataset.window = id;
+    win.dataset.title = app.title;
+    win.style.left = `${120 + (windows.size % 5) * 28}px`;
+    win.style.top = `${30 + (windows.size % 5) * 24}px`;
+    const content = win.querySelector<HTMLElement>(".desktop-app-content")!;
+    windows.set(id, win);
+    addTask(win, id, app.title);
+    workspace.append(win);
+    attachWindow(win);
+    constrain(win);
+    activate(win, true);
+    let disposed = false;
+    let dispose: (() => void) | undefined;
+    cleanups.set(id, () => {
+      disposed = true;
+      dispose?.();
+    });
+    const load = async () => {
+      content.innerHTML =
+        '<p class="utility-loading" role="status">Opening app…</p>';
+      try {
+        const { loadDesktopApp } = await import("./desktop-apps");
+        if (disposed) return;
+        const mount = await loadDesktopApp(id);
+        if (disposed) return;
+        content.replaceChildren();
+        dispose = mount(content);
+        constrain(win);
+      } catch {
+        if (disposed) return;
+        content.replaceChildren();
+        const message = document.createElement("p");
+        message.className = "utility-loading";
+        message.setAttribute("role", "status");
+        message.textContent = `${app.title} couldn’t load. Check your connection. `;
+        const reload = document.createElement("a");
+        reload.href = location.href;
+        reload.textContent = "Reload the desktop to try again.";
+        message.append(reload);
+        content.append(message);
+      }
+    };
+    void load();
+    announce(`${app.title} opened.`);
+  }
+  desktop
+    .querySelectorAll<HTMLButtonElement>("[data-open-app]")
+    .forEach((button) => {
+      button.addEventListener("click", () =>
+        openApp(button.dataset.openApp as DesktopAppId),
+      );
+    });
 
   function openGhostty() {
     const existing = windows.get("ghostty");
@@ -551,6 +619,7 @@ if (desktop) {
   library.hidden = true;
   library.classList.remove("is-active");
   const shell = mountDesktopShell(desktop, {
+    app: openApp,
     library: () => activate(library, true),
     folder: (id) => {
       selectFolder(id);

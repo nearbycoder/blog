@@ -1,0 +1,130 @@
+.focus-app {
+  display: flex;
+  flex-direction: column;
+}
+.focus-modes {
+  justify-content: center;
+  flex-shrink: 0;
+}
+.focus-body {
+  flex: 1;
+  padding: 24px 20px 12px;
+  text-align: center;
+}
+.focus-eyebrow {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--desk-accent);
+}
+.focus-body h2 {
+  font-size: 22px;
+  font-weight: 500;
+  margin: 6px 0 18px;
+  letter-spacing: -0.04em;
+}
+.focus-dial {
+  --focus-progress: 0%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: min(220px, 100%);
+  min-height: 150px;
+  margin: 0 auto 20px;
+  border-bottom: 3px solid var(--desk-line);
+  background: linear-gradient(
+      to right,
+      var(--desk-accent) var(--focus-progress),
+      transparent var(--focus-progress)
+    )
+    bottom / 100% 3px no-repeat;
+}
+.focus-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 64px;
+  font-weight: 300;
+  letter-spacing: -0.055em;
+  line-height: 1.2;
+}
+.focus-state {
+  font-size: 12px;
+  color: var(--desk-muted);
+  margin: 10px 0;
+}
+.focus-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+.utility-window .focus-actions [data-focus-toggle] {
+  background: var(--desk-selected);
+  color: var(--desk-accent);
+  min-width: 138px;
+}
+.focus-custom {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 8px;
+  margin: 18px 0 12px;
+}
+.focus-custom label {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--desk-muted);
+}
+.focus-custom input {
+  width: 92px;
+  height: 36px;
+}
+.focus-completed {
+  font-size: 12px;
+  color: var(--desk-muted);
+  margin: 0;
+}
+.focus-app > .desk-app-status {
+  text-align: center;
+  border-top: 1px solid var(--desk-line);
+}
+@container (max-width: 400px) {
+  .focus-body {
+    padding: 18px 12px 12px;
+  }
+  .focus-body h2 {
+    font-size: 20px;
+  }
+  .focus-dial {
+    min-height: 120px;
+  }
+}
+
+.utility-window[data-window="focus"] {
+  container: focus-window / size;
+}
+@container focus-window (max-height: 500px) {
+  .focus-body {
+    padding: 10px 16px;
+  }
+  .focus-body h2 {
+    display: none;
+  }
+  .focus-dial {
+    min-height: 88px;
+    margin-bottom: 8px;
+  }
+  .focus-time {
+    font-size: 52px;
+  }
+  .focus-state {
+    font-size: 11px;
+    margin: 4px 0;
+  }
+  .focus-custom {
+    margin: 10px 0 8px;
+  }
+}

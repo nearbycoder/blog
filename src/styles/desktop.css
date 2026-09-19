@@ -130,7 +130,12 @@
   top: 26px;
   left: 20px;
   width: 92px;
+  bottom: 20px;
   display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(auto-fill, 86px);
+  grid-auto-columns: 92px;
+  align-content: start;
   gap: 16px;
 }
 .desktop-shortcuts button {
@@ -1059,6 +1064,8 @@
     left: 10px;
     top: 14px;
     width: 80px;
+    grid-auto-columns: 80px;
+    grid-template-rows: repeat(auto-fill, 80px);
     gap: 9px;
   }
   .desktop-shortcuts button {
@@ -1379,4 +1386,19 @@
 
 .desktop-snap-preview[hidden] {
   display: none;
+}
+
+.app-notes,
+.shortcut-notes {
+  color: var(--desk-icon-lab);
+}
+.app-calculator {
+  color: var(--desk-icon-projects);
+}
+.app-sketchpad,
+.shortcut-sketchpad {
+  color: var(--desk-icon-arcade);
+}
+.app-focus {
+  color: var(--desk-icon-files);
 }

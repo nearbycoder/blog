@@ -1,4 +1,7 @@
+import { desktopApps, type DesktopAppId } from "../lib/desktop-apps";
+
 type ShellActions = {
+  app: (id: DesktopAppId) => void;
   library: () => void;
   folder: (id: string) => void;
   arcade: () => void;
@@ -22,6 +25,10 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
     ...desktop.querySelectorAll<HTMLAnchorElement>("[data-desktop-file]"),
   ];
   const applications = [
+    ...desktopApps.map((app) => ({
+      ...app,
+      action: () => actions.app(app.id),
+    })),
     {
       title: "Files",
       description: "File manager · all blog content",
@@ -167,6 +174,14 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
         const action = button.dataset.launchAction as
           "library" | "arcade" | "terminal" | "ghostty";
         actions[action]();
+      });
+    });
+  desktop
+    .querySelectorAll<HTMLButtonElement>("[data-launch-app]")
+    .forEach((button) => {
+      button.addEventListener("click", () => {
+        closeLauncher();
+        actions.app(button.dataset.launchApp as DesktopAppId);
       });
     });
   desktop

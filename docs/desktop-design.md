@@ -46,3 +46,14 @@ Drag a title bar until the pane touches the left or right desktop boundary for a
 Every window can be resized from all four edges and four corners. Resizing a snapped pane detaches it at its current size, keeps the opposite edge fixed, and respects minimum sizes and workspace bounds. Escape, pointer cancellation, or loss of focus restores the original geometry and snap state. Resize handles are hidden on phones.
 
 Ctrl+Alt+Left/Right snaps the active window to a half, Up maximizes, and Down restores. Connected terminal input retains its own keyboard events. Layouts resize with the workspace; narrow Library and Arcade windows adapt their controls. Phones keep their full-screen app switching behavior, and returning to a desktop-sized viewport restores the chosen layout.
+
+## Everyday applications
+
+The launcher's Everyday apps section adds Notes, Calculator, Sketchpad, and Focus. Notes and Sketchpad also have desktop shortcuts; shortcuts wrap into another column on shorter displays. App names and keywords are searchable from the launcher. Every app uses the existing window controls, task buttons, snapping, and eight-direction resizing.
+
+- **Notes:** plain-text notebooks saved in this browser, multiple notes, undo delete, and text downloads. Storage failures are shown without preventing editing; unreadable original data is preserved for recovery.
+- **Calculator:** keyboard or keypad arithmetic with precedence, parentheses, percentages, reusable session history, and copy. A bounded parser handles arithmetic without evaluating JavaScript.
+- **Sketchpad:** a white 1000×700 drawing surface with colors, brush size, eraser, undo/redo, and PNG export. Resizing changes the display size without changing the artwork. Sketches last for the window session; export before closing.
+- **Focus:** focus and break presets, custom durations, pause/resume/reset, and completed session count. A deadline keeps the clock accurate while minimized or backgrounded. Closing pauses and saves the remaining time; reloading restores a running deadline. No notification permissions are requested.
+
+Only small launcher metadata and window templates are included at desktop startup. The shared utility styles and each app's implementation/styles load on demand, and none are imported by normal blog pages. Form fields remain at least 16px on mobile and coarse pointers. Both themes use the desktop's shared colors.
