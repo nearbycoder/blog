@@ -1,6 +1,8 @@
 import { desktopApps, type DesktopAppId } from "../lib/desktop-apps";
 import { mountWindowLayout } from "./desktop-window-layout";
 import { mountDesktopShell } from "./desktop-shell";
+import { mountDesktopIcons } from "./desktop-icons";
+import { mountDesktopContextMenu } from "./desktop-context-menu";
 import type { ArcadeActivity } from "./desktop-arcade";
 
 const desktop = document.querySelector<HTMLElement>("[data-desktop]");
@@ -41,6 +43,8 @@ if (desktop) {
   function announce(message: string) {
     status.textContent = message;
   }
+
+  const icons = mountDesktopIcons(desktop, announce);
 
   function activate(win: HTMLElement, focus = false) {
     desktopSnapshot = undefined;
@@ -631,6 +635,22 @@ if (desktop) {
     doom: () => openArcade("doom"),
     game: (activity) => openArcade(activity),
     file: openFile,
+  });
+  desktop
+    .querySelector<HTMLButtonElement>("[data-reset-desktop-icons]")!
+    .addEventListener("click", () => {
+      icons.reset();
+      shell.closePopups();
+    });
+  mountDesktopContextMenu(desktop, {
+    openLibrary: () => activate(library, true),
+    openNotes: () => openApp("notes"),
+    openGhostty,
+    arrangeWindows: () =>
+      desktop.querySelector<HTMLButtonElement>("[data-desktop-reset]")!.click(),
+    resetIcons: (id) => icons.reset(id),
+    toggleTheme: () =>
+      desktop.querySelector<HTMLButtonElement>("[data-desktop-theme]")!.click(),
   });
   showDesktopButton.addEventListener("click", () => {
     if (desktopSnapshot) {

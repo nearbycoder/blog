@@ -8,6 +8,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import DesktopIcon from "../components/desktop/DesktopIcon.astro";
 import { desktopFolders, getDesktopFiles } from "../lib/desktop";
 import "../styles/desktop.css";
+import "../styles/desktop-context-menu.css";
 const files = await getDesktopFiles();
 const folderFor = (id: string) =>
   desktopFolders.find((folder) => folder.id === id)!;
@@ -30,7 +31,11 @@ const folderFor = (id: string) =>
               ["articles", "projects", "lab", "pages"].includes(folder.id),
             )
             .map((folder) => (
-              <button type="button" data-open-folder={folder.id}>
+              <button
+                type="button"
+                data-open-folder={folder.id}
+                data-desktop-icon={folder.id}
+              >
                 <span class:list={["shortcut-art", `shortcut-${folder.id}`]}>
                   <DesktopIcon name={folder.icon} />
                 </span>
@@ -40,22 +45,25 @@ const folderFor = (id: string) =>
               </button>
             ))
         }
-        <button type="button" data-open-arcade>
+        <button type="button" data-open-arcade data-desktop-icon="arcade">
           <span class="shortcut-art shortcut-arcade"
             ><DesktopIcon name="game" /></span
           ><span>Arcade</span>
         </button>
-        <button type="button" data-open-ghostty>
+        <button type="button" data-open-ghostty data-desktop-icon="ghostty">
           <span class="shortcut-art shortcut-ghostty"
             ><DesktopIcon name="terminal" /></span
           ><span>Ghostty</span>
         </button>
-        <button type="button" data-open-app="notes"
+        <button type="button" data-open-app="notes" data-desktop-icon="notes"
           ><span class="shortcut-art shortcut-notes"
             ><DesktopIcon name="journal" /></span
           ><span>Notes</span></button
         >
-        <button type="button" data-open-app="sketchpad"
+        <button
+          type="button"
+          data-open-app="sketchpad"
+          data-desktop-icon="sketchpad"
           ><span class="shortcut-art shortcut-sketchpad"
             ><DesktopIcon name="palette" /></span
           ><span>Sketchpad</span></button
@@ -295,6 +303,9 @@ const folderFor = (id: string) =>
                 </button>
               ))
           }
+          <button type="button" data-reset-desktop-icons>
+            <DesktopIcon name="desktop" />Reset icon positions
+          </button>
         </div>
       </div>
       <div class="launcher-results" data-launcher-results hidden>
