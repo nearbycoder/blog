@@ -1,0 +1,340 @@
+.tasks-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  container: taskboard / inline-size;
+}
+.tasks-toolbar {
+  flex: 0 0 auto;
+  justify-content: space-between;
+}
+.tasks-app .tasks-toolbar > button,
+.tasks-app .tasks-empty > button,
+.tasks-app [data-tasks-submit] {
+  color: var(--desk-accent);
+  border: 1px solid var(--desk-line);
+}
+.tasks-total {
+  color: var(--desk-muted);
+  font-size: 12px;
+}
+.tasks-overview {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+.tasks-filters {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  padding: 10px 12px;
+}
+.tasks-app .tasks-filters > button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  background: transparent;
+  white-space: nowrap;
+  font-size: 12px;
+}
+.tasks-filters button > span {
+  color: var(--desk-muted);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+.tasks-progress {
+  height: 2px;
+  flex: 0 0 2px;
+  background: var(--desk-line);
+}
+.tasks-progress > span {
+  display: block;
+  height: 100%;
+  background: var(--desk-accent);
+}
+.tasks-board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  flex: 1;
+  align-items: start;
+  min-height: 0;
+  gap: 12px;
+  padding: 14px 12px;
+  overflow: auto;
+  background: var(--desk-sidebar);
+}
+.tasks-column {
+  min-width: 0;
+}
+.tasks-column > h2 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 3px 10px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--desk-ink);
+}
+.tasks-stage-dot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--desk-muted);
+}
+[data-tasks-column="doing"] .tasks-stage-dot {
+  background: var(--desk-accent);
+  border-color: var(--desk-accent);
+}
+[data-tasks-column="done"] .tasks-stage-dot {
+  background: var(--desk-muted);
+}
+.tasks-column-count {
+  margin-left: auto;
+  color: var(--desk-muted);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 400;
+}
+.tasks-card {
+  min-width: 0;
+  margin-bottom: 9px;
+  padding: 12px 10px 8px;
+  border: 1px solid var(--desk-line);
+  border-radius: 7px;
+  background: var(--desk-paper);
+}
+.tasks-card h3 {
+  margin: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+  font-size: 13px;
+  font-weight: 600;
+}
+.tasks-card-details {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  color: var(--desk-muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 6px 0 0;
+}
+.tasks-card-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 10px;
+}
+.tasks-app .tasks-card-controls > select {
+  min-width: 0;
+  flex: 1 1 75px;
+  padding: 5px 4px;
+  min-height: 30px;
+  font-size: 11px;
+}
+.tasks-app .tasks-card-controls > button {
+  padding: 5px;
+  min-height: 30px;
+  font-size: 11px;
+  color: var(--desk-muted);
+  background: transparent;
+}
+.tasks-app .tasks-card-controls > button:hover {
+  color: var(--desk-ink);
+  background: var(--desk-selected);
+}
+.tasks-column-empty {
+  border: 1px dashed var(--desk-line);
+  border-radius: 7px;
+  padding: 17px 10px;
+  margin: 0;
+  color: var(--desk-muted);
+  font-size: 12px;
+  line-height: 1.6;
+  text-align: center;
+}
+.tasks-board-filtered {
+  grid-template-columns: minmax(0, 1fr);
+}
+.tasks-empty {
+  flex: 1;
+  min-height: 0;
+  padding: 24px 16px;
+  overflow: auto;
+  align-content: center;
+  text-align: center;
+}
+.tasks-empty-mark {
+  display: inline-grid;
+  width: 45px;
+  height: 45px;
+  place-items: center;
+  border: 1px solid var(--desk-line);
+  border-radius: 12px;
+  background: var(--desk-sidebar);
+  color: var(--desk-accent);
+  font-size: 27px;
+}
+.tasks-empty h2 {
+  margin: 13px 0 8px;
+  font-size: 19px;
+  font-weight: 600;
+}
+.tasks-empty p {
+  margin: 0 0 18px;
+  color: var(--desk-muted);
+  line-height: 1.7;
+  font-size: 13px;
+}
+.tasks-empty small {
+  display: block;
+  margin-top: 12px;
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+.tasks-editor {
+  flex: 1;
+  min-height: 0;
+  padding: 19px 24px;
+  overflow: auto;
+}
+.tasks-editor form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 500px;
+  margin: 0 auto;
+}
+.tasks-editor h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+.tasks-editor-hint {
+  margin: 0 0 15px;
+  color: var(--desk-muted);
+  font-size: 12px;
+}
+.tasks-editor label {
+  display: flex;
+  gap: 5px;
+  margin: 0 0 5px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.tasks-optional {
+  margin-left: auto;
+  color: var(--desk-muted);
+  font-weight: 400;
+  font-size: 11px;
+}
+.tasks-editor :is(input, textarea, select) {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 13px;
+}
+.tasks-editor textarea {
+  resize: vertical;
+  min-height: 70px;
+  line-height: 1.5;
+}
+.tasks-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tasks-error {
+  font-size: 12px;
+  margin: 0 0 12px;
+  color: var(--desk-ink);
+}
+.tasks-undo {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 12px;
+  border-top: 1px solid var(--desk-line);
+  background: var(--desk-selected);
+  font-size: 12px;
+}
+.tasks-undo > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tasks-app .tasks-undo > button {
+  flex-shrink: 0;
+  color: var(--desk-accent);
+  font-size: 12px;
+}
+.tasks-status {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--desk-line);
+  padding: 8px 12px;
+  overflow-wrap: anywhere;
+  max-height: 76px;
+  overflow: auto;
+  line-height: 1.4;
+}
+.tasks-status.has-warning {
+  color: var(--desk-ink);
+}
+@container taskboard (max-width: 540px) {
+  .tasks-board {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tasks-column-empty {
+    padding: 10px;
+  }
+  .tasks-card-controls {
+    justify-content: flex-end;
+  }
+  .tasks-app .tasks-card-controls > select {
+    flex: 0 1 120px;
+    margin-right: auto;
+  }
+}
+@container taskboard (max-width: 360px) {
+  .tasks-filters {
+    padding: 7px 8px;
+    gap: 2px;
+  }
+  .tasks-app .tasks-filters > button {
+    gap: 5px;
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+  .tasks-toolbar {
+    padding: 8px;
+  }
+  .tasks-total {
+    font-size: 11px;
+  }
+  .tasks-editor {
+    padding: 16px 12px;
+  }
+  .tasks-empty h2 {
+    font-size: 17px;
+  }
+}
+@media (max-width: 760px), (pointer: coarse) {
+  .tasks-app .tasks-card-controls > select {
+    font-size: 16px;
+    min-height: 44px;
+  }
+  .tasks-app .tasks-card-controls > button {
+    min-height: 44px;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}

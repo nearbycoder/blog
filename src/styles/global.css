@@ -3,7 +3,12 @@
 @import "@fontsource/space-grotesk/600.css";
 @import "@fontsource/space-grotesk/700.css";
 @import "@fontsource/jetbrains-mono/400.css";
-@import "tailwindcss";
+@import "tailwindcss" source("../");
+/* Desktop apps ship their own CSS on demand, not blog-wide utility rules. */
+@source not "../scripts/desktop*.ts";
+@source not "../lib/desktop*.ts";
+@source not "../components/desktop";
+@source not "../pages/desktop.astro";
 
 /* Layers: sticky navigation 30, theme popover 40, search dialog 50. */
 :root {

@@ -92,7 +92,7 @@ export function mountDesktopContextMenu(
       const title = win.dataset.title ?? "Library";
       const maximized = win.classList.contains("is-maximized");
       return {
-        invoker: win,
+        invoker: keyboard && target instanceof HTMLElement ? target : win,
         label: `${title} window actions`,
         items: [
           ["minimize", "Minimize", ""],
@@ -170,7 +170,9 @@ export function mountDesktopContextMenu(
     const top = Math.max(bounds.top, 0) + margin;
     const right = Math.min(bounds.right, innerWidth) - margin;
     const bottom = Math.min(bounds.bottom, innerHeight) - margin;
-    menu.style.maxWidth = `${Math.max(0, right - left)}px`;
+    const availableWidth = `${Math.max(0, right - left)}px`;
+    menu.style.setProperty("--desktop-context-max-width", availableWidth);
+    menu.style.maxWidth = availableWidth;
     menu.style.maxHeight = `${Math.max(0, bottom - top)}px`;
     menu.style.left = `${Math.max(left, Math.min(x, right - menu.offsetWidth)) - bounds.left}px`;
     menu.style.top = `${Math.max(top, Math.min(y, bottom - menu.offsetHeight)) - bounds.top}px`;
@@ -194,6 +196,17 @@ export function mountDesktopContextMenu(
 
   function onKeyDown(event: KeyboardEvent) {
     if (!menu.hidden) {
+      // The displayed window shortcuts still belong to the desktop shell.
+      if (
+        event.ctrlKey &&
+        event.altKey &&
+        !event.shiftKey &&
+        !event.metaKey &&
+        ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)
+      ) {
+        close(true);
+        return;
+      }
       // Let the shell's launch/search shortcuts take focus after dismissing us.
       if (
         ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") ||

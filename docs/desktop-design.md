@@ -38,7 +38,6 @@ Light mode uses a paired daylight wallpaper, pale icon tiles with darker colored
 
 Only the active wallpaper is requested by the desktop's CSS. Both assets stay outside the normal blog bundle; the chosen theme persists through the existing preference setting.
 
-
 ## Window snapping
 
 Drag a title bar until the pane touches the left or right desktop boundary for a half-screen window, two boundaries at a corner for a quarter-screen window, or only the top boundary to maximize. Contact is measured from the pane’s edges, not the cursor, with a 4px tolerance around the desktop’s 8px gutter. An emerald preview shows the exact release bounds, labeled ½, ¼, or Full screen. Drag a snapped/maximized window away to restore its floating size. Escape or a canceled pointer gesture restores the starting layout; minimizing keeps the chosen layout and Arrange windows clears it.
@@ -49,11 +48,10 @@ Ctrl+Alt+Left/Right snaps the active window to a half, Up maximizes, and Down re
 
 ## Everyday applications
 
-The launcher's Everyday apps section adds Notes, Calculator, Sketchpad, and Focus. Notes and Sketchpad also have desktop shortcuts; shortcuts wrap into another column on shorter displays. App names and keywords are searchable from the launcher. Every app uses the existing window controls, task buttons, snapping, and eight-direction resizing.
+The launcher contains 24 applications: the original Notes, Calculator, Sketchpad, and Focus plus 20 additions. Five categories—Work, Create, Tools, Play, and Unwind—organize the collection, with an All apps view and search across applications and blog files. Notes and Sketchpad retain desktop shortcuts; shortcuts wrap into another column on shorter displays. Every app uses the existing window controls, task buttons, snapping, and eight-direction resizing. Phones use full-workspace windows with task switching.
 
-- **Notes:** plain-text notebooks saved in this browser, multiple notes, undo delete, and text downloads. Storage failures are shown without preventing editing; unreadable original data is preserved for recovery.
-- **Calculator:** keyboard or keypad arithmetic with precedence, parentheses, percentages, reusable session history, and copy. A bounded parser handles arithmetic without evaluating JavaScript.
-- **Sketchpad:** a white 1000×700 drawing surface with colors, brush size, eraser, undo/redo, and PNG export. Resizing changes the display size without changing the artwork. Sketches last for the window session; export before closing.
-- **Focus:** focus and break presets, custom durations, pause/resume/reset, and completed session count. A deadline keeps the clock accurate while minimized or backgrounded. Closing pauses and saves the remaining time; reloading restores a running deadline. No notification permissions are requested.
+The collection combines local writing and task tools, unit and text utilities, drawing and sound experiments, puzzles, and quiet simulations. [The desktop guide](desktop.md#application-catalog) lists every app and explains saving, exports, keyboard controls, and background behavior. Data stays in the current browser where an app supports saving; other state lasts for its window session. Beat Lab and Soundscapes require Play and stop when hidden. Focus and Stopwatch retain elapsed-time semantics while minimized; their close behavior differs.
 
-Only small launcher metadata and window templates are included at desktop startup. The shared utility styles and each app's implementation/styles load on demand, and none are imported by normal blog pages. Form fields remain at least 16px on mobile and coarse pointers. Both themes use the desktop's shared colors.
+Only small launcher metadata and one reusable app-window template are included at desktop startup. The shared app styles and each app's implementation/styles load on demand. CSS is imported as an inline string and installed by the lazy module to prevent build-time hoisting. Desktop source is excluded from the shared Tailwind scan, and normal blog pages import no desktop implementations or styles. Form fields remain at least 16px on mobile and coarse pointers. Both themes use the desktop's shared colors.
+
+The expansion adds no external data service or package dependency. Its review process assigned 20 app builders, 20 individual reviewers, and 10 cross-cutting audits. Registry-driven integration checks cover loading, mobile layouts, themes/accessibility, and bundle budgets alongside individual app tests; the guide describes the maintainer invariants and release verification steps.

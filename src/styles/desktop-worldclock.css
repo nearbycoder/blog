@@ -1,0 +1,365 @@
+.worldclock-app {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  color: var(--desk-ink);
+  background: var(--desk-paper);
+  container-type: inline-size;
+}
+.worldclock-toolbar {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.worldclock-mode {
+  font-size: 12px;
+  font-weight: 650;
+}
+.worldclock-mode::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--desk-accent);
+}
+.worldclock-app[data-mode="preview"] .worldclock-mode::before {
+  border-radius: 1px;
+}
+.worldclock-count {
+  margin-right: auto;
+  color: var(--desk-muted);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.worldclock-format {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 11px;
+}
+.worldclock-app input,
+.worldclock-app select,
+.worldclock-app button {
+  color: var(--desk-ink);
+  font-family: inherit;
+}
+.worldclock-app input,
+.worldclock-app select {
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid var(--desk-line);
+  border-radius: 5px;
+  background: var(--desk-paper);
+  padding: 6px 8px;
+}
+.worldclock-app button {
+  cursor: pointer;
+}
+.worldclock-app button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.worldclock-app :is(input, select, button):focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 2px;
+}
+.worldclock-body {
+  min-height: 0;
+  overflow: auto;
+  padding: 14px;
+}
+.worldclock-picker {
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--desk-line);
+  border-radius: 7px;
+  background: var(--desk-sidebar);
+}
+.worldclock-picker > label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.worldclock-picker > input {
+  width: 100%;
+  box-sizing: border-box;
+}
+.worldclock-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 5px;
+  max-height: 150px;
+  overflow: auto;
+  margin-top: 8px;
+  padding: 2px;
+}
+.worldclock-results button {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 7px 9px;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  text-align: left;
+  background: var(--desk-paper);
+}
+.worldclock-results button:not(:disabled):hover {
+  background: var(--desk-selected);
+}
+.worldclock-results strong {
+  font-size: 12px;
+  font-weight: 550;
+}
+.worldclock-results span {
+  color: var(--desk-muted);
+  font-size: 10px;
+  overflow-wrap: anywhere;
+}
+.worldclock-search-message {
+  margin: 7px 0 0;
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+.worldclock-planner {
+  padding: 11px 12px;
+  margin-bottom: 14px;
+  background: var(--desk-sidebar);
+  border: 1px solid var(--desk-line);
+  border-radius: 7px;
+}
+.worldclock-planner-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-bottom: 9px;
+}
+.worldclock-planner h2 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 650;
+}
+.worldclock-planner-heading span {
+  font-size: 10px;
+  color: var(--desk-muted);
+  overflow-wrap: anywhere;
+}
+.worldclock-planner form {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.worldclock-planner form label {
+  display: grid;
+  flex: 1 1 120px;
+  gap: 5px;
+  min-width: 0;
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+.worldclock-planner form label:nth-child(2) {
+  flex: 1 1 95px;
+}
+.worldclock-planner input {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 13px;
+  min-height: 34px;
+}
+.worldclock-planner button,
+.worldclock-undo button {
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--desk-line);
+  border-radius: 5px;
+  background: var(--desk-paper);
+  font-size: 12px;
+}
+.worldclock-planner button:not(:disabled):hover,
+.worldclock-undo button:hover {
+  background: var(--desk-selected);
+}
+.worldclock-planner button[type="submit"] {
+  border-color: var(--desk-accent);
+  color: var(--desk-accent);
+}
+.worldclock-hint {
+  margin: 8px 0 0;
+  font-size: 10px;
+  color: var(--desk-muted);
+  line-height: 1.5;
+}
+.worldclock-error {
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.worldclock-app input[aria-invalid="true"] {
+  border-color: var(--desk-accent);
+}
+.worldclock-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 10px;
+}
+.worldclock-card {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  padding: 12px;
+  border: 1px solid var(--desk-line);
+  border-radius: 8px;
+  background: var(--desk-paper);
+}
+.worldclock-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--desk-accent);
+}
+.worldclock-card[data-period="morning"] {
+  background: color-mix(in srgb, var(--desk-accent) 5%, var(--desk-paper));
+}
+.worldclock-card[data-period="afternoon"] {
+  background: color-mix(in srgb, var(--desk-accent) 9%, var(--desk-paper));
+}
+.worldclock-card[data-period="evening"] {
+  background: color-mix(in srgb, var(--desk-selected) 55%, var(--desk-paper));
+}
+.worldclock-card[data-period="night"] {
+  background: var(--desk-sidebar);
+}
+.worldclock-card[data-period="night"]::before {
+  background: var(--desk-muted);
+}
+.worldclock-card-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.worldclock-card h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.worldclock-app .worldclock-remove {
+  display: grid;
+  flex: 0 0 32px;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+}
+.worldclock-remove:hover {
+  border-color: var(--desk-line);
+  background: var(--desk-selected);
+}
+.worldclock-time {
+  display: block;
+  margin: 8px 0 5px;
+  font-size: clamp(24px, 4.4cqw, 34px);
+  line-height: 1.3;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  letter-spacing: -0.04em;
+}
+.worldclock-date {
+  margin: 0;
+  font-size: 12px;
+}
+.worldclock-zone {
+  min-height: 2.5em;
+  margin: 7px 0;
+  color: var(--desk-muted);
+  font-size: 10px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.worldclock-period {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 550;
+  color: var(--desk-muted);
+}
+.worldclock-period::before {
+  content: "◐";
+  margin-right: 5px;
+  color: var(--desk-accent);
+}
+.worldclock-card[data-period="afternoon"] .worldclock-period::before {
+  content: "☀";
+}
+.worldclock-card[data-period="night"] .worldclock-period::before {
+  content: "☾";
+}
+.worldclock-empty {
+  padding: 28px 12px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--desk-muted);
+}
+.worldclock-undo {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 12px;
+}
+.worldclock-status {
+  margin: auto 0 0;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+.worldclock-app [hidden] {
+  display: none !important;
+}
+@container (max-width: 400px) {
+  .worldclock-toolbar {
+    gap: 7px;
+  }
+  .worldclock-format {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .worldclock-body {
+    padding: 10px;
+  }
+  .worldclock-planner {
+    padding: 10px;
+  }
+  .worldclock-planner form label {
+    flex-basis: 130px;
+  }
+  .worldclock-planner form label:nth-child(2) {
+    flex-basis: 80px;
+  }
+  .worldclock-planner form button {
+    flex: 1 1 auto;
+  }
+  .worldclock-time {
+    font-size: 32px;
+  }
+  .worldclock-zone {
+    min-height: 0;
+  }
+  .worldclock-results {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

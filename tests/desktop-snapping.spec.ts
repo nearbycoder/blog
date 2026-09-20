@@ -325,3 +325,38 @@ test("small quarters override floating resize minimums and stay stable when resi
   await page.mouse.up();
   expect((await win.boundingBox())!.height).toBe(target.height + 20);
 });
+
+test("cancellation from another pointer leaves the active drag and resize intact", async ({
+  page,
+}) => {
+  const win = await open(page);
+  const handle = win.locator("[data-drag-handle]");
+  await beginDrag(page, win, 2, 150);
+  await expect(page.locator(preview)).toHaveAttribute("data-snap", "left");
+  for (const event of ["pointercancel", "lostpointercapture"]) {
+    await handle.dispatchEvent(event, { pointerId: 99 });
+    await expect(page.locator(preview)).toBeVisible();
+    await expect(page.locator("[data-desktop]")).toHaveClass(/is-dragging/);
+  }
+  await page.mouse.up();
+  await expect(win).toHaveAttribute("data-snap", "left");
+
+  const before = (await win.boundingBox())!;
+  const grip = win.locator('[data-resize="e"]');
+  const rect = (await grip.boundingBox())!;
+  const x = rect.x + rect.width / 2;
+  const y = rect.y + rect.height / 2;
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + 30, y, { steps: 5 });
+  for (const event of ["pointercancel", "lostpointercapture"]) {
+    await grip.dispatchEvent(event, { pointerId: 99 });
+    await expect(page.locator("[data-desktop]")).toHaveClass(/is-resizing/);
+    await expect(win).not.toHaveAttribute("data-snap");
+  }
+  await page.mouse.move(x + 50, y, { steps: 5 });
+  await page.mouse.up();
+  expect((await win.boundingBox())!.width).toBe(before.width + 50);
+  expect((await win.boundingBox())!.x).toBe(before.x);
+  await expect(page.locator("[data-desktop]")).not.toHaveClass(/is-resizing/);
+});

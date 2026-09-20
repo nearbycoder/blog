@@ -55,10 +55,20 @@ if (desktop) {
     windows.forEach((item) => item.classList.toggle("is-active", item === win));
     win.style.zIndex = String(++layer);
     tasks.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {
-      button.setAttribute(
-        "aria-pressed",
-        String(button.dataset.task === win.dataset.window),
-      );
+      const selected = button.dataset.task === win.dataset.window;
+      button.setAttribute("aria-pressed", String(selected));
+      if (selected) {
+        const strip = tasks.getBoundingClientRect();
+        const tab = button.getBoundingClientRect();
+        if (tab.left < strip.left || tab.width > strip.width)
+          tasks.scrollLeft = Math.floor(
+            tasks.scrollLeft + tab.left - strip.left,
+          );
+        else if (tab.right > strip.right)
+          tasks.scrollLeft = Math.ceil(
+            tasks.scrollLeft + tab.right - strip.right,
+          );
+      }
     });
     if (focus) win.focus({ preventScroll: true });
   }
@@ -226,13 +236,31 @@ if (desktop) {
       return;
     }
     const template = document.getElementById(
-      `desktop-app-${id}-template`,
+      "desktop-app-template",
     ) as HTMLTemplateElement;
     const win = template.content.firstElementChild!.cloneNode(
       true,
     ) as HTMLElement;
     win.dataset.window = id;
     win.dataset.title = app.title;
+    win.setAttribute("aria-label", `${app.title} window`);
+    win.querySelector<HTMLElement>("[data-app-title]")!.textContent = app.title;
+    win.querySelector<HTMLElement>("[data-app-subtitle]")!.textContent =
+      `— ${app.subtitle}`;
+    const glyph = desktop!.querySelector(
+      `[data-launch-app="${id}"] .desktop-icon`,
+    );
+    if (glyph)
+      win.querySelector("[data-app-icon]")!.append(glyph.cloneNode(true));
+    win
+      .querySelectorAll<HTMLButtonElement>("[data-window-action]")
+      .forEach((button) => {
+        const action = button.dataset.windowAction!;
+        button.setAttribute(
+          "aria-label",
+          `${action[0].toUpperCase()}${action.slice(1)} ${app.title}`,
+        );
+      });
     win.style.left = `${120 + (windows.size % 5) * 28}px`;
     win.style.top = `${30 + (windows.size % 5) * 24}px`;
     const content = win.querySelector<HTMLElement>(".desktop-app-content")!;

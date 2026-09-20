@@ -1,0 +1,241 @@
+.connect-app {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  container: connect / size;
+}
+
+.connect-toolbar {
+  flex-shrink: 0;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.connect-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 12px;
+  color: var(--desk-muted);
+}
+
+.connect-toolbar select {
+  min-width: 0;
+  max-width: 180px;
+}
+
+.connect-body {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+  padding: 8px 16px;
+}
+
+.connect-players,
+.connect-play,
+.connect-selection,
+.connect-help {
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.connect-players {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.connect-player {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--desk-muted);
+}
+
+.connect-player.is-turn {
+  background: var(--desk-selected);
+  border-color: var(--desk-line);
+  color: var(--desk-ink);
+}
+
+.connect-token {
+  display: inline-grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  font: 700 10px/1 sans-serif;
+}
+
+.connect-red,
+.connect-cell[data-connect-piece="red"] {
+  background: #ad3042;
+  color: #fff;
+}
+
+.connect-yellow,
+.connect-cell[data-connect-piece="yellow"] {
+  background: #f1c54b;
+  color: #403109;
+}
+
+.connect-moves {
+  color: var(--desk-muted);
+  font:
+    11px/1.4 "JetBrains Mono",
+    monospace;
+  white-space: nowrap;
+}
+
+.connect-play {
+  /* Fit all six rows in short panes without shrinking the column controls
+     below a readable size. Smaller windows retain the body's scroll fallback. */
+  width: min(100%, 360px, max(252px, calc((100cqh - 190px) * 7 / 6)));
+  border-radius: 6px;
+}
+
+.connect-play:focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 4px;
+}
+
+.connect-columns,
+.connect-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.connect-columns {
+  padding: 0 8px 6px;
+}
+
+.connect-columns button {
+  min-width: 0;
+  min-height: 34px;
+  padding: 4px 0;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  background: var(--desk-paper);
+  color: var(--desk-ink);
+  font:
+    600 12px/1 "JetBrains Mono",
+    monospace;
+}
+
+.connect-columns button.is-selected {
+  background: var(--desk-selected);
+  border-color: var(--desk-accent);
+  box-shadow: inset 0 -2px var(--desk-accent);
+}
+
+.connect-columns button:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.connect-columns button:focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 2px;
+}
+
+.connect-board {
+  display: grid;
+  gap: 5px;
+  padding: 8px;
+  border: 1px solid #385773;
+  border-radius: 6px;
+  background: #244460;
+  box-shadow: inset 0 2px 3px #102b3f66;
+}
+
+.connect-cell {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--desk-paper);
+  box-shadow: inset 0 2px 3px #071a3077;
+  font: 700 clamp(10px, 2.5cqw, 16px)/1 sans-serif;
+  user-select: none;
+}
+
+.connect-cell.is-winning {
+  outline: 3px solid #fff;
+  outline-offset: -5px;
+  box-shadow: inset 0 0 0 6px #162f4b99;
+}
+
+.connect-selection {
+  margin-top: 8px;
+  margin-bottom: 4px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--desk-ink);
+}
+
+.connect-help {
+  margin-top: 6px;
+  margin-bottom: 0;
+  color: var(--desk-muted);
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.connect-mode-help {
+  font-size: 10px;
+}
+
+.connect-status {
+  flex-shrink: 0;
+  min-height: 32px;
+  margin: 0;
+  border-top: 1px solid var(--desk-line);
+  overflow-wrap: anywhere;
+}
+
+@container connect (max-width: 340px) {
+  .connect-toolbar {
+    padding: 8px;
+  }
+
+  .connect-toolbar label {
+    gap: 5px;
+    font-size: 11px;
+  }
+
+  .connect-toolbar select {
+    max-width: 146px;
+  }
+
+  .connect-body {
+    padding: 10px 8px;
+  }
+
+  .connect-columns,
+  .connect-row {
+    gap: 4px;
+  }
+
+  .connect-columns button {
+    min-height: 38px;
+  }
+
+  .connect-player {
+    gap: 4px;
+    padding: 3px;
+  }
+}

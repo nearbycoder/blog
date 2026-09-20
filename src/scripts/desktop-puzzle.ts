@@ -4,7 +4,9 @@ import {
   shufflePuzzle,
   slideTile,
 } from "../lib/games/puzzle";
-import "../styles/desktop-classics.css";
+import css from "../styles/desktop-classics.css?inline";
+import { installAppStyle } from "./desktop-app-style";
+installAppStyle("classics", css);
 export function mountGame(root: HTMLElement, events: { signal: AbortSignal }) {
   const panel = root.querySelector<HTMLElement>(
     '[data-arcade-panel="puzzle"]',

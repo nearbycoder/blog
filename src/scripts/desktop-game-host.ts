@@ -1,4 +1,6 @@
-import "../styles/desktop-classics.css";
+import css from "../styles/desktop-classics.css?inline";
+import { installAppStyle } from "./desktop-app-style";
+installAppStyle("classics", css);
 
 export type CanvasGame = {
   reset: () => void;

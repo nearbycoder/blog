@@ -223,8 +223,12 @@ export function mountWindowLayout(
       grip.addEventListener("pointerup", (event) => {
         if (resize?.pointer === event.pointerId) finish(true);
       });
-      grip.addEventListener("pointercancel", () => finish(false));
-      grip.addEventListener("lostpointercapture", () => finish(false));
+      grip.addEventListener("pointercancel", (event) => {
+        if (resize?.pointer === event.pointerId) finish(false);
+      });
+      grip.addEventListener("lostpointercapture", (event) => {
+        if (resize?.pointer === event.pointerId) finish(false);
+      });
     }
   }
 
@@ -346,8 +350,12 @@ export function mountWindowLayout(
     handle.addEventListener("pointerup", (event) => {
       if (drag?.pointer === event.pointerId) finish(true);
     });
-    handle.addEventListener("pointercancel", () => finish(false));
-    handle.addEventListener("lostpointercapture", () => finish(false));
+    handle.addEventListener("pointercancel", (event) => {
+      if (drag?.pointer === event.pointerId) finish(false);
+    });
+    handle.addEventListener("lostpointercapture", (event) => {
+      if (drag?.pointer === event.pointerId) finish(false);
+    });
     handle.addEventListener("dblclick", (event) => {
       if (
         !(event.target as HTMLElement).closest("button, a") &&

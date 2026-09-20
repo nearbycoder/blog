@@ -20,6 +20,7 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
   const launchSearch = find<HTMLInputElement>("[data-launcher-search]");
   const calendar = find("#desktop-calendar");
   const calendarButton = find<HTMLButtonElement>("[data-calendar-toggle]");
+  const defaultApps = find("[data-launcher-default]");
   const results = find("[data-launcher-results]");
   const sources = [
     ...desktop.querySelectorAll<HTMLAnchorElement>("[data-desktop-file]"),
@@ -72,6 +73,31 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
       action: () => actions.game(id),
     })),
   ];
+  function selectCategory(id: string) {
+    let count = 0;
+    desktop
+      .querySelectorAll<HTMLButtonElement>("[data-launch-app]")
+      .forEach((button) => {
+        button.hidden = id !== "all" && button.dataset.appKind !== id;
+        if (!button.hidden) count++;
+      });
+    desktop
+      .querySelectorAll<HTMLButtonElement>("[data-app-category]")
+      .forEach((button) => {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.appCategory === id),
+        );
+      });
+    find("[data-app-count]").textContent = `${count} applications`;
+  }
+  desktop
+    .querySelectorAll<HTMLButtonElement>("[data-app-category]")
+    .forEach((button) => {
+      button.addEventListener("click", () =>
+        selectCategory(button.dataset.appCategory!),
+      );
+    });
   function closeLauncher(focus = false) {
     launcher.hidden = true;
     launchButton.setAttribute("aria-expanded", "false");
@@ -84,10 +110,11 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
   }
   function searchApplications() {
     const query = launchSearch.value.trim().toLowerCase();
-    find("[data-launcher-default]").hidden = Boolean(query);
+    defaultApps.hidden = Boolean(query);
     results.hidden = !query;
     const list = results.querySelector("ul")!;
     list.replaceChildren();
+    results.scrollTop = 0;
     if (!query) return;
     const matches = [
       ...applications
@@ -142,12 +169,15 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
     launcher.hidden = false;
     launchButton.setAttribute("aria-expanded", "true");
     launchSearch.value = "";
+    selectCategory("all");
     searchApplications();
+    defaultApps.scrollTop = 0;
     launchSearch.focus();
   }
   launchButton.addEventListener("click", toggleLauncher);
   launchSearch.addEventListener("input", searchApplications);
   launchSearch.addEventListener("keydown", (event) => {
+    if (event.isComposing) return;
     if (["ArrowDown", "Enter"].includes(event.key) && !results.hidden) {
       const first = results.querySelector<HTMLButtonElement>("button");
       if (first) {
@@ -180,8 +210,12 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
     .querySelectorAll<HTMLButtonElement>("[data-launch-app]")
     .forEach((button) => {
       button.addEventListener("click", () => {
+        const app = desktopApps.find(
+          (app) => app.id === button.dataset.launchApp,
+        );
+        if (!app) return;
         closeLauncher();
-        actions.app(button.dataset.launchApp as DesktopAppId);
+        actions.app(app.id);
       });
     });
   desktop
