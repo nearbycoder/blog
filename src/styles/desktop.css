@@ -751,7 +751,10 @@
 }
 .desktop-tasks {
   display: flex;
+  flex: 1;
+  container-type: inline-size;
   gap: 3px;
+  padding-inline: 1px;
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: thin;
@@ -765,8 +768,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  min-width: 80px;
-  max-width: 180px;
+  min-width: min(80px, 100cqi);
+  max-width: min(180px, 100cqi);
   flex-shrink: 0;
 }
 .desktop-tasks button[aria-pressed="true"] {
@@ -830,7 +833,60 @@
 }
 .desktop-launcher {
   left: 12px;
-  width: min(460px, calc(100% - 24px));
+  width: min(500px, calc(100% - 24px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.desktop-launcher > :is(.launcher-heading, .launcher-search, .launcher-footer) {
+  flex-shrink: 0;
+}
+.desktop-launcher > :is([data-launcher-default], .launcher-results) {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.launcher-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 16px 14px 0;
+}
+.launcher-categories button {
+  color: var(--desk-muted);
+  background: transparent;
+  padding: 7px 9px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+.launcher-categories button[aria-pressed="true"] {
+  color: var(--desk-accent);
+  background: var(--desk-selected);
+}
+.launcher-apps.launcher-utilities {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.launcher-apps.launcher-utilities button {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  gap: 3px 10px;
+  text-align: left;
+  padding: 12px 10px;
+}
+.launcher-utilities .app-glyph {
+  grid-row: span 2;
+  height: auto;
+  color: var(--desk-accent);
+}
+.launcher-utilities .app-glyph svg {
+  width: 27px;
+  height: 27px;
+}
+.launcher-utilities strong {
+  align-self: end;
+}
+.launcher-utilities button > span:last-child {
+  align-self: start;
 }
 .launcher-heading {
   display: flex;
@@ -1245,8 +1301,8 @@
     width: 25px;
   }
   .desktop-tasks button {
-    min-width: 65px;
-    max-width: 120px;
+    min-width: min(65px, 100cqi);
+    max-width: min(120px, 100cqi);
     padding-inline: 8px;
   }
   .dock-divider {
@@ -1456,4 +1512,14 @@
 }
 .app-focus {
   color: var(--desk-icon-files);
+}
+.launcher-utilities [data-app-kind="work"] .app-glyph {
+  color: var(--desk-icon-lab);
+}
+.launcher-utilities [data-app-kind="tools"] .app-glyph {
+  color: var(--desk-icon-projects);
+}
+.launcher-utilities [data-app-kind="create"] .app-glyph,
+.launcher-utilities [data-app-kind="play"] .app-glyph {
+  color: var(--desk-icon-arcade);
 }

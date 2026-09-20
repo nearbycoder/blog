@@ -1,0 +1,80 @@
+.stopwatch-app {
+  display: flex;
+  flex-direction: column;
+  container-type: inline-size;
+}
+.stopwatch-face {
+  text-align: center;
+  padding: 24px 12px 14px;
+}
+.stopwatch-face p {
+  color: var(--desk-muted);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+.stopwatch-face output {
+  display: block;
+  margin: 12px 0 5px;
+  font:
+    clamp(28px, 8cqi, 60px)/1.2 "JetBrains Mono",
+    monospace;
+  font-variant-numeric: tabular-nums;
+  color: var(--desk-ink);
+}
+.stopwatch-face > span {
+  color: var(--desk-accent);
+  font-size: 12px;
+}
+.stopwatch-controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px 20px;
+}
+.stopwatch-controls [data-stopwatch-toggle] {
+  background: var(--desk-selected);
+  min-width: 100px;
+}
+.stopwatch-laps {
+  flex: 1;
+  min-height: 100px;
+  overflow: auto;
+  padding: 0 14px;
+}
+.stopwatch-laps table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.stopwatch-laps caption {
+  padding: 8px 0;
+  text-align: left;
+  font-size: 12px;
+}
+.stopwatch-laps caption span {
+  float: right;
+  color: var(--desk-muted);
+}
+.stopwatch-laps :is(th, td) {
+  padding: 8px;
+  text-align: right;
+  border-bottom: 1px solid var(--desk-line);
+}
+.stopwatch-laps :is(th, td):first-child {
+  text-align: left;
+}
+.stopwatch-laps th {
+  color: var(--desk-muted);
+  font-weight: 500;
+}
+.stopwatch-laps p {
+  text-align: center;
+  color: var(--desk-muted);
+  padding: 20px 0;
+  font-size: 12px;
+}
+.stopwatch-app > .desk-app-toolbar {
+  border-top: 1px solid var(--desk-line);
+}

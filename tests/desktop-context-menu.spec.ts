@@ -167,6 +167,44 @@ test("keyboard menus navigate, restore focus, and dismiss without trapping Tab",
   ).toBeFocused();
 });
 
+test("titlebar keyboard menus preserve their invoker and pass through window shortcuts", async ({
+  page,
+}) => {
+  await page.getByRole("button", { name: "Open Library", exact: true }).click();
+  const win = page.locator(librarySelector);
+  const minimize = win.locator('[data-window-action="minimize"]');
+  const maximize = win.locator('[data-window-action="maximize"]');
+  const menu = page.locator(menuSelector);
+  await minimize.focus();
+  await page.keyboard.press("Shift+F10");
+  await expect(menu).toHaveAttribute("aria-label", "Library window actions");
+  await page.keyboard.press("Escape");
+  await expect(menu).toBeHidden();
+  await expect(minimize).toBeFocused();
+
+  await page.keyboard.press("ContextMenu");
+  await expect(menu).toBeVisible();
+  await page.keyboard.press("Tab");
+  await expect(menu).toBeHidden();
+  await expect(maximize).toBeFocused();
+
+  await page.keyboard.press("Shift+F10");
+  await expect(menu).toBeVisible();
+  await page.keyboard.press("Control+Alt+ArrowUp");
+  await expect(menu).toBeHidden();
+  await expect(win).toHaveClass(/is-maximized/);
+  await expect(maximize).toBeFocused();
+
+  await page.keyboard.press("ContextMenu");
+  await expect(
+    menu.getByRole("menuitem", { name: "Restore", exact: true }),
+  ).toBeVisible();
+  await page.keyboard.press("Control+Alt+ArrowDown");
+  await expect(menu).toBeHidden();
+  await expect(win).not.toHaveClass(/is-maximized/);
+  await expect(maximize).toBeFocused();
+});
+
 test("app content, editable fields, links, selections and the panel keep native menus", async ({
   page,
 }) => {
@@ -217,6 +255,7 @@ test("menus remain inside short and mobile viewports and accessible in both them
   for (const viewport of [
     { width: 1440, height: 1000 },
     { width: 390, height: 320 },
+    { width: 220, height: 320 },
   ]) {
     await page.setViewportSize(viewport);
     const workspace = (await page.locator("[data-workspace]").boundingBox())!;

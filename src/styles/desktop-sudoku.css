@@ -1,0 +1,235 @@
+.sudoku-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  color: var(--desk-ink);
+  background: var(--desk-paper);
+  container-type: inline-size;
+}
+
+.sudoku-app button {
+  color: var(--desk-ink);
+  background: var(--desk-paper);
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+  padding: 6px 10px;
+}
+
+.sudoku-app button:disabled {
+  opacity: 0.48;
+  cursor: default;
+}
+.sudoku-app button:focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: -3px;
+}
+.sudoku-app button:not(:disabled):hover {
+  background: var(--desk-selected);
+}
+.sudoku-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  flex: none;
+}
+.sudoku-toolbar span {
+  color: var(--desk-muted);
+  margin-left: auto;
+  font-size: 11px;
+}
+.sudoku-scroll {
+  overflow: auto;
+  padding: 14px;
+  flex: 1;
+  min-height: 0;
+  container-type: size;
+}
+.sudoku-workspace {
+  /* Size against the remaining space after toolbar, notices, and status. */
+  --sudoku-board-size: clamp(252px, 100cqh, 370px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  align-items: start;
+  gap: 18px;
+  width: min(100%, calc(var(--sudoku-board-size) + 198px));
+  max-width: 568px;
+  margin: 0 auto;
+}
+.sudoku-board {
+  display: grid;
+  grid-template-rows: repeat(9, minmax(0, 1fr));
+  width: 100%;
+  max-width: var(--sudoku-board-size);
+  justify-self: center;
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  border: 2px solid var(--desk-ink);
+  background: var(--desk-paper);
+}
+.sudoku-row {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  min-height: 0;
+}
+.sudoku-board .sudoku-row > button {
+  min-width: 0;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  border-right: 1px solid var(--desk-line);
+  border-bottom: 1px solid var(--desk-line);
+  padding: 0;
+  font-size: clamp(15px, 3.9cqw, 23px);
+  line-height: 1;
+  color: var(--desk-accent);
+  position: relative;
+}
+.sudoku-board .sudoku-row > button:nth-child(3n) {
+  border-right: 2px solid var(--desk-ink);
+}
+.sudoku-board .sudoku-row > button:last-child {
+  border-right: 0;
+}
+.sudoku-board .sudoku-row:nth-child(3n) > button {
+  border-bottom: 2px solid var(--desk-ink);
+}
+.sudoku-board .sudoku-row:last-child > button {
+  border-bottom: 0;
+}
+.sudoku-board .sudoku-row > button[data-given="true"] {
+  color: var(--desk-ink);
+  font-weight: 700;
+}
+.sudoku-board .sudoku-row > button[data-peer="true"] {
+  background: var(--desk-sidebar);
+}
+.sudoku-board .sudoku-row > button[aria-selected="true"] {
+  background: var(--desk-selected);
+  box-shadow: inset 0 0 0 2px var(--desk-accent);
+  z-index: 1;
+}
+.sudoku-board .sudoku-row > button[data-invalid="true"] {
+  text-decoration: underline wavy;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  background: color-mix(in srgb, #df5353 19%, var(--desk-paper));
+}
+.sudoku-board[data-complete="true"] {
+  border-color: var(--desk-accent);
+}
+.sudoku-selection {
+  font-size: 12px;
+  font-weight: 600;
+  margin: 0 0 9px;
+}
+.sudoku-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px;
+}
+.sudoku-keypad button {
+  min-height: 36px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.sudoku-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  margin-top: 7px;
+}
+.sudoku-actions button {
+  min-height: 31px;
+  padding: 5px;
+  font-size: 12px;
+}
+.sudoku-actions button:last-child {
+  grid-column: 1 / -1;
+}
+.sudoku-help {
+  font-size: 11px;
+  color: var(--desk-muted);
+  line-height: 1.6;
+  margin: 13px 0 8px;
+}
+.sudoku-progress {
+  color: var(--desk-muted);
+  font-size: 10px;
+  line-height: 1.5;
+  margin: 0;
+}
+.sudoku-status {
+  flex: none;
+  margin: 0;
+  line-height: 1.5;
+}
+.sudoku-confirm {
+  flex: none;
+  padding: 9px 12px;
+  background: var(--desk-selected);
+  border-bottom: 1px solid var(--desk-line);
+  font-size: 12px;
+}
+.sudoku-confirm p {
+  margin: 0 0 8px;
+}
+.sudoku-confirm button + button {
+  margin-left: 5px;
+}
+.sudoku-storage {
+  flex: none;
+  margin: 0;
+  padding: 7px 12px;
+  font-size: 11px;
+  border-bottom: 1px solid var(--desk-line);
+}
+.sudoku-app [hidden] {
+  display: none;
+}
+
+@container (max-width: 475px) {
+  .sudoku-toolbar span {
+    width: 100%;
+    margin-left: 0;
+  }
+  .sudoku-scroll {
+    padding: 10px;
+  }
+  .sudoku-workspace {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 370px;
+  }
+  .sudoku-controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 108px;
+    gap: 7px 10px;
+  }
+  .sudoku-selection {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  .sudoku-keypad {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .sudoku-actions {
+    margin-top: 0;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sudoku-actions button:last-child {
+    grid-column: auto;
+  }
+  .sudoku-help,
+  .sudoku-progress {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  .sudoku-board .sudoku-row > button {
+    font-size: clamp(18px, 6cqw, 23px);
+  }
+}

@@ -17,9 +17,12 @@ const fresh = (): TimerState => ({
   deadline: null,
   completed: 0,
 });
-function read(): TimerState {
+function read(): { state: TimerState; unreadable: boolean } {
   try {
-    const data = JSON.parse(localStorage.getItem(key) ?? "null");
+    const raw = localStorage.getItem(key);
+    if (raw === null) return { state: fresh(), unreadable: false };
+    if (raw.length > 4096) throw new Error("Saved timer is too large");
+    const data = JSON.parse(raw);
     if (
       data &&
       ["Focus", "Short break", "Long break", "Custom"].includes(data.mode) &&
@@ -38,11 +41,11 @@ function read(): TimerState {
       data.completed >= 0 &&
       data.completed < 100000
     )
-      return data;
+      return { state: data, unreadable: false };
   } catch {
     /* A blocked or corrupt store should not prevent using the timer. */
   }
-  return fresh();
+  return { state: fresh(), unreadable: true };
 }
 
 export function mountFocus(root: HTMLElement) {
@@ -63,7 +66,8 @@ export function mountFocus(root: HTMLElement) {
     </div>
     <p class="desk-app-status" role="status" data-focus-message>Continues while minimized. Closing pauses the timer.</p>
   `;
-  let state = read();
+  const loaded = read();
+  let state = loaded.state;
   let alive = true;
   const display = root.querySelector<HTMLElement>(".focus-time")!;
   const phase = root.querySelector<HTMLElement>(".focus-state")!;
@@ -73,9 +77,12 @@ export function mountFocus(root: HTMLElement) {
     'input[name="minutes"]',
   )!;
   const announce = (text: string) => {
-    status.textContent = text;
+    status.textContent = loaded.unreadable
+      ? `${text} Saved timer could not be read. Changes stay in this session; original data is unchanged.`
+      : text;
   };
   const save = () => {
+    if (loaded.unreadable) return;
     try {
       localStorage.setItem(key, JSON.stringify(state));
     } catch {
@@ -178,6 +185,7 @@ export function mountFocus(root: HTMLElement) {
       setTimer("Custom", value * 60);
   });
   minutes.value = String(state.duration / 60);
+  announce("Continues while minimized. Closing pauses the timer.");
   tick();
   draw();
   const timer = window.setInterval(tick, 250);

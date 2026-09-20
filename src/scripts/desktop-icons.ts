@@ -252,9 +252,11 @@ export function mountDesktopIcons(
     button.addEventListener("pointerup", (event) => {
       if (drag?.pointerId === event.pointerId) finish(false);
     });
-    for (const type of ["pointercancel", "lostpointercapture"]) {
-      button.addEventListener(type, () => finish(true));
-    }
+    const cancelPointer = (event: PointerEvent) => {
+      if (drag?.pointerId === event.pointerId) finish(true);
+    };
+    button.addEventListener("pointercancel", cancelPointer);
+    button.addEventListener("lostpointercapture", cancelPointer);
     button.addEventListener("keydown", (event) => {
       if (!event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
         return;
@@ -272,6 +274,7 @@ export function mountDesktopIcons(
         column: positions[id].column + direction[0],
         row: positions[id].row + direction[1],
       });
+      button.scrollIntoView({ block: "nearest", inline: "nearest" });
     });
   });
   shortcuts.addEventListener(

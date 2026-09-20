@@ -1,0 +1,295 @@
+.typing-app {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  color: var(--desk-ink);
+  background: var(--desk-paper);
+  container-type: inline-size;
+}
+.typing-toolbar {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.typing-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+.typing-toolbar select {
+  min-width: 0;
+  max-width: 180px;
+  padding: 5px;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  color: var(--desk-ink);
+  background: var(--desk-paper);
+  font: inherit;
+}
+.typing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.typing-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 18px;
+}
+.typing-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.typing-eyebrow {
+  margin: 0 0 4px;
+  font-size: 11px;
+  color: var(--desk-muted);
+}
+.typing-heading h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+.typing-state {
+  border: 1px solid var(--desk-line);
+  padding: 4px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--desk-muted);
+  white-space: nowrap;
+}
+.typing-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  background: var(--desk-sidebar);
+}
+.typing-stats > div {
+  padding: 10px;
+  min-width: 0;
+}
+.typing-stats > div + div {
+  border-left: 1px solid var(--desk-line);
+}
+.typing-stats output {
+  display: block;
+  font-size: 25px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+.typing-stats span {
+  display: block;
+  margin-top: 4px;
+  color: var(--desk-muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+.typing-passage {
+  padding: 14px 0 4px;
+  margin: 0 0 12px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font:
+    17px/1.8 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+  color: var(--desk-muted);
+}
+.typing-passage .typing-correct {
+  color: var(--desk-ink);
+  background: var(--desk-selected);
+}
+.typing-passage .typing-incorrect {
+  color: var(--desk-ink);
+  background: color-mix(in srgb, #d45050 24%, var(--desk-paper));
+  text-decoration: underline wavy #c44141;
+  text-underline-offset: 3px;
+}
+.typing-current {
+  border-bottom: 2px solid var(--desk-accent);
+  background: var(--desk-sidebar);
+}
+.typing-progress-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--desk-muted);
+}
+.typing-app progress {
+  width: 100%;
+  height: 5px;
+  display: block;
+  margin: 6px 0 16px;
+  appearance: none;
+  border: 0;
+  background: var(--desk-line);
+  color: var(--desk-accent);
+  accent-color: var(--desk-accent);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.typing-app progress::-webkit-progress-bar {
+  background: var(--desk-line);
+}
+.typing-app progress::-webkit-progress-value {
+  background: var(--desk-accent);
+}
+.typing-app progress::-moz-progress-bar {
+  background: var(--desk-accent);
+}
+.typing-input-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.typing-app textarea {
+  box-sizing: border-box;
+  display: block;
+  min-width: 0;
+  width: 100%;
+  resize: vertical;
+  min-height: 92px;
+  max-height: 240px;
+  border: 1px solid var(--desk-line);
+  border-radius: 5px;
+  background: var(--desk-paper);
+  color: var(--desk-ink);
+  padding: 10px;
+  font:
+    16px/1.55 ui-monospace,
+    SFMono-Regular,
+    Consolas,
+    monospace;
+}
+.typing-app textarea[readonly] {
+  background: var(--desk-sidebar);
+}
+.typing-app textarea::placeholder {
+  color: var(--desk-muted);
+  font-family: inherit;
+}
+.typing-app button:focus-visible,
+.typing-app select:focus-visible,
+.typing-app textarea:focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 2px;
+}
+.typing-help,
+.typing-storage {
+  margin: 12px 0 0;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--desk-muted);
+}
+.typing-storage {
+  padding: 8px;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+}
+.typing-confirm {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background: var(--desk-sidebar);
+  border: 1px solid var(--desk-line);
+  border-radius: 5px;
+  margin-top: 10px;
+  font-size: 12px;
+}
+.typing-confirm span {
+  flex-basis: 100%;
+}
+.typing-confirm button {
+  padding: 6px 9px;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  background: var(--desk-paper);
+  color: var(--desk-ink);
+  font: inherit;
+  cursor: pointer;
+}
+.typing-result {
+  background: var(--desk-selected);
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 13px;
+}
+.typing-result strong {
+  font-size: 15px;
+}
+.typing-result p {
+  margin: 6px 0;
+  line-height: 1.5;
+}
+.typing-result > span {
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+.typing-status {
+  flex-shrink: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.typing-app [hidden] {
+  display: none !important;
+}
+@container (max-width: 430px) {
+  .typing-body {
+    padding: 12px;
+  }
+  .typing-heading {
+    align-items: start;
+  }
+  .typing-heading h2 {
+    font-size: 18px;
+  }
+  .typing-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .typing-stats > div {
+    padding: 8px 10px;
+  }
+  .typing-stats > div:nth-child(3) {
+    border-left: 0;
+  }
+  .typing-stats > div:nth-child(n + 3) {
+    border-top: 1px solid var(--desk-line);
+  }
+  .typing-stats output {
+    font-size: 23px;
+  }
+  .typing-passage {
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .typing-toolbar {
+    align-items: stretch;
+  }
+  .typing-toolbar label {
+    flex: 1;
+    justify-content: space-between;
+  }
+  .typing-actions {
+    flex-basis: 100%;
+  }
+  .typing-actions button {
+    flex: 1;
+  }
+}

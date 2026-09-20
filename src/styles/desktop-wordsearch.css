@@ -1,0 +1,282 @@
+.wordsearch-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  color: var(--desk-ink);
+  background: var(--desk-paper);
+  container-type: size;
+}
+.wordsearch-app button,
+.wordsearch-app select {
+  font: inherit;
+  color: var(--desk-ink);
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  background: var(--desk-paper);
+  padding: 6px 9px;
+}
+.wordsearch-app button {
+  cursor: pointer;
+}
+.wordsearch-app button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.wordsearch-app button:focus-visible,
+.wordsearch-app select:focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 2px;
+}
+.wordsearch-app button:not(:disabled):hover {
+  background: var(--desk-selected);
+}
+.wordsearch-toolbar {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+}
+.wordsearch-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+.wordsearch-toolbar select {
+  max-width: 132px;
+}
+.wordsearch-toolbar button {
+  font-size: 12px;
+}
+.wordsearch-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 13px 16px;
+}
+.wordsearch-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  max-width: 540px;
+  margin: 0 auto;
+}
+.wordsearch-heading strong {
+  font-size: 19px;
+  letter-spacing: -0.4px;
+}
+.wordsearch-heading > span {
+  color: var(--desk-muted);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.wordsearch-note {
+  max-width: 540px;
+  margin: 4px auto 12px;
+  color: var(--desk-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.wordsearch-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 155px;
+  gap: 18px;
+  align-items: start;
+  max-width: 540px;
+  margin: 0 auto;
+}
+.wordsearch-play {
+  min-width: 0;
+}
+.wordsearch-board {
+  display: grid;
+  grid-template-rows: repeat(9, minmax(0, 1fr));
+  width: 100%;
+  max-width: min(342px, max(216px, calc(100cqh - 210px)));
+  margin-inline: auto;
+  aspect-ratio: 1;
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  padding: 4px;
+  background: var(--desk-sidebar);
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  box-sizing: border-box;
+}
+.wordsearch-row {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  min-height: 0;
+}
+.wordsearch-board .wordsearch-row > button {
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  min-width: 0;
+  min-height: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(14px, 3.1cqw, 20px);
+  line-height: 1;
+  font-weight: 600;
+  background: transparent;
+  position: relative;
+  touch-action: none;
+}
+.wordsearch-board .wordsearch-row > button[data-found="true"] {
+  background: color-mix(in srgb, var(--desk-accent) 17%, var(--desk-paper));
+  color: var(--desk-ink);
+}
+.wordsearch-board .wordsearch-row > button[data-found="true"]::after {
+  content: "";
+  position: absolute;
+  bottom: 3px;
+  left: 35%;
+  right: 35%;
+  height: 2px;
+  background: var(--desk-accent);
+  border-radius: 2px;
+}
+.wordsearch-board .wordsearch-row > button[aria-selected="true"] {
+  color: var(--desk-ink);
+  background: var(--desk-selected);
+  box-shadow: inset 0 0 0 1px var(--desk-accent);
+}
+.wordsearch-board .wordsearch-row > button[data-anchor="true"] {
+  box-shadow: inset 0 0 0 2px var(--desk-accent);
+}
+.wordsearch-board .wordsearch-row > button:focus-visible {
+  outline-offset: -3px;
+  z-index: 1;
+}
+.wordsearch-board[data-complete="true"] {
+  border-color: var(--desk-accent);
+}
+.wordsearch-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 7px;
+  margin-top: 8px;
+  min-height: 29px;
+  font-size: 11px;
+  color: var(--desk-muted);
+}
+.wordsearch-selection > span {
+  overflow-wrap: anywhere;
+}
+.wordsearch-selection button {
+  font-size: 10px;
+  padding: 4px 7px;
+  flex: none;
+}
+.wordsearch-count {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+.wordsearch-count strong {
+  font-size: 22px;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.7px;
+}
+.wordsearch-count > span {
+  color: var(--desk-muted);
+  font-size: 10px;
+}
+.wordsearch-sidebar progress {
+  display: block;
+  width: 100%;
+  height: 5px;
+  margin: 9px 0 12px;
+  accent-color: var(--desk-accent);
+  border: 0;
+  border-radius: 9px;
+  background: var(--desk-sidebar);
+}
+.wordsearch-sidebar progress::-webkit-progress-bar {
+  background: var(--desk-sidebar);
+  border-radius: 9px;
+}
+.wordsearch-sidebar progress::-webkit-progress-value {
+  background: var(--desk-accent);
+  border-radius: 9px;
+}
+.wordsearch-words {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+.wordsearch-words li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  padding: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.wordsearch-words li[data-found="true"] {
+  background: var(--desk-selected);
+}
+.wordsearch-words li[data-found="true"] > span:first-child {
+  text-decoration: line-through;
+  text-decoration-color: var(--desk-accent);
+}
+.wordsearch-check {
+  font-size: 13px;
+  color: var(--desk-accent);
+}
+.wordsearch-help {
+  font-size: 10px;
+  color: var(--desk-muted);
+  line-height: 1.6;
+  margin: 12px 0 0;
+}
+.wordsearch-status {
+  flex: none;
+  margin: 0;
+  line-height: 1.5;
+  padding: 6px 10px;
+}
+@container (max-width: 440px) {
+  .wordsearch-scroll {
+    padding: 11px;
+  }
+  .wordsearch-workspace {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 342px;
+    gap: 14px;
+  }
+  .wordsearch-heading,
+  .wordsearch-note {
+    max-width: 342px;
+  }
+  .wordsearch-board .wordsearch-row > button {
+    font-size: clamp(16px, 5.2cqw, 21px);
+  }
+  .wordsearch-words {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+  .wordsearch-words li {
+    padding: 6px;
+    letter-spacing: 0.5px;
+    font-size: 10px;
+    gap: 3px;
+  }
+  .wordsearch-help {
+    margin-top: 10px;
+  }
+}

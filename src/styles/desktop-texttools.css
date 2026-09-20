@@ -1,0 +1,79 @@
+.texttools-app {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  container-type: inline-size;
+}
+.texttools-toolbar {
+  align-items: end;
+  flex-shrink: 0;
+}
+.texttools-toolbar label {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+  flex: 1;
+  min-width: 120px;
+}
+.texttools-toolbar select {
+  width: 100%;
+}
+.texttools-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: var(--desk-muted);
+}
+.texttools-editor {
+  display: flex;
+  flex: 1;
+  min-height: 140px;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 12px 12px;
+  font-size: 12px;
+}
+.texttools-editor textarea {
+  width: 100%;
+  flex: 1;
+  resize: none;
+  min-height: 100px;
+  font-family: "JetBrains Mono", monospace;
+  line-height: 1.7;
+  background: var(--desk-sidebar);
+}
+.texttools-replace {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--desk-line);
+}
+.texttools-replace label {
+  display: grid;
+  flex: 1;
+  min-width: 100px;
+  gap: 5px;
+  font-size: 12px;
+}
+.texttools-replace input {
+  width: 100%;
+}
+.texttools-actions {
+  padding-block: 8px;
+}
+.texttools-app .desk-app-status {
+  border-top: 1px solid var(--desk-line);
+}
+@container (max-width:400px) {
+  .texttools-replace button {
+    flex: 1 0 100%;
+  }
+  .texttools-metrics {
+    font-size: 11px;
+    gap: 4px 12px;
+  }
+}

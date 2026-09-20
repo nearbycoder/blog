@@ -1,5 +1,5 @@
 ---
-import { desktopApps } from "../lib/desktop-apps";
+import { desktopApps, desktopAppCategories } from "../lib/desktop-apps";
 import Ghostty from "../components/desktop/Ghostty.astro";
 import "../styles/desktop-ghostty.css";
 import Arcade from "../components/desktop/Arcade.astro";
@@ -272,11 +272,34 @@ const folderFor = (id: string) =>
             ><strong>Terminal</strong><span>Pocket shell</span></button
           >
         </div>
-        <p class="launcher-section-label">Everyday apps</p>
+        <div
+          class="launcher-categories"
+          role="group"
+          aria-label="Application categories"
+        >
+          {
+            desktopAppCategories.map((category) => (
+              <button
+                type="button"
+                data-app-category={category.id}
+                aria-pressed={category.id === "all"}
+              >
+                {category.title}
+              </button>
+            ))
+          }
+        </div>
+        <p class="launcher-section-label" data-app-count aria-live="polite">
+          {desktopApps.length} applications
+        </p>
         <div class="launcher-apps launcher-utilities">
           {
             desktopApps.map((app) => (
-              <button type="button" data-launch-app={app.id}>
+              <button
+                type="button"
+                data-launch-app={app.id}
+                data-app-kind={app.category}
+              >
                 <span class:list={["app-glyph", `app-${app.id}`]}>
                   <DesktopIcon name={app.icon} />
                 </span>
@@ -425,57 +448,32 @@ const folderFor = (id: string) =>
   </div>
   <Arcade />
   <Ghostty />
-  {
-    desktopApps.map((app) => (
-      <template id={`desktop-app-${app.id}-template`}>
-        <section
-          class="desktop-window utility-window"
-          role="region"
-          aria-label={`${app.title} window`}
-          tabindex="-1"
-        >
-          <div class="window-titlebar" data-drag-handle>
-            <span class="window-title">
-              <>
-                <DesktopIcon name={app.icon} />
-                <strong>{app.title}</strong>
-                <span class="window-subtitle">— {app.subtitle}</span>
-              </>
-            </span>
-            <div class="window-controls">
-              <button
-                type="button"
-                data-window-action="minimize"
-                aria-label={`Minimize ${app.title}`}
-              >
-                <DesktopIcon name="minimize" />
-              </button>
-              <button
-                type="button"
-                data-window-action="maximize"
-                aria-pressed="false"
-                aria-label={`Maximize ${app.title}`}
-              >
-                <DesktopIcon name="maximize" />
-              </button>
-              <button
-                type="button"
-                data-window-action="close"
-                aria-label={`Close ${app.title}`}
-              >
-                <DesktopIcon name="close" />
-              </button>
-            </div>
-          </div>
-          <div class="desktop-app-content">
-            <p class="utility-loading" role="status">
-              Opening {app.title}…
-            </p>
-          </div>
-        </section>
-      </template>
-    ))
-  }
+  <template id="desktop-app-template">
+    <section class="desktop-window utility-window" role="region" tabindex="-1">
+      <div class="window-titlebar" data-drag-handle>
+        <span class="window-title">
+          <span data-app-icon></span><strong data-app-title></strong>
+          <span class="window-subtitle" data-app-subtitle></span>
+        </span>
+        <div class="window-controls">
+          <button type="button" data-window-action="minimize"
+            ><DesktopIcon name="minimize" /></button
+          >
+          <button
+            type="button"
+            data-window-action="maximize"
+            aria-pressed="false"><DesktopIcon name="maximize" /></button
+          >
+          <button type="button" data-window-action="close"
+            ><DesktopIcon name="close" /></button
+          >
+        </div>
+      </div>
+      <div class="desktop-app-content">
+        <p class="utility-loading" role="status">Opening app…</p>
+      </div>
+    </section>
+  </template>
   <template id="desktop-reader-template">
     <section class="desktop-window reader-window" role="region" tabindex="-1">
       <div class="window-titlebar" data-drag-handle>

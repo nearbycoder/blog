@@ -1,7 +1,7 @@
 .desktop-context-menu {
   position: absolute;
   z-index: 2147483647;
-  min-width: 218px;
+  min-width: min(218px, var(--desktop-context-max-width, 218px));
   width: max-content;
   overflow: auto;
   padding: 5px;
@@ -28,7 +28,12 @@
   background: transparent;
   color: inherit;
   text-align: left;
-  white-space: nowrap;
+  white-space: normal;
+}
+
+.desktop-context-menu button > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .desktop-context-menu button:hover:not(:disabled),
@@ -43,8 +48,10 @@
 }
 
 .desktop-context-shortcut {
+  flex-shrink: 0;
   color: var(--desk-muted);
   font-size: 11px;
+  white-space: nowrap;
 }
 
 .desktop-context-divider {

@@ -229,6 +229,35 @@ test("Alt and arrow keys move and swap focused icons; reset restores the current
   expect(await positions(page)).toEqual(original);
 });
 
+test("cancellation from another pointer does not interrupt an icon drag", async ({
+  page,
+}) => {
+  await open(page);
+  const articles = icon(page, "articles");
+  const projects = icon(page, "projects");
+  const original = await articles.boundingBox();
+  const target = (await projects.boundingBox())!;
+  await beginDrag(
+    page,
+    articles,
+    target.x + target.width / 2,
+    target.y + target.height / 2,
+  );
+  for (const type of ["pointercancel", "lostpointercapture"]) {
+    await projects.dispatchEvent(type, { pointerId: 2, isPrimary: false });
+    await articles.dispatchEvent(type, { pointerId: 2, isPrimary: false });
+    await expect(articles).toHaveClass(/is-icon-dragging/);
+  }
+  await page.mouse.up();
+  expect(await articles.boundingBox()).toEqual(target);
+  expect(await projects.boundingBox()).toEqual(original);
+  expect(JSON.parse((await stored(page))!).layouts.wide.articles).toEqual({
+    column: 0,
+    row: 1,
+  });
+  await expect(page.locator(".desktop-window:visible")).toHaveCount(0);
+});
+
 test("viewport reflow keeps all icons reachable without overwriting the saved wide layout", async ({
   page,
 }) => {
@@ -384,6 +413,30 @@ test("very short viewports keep all icons distinct and let the final column scro
   await sketchpad.click();
   await expect(page.locator('[data-window="sketchpad"]')).toBeVisible();
   await expect(page.locator('[data-window="sketchpad"] canvas')).toBeVisible();
+});
+
+test("keyboard movement keeps the focused icon visible in a scrolling layout", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 320 });
+  await page.goto("/desktop/");
+  const shortcuts = page.locator(".desktop-shortcuts");
+  const articles = icon(page, "articles");
+  await expect(shortcuts).toHaveAttribute("data-overflow", "");
+  await articles.focus();
+  for (let column = 0; column < 7; column++) {
+    await page.keyboard.press("Alt+ArrowRight");
+    await expect(articles).toBeFocused();
+    const bounds = (await articles.boundingBox())!;
+    expect(bounds.x).toBeGreaterThanOrEqual(0);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(320);
+  }
+  expect(
+    await shortcuts.evaluate((element) => element.scrollLeft),
+  ).toBeGreaterThan(0);
+  await expect(page.locator(".desktop-window:visible")).toHaveCount(0);
+  await page.keyboard.press("Enter");
+  await expect(page.locator('[data-window="library"]')).toBeVisible();
 });
 
 for (const [name, corrupt] of [

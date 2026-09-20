@@ -1,0 +1,142 @@
+.json-app {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  background: var(--desk-paper);
+  color: var(--desk-ink);
+  container-type: inline-size;
+}
+.json-toolbar,
+.json-actions {
+  flex-shrink: 0;
+  gap: 6px;
+  padding: 9px 12px;
+}
+.json-app button {
+  border: 1px solid var(--desk-line);
+  font-size: 12px;
+  cursor: pointer;
+}
+.json-app button:disabled {
+  cursor: default;
+}
+.json-toolbar .json-primary {
+  border-color: var(--desk-accent);
+  background: var(--desk-selected);
+  color: var(--desk-accent);
+  font-weight: 600;
+}
+.json-indent {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  color: var(--desk-muted);
+  font-size: 12px;
+}
+.json-indent select {
+  padding: 7px 8px;
+}
+.json-editor-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 5px 10px;
+  padding: 12px 14px 8px;
+  font-size: 12px;
+}
+.json-editor-heading label {
+  font-weight: 600;
+}
+.json-editor-heading > span {
+  color: var(--desk-muted);
+  overflow-wrap: anywhere;
+}
+.json-editor-wrap {
+  display: flex;
+  flex: 1 0 130px;
+  min-width: 0;
+  min-height: 130px;
+  padding: 0 12px;
+}
+.json-app textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 130px;
+  resize: none;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  background: var(--desk-sidebar);
+  color: var(--desk-ink);
+  font:
+    13px/1.6 "JetBrains Mono",
+    monospace;
+  tab-size: 2;
+  white-space: pre;
+}
+.json-app textarea[aria-invalid="true"] {
+  border-color: var(--desk-accent);
+}
+.json-app :is(button, select, textarea):focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 2px;
+}
+.json-document-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-shrink: 0;
+  gap: 4px 12px;
+  padding: 8px 14px 10px;
+  color: var(--desk-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.json-actions {
+  border-top: 1px solid var(--desk-line);
+}
+.json-toolbar-gap {
+  flex: 1;
+}
+.json-status {
+  flex-shrink: 0;
+  min-height: 38px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.json-status.is-error {
+  color: var(--desk-ink);
+  background: var(--desk-selected);
+}
+@container (max-width: 400px) {
+  .json-toolbar,
+  .json-actions {
+    padding: 8px;
+  }
+  .json-indent {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .json-toolbar-gap {
+    display: none;
+  }
+  .json-editor-wrap {
+    padding: 0 8px;
+  }
+  .json-editor-heading,
+  .json-document-bar {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+@media (max-width: 760px), (pointer: coarse) {
+  .json-app textarea {
+    font-size: 16px;
+  }
+}

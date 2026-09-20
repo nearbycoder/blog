@@ -1,0 +1,253 @@
+.spirograph-app {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  color: var(--desk-ink);
+  background: var(--desk-paper);
+  container-type: inline-size;
+}
+.spirograph-toolbar {
+  flex-shrink: 0;
+  gap: 10px;
+  padding: 9px 12px;
+}
+.spirograph-toolbar > div {
+  display: grid;
+  gap: 2px;
+  margin-right: auto;
+}
+.spirograph-toolbar strong {
+  font-size: 12px;
+}
+.spirograph-toolbar > div > span {
+  color: var(--desk-muted);
+  font-size: 10px;
+}
+.spirograph-app button,
+.spirograph-app select {
+  max-width: 100%;
+  min-width: 0;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  padding: 6px 8px;
+  background: var(--desk-paper);
+  color: var(--desk-ink);
+  font: inherit;
+  font-size: 11px;
+}
+.spirograph-app button {
+  cursor: pointer;
+}
+.spirograph-app button:hover {
+  background: var(--desk-selected);
+}
+.spirograph-app :is(button, input, select, canvas):focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 2px;
+}
+.spirograph-workspace {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 188px minmax(0, 1fr);
+  grid-template-rows: minmax(310px, 1fr) auto;
+  gap: 10px 12px;
+  padding: 12px;
+  overflow: auto;
+}
+.spirograph-controls {
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+  gap: 10px;
+  min-width: 0;
+}
+.spirograph-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 600;
+}
+.spirograph-field select {
+  width: 100%;
+  font-weight: 400;
+}
+.spirograph-sliders {
+  display: grid;
+  gap: 8px;
+}
+.spirograph-sliders label {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  font-size: 11px;
+}
+.spirograph-sliders label > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.spirograph-sliders output {
+  color: var(--desk-muted);
+  font:
+    10px "JetBrains Mono",
+    monospace;
+}
+.spirograph-sliders input {
+  width: 100%;
+  min-width: 0;
+  height: 17px;
+  margin: 0;
+  accent-color: var(--desk-accent);
+  cursor: pointer;
+}
+.spirograph-ink {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--desk-line);
+}
+.spirograph-color,
+.spirograph-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+.spirograph-color input {
+  width: 33px;
+  height: 25px;
+  border: 1px solid var(--desk-line);
+  border-radius: 3px;
+  background: var(--desk-paper);
+  padding: 2px;
+  cursor: pointer;
+}
+.spirograph-color input:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.spirograph-check input {
+  margin: 0;
+  accent-color: var(--desk-accent);
+}
+.spirograph-random {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.spirograph-stage {
+  position: relative;
+  min-width: 0;
+  min-height: 270px;
+  overflow: hidden;
+  border: 1px solid var(--desk-line);
+  border-radius: 5px;
+  background: #101c29;
+  color: #a4b7cb;
+}
+.spirograph-stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+.spirograph-stage canvas:active {
+  cursor: grabbing;
+}
+.spirograph-stage canvas:focus-visible {
+  outline-offset: -4px;
+}
+.spirograph-stage-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  pointer-events: none;
+  font:
+    9px "JetBrains Mono",
+    monospace;
+  letter-spacing: 0.07em;
+}
+.spirograph-stage-bottom {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  pointer-events: none;
+  font:
+    8px "JetBrains Mono",
+    monospace;
+  letter-spacing: 0.09em;
+}
+.spirograph-paper {
+  background: #faf8f2;
+  color: #586470;
+}
+.spirograph-help {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--desk-muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+.spirograph-status {
+  flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 10px;
+  font-size: 10px;
+}
+.spirograph-status > span:last-child {
+  color: var(--desk-muted);
+}
+@container (max-width: 510px) {
+  .spirograph-workspace {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 9px;
+  }
+  .spirograph-stage {
+    order: -1;
+    flex-shrink: 0;
+    min-height: 260px;
+  }
+  .spirograph-controls {
+    width: 100%;
+  }
+  .spirograph-sliders {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+  .spirograph-toolbar {
+    padding: 8px 9px;
+  }
+  .spirograph-toolbar > div > span {
+    display: none;
+  }
+}
+@media (max-width: 760px), (pointer: coarse) {
+  .spirograph-app select {
+    font-size: 16px;
+  }
+  .spirograph-sliders input {
+    height: 24px;
+  }
+  .spirograph-check {
+    min-height: 28px;
+  }
+}
