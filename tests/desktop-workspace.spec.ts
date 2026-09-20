@@ -73,10 +73,17 @@ test("open apps retain dragged and resized geometry, focus, and stacking after r
   await resize(page, json, -100, -80);
   const jsonBox = await json.boundingBox();
   await page.getByRole("button", { name: "Show Notes", exact: true }).click();
-  await expect.poll(async () => (await saved(page))?.active).toBe("notes");
-  expect(
-    (await saved(page)).windows.map((win: { id: string }) => win.id),
-  ).toEqual(["json", "notes"]);
+  // An earlier snapshot can already have Notes active. Wait for the complete
+  // debounced save, including the newly opened JSON window and stacking order.
+  await expect
+    .poll(async () => {
+      const state = await saved(page);
+      return {
+        active: state?.active,
+        order: state?.windows.map((win: { id: string }) => win.id),
+      };
+    })
+    .toEqual({ active: "notes", order: ["json", "notes"] });
 
   await page.reload();
   await ready(page);
