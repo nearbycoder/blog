@@ -1,0 +1,270 @@
+.desktop-commands {
+  position: fixed;
+  inset: min(22dvh, 180px) auto auto 50%;
+  transform: translateX(-50%);
+  width: min(640px, calc(100vw - 32px));
+  max-width: none;
+  max-height: min(620px, calc(78dvh - 20px));
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--desk-line);
+  border-radius: 14px;
+  background: var(--desk-paper);
+  color: var(--desk-ink);
+  box-shadow:
+    0 24px 80px var(--desk-shadow),
+    0 2px 8px var(--desk-shadow-soft);
+  font:
+    13px/1.45 system-ui,
+    sans-serif;
+}
+.desktop-commands[open] {
+  display: flex;
+  flex-direction: column;
+  animation: desktop-commands-enter 120ms ease-out;
+}
+.desktop-commands::backdrop {
+  background: #07101966;
+  backdrop-filter: blur(5px);
+}
+.desktop-commands-search {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--desk-line);
+}
+.desktop-commands-search > svg {
+  flex: 0 0 auto;
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: var(--desk-muted);
+  stroke-width: 1.7;
+  stroke-linecap: round;
+}
+.desktop-commands-search > input {
+  flex: 1;
+  width: 0;
+  min-width: 0;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--desk-ink);
+  font:
+    400 16px/1.5 system-ui,
+    sans-serif;
+  box-shadow: none;
+}
+.desktop-commands-search > input::placeholder {
+  color: var(--desk-muted);
+  opacity: 1;
+}
+.desktop-commands-search > input:focus-visible {
+  outline: none;
+}
+.desktop-commands-search:focus-within {
+  border-bottom-color: var(--desk-accent);
+}
+.desktop-environment .desktop-commands-close {
+  flex: 0 0 auto;
+  min-width: 40px;
+  min-height: 36px;
+  padding: 4px 8px;
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  background: var(--desk-sidebar);
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+.desktop-environment .desktop-commands-close:hover {
+  background: var(--desk-selected);
+  color: var(--desk-ink);
+}
+.desktop-commands-results {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+  scroll-padding: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--desk-line) transparent;
+}
+.desktop-commands-heading {
+  padding: 12px 12px 6px;
+  color: var(--desk-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+}
+.desktop-commands-option {
+  display: flex;
+  align-items: center;
+  min-height: 54px;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  user-select: none;
+}
+.desktop-commands-option[aria-selected="true"] {
+  background: var(--desk-selected);
+  box-shadow: inset 2px 0 var(--desk-accent);
+}
+.desktop-commands-icon {
+  display: inline-flex;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--desk-line);
+  border-radius: 7px;
+  background: var(--desk-sidebar);
+  color: var(--desk-accent);
+  font-size: 19px;
+  pointer-events: none;
+}
+.desktop-commands-icon svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+}
+.desktop-commands-icon > .desktop-icon {
+  display: inline-flex;
+}
+.desktop-commands-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  gap: 1px;
+}
+.desktop-commands-title,
+.desktop-commands-description {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.desktop-commands-title {
+  font-weight: 500;
+}
+.desktop-commands-description {
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+.desktop-commands-meta {
+  flex: 0 0 auto;
+  padding-left: 6px;
+  color: var(--desk-muted);
+  font-size: 10px;
+}
+.desktop-commands-empty {
+  padding: 44px 20px;
+  text-align: center;
+}
+.desktop-commands-empty strong {
+  font-weight: 500;
+}
+.desktop-commands-empty p {
+  margin: 7px 0 0;
+  color: var(--desk-muted);
+  font-size: 12px;
+}
+.desktop-commands-footer {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 42px;
+  padding: 6px 16px;
+  border-top: 1px solid var(--desk-line);
+  background: var(--desk-sidebar);
+  color: var(--desk-muted);
+  font-size: 10px;
+}
+.desktop-commands-footer > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.desktop-commands-count {
+  flex: 1;
+  min-width: 0;
+}
+.desktop-commands-footer kbd {
+  padding: 1px 4px;
+  border: 1px solid var(--desk-line);
+  border-radius: 3px;
+  color: var(--desk-ink);
+  font:
+    10px/1.5 system-ui,
+    sans-serif;
+}
+@keyframes desktop-commands-enter {
+  from {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+@media (max-width: 600px), (max-height: 560px) {
+  .desktop-commands {
+    top: min(12dvh, 60px);
+    width: min(640px, calc(100vw - 16px));
+    max-height: calc(88dvh - 12px);
+    border-radius: 10px;
+  }
+  .desktop-commands-search {
+    gap: 9px;
+    padding: 8px 10px;
+  }
+  .desktop-commands-search > svg {
+    width: 18px;
+    height: 18px;
+  }
+  .desktop-environment .desktop-commands-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .desktop-commands-option {
+    gap: 9px;
+    padding: 8px;
+  }
+  .desktop-commands-meta {
+    display: none;
+  }
+  .desktop-commands-footer {
+    gap: 8px;
+    padding: 6px 12px;
+  }
+  .desktop-commands-footer > .desktop-commands-navigation {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .desktop-commands[open] {
+    animation: none;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .desktop-commands::backdrop {
+    backdrop-filter: none;
+    background: #071019bb;
+  }
+}
+@supports not (backdrop-filter: blur(5px)) {
+  .desktop-commands::backdrop {
+    background: #071019bb;
+  }
+}

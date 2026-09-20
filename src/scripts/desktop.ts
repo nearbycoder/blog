@@ -3,6 +3,10 @@ import { mountWindowLayout } from "./desktop-window-layout";
 import { mountDesktopShell } from "./desktop-shell";
 import { mountDesktopIcons } from "./desktop-icons";
 import { mountDesktopContextMenu } from "./desktop-context-menu";
+import {
+  createWorkspaceStore,
+  type SavedWindow,
+} from "./desktop-workspace-store";
 import type { ArcadeActivity } from "./desktop-arcade";
 
 const desktop = document.querySelector<HTMLElement>("[data-desktop]");
@@ -20,6 +24,20 @@ if (desktop) {
   const files = [...desktop.querySelectorAll<HTMLElement>("[data-file]")];
   const windows = new Map<string, HTMLElement>([["library", library]]);
   const cleanups = new Map<string, () => void>();
+  const pendingLoads = new Map<HTMLElement, () => void>();
+  const windowObservers = new Map<HTMLElement, MutationObserver>();
+  const readerLinks = new Map(
+    [...desktop.querySelectorAll<HTMLAnchorElement>("[data-desktop-file]")].map(
+      (link) => [link.pathname.replace(/\/$/, ""), link],
+    ),
+  );
+  const workspaceStore = createWorkspaceStore(
+    desktopApps.map((app) => app.id),
+    new Set(readerLinks.keys()),
+  );
+  let restoring = true;
+  let saveTimer: ReturnType<typeof setTimeout> | undefined;
+  let saveWarning = false;
   const mobile = matchMedia("(max-width: 760px)");
   let nextId = 0;
   let layer = 1;
@@ -41,7 +59,78 @@ if (desktop) {
   }
 
   function announce(message: string) {
-    status.textContent = message;
+    if (!restoring) status.textContent = message;
+  }
+
+  function saveWorkspace() {
+    clearTimeout(saveTimer);
+    if (restoring || desktop!.matches(".is-dragging, .is-resizing")) return;
+    const saved: SavedWindow[] = [...windows.values()]
+      .filter((win) => win !== library || win.dataset.opened === "true")
+      .sort((a, b) => Number(a.style.zIndex) - Number(b.style.zIndex))
+      .map((win) => ({
+        id: win.dataset.window!,
+        minimized: win.hidden,
+        placement: layouts.capture(win),
+        ...(win.dataset.source ? { source: win.dataset.source } : {}),
+        ...(win.dataset.window === "arcade"
+          ? { activity: win.dataset.arcadeActivity as ArcadeActivity }
+          : {}),
+      }));
+    // A reader may navigate to a removed/unlisted page, or two readers can
+    // converge on one URL. Keep the topmost valid one without blocking saves.
+    const sources = new Set<string>();
+    const restorable = saved
+      .reverse()
+      .filter((win) => {
+        if (!win.source) return true;
+        if (!readerLinks.has(win.source) || sources.has(win.source))
+          return false;
+        sources.add(win.source);
+        return true;
+      })
+      .reverse();
+    const active = [...windows.values()].find(
+      (win) => !win.hidden && win.classList.contains("is-active"),
+    );
+    const activeId =
+      restorable.find((win) => win.id === active?.dataset.window)?.id ?? null;
+    if (
+      !workspaceStore.save({
+        version: 1,
+        windows: restorable,
+        active: activeId,
+      })
+    ) {
+      if (!saveWarning)
+        announce(
+          "This browser cannot save the workspace. Window changes last for this visit.",
+        );
+      saveWarning = true;
+    } else saveWarning = false;
+  }
+
+  function scheduleSave() {
+    if (restoring) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveWorkspace, 150);
+  }
+
+  function loadWindow(win: HTMLElement) {
+    const load = pendingLoads.get(win);
+    if (
+      !load ||
+      win.hidden ||
+      (mobile.matches && !win.classList.contains("is-active"))
+    )
+      return;
+    pendingLoads.delete(win);
+    load();
+  }
+
+  function deferWindowLoad(win: HTMLElement, load: () => void) {
+    pendingLoads.set(win, load);
+    if (!restoring) loadWindow(win);
   }
 
   const icons = mountDesktopIcons(desktop, announce);
@@ -70,7 +159,12 @@ if (desktop) {
           );
       }
     });
-    if (focus) win.focus({ preventScroll: true });
+    if (!restoring) {
+      constrain(win);
+      loadWindow(win);
+      if (focus) win.focus({ preventScroll: true });
+      scheduleSave();
+    }
   }
 
   function focusRemaining() {
@@ -87,6 +181,7 @@ if (desktop) {
     activate,
     constrain,
     announce,
+    changed: scheduleSave,
   });
 
   function constrain(win: HTMLElement) {
@@ -98,14 +193,27 @@ if (desktop) {
     )
       return;
     const bounds = workspace.getBoundingClientRect();
-    const rect = win.getBoundingClientRect();
+    for (const [property, size] of [
+      ["minWidth", bounds.width],
+      ["minHeight", bounds.height],
+    ] as const) {
+      if (parseFloat(win.style[property]) > size - 16)
+        win.style[property] = `${Math.max(0, size - 16)}px`;
+    }
+    const style = getComputedStyle(win);
     const x = Math.max(
       8,
-      Math.min(rect.left - bounds.left, bounds.width - rect.width - 8),
+      Math.min(
+        parseFloat(style.left),
+        bounds.width - parseFloat(style.width) - 8,
+      ),
     );
     const y = Math.max(
       8,
-      Math.min(rect.top - bounds.top, bounds.height - rect.height - 8),
+      Math.min(
+        parseFloat(style.top),
+        bounds.height - parseFloat(style.height) - 8,
+      ),
     );
     win.style.left = `${x}px`;
     win.style.top = `${y}px`;
@@ -116,6 +224,18 @@ if (desktop) {
   });
 
   function attachWindow(win: HTMLElement) {
+    const observer = new MutationObserver(scheduleSave);
+    observer.observe(win, {
+      attributes: true,
+      attributeFilter: [
+        "style",
+        "hidden",
+        "class",
+        "data-source",
+        "data-arcade-activity",
+      ],
+    });
+    windowObservers.set(win, observer);
     win.addEventListener("pointerdown", () => activate(win));
     win.addEventListener("focusin", () => activate(win));
     win
@@ -132,12 +252,16 @@ if (desktop) {
             activate(win);
             constrain(win);
           } else {
+            layouts.capture(win);
             win.hidden = true;
             win.classList.remove("is-active");
             tasks
               .querySelector(`[data-task="${win.dataset.window}"]`)
               ?.setAttribute("aria-pressed", "false");
             if (action === "close" && win !== library) {
+              pendingLoads.delete(win);
+              windowObservers.get(win)?.disconnect();
+              windowObservers.delete(win);
               cleanups.get(win.dataset.window!)?.();
               cleanups.delete(win.dataset.window!);
               resizeObserver.unobserve(win);
@@ -147,11 +271,14 @@ if (desktop) {
                 ?.remove();
               win.remove();
             }
+            if (action === "close" && win === library)
+              delete win.dataset.opened;
             announce(
               `${title} ${action === "close" ? "closed" : "minimized"}.`,
             );
             updatePanel();
             focusRemaining();
+            scheduleSave();
           }
         });
       });
@@ -233,7 +360,7 @@ if (desktop) {
     const existing = windows.get(id);
     if (existing) {
       activate(existing, true);
-      return;
+      return existing;
     }
     const template = document.getElementById(
       "desktop-app-template",
@@ -301,8 +428,9 @@ if (desktop) {
         content.append(message);
       }
     };
-    void load();
+    deferWindowLoad(win, () => void load());
     announce(`${app.title} opened.`);
+    return win;
   }
   desktop
     .querySelectorAll<HTMLButtonElement>("[data-open-app]")
@@ -316,7 +444,7 @@ if (desktop) {
     const existing = windows.get("ghostty");
     if (existing) {
       activate(existing, true);
-      return;
+      return existing;
     }
     const template = document.getElementById(
       "desktop-ghostty-template",
@@ -340,23 +468,28 @@ if (desktop) {
       disposed = true;
       dispose?.();
     });
-    import("./desktop-ghostty")
-      .then(async ({ mountGhostty }) => {
-        if (disposed) return;
-        // Closing while WASM is loading must never create a late terminal.
-        dispose = await mountGhostty(win);
-        if (disposed) dispose();
-      })
-      .catch(() => {
-        if (disposed) return;
-        const status = win.querySelector<HTMLElement>("[role=status]")!;
-        status.textContent = "Ghostty couldn’t load. ";
-        const reload = document.createElement("a");
-        reload.href = location.href;
-        reload.textContent = "Reload the desktop to try again.";
-        status.append(reload);
-      });
+    deferWindowLoad(
+      win,
+      () =>
+        void import("./desktop-ghostty")
+          .then(async ({ mountGhostty }) => {
+            if (disposed) return;
+            // Closing while WASM is loading must never create a late terminal.
+            dispose = await mountGhostty(win);
+            if (disposed) dispose();
+          })
+          .catch(() => {
+            if (disposed) return;
+            const status = win.querySelector<HTMLElement>("[role=status]")!;
+            status.textContent = "Ghostty couldn’t load. ";
+            const reload = document.createElement("a");
+            reload.href = location.href;
+            reload.textContent = "Reload the desktop to try again.";
+            status.append(reload);
+          }),
+    );
     announce("Ghostty opened.");
+    return win;
   }
   desktop
     .querySelectorAll("[data-open-ghostty]")
@@ -373,7 +506,7 @@ if (desktop) {
             `[data-arcade-select="${activity}"]`,
           )!
           .click();
-      return;
+      return existing;
     }
     const template = document.getElementById(
       "desktop-arcade-template",
@@ -403,26 +536,30 @@ if (desktop) {
       disposeArcade?.();
     });
     // Only /desktop imports this entry; game code is fetched on demand.
-    import("./desktop-arcade")
-      .then(({ mountArcade }) => {
-        if (disposed) return;
-        disposeArcade = mountArcade(win, toggleParty);
-        content.inert = false;
-        loading.remove();
-        win
-          .querySelector<HTMLButtonElement>(
-            `[data-arcade-select="${win.dataset.arcadeActivity}"]`,
-          )!
-          .click();
-      })
-      .catch(() => {
-        if (disposed) return;
-        loading.textContent = "Arcade couldn’t load. ";
-        const reload = document.createElement("a");
-        reload.href = location.href;
-        reload.textContent = "Reload the desktop to try again.";
-        loading.append(reload);
-      });
+    deferWindowLoad(
+      win,
+      () =>
+        void import("./desktop-arcade")
+          .then(({ mountArcade }) => {
+            if (disposed) return;
+            disposeArcade = mountArcade(win, toggleParty);
+            content.inert = false;
+            loading.remove();
+            win
+              .querySelector<HTMLButtonElement>(
+                `[data-arcade-select="${win.dataset.arcadeActivity}"]`,
+              )!
+              .click();
+          })
+          .catch(() => {
+            if (disposed) return;
+            loading.textContent = "Arcade couldn’t load. ";
+            const reload = document.createElement("a");
+            reload.href = location.href;
+            reload.textContent = "Reload the desktop to try again.";
+            loading.append(reload);
+          }),
+    );
     attachWindow(win);
     win.addEventListener("desktop-game-focus", () => {
       shell.closePopups();
@@ -430,11 +567,8 @@ if (desktop) {
     });
     win.addEventListener("desktop-game-shortcut", (event) => {
       if ((event as CustomEvent).detail === "launcher") shell.toggleLauncher();
-      else {
-        shell.closePopups();
-        activate(library);
-        search.focus();
-      }
+      else if ((event as CustomEvent).detail === "commands")
+        void toggleCommands();
     });
     constrain(win);
     activate(win, true);
@@ -443,6 +577,7 @@ if (desktop) {
         .querySelector<HTMLButtonElement>(`[data-arcade-select="${activity}"]`)!
         .click();
     announce("Arcade opened. Choose a game or explore Terminal.");
+    return win;
   }
 
   // Ignore typing, games, held keys, and shortcuts: ordinary browsing stays ordinary.
@@ -499,7 +634,7 @@ if (desktop) {
     );
     if (existing) {
       activate(existing, true);
-      return;
+      return existing;
     }
     const template = document.getElementById(
       "desktop-reader-template",
@@ -520,7 +655,6 @@ if (desktop) {
       link.href;
     const iframe = win.querySelector<HTMLIFrameElement>("iframe")!;
     iframe.title = title;
-    iframe.src = link.href;
     win
       .querySelectorAll<HTMLButtonElement>("[data-window-action]")
       .forEach((button) => {
@@ -536,10 +670,12 @@ if (desktop) {
     win.style.top = `${28 + ((nextId - 1) % 5) * 28}px`;
     const connectedDocuments = new WeakSet<Document>();
     const connectReader = () => {
+      if (!iframe.getAttribute("src")) return;
       win.querySelector<HTMLElement>("[data-reader-loading]")!.hidden = true;
       try {
         const doc = iframe.contentDocument;
         if (!doc || connectedDocuments.has(doc)) return;
+        if (iframe.contentWindow!.location.origin !== location.origin) return;
         connectedDocuments.add(doc);
         doc.documentElement.dataset.theme =
           document.documentElement.dataset.theme;
@@ -616,16 +752,47 @@ if (desktop) {
     attachWindow(win);
     constrain(win);
     activate(win, true);
+    deferWindowLoad(win, () => {
+      iframe.src = link.href;
+    });
     announce(`Opened ${title}.`);
+    return win;
   }
 
   function onShortcut(event: KeyboardEvent) {
+    if (event.isComposing || event.keyCode === 229) return;
+    if (
+      (event.metaKey || event.ctrlKey) &&
+      !event.altKey &&
+      !event.shiftKey &&
+      event.key.toLowerCase() === "k"
+    ) {
+      // Ctrl+K is a shell editing command; Command+K remains available on Macs.
+      if (
+        !event.metaKey &&
+        (event.target as Element | null)?.closest?.(".ghostty-surface")
+      )
+        return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (!event.repeat) void toggleCommands();
+      return;
+    }
+    if (commandsPending && event.key === "Escape" && !event.ctrlKey) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      cancelCommandRequest();
+      return;
+    }
     if (event.ctrlKey && event.key === "Escape") {
       event.preventDefault();
       event.stopImmediatePropagation();
+      cancelCommandRequest(false);
+      commandPalette?.close(false);
       shell.toggleLauncher();
       return;
     }
+    if (commandPalette?.isOpen()) return;
     // Connected shells own their editing shortcuts, including Ctrl+K.
     if ((event.target as Element | null)?.closest?.(".ghostty-surface")) return;
     if (
@@ -637,14 +804,6 @@ if (desktop) {
       )
     )
       return;
-    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      shell.closePopups();
-      activate(library);
-      search.focus();
-      search.select();
-    }
   }
 
   attachWindow(library);
@@ -664,6 +823,92 @@ if (desktop) {
     game: (activity) => openArcade(activity),
     file: openFile,
   });
+  type CommandPalette = ReturnType<
+    typeof import("./desktop-commands").mountCommandPalette
+  >;
+  let commandPalette: CommandPalette | undefined;
+  let commandLoading: Promise<CommandPalette> | undefined;
+  let commandsPending = false;
+  let commandRequest = 0;
+  let commandInvoker: HTMLElement | undefined;
+  function cancelCommandRequest(restoreFocus = true) {
+    if (commandsPending && restoreFocus)
+      commandInvoker?.focus({ preventScroll: true });
+    commandsPending = false;
+    commandInvoker = undefined;
+    commandRequest++;
+  }
+  async function toggleCommands() {
+    if (commandPalette?.isOpen() || commandsPending) {
+      cancelCommandRequest();
+      commandPalette?.close();
+      return;
+    }
+    const focused = document.activeElement;
+    const invoker =
+      focused instanceof HTMLElement && focused.closest("#desktop-launcher")
+        ? (desktop!.querySelector<HTMLElement>("[data-launcher-toggle]") ??
+          undefined)
+        : focused instanceof HTMLElement
+          ? focused
+          : undefined;
+    layouts.cancel();
+    shell.closePopups();
+    commandInvoker = invoker;
+    commandsPending = true;
+    const request = ++commandRequest;
+    try {
+      commandLoading ??= import("./desktop-commands").then(
+        ({ mountCommandPalette, createDesktopCommands }) => {
+          commandPalette = mountCommandPalette(desktop!, () =>
+            createDesktopCommands({
+              desktop: desktop!,
+              windows: [...windows.values()],
+              readers: [...readerLinks.values()],
+              mobile: mobile.matches,
+              showingDesktop: Boolean(desktopSnapshot),
+              app: openApp,
+              arcade: openArcade,
+              ghostty: openGhostty,
+              file: openFile,
+              activate,
+              layout: (win, layout) => {
+                layouts.setLayout(win, layout);
+                activate(win, true);
+                announce(
+                  `${win.dataset.title ?? "Library"} ${layout ? layout.replaceAll("-", " ") : "restored"}.`,
+                );
+              },
+            }),
+          );
+          return commandPalette;
+        },
+      );
+      const palette = await commandLoading;
+      if (commandsPending && request === commandRequest) {
+        commandsPending = false;
+        commandInvoker = undefined;
+        palette.open(invoker);
+      }
+    } catch {
+      commandLoading = undefined;
+      if (request === commandRequest) {
+        cancelCommandRequest();
+        announce(
+          "Desktop commands couldn’t load. Check your connection and reload the desktop to try again.",
+        );
+      }
+    }
+  }
+  const commandsButton = desktop.querySelector<HTMLButtonElement>(
+    "[data-command-palette-toggle]",
+  )!;
+  commandsButton.addEventListener("click", () => void toggleCommands());
+  commandsButton.querySelector("kbd")!.textContent = /Mac|iPhone|iPad/.test(
+    navigator.platform,
+  )
+    ? "⌘ K"
+    : "Ctrl K";
   desktop
     .querySelector<HTMLButtonElement>("[data-reset-desktop-icons]")!
     .addEventListener("click", () => {
@@ -698,6 +943,7 @@ if (desktop) {
         active: visible.find((win) => win.classList.contains("is-active")),
       };
       visible.forEach((win) => {
+        layouts.capture(win);
         win.hidden = true;
         win.classList.remove("is-active");
       });
@@ -708,6 +954,7 @@ if (desktop) {
       announce("Desktop shown. Press Show desktop again to restore windows.");
     }
     updatePanel();
+    scheduleSave();
   });
   search.addEventListener("input", filterFiles);
   desktop
@@ -796,5 +1043,57 @@ if (desktop) {
       announce(`${theme === "dark" ? "Dark" : "Light"} theme enabled.`);
     });
   document.addEventListener("keydown", onShortcut, { capture: true });
-  window.addEventListener("resize", () => windows.forEach(constrain));
+  window.addEventListener("resize", () => {
+    windows.forEach((win) => {
+      constrain(win);
+      loadWindow(win);
+    });
+    scheduleSave();
+  });
+
+  // Restore all window shells and placement in one task, before the browser paints.
+  // App code remains deferred until a restored window is visible.
+  const restored = new Map<string, HTMLElement>();
+  for (const saved of workspaceStore.state?.windows ?? []) {
+    let win: HTMLElement | undefined;
+    if (saved.id === "library") {
+      win = library;
+      activate(win);
+    } else if (saved.id === "arcade") win = openArcade(saved.activity);
+    else if (saved.id === "ghostty") win = openGhostty();
+    else if (saved.source) {
+      const link = readerLinks.get(saved.source);
+      if (link) win = openFile(link);
+    } else win = openApp(saved.id as DesktopAppId);
+    if (!win) continue;
+    win.dataset.restored = "true";
+    layouts.restore(win, saved.placement);
+    constrain(win);
+    win.hidden = saved.minimized;
+    win.classList.remove("is-active");
+    tasks
+      .querySelector(`[data-task="${win.dataset.window}"]`)
+      ?.setAttribute("aria-pressed", "false");
+    restored.set(saved.id, win);
+  }
+  const savedActive = workspaceStore.state?.active;
+  const active =
+    (savedActive ? restored.get(savedActive) : undefined) ??
+    [...restored.values()].reverse().find((win) => !win.hidden);
+  if (active && !active.hidden) activate(active);
+  updatePanel();
+  // Ignore initialization mutations; a failed or unreadable save is never replaced on boot.
+  windowObservers.forEach((observer) => observer.takeRecords());
+  restoring = false;
+  desktop.dataset.workspaceReady = "true";
+  windows.forEach(loadWindow);
+
+  function flushWorkspace() {
+    layouts.cancel();
+    saveWorkspace();
+  }
+  window.addEventListener("pagehide", flushWorkspace);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) flushWorkspace();
+  });
 }

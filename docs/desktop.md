@@ -4,6 +4,10 @@ Open `/desktop/` for a browser workspace with the blog's Library, Arcade, termin
 
 ## Launching and arranging apps
 
+Press **Cmd+K** on Mac or **Ctrl+K** on other keyboards to open Desktop commands, or choose **Commands** in the application launcher's footer. Search apps, blog files, open windows, and desktop actions from one menu. Arrow keys select results, Enter runs a command, and Escape returns focus to your work. Commands include switching/minimizing/closing windows, half/quarter snapping, maximizing/restoring, arranging windows, showing the desktop, and changing the theme. Window layout actions appear on wide screens. The shortcut also works inside blog readers; Ghostty keeps **Ctrl+K** for shell editing while **Cmd+K** opens commands.
+
+The command menu's implementation, styles, and catalog load only on its first invocation inside `/desktop/`. Searching uses local metadata and does not download app implementations; those still load when an app is opened.
+
 Open the application launcher from the bottom panel or press **Ctrl+Esc**. Browse **All apps** or the **Work**, **Create**, **Tools**, **Play**, and **Unwind** categories. Search matches app names, descriptions, keywords, and blog files across all categories. Results show the first 12 matches; narrow the phrase if necessary. Enter opens the first result, arrow keys move through results, and Escape closes the launcher. Reopening starts at All apps.
 
 Each app has one window: launching it again brings that window forward. Use its panel task button to return to it after minimizing. Drag a title bar to move a window, use the edges or corners to resize it, or drag to a workspace edge/corner to preview a half/quarter snap. **Ctrl+Alt+Left/Right** snaps, **Up** maximizes, and **Down** restores. **Show desktop** hides the visible windows and restores that set on the next click. **Arrange windows** resets their layout. On phones, apps fill the workspace and panel tasks switch between them. See [desktop design](desktop-design.md#window-snapping) for gesture details.
@@ -40,6 +44,10 @@ Each app has one window: launching it again brings that window forward. Use its 
 Library, Arcade, the pocket Terminal, and Ghostty remain separate launcher favorites. [Terminal documentation](desktop-terminal.md) covers Ghostty's existing connections and setup.
 
 ## Saving, exports, and background behavior
+
+The desktop automatically remembers open apps and blog readers, window positions and sizes, half/quarter snaps, maximized and minimized windows, stacking order, and the active window. Returning to `/desktop/` in the same browser profile on the same device restores that workspace. Closing a window removes it from the saved workspace; minimizing keeps it. Show desktop returns as minimized windows after a reload. Phone layouts retain the saved desktop placement for when the viewport becomes wide again, and positions are kept reachable on smaller screens.
+
+Restoring a workspace restores its windows, not every app's running session or unsaved content. Each app follows the saving rules below. Minimized apps and readers wait until opened before loading their code or content. Audio still requires Play, and Ghostty requires a new connection; terminal tokens and live sessions are never included in the workspace save. Window placement is applied before the windows appear, so saved windows do not flash at their default locations. Workspace saves belong to this browser and site origin, with no cross-device sync.
 
 Browser storage keeps Notes, Focus state, Tasks, the Markdown draft, World Clock choices, Color Studio swatches, Pixel Studio artwork, the explicitly saved Beat Lab pattern, Soundscapes preferences, Sudoku progress, Type Sprint's best, and Decision Wheel choices. Other work and histories last only for the open window. Beat Lab's **Save pattern** and Decision Wheel's **Save choices** make their save behavior explicit; spinning also uses and saves edited choices.
 

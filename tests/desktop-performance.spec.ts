@@ -9,7 +9,7 @@ const appStyle = new RegExp(
   `\\.(?:${desktopApps.map((app) => app.id).join("|")})-app\\b`,
 );
 const deferredChunk = new RegExp(
-  `^desktop-(?:apps|app-style|arcade|ghostty|doom|snake|pong|puzzle|game-host|classics|${desktopApps.map((app) => app.id).join("|")})\\.`,
+  `^desktop-(?:commands|command-catalog|apps|app-style|arcade|ghostty|doom|snake|pong|puzzle|game-host|classics|${desktopApps.map((app) => app.id).join("|")})\\.`,
 );
 
 function source(asset: string) {

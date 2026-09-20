@@ -74,6 +74,7 @@ export function mountArcade(
                 panel.dataset.arcadePanel !== button.dataset.arcadeSelect;
             });
           const id = button.dataset.arcadeSelect!;
+          root.dataset.arcadeActivity = id;
           if (Object.hasOwn(loaders, id))
             void loadGame(id as keyof typeof loaders);
           if (

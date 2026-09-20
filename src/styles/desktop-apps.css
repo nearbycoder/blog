@@ -1,11 +1,3 @@
-.utility-window {
-  --desk-text: var(--desk-ink);
-  width: min(760px, calc(100% - 80px));
-  height: min(600px, calc(100% - 64px));
-  min-width: 290px;
-  min-height: 300px;
-  container-type: inline-size;
-}
 .desktop-app-content {
   flex: 1;
   min-height: 0;
