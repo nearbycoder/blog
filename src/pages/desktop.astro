@@ -128,7 +128,7 @@ const folderFor = (id: string) =>
               placeholder="Search files…"
               data-desktop-search
               autocomplete="off"
-            /><kbd>Ctrl K</kbd></label
+            /></label
           >
           <div class="file-view-controls" role="group" aria-label="File view">
             <button
@@ -335,9 +335,14 @@ const folderFor = (id: string) =>
         <p data-launcher-count aria-live="polite"></p><ul></ul>
       </div>
       <footer class="launcher-footer">
-        <span><DesktopIcon name="desktop" />Nearby Desktop</span><a
-          href="/"
-          aria-label="Return to blog"
+        <button
+          type="button"
+          data-command-palette-toggle
+          aria-label="Open desktop commands"
+          aria-haspopup="dialog"
+          title="Commands (Cmd/Ctrl+K)"
+          ><DesktopIcon name="search" />Commands<kbd>⌘ K</kbd></button
+        ><a href="/" aria-label="Return to blog"
           ><DesktopIcon name="logout" />Leave desktop</a
         >
       </footer>

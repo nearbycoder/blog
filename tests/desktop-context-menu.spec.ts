@@ -157,8 +157,9 @@ test("keyboard menus navigate, restore focus, and dismiss without trapping Tab",
   await page.keyboard.press("Control+k");
   await expect(menu).toBeHidden();
   await expect(
-    page.getByRole("searchbox", { name: "Search desktop files" }),
+    page.getByRole("combobox", { name: "Search desktop commands" }),
   ).toBeFocused();
+  await page.keyboard.press("Escape");
   await backgroundMenu(page);
   await page.keyboard.press("Control+Escape");
   await expect(menu).toBeHidden();

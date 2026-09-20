@@ -75,6 +75,12 @@ test("Doom loads on demand, pauses when hidden, resumes, and disposes on stop or
     page.getByRole("searchbox", { name: "Search applications and files" }),
   ).toBeFocused();
   await page.keyboard.press("Escape");
+  await frame.locator("canvas").click();
+  await page.keyboard.press("Control+k");
+  await expect(
+    page.getByRole("combobox", { name: "Search desktop commands" }),
+  ).toBeFocused();
+  await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Stop game", exact: true }).click();
   await expect(page.locator("[data-doom-host] iframe")).toHaveCount(0);
   await page.getByRole("button", { name: "Play DOOM", exact: true }).click();

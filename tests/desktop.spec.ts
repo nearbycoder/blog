@@ -63,13 +63,11 @@ test("desktop indexes every published collection entry and opens real content", 
   ).toHaveAttribute("href", /\/articles\//);
 });
 
-test("search, empty state, folder selection, and keyboard launcher work", async ({
-  page,
-}) => {
+test("search, empty state, and folder selection work", async ({ page }) => {
   await page.goto("/desktop/");
   await page.getByRole("button", { name: "Open Library", exact: true }).click();
   const search = page.getByRole("searchbox", { name: "Search desktop files" });
-  await page.keyboard.press("Control+k");
+  await search.focus();
   await expect(search).toBeFocused();
   await search.fill("no-such-file-938274");
   await expect(
@@ -272,11 +270,13 @@ test("reader navigation updates its window and the search shortcut escapes the f
   await frame.locator("h1").click();
   await page.keyboard.press("Control+k");
   await expect(
-    page.getByRole("searchbox", { name: "Search desktop files" }),
+    page.getByRole("combobox", { name: "Search desktop commands" }),
   ).toBeFocused();
   await expect(
     frame.getByRole("dialog", { name: "Search this site" }),
   ).toBeHidden();
+  await page.keyboard.press("Escape");
+  await page.getByRole("button", { name: "Open Library", exact: true }).click();
   await page.locator('[data-folder="articles"]').click();
   await page
     .locator("[data-desktop-file]")

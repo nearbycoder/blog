@@ -47,10 +47,12 @@ export function mountWindowLayout(
     activate: (win: HTMLElement) => void;
     constrain: (win: HTMLElement) => void;
     announce: (message: string) => void;
+    changed?: () => void;
   },
 ) {
   const desktop = workspace.closest<HTMLElement>("[data-desktop]")!;
   const floating = new WeakMap<HTMLElement, Geometry>();
+  const remembered = new WeakMap<HTMLElement, Geometry>();
   const preview = document.createElement("div");
   preview.className = "desktop-snap-preview";
   preview.setAttribute("aria-hidden", "true");
@@ -58,8 +60,26 @@ export function mountWindowLayout(
   workspace.append(preview);
   let cancelGesture: (() => void) | undefined;
 
+  function captureFloating(win: HTMLElement): Geometry {
+    // Mobile CSS fills the screen, and minimized windows have no measured box.
+    // Keep their last desktop bounds rather than recording those temporary sizes.
+    if (actions.isMobile() || !win.getClientRects().length)
+      return remembered.get(win) ?? geometry(win);
+    const style = getComputedStyle(win);
+    const saved = {
+      ...geometry(win),
+      // Computed layout excludes the opening animation's translateY offset.
+      left: style.left,
+      top: style.top,
+      width: style.width,
+      height: style.height,
+    };
+    remembered.set(win, saved);
+    return saved;
+  }
+
   function setLayout(win: HTMLElement, target?: WindowLayout) {
-    if (target && !win.dataset.snap) floating.set(win, geometry(win));
+    if (target && !win.dataset.snap) floating.set(win, captureFloating(win));
     if (target) win.dataset.snap = target;
     else {
       delete win.dataset.snap;
@@ -69,6 +89,7 @@ export function mountWindowLayout(
     }
     const maximized = target === "maximized";
     win.classList.toggle("is-maximized", maximized);
+    if (!target) actions.constrain(win);
     const button = win.querySelector<HTMLButtonElement>(
       '[data-window-action="maximize"]',
     )!;
@@ -77,6 +98,7 @@ export function mountWindowLayout(
       "aria-label",
       `${maximized ? "Restore" : "Maximize"} ${win.dataset.title ?? "Library"}`,
     );
+    actions.changed?.();
   }
 
   function snap(win: HTMLElement, target?: WindowLayout) {
@@ -135,6 +157,8 @@ export function mountWindowLayout(
         if (!commit) restore(win, ended.before, ended.layout, ended.saved);
         if (grip.hasPointerCapture(ended.pointer))
           grip.releasePointerCapture(ended.pointer);
+        if (!win.dataset.snap) captureFloating(win);
+        actions.changed?.();
       };
       grip.addEventListener("pointerdown", (event) => {
         if (actions.isMobile() || event.button !== 0) return;
@@ -271,6 +295,8 @@ export function mountWindowLayout(
       }
       if (handle.hasPointerCapture(ended.pointer))
         handle.releasePointerCapture(ended.pointer);
+      if (!win.dataset.snap) captureFloating(win);
+      actions.changed?.();
     }
 
     handle.addEventListener("pointerdown", (event) => {
@@ -404,5 +430,24 @@ export function mountWindowLayout(
     snap(win, target);
     return true;
   }
-  return { attach, setLayout, shortcut };
+  return {
+    attach,
+    setLayout,
+    shortcut,
+    cancel: () => cancelGesture?.(),
+    capture: (win: HTMLElement) => ({
+      ...(floating.get(win) ?? captureFloating(win)),
+      layout: win.dataset.snap as WindowLayout | undefined,
+    }),
+    restore: (
+      win: HTMLElement,
+      placement: Geometry & { layout?: WindowLayout },
+    ) => {
+      setLayout(win, undefined);
+      const { layout, ...bounds } = placement;
+      Object.assign(win.style, bounds);
+      remembered.set(win, bounds);
+      if (layout) setLayout(win, layout);
+    },
+  };
 }

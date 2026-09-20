@@ -254,6 +254,11 @@
 .has-desktop-js .library-window:not([data-opened]) {
   display: none;
 }
+.has-desktop-js
+  [data-desktop]:not([data-workspace-ready="true"])
+  .desktop-window {
+  visibility: hidden;
+}
 .desktop-window {
   position: absolute;
   top: 62px;
@@ -280,6 +285,15 @@
   box-shadow:
     0 24px 70px var(--desk-shadow),
     0 3px 10px var(--desk-shadow-soft);
+}
+/* Window geometry must be available before a restored app downloads its CSS. */
+.utility-window {
+  --desk-text: var(--desk-ink);
+  width: min(760px, calc(100% - 80px));
+  height: min(600px, calc(100% - 64px));
+  min-width: 290px;
+  min-height: 300px;
+  container-type: inline-size;
 }
 .desktop-window:focus {
   outline: none;
@@ -1001,6 +1015,23 @@
 .launcher-footer a {
   color: var(--desk-ink);
 }
+.launcher-footer button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--desk-ink);
+  font: inherit;
+}
+.launcher-footer button:hover {
+  color: var(--desk-accent);
+}
+.launcher-footer kbd {
+  padding: 1px 4px;
+  border: 1px solid var(--desk-line);
+  border-radius: 3px;
+  font: inherit;
+  color: var(--desk-muted);
+}
 .launcher-footer svg {
   width: 15px;
   height: 15px;
@@ -1332,6 +1363,9 @@
   .desktop-window,
   .shell-popup {
     animation: desktop-open 0.12s ease-out;
+  }
+  .desktop-window[data-restored] {
+    animation: none;
   }
   @keyframes desktop-open {
     from {
