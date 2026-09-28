@@ -35,6 +35,65 @@ export const site = {
     { label: "Now", href: "/now" },
     { label: "Postmortems", href: "/postmortems" },
   ],
+  /**
+   * The site's information architecture: three sections that group every
+   * destination in `nav` and `explore`. Hrefs must match those lists exactly;
+   * `src/lib/sections.ts` resolves labels from them and fails the build if a
+   * link goes missing.
+   */
+  sections: [
+    {
+      id: "read",
+      number: "01",
+      label: "Read",
+      title: "The notebook",
+      blurb:
+        "Essays on engineering, building with AI, and the human side of shipping software.",
+      home: "/articles",
+      links: [
+        { href: "/start-here", note: "Curated paths for first-time readers" },
+        { href: "/articles", note: "Every published story, newest first" },
+        { href: "/topics/", note: "Writing grouped by subject" },
+        { href: "/archive/", note: "The whole back catalogue by year" },
+        { href: "/discover/", note: "Let the site pick your next read" },
+        { href: "/search/", note: "Full-text search across posts" },
+        { href: "/reading-list", note: "Stories you saved for later" },
+        { href: "/glossary/", note: "Terms that come up a lot" },
+      ],
+    },
+    {
+      id: "workshop",
+      number: "02",
+      label: "Workshop",
+      title: "The workshop",
+      blurb:
+        "Things I’ve built, the week-by-week log of building them, and honest notes on how they went.",
+      home: "/projects",
+      links: [
+        { href: "/projects", note: "Shipped products and side projects" },
+        { href: "/layoff", note: "A build a week after a layoff" },
+        { href: "/lab", note: "Small experiments you can play with" },
+        { href: "/postmortems", note: "What worked, what didn’t" },
+        { href: "/technologies/", note: "Projects grouped by stack" },
+      ],
+    },
+    {
+      id: "about",
+      number: "03",
+      label: "About",
+      title: "Off the page",
+      blurb:
+        "Who’s writing, what I’m up to lately, the tools on my desk, and how to follow along.",
+      home: "/about",
+      links: [
+        { href: "/about", note: "Background and work history" },
+        { href: "/now", note: "What I’m focused on lately" },
+        { href: "/uses", note: "Hardware, software, and AI tools" },
+        { href: "/subscribe", note: "New posts by email" },
+        { href: "/feeds/", note: "RSS, JSON Feed, and OPML" },
+      ],
+    },
+  ],
   hero: {
     title:
       "Member of Technical Staff @ Augment Code, loving husband, father of two girls.",

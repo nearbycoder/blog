@@ -4,7 +4,8 @@ Personal site for Josh Hamilton (`nearbycoder`) built with Astro. The app combin
 
 ## What the app includes
 
-- Home page with a hero, latest articles, selected projects, recent layoff-log entries, and work history
+- Three site sections — **01 Read**, **02 Workshop**, and **03 About** — that group every destination. The header opens each section as a menu with one-line descriptions, section pages show a strip of sibling pages under the header, and the mobile menu and footer use the same groups
+- Home page with a hero, latest articles, a "Three ways in" overview of the sections with live counts, selected projects, recent layoff-log entries, and work history
 - Article index and article detail pages powered by Astro content collections
 - Project index and project detail pages with external links and stack metadata
 - Layoff log index grouped by week plus detail pages for each shipped build update
@@ -36,7 +37,7 @@ Most of the site is driven by content files and a couple of local data modules:
 - `src/content/layoff`
   Weekly build-log entries with `title`, `summary`, `date`, optional `week` or `day`, `status`, `stack`, `repoUrl`, `siteUrl`, `accent`, and `draft`.
 - `src/data/site.ts`
-  Site metadata, navigation, socials, hero copy, newsletter copy, and work timeline.
+  Site metadata, navigation, section structure, socials, hero copy, newsletter copy, and work timeline. `nav` and `explore` list every destination; `sections` groups them and adds a short note for each link. Section hrefs must match `nav`/`explore` exactly — `src/lib/sections.ts` resolves labels from them and fails the build if one is missing. To add a page, add it to `explore` and to one section.
 - `src/data/uses.ts`
   The `/uses` page data for workstation, development, productivity, and AI tooling.
 
