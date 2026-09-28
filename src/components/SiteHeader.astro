@@ -1,10 +1,14 @@
 ---
-import { site } from "../data/site";
 import ThemeToggle from "./ThemeToggle.astro";
 import Icon from "./Icon.astro";
+import { sections, locate } from "../lib/sections";
 const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
-const isActive = (href: string) =>
-  pathname === href || pathname.startsWith(`${href}/`);
+const here = locate(pathname);
+const linkState = (href: string) => {
+  const target = href.replace(/\/$/, "") || "/";
+  if (pathname === target) return "page";
+  return here?.link.href === href ? "true" : undefined;
+};
 ---
 
 <header class="site-header">
@@ -29,17 +33,53 @@ const isActive = (href: string) =>
       <span>NEARBYCODER</span>
     </a>
     <nav class="desktop-nav" aria-label="Main navigation">
-      {
-        site.nav.map((item) => (
-          <a
-            href={item.href}
-            class="nav-link"
-            aria-current={isActive(item.href) ? "page" : undefined}
-          >
-            {item.label}
-          </a>
-        ))
-      }
+      <ul class="section-menus">
+        {
+          sections.map((section) => (
+            <li class="section-menu" data-section-menu>
+              <button
+                type="button"
+                class="section-trigger"
+                aria-expanded="false"
+                aria-controls={`section-menu-${section.id}`}
+                data-current={
+                  here?.section.id === section.id ? "true" : undefined
+                }
+              >
+                <span class="section-number" aria-hidden="true">
+                  {section.number}
+                </span>
+                {section.label}
+                <Icon name="chevronDown" />
+              </button>
+              <div
+                id={`section-menu-${section.id}`}
+                class="section-panel"
+                hidden
+              >
+                <div class="site-container section-panel-inner">
+                  <div class="section-panel-intro">
+                    <p class="label">
+                      {section.number} · {section.title}
+                    </p>
+                    <p class="section-panel-blurb">{section.blurb}</p>
+                  </div>
+                  <ul class="section-panel-links">
+                    {section.links.map((link) => (
+                      <li>
+                        <a href={link.href} aria-current={linkState(link.href)}>
+                          <strong>{link.label}</strong>
+                          <span>{link.note}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
     </nav>
     <div class="header-actions">
       <button
@@ -69,18 +109,55 @@ const isActive = (href: string) =>
     hidden
   >
     {
-      [...site.nav,...site.explore].map((item) => (
-        <a
-          href={item.href}
-          class="nav-link"
-          aria-current={isActive(item.href) ? "page" : undefined}
-        >
-          {item.label}
-        </a>
+      sections.map((section) => (
+        <div class="mobile-nav-group">
+          <p class="label">
+            {section.number} · {section.label}
+          </p>
+          {section.links.map((link) => (
+            <a
+              href={link.href}
+              class="nav-link"
+              aria-current={linkState(link.href)}
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
       ))
     }
+    <a href="/desktop" class="nav-link mobile-nav-desktop" target="_top"
+      >Desktop (experimental)</a
+    >
   </nav>
 </header>
+{
+  here && (
+    <nav
+      class="section-nav"
+      aria-label={`${here.section.label} section`}
+      data-section={here.section.id}
+    >
+      <div class="site-container section-nav-inner">
+        <a href={here.section.home} class="section-nav-title">
+          <span class="section-number" aria-hidden="true">
+            {here.section.number}
+          </span>
+          {here.section.label}
+        </a>
+        <ul class="section-nav-links">
+          {here.section.links.map((link) => (
+            <li>
+              <a href={link.href} aria-current={linkState(link.href)}>
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
+  )
+}
 <script>
   const toggle =
     document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
@@ -94,11 +171,59 @@ const isActive = (href: string) =>
     nav.hidden = !nav.hidden;
     toggle.setAttribute("aria-expanded", String(!nav.hidden));
   });
+
+  const menus = [
+    ...document.querySelectorAll<HTMLElement>("[data-section-menu]"),
+  ].map((menu) => ({
+    menu,
+    trigger: menu.querySelector<HTMLButtonElement>("button")!,
+    panel: menu.querySelector<HTMLElement>(".section-panel")!,
+  }));
+  const setOpen = (target: (typeof menus)[number] | undefined) => {
+    for (const item of menus) {
+      const open = item === target;
+      item.panel.hidden = !open;
+      item.trigger.setAttribute("aria-expanded", String(open));
+    }
+  };
+  for (const item of menus) {
+    item.trigger.addEventListener("click", () =>
+      setOpen(item.panel.hidden ? item : undefined),
+    );
+    // Tabbing out of an open menu closes it; clicks are handled below.
+    item.menu.addEventListener("focusout", (event) => {
+      const next = event.relatedTarget as Node | null;
+      if (next && !item.menu.contains(next) && !item.panel.hidden)
+        setOpen(undefined);
+    });
+  }
+  document.addEventListener("click", (event) => {
+    if (!menus.some(({ menu }) => menu.contains(event.target as Node)))
+      setOpen(undefined);
+  });
+
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && nav && !nav.hidden) {
+    if (event.key !== "Escape") return;
+    const open = menus.find(({ panel }) => !panel.hidden);
+    if (open) {
+      setOpen(undefined);
+      open.trigger.focus();
+    } else if (nav && !nav.hidden) {
       close();
       toggle?.focus();
     }
   });
-  matchMedia("(min-width:768px)").addEventListener("change", close);
+  matchMedia("(min-width:768px)").addEventListener("change", (event) => {
+    if (event.matches) close();
+    else setOpen(undefined);
+  });
+
+  // Keep the current page visible in the scrollable section strip on phones.
+  const current = document.querySelector<HTMLElement>(
+    ".section-nav [aria-current]",
+  );
+  const strip = current?.closest("ul");
+  if (current && strip && strip.scrollWidth > strip.clientWidth)
+    strip.scrollLeft =
+      current.offsetLeft - (strip.clientWidth - current.offsetWidth) / 2;
 </script>

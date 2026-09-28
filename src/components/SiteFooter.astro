@@ -1,40 +1,11 @@
 ---
 import { site } from "../data/site";
+import { sections } from "../lib/sections";
 import Icon from "./Icon.astro";
-const groups = [
-  {
-    title: "Browse",
-    links: [
-      "/start-here",
-      "/articles",
-      "/topics/",
-      "/archive/",
-      "/search/",
-      "/discover/",
-    ],
-  },
-  {
-    title: "Build & learn",
-    links: [
-      "/projects",
-      "/lab",
-      "/postmortems",
-      "/technologies/",
-      "/glossary",
-      "/uses",
-    ],
-  },
-  {
-    title: "Personal",
-    links: ["/about", "/now", "/layoff", "/reading-list", "/feeds/"],
-  },
-].map((group) => ({
-  ...group,
-  links: group.links.map((href) =>
-    [...site.nav, ...site.explore].find(
-      (link) => link.href.replace(/\/$/, "") === href.replace(/\/$/, ""),
-    )!,
-  ),
+// The intro already links to /subscribe, so the About group skips it.
+const groups = sections.map((section) => ({
+  title: `${section.number} · ${section.label}`,
+  links: section.links.filter((link) => link.href !== "/subscribe"),
 }));
 ---
 

@@ -1,0 +1,91 @@
+---
+import { getCollection } from "astro:content";
+import Icon from "./Icon.astro";
+import { sections } from "../lib/sections";
+import { isArticlePublished } from "../lib/articles";
+import { getReadingPaths } from "../lib/discovery";
+import { getTopics } from "../lib/topics";
+import { formatDate } from "../lib/media";
+import { now } from "../data/now";
+
+const includeScheduled = !import.meta.env.PROD;
+const published = (entry: { data: { draft?: boolean } }) => !entry.data.draft;
+const articles = (await getCollection("articles")).filter((entry) =>
+  isArticlePublished(entry, { includeScheduled }),
+);
+const projects = (await getCollection("projects")).filter(published);
+const builds = (await getCollection("layoff")).filter(published);
+const postmortems = (await getCollection("postmortems")).filter(published);
+const topics = await getTopics();
+const paths = await getReadingPaths();
+
+const plural = (count: number, one: string, many = `${one}s`) =>
+  `${count} ${count === 1 ? one : many}`;
+const facts: Record<string, string[]> = {
+  read: [
+    plural(articles.length, "story", "stories"),
+    plural(topics.length, "topic"),
+    plural(paths.length, "reading path"),
+  ],
+  workshop: [
+    plural(projects.length, "project"),
+    plural(builds.length, "build log"),
+    plural(postmortems.length, "postmortem"),
+  ],
+  about: [`Now · updated ${formatDate(now.updated)}`],
+};
+// The three most useful ways into each section; the rest live in the menus.
+const shortcuts: Record<string, string[]> = {
+  read: ["/start-here", "/topics/", "/discover/"],
+  workshop: ["/layoff", "/lab", "/postmortems"],
+  about: ["/now", "/uses", "/subscribe"],
+};
+const doors = sections.map((section) => ({
+  ...section,
+  facts: facts[section.id] ?? [],
+  shortcuts: (shortcuts[section.id] ?? []).map((href) =>
+    section.links.find((link) => link.href === href)!,
+  ),
+  homeLabel: section.links.find((link) => link.href === section.home)!.label,
+}));
+---
+
+<section class="home-section section-doors" aria-labelledby="doors-heading">
+  <header class="section-head">
+    <h2 id="doors-heading">Three ways in</h2>
+    <p class="label">Pick a door</p>
+  </header>
+  <ol class="door-grid">
+    {
+      doors.map((door) => (
+        <li class="door" data-section={door.id}>
+          <p class="door-number" aria-hidden="true">
+            {door.number}
+          </p>
+          <h3>{door.label}</h3>
+          <p class="door-title">{door.title}</p>
+          <p class="door-blurb">{door.blurb}</p>
+          <p class="door-facts">
+            {door.facts.map((fact) => (
+              <span>{fact}</span>
+            ))}
+          </p>
+          <ul class="door-links">
+            {door.shortcuts.map((link) => (
+              <li>
+                <a href={link.href}>
+                  <span>{link.label}</span>
+                  <small>{link.note}</small>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <a href={door.home} class="text-link door-enter">
+            {door.homeLabel}
+            <Icon name="arrow" />
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</section>
