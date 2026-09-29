@@ -22,9 +22,9 @@ const ticks = Array.from({ length: 72 }, (_, index) => {
     <div class="contour-field"></div>
   </div>
   <p class="hero-kicker">
-    <span class="hero-pin" aria-hidden="true"></span>Josh Hamilton · Member of
-    Technical Staff at Augment Code
-    <span class="hero-coords">36.154° N · 95.993° W · {site.location}</span>
+    <span class="hero-pin" aria-hidden="true"></span>
+    <span>Josh Hamilton</span>
+    <span class="hero-kicker-role">Member of Technical Staff, Augment Code</span>
   </p>
   <div class="hero-grid">
     <div>
@@ -80,12 +80,23 @@ const ticks = Array.from({ length: 72 }, (_, index) => {
     <a href="/articles" class="btn btn-accent"
       >Explore the writing <Icon name="arrow" /></a
     ><a href="/projects" class="btn">Browse projects</a>
-    <div class="scale-bar" aria-hidden="true">
-      <span>Scale · one idea at a time</span>
-      <span class="scale-bar-track"></span>
-      <span class="scale-bar-labels"
-        ><span>0</span><span>curious</span><span>shipped</span></span
-      >
+    <div class="hero-legend">
+      <dl>
+        <div>
+          <dt>Surveyed from</dt>
+          <dd>{site.location}</dd>
+        </div>
+        <div>
+          <dt>Position</dt>
+          <dd>36.154° N · 95.993° W</dd>
+        </div>
+      </dl>
+      <div class="scale-bar" aria-hidden="true">
+        <span class="scale-bar-track"></span>
+        <span class="scale-bar-labels"
+          ><span>0</span><span>curious</span><span>shipped</span></span
+        >
+      </div>
     </div>
   </div>
 </section>
