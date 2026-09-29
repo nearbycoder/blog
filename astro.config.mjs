@@ -33,6 +33,22 @@ export default defineConfig({
             ),
           },
           {
+            name: "Fraunces",
+            weight: 400,
+            style: "normal",
+            data: readFileSync(
+              "node_modules/@fontsource/fraunces/files/fraunces-latin-400-normal.woff",
+            ),
+          },
+          {
+            name: "Fraunces",
+            weight: 300,
+            style: "italic",
+            data: readFileSync(
+              "node_modules/@fontsource/fraunces/files/fraunces-latin-300-italic.woff",
+            ),
+          },
+          {
             name: "JetBrains Mono",
             weight: 700,
             style: "normal",

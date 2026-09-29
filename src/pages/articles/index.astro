@@ -1,6 +1,6 @@
 ---
 import CustomSelect from "../../components/CustomSelect.astro";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
 import Icon from "../../components/Icon.astro";
 import { getCollection } from "astro:content";
@@ -22,7 +22,7 @@ const topics = [
 ];
 ---
 
-<BaseLayout
+<BlogLayout
   title="Articles"
   description="Josh Hamilton’s notes on engineering, building with AI, career changes, and the human side of shipping software."
 >
@@ -118,7 +118,7 @@ const topics = [
       }
     </div>
   </section>
-</BaseLayout>
+</BlogLayout>
 <script>
   import "../../lib/custom-select";
   import type { CustomSelectElement } from "../../lib/custom-select";

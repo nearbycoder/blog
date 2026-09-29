@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import { getCollection } from "astro:content";
 
@@ -18,7 +18,7 @@ const sortedProjects = projects
   });
 ---
 
-<BaseLayout title="Projects">
+<BlogLayout title="Projects">
   <section class="page-shell space-y-8">
     <header class="page-intro">
       <p class="paper-strip">Projects / {sortedProjects.length} builds</p>
@@ -40,4 +40,4 @@ const sortedProjects = projects
       }
     </div>
   </section>
-</BaseLayout>
+</BlogLayout>

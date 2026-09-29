@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BlogLayout from "../layouts/BlogLayout.astro";
 import { glossary } from "../data/glossary";
 import { getCollection } from "astro:content";
 import {
@@ -11,7 +11,7 @@ const articles = (await getCollection("articles"))
   .sort(compareArticlesByPublishDateDesc);
 ---
 
-<BaseLayout
+<BlogLayout
   title="A builder’s glossary"
   description="Plain-language definitions for technical terms, connected to stories from the blog."
   ><section class="page-shell">
@@ -60,7 +60,7 @@ const articles = (await getCollection("articles"))
         ))
       }
     </div>
-  </section></BaseLayout
+  </section></BlogLayout
 >
 <script>
   const input = document.querySelector<HTMLInputElement>("#glossary-filter")!,

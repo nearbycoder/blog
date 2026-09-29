@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import { getReadingPaths } from "../../lib/discovery";
 import { formatDate } from "../../lib/media";
 export async function getStaticPaths() {
@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 const { path } = Astro.props;
 ---
 
-<BaseLayout title={path.title} description={path.description}>
+<BlogLayout title={path.title} description={path.description}>
   <section class="page-shell">
     <header class="page-intro">
       <a href="/start-here" class="nav-link">← All reading paths</a><h1
@@ -54,4 +54,4 @@ const { path } = Astro.props;
     </ol>
     <a href="/start-here" class="text-link">Explore another path →</a>
   </section>
-</BaseLayout>
+</BlogLayout>

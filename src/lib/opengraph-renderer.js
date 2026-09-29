@@ -20,6 +20,24 @@ async function coverData(src) {
   return artCache.get(src);
 }
 
+// The theme's contour map, inked in survey brown for the card background.
+let contourCache;
+function contourData() {
+  contourCache ??= sharp(
+    Buffer.from(
+      readFileSync(
+        new URL("../../public/images/contours.svg", import.meta.url),
+        "utf8",
+      ).replace('stroke="#000"', 'stroke="#8a6d4a"'),
+    ),
+  )
+    .resize(1080, 608, { fit: "cover" })
+    .png()
+    .toBuffer()
+    .then((buffer) => `data:image/png;base64,${buffer.toString("base64")}`);
+  return contourCache;
+}
+
 /** @type {import("astro-opengraph-images").RenderFunction} */
 export async function renderNearbycoderOg({ title, description, pathname }) {
   const path =
@@ -32,6 +50,7 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
   const art = await coverData(
     articleArt?.src ?? "/images/editorial-curiosity.webp",
   );
+  const contours = await contourData();
   const displayTitle = home
     ? "Always curious. Still building."
     : title.replace(/ · Josh Hamilton$/, "");
@@ -58,12 +77,20 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
         width: "100%",
         height: "100%",
         display: "flex",
-        background: "#f8f9fb",
-        color: "#19202b",
+        position: "relative",
+        background: "#f3ecdc",
+        color: "#1c2620",
         fontFamily: "Space Grotesk",
       },
     },
     [
+      h("img", {
+        key: "contours",
+        src: contours,
+        width: 1080,
+        height: 608,
+        style: { position: "absolute", left: -120, top: 22, opacity: 0.32 },
+      }),
       h(
         "div",
         {
@@ -83,13 +110,34 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
               key: "brand",
               style: {
                 display: "flex",
-                fontSize: 20,
-                fontWeight: 700,
-                letterSpacing: "-0.7px",
-                color: "#2743d9",
+                alignItems: "center",
+                fontFamily: "Fraunces",
+                fontSize: 26,
+                letterSpacing: "-0.6px",
               },
             },
-            "NEARBYCODER",
+            [
+              h("div", {
+                key: "pin",
+                style: {
+                  width: 14,
+                  height: 14,
+                  marginRight: 12,
+                  borderRadius: 7,
+                  background: "#a8390b",
+                  boxShadow: "0 0 0 5px #f5dfcb",
+                },
+              }),
+              h("span", { key: "near" }, "Nearby"),
+              h(
+                "span",
+                {
+                  key: "coder",
+                  style: { fontStyle: "italic", fontWeight: 300, color: "#a8390b" },
+                },
+                "coder",
+              ),
+            ],
           ),
           h(
             "div",
@@ -100,10 +148,11 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                 marginTop: 47,
                 fontFamily: "JetBrains Mono",
                 fontSize: 15,
-                color: "#596270",
+                letterSpacing: "1.5px",
+                color: "#a8390b",
               },
             },
-            section.toUpperCase(),
+            `${section.toUpperCase()}  ·  36.154° N 95.993° W`,
           ),
           h(
             "div",
@@ -112,10 +161,11 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
               style: {
                 display: "flex",
                 marginTop: 17,
-                fontWeight: 500,
+                fontFamily: "Fraunces",
+                fontWeight: 400,
                 fontSize: size,
-                lineHeight: 1.06,
-                letterSpacing: "-2.4px",
+                lineHeight: 1.04,
+                letterSpacing: "-1.6px",
               },
             },
             displayTitle,
@@ -129,7 +179,7 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                 marginTop: 22,
                 fontSize: 20,
                 lineHeight: 1.4,
-                color: "#596270",
+                color: "#5a5545",
               },
             },
             home
@@ -147,9 +197,9 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                 justifyContent: "space-between",
                 marginTop: "auto",
                 paddingTop: 18,
-                borderTop: "1px solid #d3d8e1",
+                borderTop: "2px dashed #cdbf9f",
                 fontSize: 17,
-                color: "#596270",
+                color: "#5a5545",
               },
             },
             [
@@ -164,7 +214,7 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
         src: art,
         width: 390,
         height: 630,
-        style: { objectFit: "cover" },
+        style: { objectFit: "cover", borderLeft: "10px solid #faf6ec" },
       }),
     ],
   );

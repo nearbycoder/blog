@@ -1,0 +1,8 @@
+---
+// Blog pages carry the Field Survey theme. /desktop uses BaseLayout directly,
+// so the theme's CSS and fonts never ship with the desktop shell.
+import BaseLayout from "./BaseLayout.astro";
+import "../styles/global.css";
+---
+
+<BaseLayout {...Astro.props}><slot /></BaseLayout>

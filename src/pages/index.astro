@@ -1,7 +1,7 @@
 ---
 import NewsletterInvite from "../components/NewsletterInvite.astro";
 import SectionDoors from "../components/SectionDoors.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BlogLayout from "../layouts/BlogLayout.astro";
 import Hero from "../components/Hero.astro";
 import Icon from "../components/Icon.astro";
 import { articleImage, formatDate } from "../lib/media";
@@ -58,7 +58,7 @@ const recentLayoffEntries = layoffEntries
 const latest = sortedArticles[0];
 ---
 
-<BaseLayout>
+<BlogLayout>
   <Hero />
   {
     latest && (
@@ -164,5 +164,5 @@ const latest = sortedArticles[0];
       >
     </header><WorkTimeline />
   </section>
-  <NewsletterInvite /></BaseLayout
+  <NewsletterInvite /></BlogLayout
 >

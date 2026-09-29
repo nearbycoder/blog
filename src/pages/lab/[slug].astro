@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import { labs } from "../../data/labs";
 import Roomba from "../../components/lab/Roomba.astro";
 import Poll from "../../components/lab/Poll.astro";
@@ -12,7 +12,7 @@ const { lab } = Astro.props;
 const project = await getEntry("projects", lab.project);
 ---
 
-<BaseLayout title={lab.title} description={lab.description}>
+<BlogLayout title={lab.title} description={lab.description}>
   <header class="page-intro">
     <a class="nav-link" href="/lab">← All experiments</a><h1 class="display">
       {lab.title}
@@ -38,4 +38,4 @@ const project = await getEntry("projects", lab.project);
       class="text-link"
       href={`/projects/${lab.project}`}>Explore {project!.data.title} →</a>
   </section>
-</BaseLayout>
+</BlogLayout>

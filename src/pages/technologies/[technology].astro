@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import { getTechnologies } from "../../lib/technologies";
 export async function getStaticPaths() {
@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 const { technology } = Astro.props;
 ---
 
-<BaseLayout
+<BlogLayout
   title={`${technology.name} projects`}
   description={`Published projects built with ${technology.name}.`}
   ><section class="page-shell">
@@ -32,5 +32,5 @@ const { technology } = Astro.props;
         ))
       }
     </div>
-  </section></BaseLayout
+  </section></BlogLayout
 >

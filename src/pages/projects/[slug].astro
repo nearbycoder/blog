@@ -2,7 +2,7 @@
 import { technologySlug } from "../../lib/technologies";
 import { labs } from "../../data/labs";
 import ProjectStory from "../../components/ProjectStory.astro";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import Icon from "../../components/Icon.astro";
 import { getCollection, render } from "astro:content";
 import { projectImage } from "../../lib/media";
@@ -17,7 +17,7 @@ const image = projectImage(entry);
 const lab = labs.find((lab) => lab.project === entry.id);
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.summary}>
+<BlogLayout title={entry.data.title} description={entry.data.summary}>
   <article>
     <header class="reading-header">
       <a href="/projects" class="nav-link">← All projects</a><h1
@@ -116,4 +116,4 @@ const lab = labs.find((lab) => lab.project === entry.id);
     )
   }
   <ProjectStory projectId={entry.id} />
-</BaseLayout>
+</BlogLayout>

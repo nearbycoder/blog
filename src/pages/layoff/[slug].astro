@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import Icon from "../../components/Icon.astro";
 import ShareArticle from "../../components/ShareArticle.astro";
 import { getCollection, render } from "astro:content";
@@ -22,7 +22,7 @@ const entries = (await getCollection("layoff"))
 const next = entries[entries.findIndex((item) => item.id === entry.id) + 1];
 ---
 
-<BaseLayout
+<BlogLayout
   title={entry.data.title}
   description={entry.data.summary}
   type="article"
@@ -88,4 +88,4 @@ const next = entries[entries.findIndex((item) => item.id === entry.id) + 1];
       </div>
     </div>
   </article>
-</BaseLayout>
+</BlogLayout>

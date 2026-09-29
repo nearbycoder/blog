@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
 import { getTopics } from "../../lib/topics";
 export async function getStaticPaths() {
@@ -11,7 +11,7 @@ export async function getStaticPaths() {
 const { topic } = Astro.props;
 ---
 
-<BaseLayout
+<BlogLayout
   title={`${topic.tag} articles`}
   description={`Published stories about ${topic.tag}, newest first.`}
 >
@@ -35,4 +35,4 @@ const { topic } = Astro.props;
       }
     </div>
   </section>
-</BaseLayout>
+</BlogLayout>

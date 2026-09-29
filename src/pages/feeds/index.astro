@@ -1,11 +1,11 @@
 ---
 import CustomSelect from "../../components/CustomSelect.astro";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import { getTopics } from "../../lib/topics";
 const topics = await getTopics();
 ---
 
-<BaseLayout
+<BlogLayout
   title="Feeds for curious readers"
   description="Follow all writing or individual topics with RSS, JSON Feed, and OPML."
   ><section class="page-shell">
@@ -63,7 +63,7 @@ const topics = await getTopics();
         ))
       }
     </ul>
-  </section></BaseLayout
+  </section></BlogLayout
 >
 <script>
   import "../../lib/custom-select";

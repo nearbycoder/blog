@@ -9,7 +9,7 @@ import NewsletterInvite from "../../components/NewsletterInvite.astro";
 import ReadingTools from "../../components/ReadingTools.astro";
 import CopyCode from "../../components/CopyCode.astro";
 import ArticleContext from "../../components/ArticleContext.astro";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
 import ShareArticle from "../../components/ShareArticle.astro";
 import { getCollection, render } from "astro:content";
@@ -42,7 +42,7 @@ const related = (await getCollection("articles"))
 const toc = headings.filter((heading) => heading.depth === 2);
 ---
 
-<BaseLayout
+<BlogLayout
   title={entry.data.title}
   description={entry.data.description}
   type="article"
@@ -138,7 +138,7 @@ const toc = headings.filter((heading) => heading.depth === 2);
       </section>
     )
   }
-  <ArticleImages /><NewsletterInvite /><CopyCode /></BaseLayout
+  <ArticleImages /><NewsletterInvite /><CopyCode /></BlogLayout
 >
 <script>
   const links = Array.from(
