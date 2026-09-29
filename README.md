@@ -136,7 +136,7 @@ npm run verify
 
 `verify` runs Astro type checks, a production build, and browser regression tests against the built site. `npm test` expects an existing production build. Images are optimized automatically before development and production builds.
 
-See [the redesign notes and screenshot gallery](docs/redesign.md) for the visual direction, route coverage, accessibility scope, and measured performance.
+The current look is the [Field Survey theme](docs/field-survey-theme.md). See [the earlier redesign notes and screenshot gallery](docs/redesign.md) for the visual direction, route coverage, accessibility scope, and measured performance.
 
 ### DOOM in the desktop
 

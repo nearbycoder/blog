@@ -1,12 +1,12 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import { getCollection } from "astro:content";
 const entries = (await getCollection("postmortems"))
   .filter((e) => !e.data.draft)
   .sort((a, b) => b.data.date.localeCompare(a.data.date));
 ---
 
-<BaseLayout
+<BlogLayout
   title="Build postmortems"
   description="What shipped, what proved difficult, where AI fit, and the lessons carried into the next build."
 >
@@ -33,4 +33,4 @@ const entries = (await getCollection("postmortems"))
       }
     </div>
   </section>
-</BaseLayout>
+</BlogLayout>

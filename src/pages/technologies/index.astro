@@ -1,10 +1,10 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import { getTechnologies } from "../../lib/technologies";
 const technologies = await getTechnologies();
 ---
 
-<BaseLayout
+<BlogLayout
   title="Project technologies"
   description="Explore the tools and technologies declared in published projects."
   ><section class="page-shell">
@@ -32,5 +32,5 @@ const technologies = await getTechnologies();
         ))
       }
     </ul>
-  </section></BaseLayout
+  </section></BlogLayout
 >

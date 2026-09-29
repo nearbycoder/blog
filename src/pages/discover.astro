@@ -1,6 +1,6 @@
 ---
 import CustomSelect from "../components/CustomSelect.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BlogLayout from "../layouts/BlogLayout.astro";
 import { getCollection } from "astro:content";
 import { isArticlePublished } from "../lib/articles";
 const articles = (await getCollection("articles"))
@@ -17,7 +17,7 @@ const articles = (await getCollection("articles"))
 const tags = [...new Set(articles.flatMap((e) => e.tags))].sort();
 ---
 
-<BaseLayout
+<BlogLayout
   title="Discover a story"
   description="Find an unexpected story that fits your interests and available reading time."
   ><section class="page-shell">
@@ -70,7 +70,7 @@ const tags = [...new Set(articles.flatMap((e) => e.tags))].sort();
       id="discover-catalog"
       set:html={JSON.stringify(articles).replace(/</g, "\\u003c")}
     />
-  </section></BaseLayout
+  </section></BlogLayout
 >
 <script>
   import "../lib/custom-select";

@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import { getCollection, render } from "astro:content";
 import { isArticlePublished } from "../../lib/articles";
 export async function getStaticPaths() {
@@ -24,7 +24,7 @@ const project = (await getCollection("projects")).find(
 );
 ---
 
-<BaseLayout
+<BlogLayout
   title={entry.data.title}
   description={entry.data.description}
   type="article"
@@ -56,4 +56,4 @@ const project = (await getCollection("projects")).find(
       </aside><div class="article-content"><Content /></div>
     </div>
   </article>
-</BaseLayout>
+</BlogLayout>

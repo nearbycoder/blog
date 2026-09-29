@@ -2,7 +2,7 @@
 import ReadingBackup from "../components/ReadingBackup.astro";
 import ReadingStats from "../components/ReadingStats.astro";
 import ReadingQueue from "../components/ReadingQueue.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BlogLayout from "../layouts/BlogLayout.astro";
 import { getCollection, render } from "astro:content";
 import { isArticlePublished } from "../lib/articles";
 const catalog = await Promise.all(
@@ -26,7 +26,7 @@ const catalog = await Promise.all(
 );
 ---
 
-<BaseLayout
+<BlogLayout
   title="Your reading list"
   description="Your saved articles and reading positions, kept in this browser."
 >
@@ -70,7 +70,7 @@ const catalog = await Promise.all(
     id="reading-catalog"
     set:html={JSON.stringify(catalog).replace(/</g, "\\u003c")}
   />
-</BaseLayout>
+</BlogLayout>
 <script>
   import {
     readReadingState,

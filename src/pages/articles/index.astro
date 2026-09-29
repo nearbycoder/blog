@@ -1,6 +1,6 @@
 ---
 import CustomSelect from "../../components/CustomSelect.astro";
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
 import Icon from "../../components/Icon.astro";
 import { getCollection } from "astro:content";
@@ -22,7 +22,7 @@ const topics = [
 ];
 ---
 
-<BaseLayout
+<BlogLayout
   title="Articles"
   description="Josh Hamilton’s notes on engineering, building with AI, career changes, and the human side of shipping software."
 >
@@ -37,11 +37,16 @@ const topics = [
         spent making software.
       </p>
     </header>
-    <a class="text-link" href="/archive/">Browse by date →</a>
-    <a class="text-link" href="/topics/">Browse every topic →</a>
-    <a class="text-link" href="/discover/">Find an unexpected story →</a>
-    <a href="/start-here" class="text-link">New here? Pick a reading path →</a>
-    <a href="/search/" class="text-link">Search inside every post →</a>
+    <nav class="signposts" aria-label="Other ways to read">
+      <p class="label">Other ways in</p>
+      <ul>
+        <li><a href="/start-here">New here? Pick a reading path</a></li>
+        <li><a href="/archive/">Browse by date</a></li>
+        <li><a href="/topics/">Browse every topic</a></li>
+        <li><a href="/discover/">Find an unexpected story</a></li>
+        <li><a href="/search/">Search inside every post</a></li>
+      </ul>
+    </nav>
     <div class="search-toolbar">
       <Icon name="search" /><label for="article-search" class="sr-only"
         >Search articles</label
@@ -118,7 +123,7 @@ const topics = [
       }
     </div>
   </section>
-</BaseLayout>
+</BlogLayout>
 <script>
   import "../../lib/custom-select";
   import type { CustomSelectElement } from "../../lib/custom-select";

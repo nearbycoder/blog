@@ -1,0 +1,188 @@
+@import "@fontsource/jetbrains-mono/400.css";
+/*
+ * Shared foundation for every page, including /desktop: Tailwind's reset,
+ * theme tokens, and element defaults. The blog's Field Survey theme lives in
+ * global.css, which only blog pages load (via SiteHeader).
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/preflight.css" layer(base);
+
+:root {
+  color-scheme: light;
+  --bg: #f3ecdc;
+  --bg-alt: #eae1cc;
+  --surface: #faf6ec;
+  --surface-2: #e2d7bd;
+  --fg: #1c2620;
+  --fg-muted: #5a5545;
+  --fg-dim: #686150;
+  --border: #cdbf9f;
+  --border-dim: #ded3ba;
+  --accent: #a8390b;
+  --accent-ink: #a8390b;
+  --accent-fg: #fff8ec;
+  --accent-soft: #f5dfcb;
+  --water: #23637b;
+  --moss: #45622a;
+  --contour: #8a6d4a;
+  --contour-strength: 0.32;
+  --ink-shadow: #1c262033;
+  --paper-grain: 0.09;
+  --blaze-read: var(--accent);
+  --blaze-workshop: var(--water);
+  --blaze-about: var(--moss);
+  --rule: 1px;
+  --rule-heavy: 2px;
+  --radius: 4px;
+  --font-body: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --font-serif: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1714;
+  --bg-alt: #14211c;
+  --surface: #182a23;
+  --surface-2: #20372d;
+  --fg: #ece5d3;
+  --fg-muted: #b5ae99;
+  --fg-dim: #a39c87;
+  --border: #2f473b;
+  --border-dim: #22362c;
+  --accent: #ff9159;
+  --accent-ink: #ff9159;
+  --accent-fg: #1b0d04;
+  --accent-soft: #3b2619;
+  --water: #86c9dd;
+  --moss: #b0cf86;
+  --contour: #5f9a80;
+  --contour-strength: 0.3;
+  --ink-shadow: #00000066;
+  --paper-grain: 0.05;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="system"] {
+    color-scheme: dark;
+    --bg: #0e1714;
+    --bg-alt: #14211c;
+    --surface: #182a23;
+    --surface-2: #20372d;
+    --fg: #ece5d3;
+    --fg-muted: #b5ae99;
+    --fg-dim: #a39c87;
+    --border: #2f473b;
+    --border-dim: #22362c;
+    --accent: #ff9159;
+    --accent-ink: #ff9159;
+    --accent-fg: #1b0d04;
+    --accent-soft: #3b2619;
+    --water: #86c9dd;
+    --moss: #b0cf86;
+    --contour: #5f9a80;
+    --contour-strength: 0.3;
+    --ink-shadow: #00000066;
+    --paper-grain: 0.05;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+html {
+  background: var(--bg);
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+  scrollbar-color: var(--border) transparent;
+}
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+::selection {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+img,
+svg {
+  display: block;
+}
+img {
+  max-width: 100%;
+}
+button,
+input {
+  font: inherit;
+}
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+.hidden,
+[hidden] {
+  display: none !important;
+}
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  transform: translateY(-200%);
+  z-index: 60;
+  background: var(--accent);
+  color: var(--accent-fg);
+  padding: 12px 18px;
+  border-radius: var(--radius);
+}
+.skip-link:focus {
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+/* The few Tailwind utilities used outside the blog theme (layout body, desktop labels). */
+@layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  .flex {
+    display: flex;
+  }
+  .flex-col {
+    flex-direction: column;
+  }
+}

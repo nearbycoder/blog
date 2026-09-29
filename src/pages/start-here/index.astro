@@ -1,10 +1,10 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import { getReadingPaths } from "../../lib/discovery";
 const paths = await getReadingPaths();
 ---
 
-<BaseLayout
+<BlogLayout
   title="Start here"
   description="Curated reading paths through Josh Hamilton’s writing on AI, career changes, and shipping side projects."
 >
@@ -34,4 +34,4 @@ const paths = await getReadingPaths();
     <a href="/articles" class="text-link mt-8"
       >Or explore the whole archive →</a>
   </section>
-</BaseLayout>
+</BlogLayout>

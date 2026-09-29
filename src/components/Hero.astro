@@ -1,11 +1,30 @@
 ---
 import Icon from "./Icon.astro";
+import { site } from "../data/site";
+
+// Compass ring around the portrait: a tick every 5°, longer every 45°.
+const ticks = Array.from({ length: 72 }, (_, index) => {
+  const angle = (index * 5 * Math.PI) / 180;
+  const major = index % 9 === 0;
+  const inner = major ? 68 : 72;
+  return {
+    x1: 84 + inner * Math.sin(angle),
+    y1: 84 - inner * Math.cos(angle),
+    x2: 84 + 78 * Math.sin(angle),
+    y2: 84 - 78 * Math.cos(angle),
+    major,
+  };
+});
 ---
 
 <section class="hero reveal">
+  <div class="hero-map" aria-hidden="true">
+    <div class="contour-field"></div>
+  </div>
   <p class="hero-kicker">
-    <span aria-hidden="true"></span>Josh Hamilton · Member of Technical Staff at
-    Augment Code
+    <span class="hero-pin" aria-hidden="true"></span>
+    <span>Josh Hamilton</span>
+    <span class="hero-kicker-role">Member of Technical Staff, Augment Code</span>
   </p>
   <div class="hero-grid">
     <div>
@@ -16,13 +35,38 @@ import Icon from "./Icon.astro";
       </p>
     </div>
     <aside class="hero-profile">
-      <img
-        src="/images/portrait.webp"
-        alt="Josh Hamilton"
-        width="90"
-        height="90"
-        loading="eager"
-      />
+      <div class="hero-compass">
+        <svg viewBox="0 0 168 168" aria-hidden="true">
+          <g class="compass-ring" stroke="currentColor">
+            <circle cx="84" cy="84" r="78" fill="none" stroke-width="1"
+            ></circle>
+            {
+              ticks.map((tick) => (
+                <line
+                  x1={tick.x1.toFixed(2)}
+                  y1={tick.y1.toFixed(2)}
+                  x2={tick.x2.toFixed(2)}
+                  y2={tick.y2.toFixed(2)}
+                  stroke-width={tick.major ? 1.4 : 0.7}
+                />
+              ))
+            }
+            <path class="compass-north" d="M84 0l5 11h-10z" stroke="none"
+            ></path>
+            <text x="84" y="24" text-anchor="middle" stroke="none">N</text>
+            <text x="146" y="87" text-anchor="middle" stroke="none">E</text>
+            <text x="84" y="150" text-anchor="middle" stroke="none">S</text>
+            <text x="22" y="87" text-anchor="middle" stroke="none">W</text>
+          </g>
+        </svg>
+        <img
+          src="/images/portrait.webp"
+          alt="Josh Hamilton"
+          width="108"
+          height="108"
+          loading="eager"
+        />
+      </div>
       <p>
         <strong>Hey, I’m Josh.</strong><br />Engineer, husband, and dad of two.
         Building useful things. Learning out loud.
@@ -36,5 +80,23 @@ import Icon from "./Icon.astro";
     <a href="/articles" class="btn btn-accent"
       >Explore the writing <Icon name="arrow" /></a
     ><a href="/projects" class="btn">Browse projects</a>
+    <div class="hero-legend">
+      <dl>
+        <div>
+          <dt>Surveyed from</dt>
+          <dd>{site.location}</dd>
+        </div>
+        <div>
+          <dt>Position</dt>
+          <dd>36.154° N · 95.993° W</dd>
+        </div>
+      </dl>
+      <div class="scale-bar" aria-hidden="true">
+        <span class="scale-bar-track"></span>
+        <span class="scale-bar-labels"
+          ><span>0</span><span>curious</span><span>shipped</span></span
+        >
+      </div>
+    </div>
   </div>
 </section>

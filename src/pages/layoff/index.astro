@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
+import BlogLayout from "../../layouts/BlogLayout.astro";
 import LayoffEntryCard from "../../components/LayoffEntryCard.astro";
 import { getCollection } from "astro:content";
 
@@ -27,7 +27,7 @@ const weekSections = sortedEntries.reduce(
 );
 ---
 
-<BaseLayout title="Early 2026 Layoff Log">
+<BlogLayout title="Early 2026 Layoff Log">
   <section class="page-shell space-y-10">
     <header class="page-intro">
       <p class="paper-strip">Layoff Log / Early 2026</p>
@@ -77,4 +77,4 @@ const weekSections = sortedEntries.reduce(
       )
     }
   </section>
-</BaseLayout>
+</BlogLayout>
