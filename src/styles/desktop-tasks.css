@@ -338,3 +338,142 @@
     font-size: 12px;
   }
 }
+
+.tasks-toolbar {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tasks-total {
+  margin-left: auto;
+}
+.tasks-data-menu {
+  min-width: 0;
+  max-width: 100%;
+  font-size: 12px;
+}
+.tasks-data-menu[open] {
+  flex: 1 0 100%;
+}
+.tasks-data-menu summary {
+  padding: 6px;
+  border: 1px solid var(--desk-line);
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--desk-ink);
+}
+.tasks-data-menu summary:focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 2px;
+}
+.tasks-data-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding-top: 6px;
+}
+.tasks-data-actions > button {
+  flex: 1 1 80px;
+}
+.tasks-search-controls {
+  display: flex;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 8px;
+  padding: 0 12px 10px;
+}
+.tasks-search-controls label {
+  display: grid;
+  min-width: 0;
+  gap: 4px;
+  flex: 1 1 110px;
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+.tasks-search-controls .tasks-search-label {
+  flex: 2 1 160px;
+}
+.tasks-search-controls :is(input, select) {
+  width: 100%;
+  min-width: 0;
+}
+.tasks-results {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 0 12px 9px;
+  color: var(--desk-muted);
+  font-size: 12px;
+  line-height: 1.4;
+}
+.tasks-card-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 8px;
+  margin-top: 8px;
+  color: var(--desk-muted);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.tasks-priority {
+  padding: 1px 5px;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+}
+.tasks-priority-high,
+.tasks-due.is-overdue {
+  color: var(--desk-ink);
+  font-weight: 650;
+}
+.tasks-priority-high {
+  border-color: var(--desk-accent);
+}
+.tasks-due.is-overdue {
+  text-decoration: underline;
+  text-decoration-color: var(--desk-accent);
+  text-underline-offset: 3px;
+}
+.tasks-editor-metadata {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.tasks-editor-metadata > div {
+  min-width: 0;
+}
+.tasks-import {
+  flex: 1;
+  min-height: 0;
+  padding: 18px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+.tasks-import h2 {
+  margin: 0 0 10px;
+  font-size: 19px;
+}
+.tasks-import p,
+.tasks-import li {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.tasks-import-hint {
+  color: var(--desk-muted);
+}
+.tasks-import ul {
+  padding-left: 20px;
+}
+.tasks-import li + li {
+  margin-top: 7px;
+}
+@container taskboard (max-width: 360px) {
+  .tasks-search-controls {
+    padding-inline: 8px;
+  }
+  .tasks-editor-metadata {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .tasks-app .tasks-data-actions > button {
+    padding-inline: 6px;
+    font-size: 11px;
+  }
+}

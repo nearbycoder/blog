@@ -5,6 +5,7 @@
 /* Desktop apps ship their own CSS on demand, not blog-wide utility rules. */
 @source not "../scripts/desktop*.ts";
 @source not "../lib/desktop*.ts";
+@source not "../styles/desktop*.css";
 @source not "../components/desktop";
 @source not "../pages/desktop.astro";
 
@@ -80,11 +81,9 @@ body:not(.desktop-shell) {
   pointer-events: none;
   background: var(--contour);
   opacity: var(--contour-strength);
-  -webkit-mask:
-    url("/images/contours.svg") var(--contour-position, center) / cover
-    no-repeat;
-  mask:
-    url("/images/contours.svg") var(--contour-position, center) / cover
+  -webkit-mask: url("/images/contours.svg") var(--contour-position, center) /
+    cover no-repeat;
+  mask: url("/images/contours.svg") var(--contour-position, center) / cover
     no-repeat;
 }
 .site-container {
@@ -2186,13 +2185,11 @@ a.chip:hover {
   opacity: 0.16;
   -webkit-mask:
     linear-gradient(transparent, #000 10%, transparent),
-    url("/images/contours-tall.svg") var(--door-map, 0 0) / 900px auto
-      no-repeat;
+    url("/images/contours-tall.svg") var(--door-map, 0 0) / 900px auto no-repeat;
   -webkit-mask-composite: source-in;
   mask:
     linear-gradient(transparent, #000 10%, transparent) intersect,
-    url("/images/contours-tall.svg") var(--door-map, 0 0) / 900px auto
-      no-repeat;
+    url("/images/contours-tall.svg") var(--door-map, 0 0) / 900px auto no-repeat;
   transition: opacity 0.3s;
 }
 .door[data-section="workshop"] {
@@ -3321,25 +3318,25 @@ a.chip:hover {
 
 /* Secondary headings across page families share the display serif. */
 :is(
-    .lab-entry h2,
-    .lab-workbench h2,
-    .lab-source h2,
-    .path-card h2,
-    .reading-path h2,
-    .now-grid h2,
-    .story-connections h3,
-    .article-context h2,
-    .reading-empty h2,
-    .saved-articles h2,
-    .subscribe-layout h2,
-    .newsletter-invite h2,
-    .archive-year > h2,
-    .keyboard-help h2,
-    .image-viewer h2,
-    .reading-stat-grid dd,
-    .agent-transcript h3,
-    .lab-controls legend
-  ) {
+  .lab-entry h2,
+  .lab-workbench h2,
+  .lab-source h2,
+  .path-card h2,
+  .reading-path h2,
+  .now-grid h2,
+  .story-connections h3,
+  .article-context h2,
+  .reading-empty h2,
+  .saved-articles h2,
+  .subscribe-layout h2,
+  .newsletter-invite h2,
+  .archive-year > h2,
+  .keyboard-help h2,
+  .image-viewer h2,
+  .reading-stat-grid dd,
+  .agent-transcript h3,
+  .lab-controls legend
+) {
   font-family: var(--font-display);
   font-weight: 400;
   letter-spacing: -0.02em;

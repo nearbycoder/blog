@@ -136,7 +136,13 @@ test("launcher restores its starting position and supports keyboard search witho
   await search.fill("studio");
   expect(await resultsPanel.evaluate((element) => element.scrollTop)).toBe(0);
   const results = page.locator("[data-launcher-results] button");
-  await expect(results).toHaveCount(3);
+  // Blog articles and projects can also mention "studio". Keep the keyboard
+  // test tied to the app results rather than the changing content collection.
+  for (const title of ["Color Studio", "Pixel Studio", "Orbit Studio"]) {
+    await expect(
+      resultsPanel.getByRole("button", { name: new RegExp(`^${title} `) }),
+    ).toBeVisible();
+  }
   await search.press("ArrowDown");
   await expect(results.nth(0)).toBeFocused();
   await page.keyboard.press("ArrowDown");

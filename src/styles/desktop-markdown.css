@@ -7,6 +7,7 @@
   container: markdown-pad / inline-size;
   color: var(--desk-ink);
   background: var(--desk-paper);
+  overflow-y: auto;
 }
 .markdown-app [hidden] {
   display: none !important;
@@ -15,6 +16,100 @@
   flex: 0 0 auto;
   flex-wrap: wrap;
   gap: 5px;
+}
+.markdown-format-toolbar {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.markdown-format-toolbar button {
+  min-height: 30px;
+}
+.markdown-find {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--desk-line);
+  background: var(--desk-sidebar);
+}
+.markdown-find label {
+  display: flex;
+  flex: 1 1 130px;
+  min-width: 0;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--desk-muted);
+}
+.markdown-find input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 6px 8px;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--desk-ink);
+  background: var(--desk-paper);
+}
+.markdown-find input:focus-visible,
+.markdown-outline button:focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 1px;
+}
+.markdown-find-actions {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.markdown-find button {
+  min-height: 30px;
+  padding: 5px 8px;
+  border: 1px solid var(--desk-line);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--desk-ink);
+  background: var(--desk-paper);
+}
+.markdown-find p {
+  width: 100%;
+  margin: 0;
+  color: var(--desk-muted);
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.markdown-outline {
+  flex: 0 0 auto;
+  max-height: 110px;
+  overflow: auto;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--desk-line);
+  background: var(--desk-sidebar);
+  font-size: 12px;
+  color: var(--desk-muted);
+}
+.markdown-outline ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.markdown-outline button {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  padding: 5px 8px;
+  border-radius: 3px;
+  color: var(--desk-ink);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.markdown-outline button:hover {
+  color: var(--desk-accent);
+  background: var(--desk-selected);
 }
 .markdown-views {
   display: flex;
@@ -30,7 +125,7 @@
 .markdown-workspace {
   display: flex;
   flex: 1;
-  min-height: 0;
+  min-height: 140px;
   min-width: 0;
   overflow: hidden;
 }
@@ -271,7 +366,8 @@
   }
 }
 @media (max-width: 760px), (pointer: coarse) {
-  .markdown-app textarea {
+  .markdown-app textarea,
+  .markdown-find input {
     font-size: 16px;
   }
 }

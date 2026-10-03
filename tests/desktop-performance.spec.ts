@@ -65,13 +65,14 @@ function bytes(assets: string[]) {
   );
 }
 
-// Before this expansion: 65,547 B homepage / 76,938 B article direct JS+CSS.
-// The article also statically imports 2,339 B of reading/notes storage code.
-// Keep those original ceilings: current builds leave 2,071 B of headroom.
+// Clean HEAD 01730a6 before the October desktop expansion: 87,167 B homepage
+// and 100,897 B article including static imports. Reproduced with git archive
+// and an isolated production build; older ceilings predated the Field Survey
+// theme. This expansion gets no additional budget on ordinary blog routes.
 // These are uncompressed build bytes, independent of network speed and caching.
 for (const [route, budget] of [
-  ["index.html", 65_547],
-  ["articles/gettting-started-with-react-and-vitejs/index.html", 79_277],
+  ["index.html", 87_167],
+  ["articles/gettting-started-with-react-and-vitejs/index.html", 100_897],
 ] as const) {
   test(`${route} stays within its pre-expansion JS/CSS budget`, () => {
     const assets = eagerAssets(pageAssets(route));

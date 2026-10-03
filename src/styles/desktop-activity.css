@@ -1,0 +1,171 @@
+[data-desktop] .activity-app {
+  overflow: auto;
+  padding: 22px 24px;
+}
+[data-desktop] .activity-heading h2 {
+  font-size: 21px;
+  font-weight: 500;
+  margin: 0 0 6px;
+  letter-spacing: -0.025em;
+}
+[data-desktop] .activity-heading p,
+[data-desktop] .activity-help {
+  color: var(--desk-muted);
+  margin: 0 0 12px;
+  font-size: 0.9em;
+}
+[data-desktop] .activity-quiet {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--desk-line);
+  cursor: pointer;
+}
+[data-desktop] .activity-quiet input {
+  appearance: auto;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  accent-color: var(--desk-accent);
+}
+[data-desktop] .activity-quiet strong,
+[data-desktop] .activity-quiet small {
+  display: block;
+}
+[data-desktop] .activity-quiet strong {
+  font-weight: 500;
+}
+[data-desktop] .activity-quiet small {
+  color: var(--desk-muted);
+  font-size: 0.9em;
+  margin-top: 2px;
+}
+[data-desktop] .activity-app section {
+  margin-top: 22px;
+}
+[data-desktop] .activity-section-heading {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+[data-desktop] .activity-section-heading h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+[data-desktop] .activity-section-heading > span {
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+[data-desktop] .activity-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+[data-desktop] .activity-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+[data-desktop] .activity-toolbar select {
+  padding: 7px 8px;
+  max-width: 100%;
+  min-height: 44px;
+  font-size: 16px;
+}
+[data-desktop] .activity-app button {
+  font-size: 12px;
+  min-height: 44px;
+  padding: 7px 10px;
+  max-width: 100%;
+}
+[data-desktop] .activity-app button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+[data-desktop] .activity-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 310px;
+  overflow: auto;
+  border-block: 1px solid var(--desk-line);
+}
+[data-desktop] .activity-history:empty {
+  display: none;
+}
+[data-desktop] .activity-history li {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-bottom: 1px solid var(--desk-line);
+  padding: 12px 2px;
+}
+[data-desktop] .activity-history li:last-child {
+  border-bottom: 0;
+}
+[data-desktop] .activity-history li[data-activity-read="false"] {
+  border-left: 3px solid var(--desk-accent);
+  padding-left: 9px;
+}
+[data-desktop] .activity-history li > div {
+  flex: 1;
+  min-width: 0;
+}
+[data-desktop] .activity-history p {
+  margin: 0 0 3px;
+  overflow-wrap: anywhere;
+}
+[data-desktop] .activity-history small {
+  color: var(--desk-muted);
+  font-size: 11px;
+}
+[data-desktop] .activity-history button {
+  flex-shrink: 0;
+}
+[data-desktop] .activity-empty {
+  color: var(--desk-muted);
+  font-size: 12px;
+  margin: 8px 0;
+}
+[data-desktop] .activity-favorites,
+[data-desktop] .activity-recent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+[data-desktop] .activity-favorites button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--desk-line);
+}
+[data-desktop] .activity-favorites button[aria-pressed="true"] {
+  border-color: var(--desk-accent);
+  background: var(--desk-selected);
+}
+[data-desktop] .activity-favorites button > span {
+  color: var(--desk-accent);
+}
+[data-desktop] .activity-app > .desk-app-status {
+  padding: 18px 0 0;
+  margin: 0;
+}
+@container (max-width:400px) {
+  [data-desktop] .activity-app {
+    padding: 18px 14px;
+  }
+  [data-desktop] .activity-history li {
+    gap: 8px;
+  }
+  [data-desktop] .activity-history button {
+    padding: 6px;
+  }
+}

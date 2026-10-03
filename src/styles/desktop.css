@@ -125,6 +125,70 @@
   position: relative;
   isolation: isolate;
 }
+.desktop-session-tools {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--desk-line);
+  border-radius: var(--desk-radius);
+  background: var(--desk-panel);
+  box-shadow: 0 3px 12px var(--desk-shadow-soft);
+}
+.desktop-session-tools button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  min-width: 32px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--desk-ink);
+}
+.desktop-session-tools button:hover {
+  background: var(--desk-hover);
+}
+[data-active-space-label] {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+[data-activity-unread] {
+  min-width: 16px;
+  border-radius: 8px;
+  background: var(--desk-accent);
+  color: var(--desk-paper);
+  font-size: 10px;
+  padding: 0 4px;
+}
+.desktop-window[data-pinned="true"] .window-titlebar {
+  box-shadow: inset 0 2px var(--desk-accent);
+}
+@media (max-width: 760px) {
+  .desktop-session-tools {
+    top: 8px;
+    right: 8px;
+  }
+  .desktop-session-tools button {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 5px;
+  }
+  [data-active-space-label] {
+    max-width: 72px;
+  }
+}
+@media (pointer: coarse) {
+  .desktop-session-tools button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
 .desktop-shortcuts {
   --desktop-icon-width: 92px;
   --desktop-icon-height: 86px;
@@ -1353,6 +1417,7 @@
   }
 }
 @media (prefers-reduced-transparency: reduce) {
+  .desktop-session-tools,
   .desktop-dock,
   .shell-popup {
     background: var(--desk-sidebar);

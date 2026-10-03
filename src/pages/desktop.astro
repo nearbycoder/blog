@@ -9,6 +9,7 @@ import DesktopIcon from "../components/desktop/DesktopIcon.astro";
 import { desktopFolders, getDesktopFiles } from "../lib/desktop";
 import "../styles/desktop.css";
 import "../styles/desktop-context-menu.css";
+import "../styles/desktop-preferences.css";
 const files = await getDesktopFiles();
 const folderFor = (id: string) =>
   desktopFolders.find((folder) => folder.id === id)!;
@@ -72,6 +73,37 @@ const folderFor = (id: string) =>
       <div class="desktop-wallpaper-copy" aria-hidden="true">
         <strong>nearby</strong><span>DESKTOP</span>
       </div>
+      <nav class="desktop-session-tools" aria-label="Workspace tools">
+        <button
+          type="button"
+          data-open-app="workspaces"
+          title="Manage virtual desktops"
+          ><DesktopIcon name="files" /><span data-active-space-label
+            >Desk 1</span
+          ></button
+        >
+        <button
+          type="button"
+          data-open-app="windows"
+          aria-label="Open Window Overview"
+          title="Window Overview (Ctrl+Shift+Space)"
+          ><DesktopIcon name="grid" /></button
+        >
+        <button
+          type="button"
+          data-open-app="activity"
+          aria-label="Open Activity"
+          title="Activity"
+          ><DesktopIcon name="list" /><span data-activity-unread hidden>0</span
+          ></button
+        >
+        <button
+          type="button"
+          data-open-app="settings"
+          aria-label="Open Settings"
+          title="Desktop settings"><DesktopIcon name="desktop" /></button
+        >
+      </nav>
       <section
         class="desktop-window library-window is-active"
         data-window="library"
@@ -249,7 +281,7 @@ const folderFor = (id: string) =>
         /></label
       >
       <div data-launcher-default>
-        <p class="launcher-section-label">Favorites</p>
+        <p class="launcher-section-label">Essentials</p>
         <div class="launcher-apps">
           <button type="button" data-launch-action="library"
             ><span class="app-glyph app-files"
@@ -371,6 +403,9 @@ const folderFor = (id: string) =>
         type="button"
         class="calendar-today"
         data-calendar-today>Today</button
+      >
+      <button type="button" class="calendar-today" data-open-app="agenda"
+        >Open Agenda</button
       >
     </section>
     <nav class="desktop-dock" aria-label="Open windows">

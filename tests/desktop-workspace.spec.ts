@@ -506,3 +506,97 @@ for (const mode of ["corrupt", "blocked"] as const) {
     expect(errors).toEqual([]);
   });
 }
+
+test("Show desktop stays on the current desk after switching away from hidden windows", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "desktop-spaces:v1",
+      JSON.stringify({
+        version: 1,
+        active: "desk-1",
+        spaces: [
+          { id: "desk-1", name: "Desk 1" },
+          { id: "desk-2", name: "Desk 2" },
+        ],
+        assignments: { notes: "desk-1" },
+      }),
+    );
+  });
+  await open(page);
+  const notes = await launch(page, "notes");
+  const showDesktop = page.getByRole("button", {
+    name: "Show desktop",
+    exact: true,
+  });
+  await showDesktop.click();
+  await expect(notes).toBeHidden();
+  await page.keyboard.press("Control+Alt+PageDown");
+  await expect(desktop(page)).toHaveAttribute("data-active-space", "desk-2");
+  await expect(showDesktop).toHaveAttribute("aria-pressed", "false");
+  await showDesktop.click();
+  await expect(desktop(page)).toHaveAttribute("data-active-space", "desk-2");
+  await expect(notes).toBeHidden();
+});
+
+test("Arrange windows preserves other desks and keeps the current desk when Library belongs elsewhere", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "desktop-spaces:v1",
+      JSON.stringify({
+        version: 1,
+        active: "desk-2",
+        spaces: [
+          { id: "desk-1", name: "Desk 1" },
+          { id: "desk-2", name: "Desk 2" },
+        ],
+        assignments: { library: "desk-1", json: "desk-1", notes: "desk-2" },
+      }),
+    );
+  });
+  await page.addInitScript(
+    ({ key, placement }) => {
+      localStorage.setItem(
+        key,
+        JSON.stringify({
+          version: 1,
+          windows: [{ id: "json", minimized: false, placement }],
+          active: null,
+        }),
+      );
+    },
+    { key: storageKey, placement },
+  );
+  await open(page);
+  const otherDeskWindow = windowFor(page, "json");
+  await expect(otherDeskWindow).toBeHidden();
+  const otherDeskGeometry = await otherDeskWindow.evaluate((element) => {
+    const { left, top, width, height } = (element as HTMLElement).style;
+    return { left, top, width, height };
+  });
+  const notes = await launch(page, "notes");
+  await page.keyboard.press("Control+Alt+ArrowLeft");
+  await expect(notes).toHaveAttribute("data-snap", "left");
+  await page.keyboard.press("Control+k");
+  await page
+    .getByRole("combobox", { name: "Search desktop commands", exact: true })
+    .fill("Arrange windows");
+  await page
+    .getByRole("option", { name: "Arrange windows", exact: true })
+    .click();
+  await expect(desktop(page)).toHaveAttribute("data-active-space", "desk-2");
+  await expect(notes).toBeVisible();
+  await expect(notes).not.toHaveAttribute("data-snap");
+  await expect(windowFor(page, "library")).toBeHidden();
+  await expect(otherDeskWindow).toBeHidden();
+  expect(
+    await otherDeskWindow.evaluate((element) => {
+      const { left, top, width, height } = (element as HTMLElement).style;
+      return { left, top, width, height };
+    }),
+  ).toEqual(otherDeskGeometry);
+  await expect(notes).toHaveClass(/is-active/);
+});

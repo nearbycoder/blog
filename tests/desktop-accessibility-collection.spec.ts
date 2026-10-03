@@ -5,14 +5,20 @@ import { desktopApps } from "../src/lib/desktop-apps";
 type DesktopApp = (typeof desktopApps)[number];
 type Theme = "light" | "dark";
 
-// One app from each category exercises the compact layout without repeating
-// the collection's separate phone sizing, text size, and overflow coverage.
+// One existing app per category plus every new system app exercises compact
+// accessibility alongside the separate full collection phone sizing audit.
 const compactAppIds = new Set([
   "tasks",
   "colors",
   "converter",
   "sudoku",
   "soundscape",
+  "settings",
+  "windows",
+  "workspaces",
+  "activity",
+  "backup",
+  "agenda",
 ]);
 
 async function openDesktop(page: Page, theme: Theme, compact: boolean) {
@@ -118,6 +124,7 @@ for (const theme of ["light", "dark"] as const) {
     page,
   }) => {
     test.setTimeout(300_000);
+    expect(desktopApps).toHaveLength(30);
     await openDesktop(page, theme, false);
     for (const app of desktopApps) {
       await test.step(app.title, () => auditApp(page, app, theme, false));
@@ -127,10 +134,63 @@ for (const theme of ["light", "dark"] as const) {
   test(`representative compact apps remain accessible in the ${theme} theme`, async ({
     page,
   }) => {
-    test.setTimeout(120_000);
+    test.setTimeout(240_000);
     await openDesktop(page, theme, true);
     for (const app of desktopApps.filter((app) => compactAppIds.has(app.id))) {
       await test.step(app.title, () => auditApp(page, app, theme, true));
     }
+  });
+}
+
+for (const theme of ["light", "dark"] as const) {
+  test(`expanded Agenda and Data Center stay accessible with larger text in the ${theme} theme`, async ({
+    page,
+  }) => {
+    await openDesktop(page, theme, true);
+    await page
+      .getByRole("button", { name: "Open Settings", exact: true })
+      .click();
+    const settings = page.locator('[data-window="settings"]');
+    await settings.getByRole("radio", { name: "Compact", exact: true }).check();
+    await settings.getByRole("radio", { name: "Larger", exact: true }).check();
+    const launch = async (id: string) => {
+      await page
+        .getByRole("button", { name: "Open application launcher", exact: true })
+        .click();
+      await page.locator(`[data-launch-app="${id}"]`).click();
+      const app = page.locator(`[data-window="${id}"]`);
+      await expect(app.locator(".utility-loading")).toHaveCount(0);
+      return app;
+    };
+    const audit = async (id: string) => {
+      const results = await new AxeBuilder({ page })
+        .include(`[data-window="${id}"]`)
+        .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+        .analyze();
+      expect(results.violations).toEqual([]);
+    };
+    const agenda = await launch("agenda");
+    await agenda
+      .getByRole("button", { name: "New event", exact: true })
+      .click();
+    await agenda
+      .getByLabel("Event title", { exact: true })
+      .fill("A complete event editor");
+    await audit("agenda");
+    const backup = await launch("backup");
+    await expect(backup.locator("[data-backup-total]")).toContainText("across");
+    await backup
+      .getByRole("checkbox", { name: "Select Notes", exact: true })
+      .check();
+    await backup
+      .getByRole("button", { name: "Reset selected…", exact: true })
+      .click();
+    await audit("backup");
+    await backup.getByRole("button", { name: "Cancel", exact: true }).click();
+    const toolbar = await new AxeBuilder({ page })
+      .include(".desktop-session-tools")
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+    expect(toolbar.violations).toEqual([]);
   });
 }

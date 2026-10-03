@@ -1,0 +1,123 @@
+[data-desktop] .settings-app {
+  overflow: auto;
+  padding: 22px 24px;
+}
+[data-desktop] .settings-heading h2 {
+  font-size: 21px;
+  font-weight: 500;
+  margin: 0 0 6px;
+  letter-spacing: -0.025em;
+}
+[data-desktop] .settings-heading p,
+[data-desktop] .settings-options fieldset > p {
+  color: var(--desk-muted);
+  margin: 0 0 12px;
+  font-size: 0.9em;
+}
+[data-desktop] .settings-options fieldset {
+  min-width: 0;
+  margin: 22px 0 0;
+  padding: 0 0 20px;
+  border: 0;
+  border-bottom: 1px solid var(--desk-line);
+}
+[data-desktop] .settings-options legend {
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 7px;
+}
+[data-desktop] .settings-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+[data-desktop] .settings-choices label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  cursor: pointer;
+}
+[data-desktop] .settings-choices label:has(:checked) {
+  border-color: var(--desk-accent);
+  background: var(--desk-selected);
+}
+[data-desktop] .settings-options input {
+  appearance: auto;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  accent-color: var(--desk-accent);
+  padding: 0;
+  margin: 0;
+}
+[data-desktop] .settings-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--swatch-color);
+  box-shadow: 0 0 0 1px #0002;
+}
+[data-desktop] [data-palette="emerald"] {
+  --swatch-color: #3bac86;
+}
+[data-desktop] [data-palette="blue"] {
+  --swatch-color: #5799e9;
+}
+[data-desktop] [data-palette="violet"] {
+  --swatch-color: #ac83df;
+}
+[data-desktop] [data-palette="amber"] {
+  --swatch-color: #d09b32;
+}
+[data-desktop] .settings-toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-block: 10px;
+  cursor: pointer;
+}
+[data-desktop] .settings-toggle input {
+  margin-top: 4px;
+}
+[data-desktop] .settings-toggle strong,
+[data-desktop] .settings-toggle small {
+  display: block;
+}
+[data-desktop] .settings-toggle strong {
+  font-weight: 500;
+}
+[data-desktop] .settings-toggle small {
+  margin-top: 3px;
+  font-size: 0.9em;
+  color: var(--desk-muted);
+  line-height: 1.5;
+}
+[data-desktop] .settings-footer {
+  padding-top: 20px;
+}
+[data-desktop] .settings-footer button {
+  max-width: 100%;
+}
+[data-desktop] .settings-footer .desk-app-status {
+  padding: 12px 0 0;
+}
+@media (max-width: 760px), (pointer: coarse) {
+  [data-desktop] :is(.settings-choices label, .settings-toggle) {
+    min-height: 44px;
+  }
+}
+@container (max-width: 400px) {
+  [data-desktop] .settings-app {
+    padding: 18px 14px;
+  }
+  [data-desktop] .settings-choices label {
+    min-height: 44px;
+  }
+  [data-desktop] .settings-palettes label {
+    flex: 1 1 40%;
+  }
+}

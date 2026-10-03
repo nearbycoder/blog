@@ -3,6 +3,12 @@ import { mountWindowLayout } from "./desktop-window-layout";
 import { mountDesktopShell } from "./desktop-shell";
 import { mountDesktopIcons } from "./desktop-icons";
 import { mountDesktopContextMenu } from "./desktop-context-menu";
+import { setDesktopHost, desktopChanged, notifyDesktop } from "./desktop-host";
+import { localState } from "./desktop-local-state";
+import { libraryPath, recordLibraryOpen } from "./desktop-library-history";
+import { applyDesktopPreferences } from "./desktop-preferences";
+import { mountDesktopSpaces } from "./desktop-spaces";
+import { mountDesktopActivity } from "./desktop-activity-service";
 import {
   createWorkspaceStore,
   type SavedWindow,
@@ -12,6 +18,9 @@ import type { ArcadeActivity } from "./desktop-arcade";
 const desktop = document.querySelector<HTMLElement>("[data-desktop]");
 
 if (desktop) {
+  applyDesktopPreferences(desktop);
+  const disposeActivity = mountDesktopActivity(desktop);
+  let spaces: ReturnType<typeof mountDesktopSpaces> | undefined;
   const workspace = desktop.querySelector<HTMLElement>("[data-workspace]")!;
   const library = desktop.querySelector<HTMLElement>(
     '[data-window="library"]',
@@ -36,12 +45,101 @@ if (desktop) {
     new Set(readerLinks.keys()),
   );
   let restoring = true;
+  let persistenceSuspended = false;
   let saveTimer: ReturnType<typeof setTimeout> | undefined;
   let saveWarning = false;
   const mobile = matchMedia("(max-width: 760px)");
   let nextId = 0;
   let layer = 1;
+  const closedWindows: {
+    id: string;
+    source?: string;
+    activity?: ArcadeActivity;
+  }[] = [];
+  const pinStore = localState<{ version: 1; keys: string[] }>(
+    "desktop-window-pins:v1",
+    { version: 1, keys: [] },
+    (value): value is { version: 1; keys: string[] } => {
+      const item = value as { version?: unknown; keys?: unknown } | null;
+      return (
+        !!item &&
+        item.version === 1 &&
+        Array.isArray(item.keys) &&
+        item.keys.length <= 64 &&
+        item.keys.every(
+          (key) =>
+            typeof key === "string" &&
+            key.length <= 300 &&
+            (desktopApps.some((app) => app.id === key) ||
+              ["library", "arcade", "ghostty"].includes(key) ||
+              libraryPath(key) === key),
+        )
+      );
+    },
+  );
+  let windowEventTimer: ReturnType<typeof setTimeout> | undefined;
+  function publishWindows() {
+    clearTimeout(windowEventTimer);
+    windowEventTimer = setTimeout(desktopChanged, 50);
+  }
   let folder = "all";
+  let libraryTools:
+    ReturnType<typeof import("./desktop-library").mountLibrary> | undefined;
+  let libraryLoading: Promise<void> | undefined;
+  function ensureLibraryTools() {
+    if (libraryTools || libraryLoading) return;
+    // The basic Library controls work before its optional tools arrive. Track
+    // interactions, including changes that return to an empty/default value,
+    // so a slow import cannot replace what the visitor has just chosen.
+    const pending = new AbortController();
+    const restore = {
+      location: folder === "all" && search.value === "",
+      view: true,
+    };
+    search.addEventListener(
+      "input",
+      () => {
+        restore.location = false;
+      },
+      {
+        signal: pending.signal,
+      },
+    );
+    desktop!.addEventListener(
+      "click",
+      (event) => {
+        const target = event.target as Element | null;
+        if (
+          target?.closest(
+            "[data-folder], [data-open-folder], [data-launch-folder]",
+          )
+        )
+          restore.location = false;
+        if (target?.closest("[data-file-view]")) restore.view = false;
+      },
+      { signal: pending.signal },
+    );
+    libraryLoading = import("./desktop-library")
+      .then(({ mountLibrary }) => {
+        libraryTools = mountLibrary(
+          desktop!,
+          {
+            getFolder: () => folder,
+            selectFolder: (id) => selectFolder(id, false),
+            announce,
+          },
+          restore,
+        );
+        filterFiles();
+      })
+      .catch(() => {
+        libraryLoading = undefined;
+        announce(
+          "Library tools could not load. Close and reopen Library to try again.",
+        );
+      })
+      .finally(() => pending.abort());
+  }
   let desktopSnapshot:
     { windows: HTMLElement[]; active?: HTMLElement } | undefined;
   const showDesktopButton = desktop.querySelector<HTMLButtonElement>(
@@ -59,18 +157,29 @@ if (desktop) {
   }
 
   function announce(message: string) {
-    if (!restoring) status.textContent = message;
+    if (!restoring && !persistenceSuspended) {
+      status.textContent = message;
+      notifyDesktop(
+        message,
+        /\b(opened|closed|minimized)\b/i.test(message) ? "app" : "system",
+      );
+    }
   }
 
   function saveWorkspace() {
     clearTimeout(saveTimer);
-    if (restoring || desktop!.matches(".is-dragging, .is-resizing")) return;
+    if (
+      restoring ||
+      persistenceSuspended ||
+      desktop!.matches(".is-dragging, .is-resizing")
+    )
+      return;
     const saved: SavedWindow[] = [...windows.values()]
       .filter((win) => win !== library || win.dataset.opened === "true")
       .sort((a, b) => Number(a.style.zIndex) - Number(b.style.zIndex))
       .map((win) => ({
         id: win.dataset.window!,
-        minimized: win.hidden,
+        minimized: spaces?.isMinimized(win) ?? win.hidden,
         placement: layouts.capture(win),
         ...(win.dataset.source ? { source: win.dataset.source } : {}),
         ...(win.dataset.window === "arcade"
@@ -111,9 +220,10 @@ if (desktop) {
   }
 
   function scheduleSave() {
-    if (restoring) return;
+    if (restoring || persistenceSuspended) return;
     clearTimeout(saveTimer);
     saveTimer = setTimeout(saveWorkspace, 150);
+    publishWindows();
   }
 
   function loadWindow(win: HTMLElement) {
@@ -136,13 +246,30 @@ if (desktop) {
   const icons = mountDesktopIcons(desktop, announce);
 
   function activate(win: HTMLElement, focus = false) {
+    if (!restoring) spaces?.reveal(win);
     desktopSnapshot = undefined;
     showDesktopButton.setAttribute("aria-pressed", "false");
     win.dataset.opened = "true";
     win.hidden = false;
     updatePanel();
-    windows.forEach((item) => item.classList.toggle("is-active", item === win));
-    win.style.zIndex = String(++layer);
+    win.dataset.lastActive = String(++layer);
+    windows.forEach((item) => {
+      const active = item === win;
+      item.classList.toggle("is-active", active);
+      const systemTool =
+        active &&
+        ["windows", "workspaces", "settings", "activity", "backup"].includes(
+          item.dataset.window!,
+        );
+      item.style.zIndex = String(
+        Number(item.dataset.lastActive ?? 0) +
+          (systemTool
+            ? 2_000_000
+            : item.dataset.pinned === "true"
+              ? 1_000_000
+              : 0),
+      );
+    });
     tasks.querySelectorAll<HTMLButtonElement>("button").forEach((button) => {
       const selected = button.dataset.task === win.dataset.window;
       button.setAttribute("aria-pressed", String(selected));
@@ -160,6 +287,7 @@ if (desktop) {
       }
     });
     if (!restoring) {
+      if (win === library) ensureLibraryTools();
       constrain(win);
       loadWindow(win);
       if (focus) win.focus({ preventScroll: true });
@@ -224,6 +352,9 @@ if (desktop) {
   });
 
   function attachWindow(win: HTMLElement) {
+    spaces?.register(win);
+    const pinKey = win.dataset.source ?? win.dataset.window!;
+    win.dataset.pinned = String(pinStore.value.keys.includes(pinKey));
     const observer = new MutationObserver(scheduleSave);
     observer.observe(win, {
       attributes: true,
@@ -252,6 +383,17 @@ if (desktop) {
             activate(win);
             constrain(win);
           } else {
+            // Closing Library retains its DOM, so clear any hidden-desk visibility memory too.
+            spaces?.minimize(win);
+            if (action === "close" && !restoring) {
+              closedWindows.push({
+                id: win.dataset.window!,
+                source: win.dataset.source,
+                activity: win.dataset.arcadeActivity as
+                  ArcadeActivity | undefined,
+              });
+              if (closedWindows.length > 10) closedWindows.shift();
+            }
             layouts.capture(win);
             win.hidden = true;
             win.classList.remove("is-active");
@@ -287,6 +429,10 @@ if (desktop) {
   }
 
   function filterFiles() {
+    if (libraryTools) {
+      libraryTools.filter(folder, search.value);
+      return;
+    }
     const terms = search.value
       .toLowerCase()
       .trim()
@@ -305,7 +451,7 @@ if (desktop) {
       count !== 0;
   }
 
-  function selectFolder(id: string) {
+  function selectFolder(id: string, activateWindow = true) {
     folder = id;
     const buttons =
       desktop!.querySelectorAll<HTMLButtonElement>("[data-folder]");
@@ -324,7 +470,7 @@ if (desktop) {
     search.value = "";
     filterFiles();
     desktop!.querySelector(".library-content")!.scrollTop = 0;
-    activate(library);
+    if (activateWindow) activate(library);
   }
 
   function addTask(win: HTMLElement, id: string, title: string) {
@@ -357,6 +503,12 @@ if (desktop) {
   function openApp(id: DesktopAppId) {
     const app = desktopApps.find((item) => item.id === id);
     if (!app) return;
+    if (!restoring) {
+      shell.closePopups();
+      document.dispatchEvent(
+        new CustomEvent("desktop-app-launched", { detail: { id } }),
+      );
+    }
     const existing = windows.get(id);
     if (existing) {
       activate(existing, true);
@@ -629,6 +781,10 @@ if (desktop) {
     });
 
   function openFile(link: HTMLAnchorElement) {
+    if (!restoring) {
+      recordLibraryOpen(link.pathname.replace(/\/$/, ""));
+      libraryTools?.recordOpen(link);
+    }
     const existing = [...windows.values()].find(
       (win) => win.dataset.source === link.pathname.replace(/\/$/, ""),
     );
@@ -759,20 +915,98 @@ if (desktop) {
     return win;
   }
 
+  let switcherRequest = 0;
+  let switcherPending = false;
+  window.addEventListener("pagehide", () => {
+    switcherPending = false;
+    switcherRequest++;
+  });
   function onShortcut(event: KeyboardEvent) {
     if (event.isComposing || event.keyCode === 229) return;
+    const switchShortcut =
+      event.ctrlKey &&
+      event.shiftKey &&
+      !event.altKey &&
+      !event.metaKey &&
+      event.code === "Space";
+    const target = event.target as Element | null;
+    const sourceDocument = target?.ownerDocument;
+    const modal = document.querySelector("dialog[open]");
+    // A native dialog owns its keyboard, including dialogs inside a reader.
+    // Commands retains its existing Ctrl+Escape route back to the launcher.
+    if (
+      (sourceDocument !== document &&
+        sourceDocument?.querySelector("dialog[open]")) ||
+      (modal &&
+        !modal.classList.contains("desktop-commands") &&
+        !(
+          switchShortcut && modal.classList.contains("desktop-window-switcher")
+        )) ||
+      (modal?.classList.contains("desktop-commands") && switchShortcut)
+    )
+      return;
+    // Connected terminals own control sequences; these two shell entry points
+    // remain available without consuming Ctrl+Space or Ctrl+Alt+Page keys.
+    if (
+      target?.closest?.(".ghostty-surface") &&
+      !(
+        (event.metaKey &&
+          !event.altKey &&
+          !event.shiftKey &&
+          event.key.toLowerCase() === "k") ||
+        (event.ctrlKey && event.key === "Escape")
+      )
+    )
+      return;
+    if (switcherPending && event.key === "Escape" && !modal) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      switcherPending = false;
+      switcherRequest++;
+      return;
+    }
+    if (spaces?.handleShortcut(event)) return;
+    if (switchShortcut) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (!event.repeat) {
+        shell.closePopups();
+        cancelCommandRequest(false);
+        const request = ++switcherRequest;
+        const invoker = document.activeElement;
+        switcherPending = true;
+        void import("./desktop-windows")
+          .then((module) => {
+            if (
+              switcherPending &&
+              request === switcherRequest &&
+              !commandsPending &&
+              document.activeElement === invoker &&
+              !document.querySelector(
+                "dialog[open]:not(.desktop-window-switcher)",
+              )
+            )
+              module.openWindowSwitcher();
+          })
+          .catch(() => {
+            if (request === switcherRequest)
+              announce(
+                "Window switcher could not load. Try Window Overview in the launcher.",
+              );
+          })
+          .finally(() => {
+            if (request === switcherRequest) switcherPending = false;
+          });
+      }
+      return;
+    }
     if (
       (event.metaKey || event.ctrlKey) &&
       !event.altKey &&
       !event.shiftKey &&
       event.key.toLowerCase() === "k"
     ) {
-      // Ctrl+K is a shell editing command; Command+K remains available on Macs.
-      if (
-        !event.metaKey &&
-        (event.target as Element | null)?.closest?.(".ghostty-surface")
-      )
-        return;
+      if (target?.matches?.("[data-markdown-source]")) return;
       event.preventDefault();
       event.stopImmediatePropagation();
       if (!event.repeat) void toggleCommands();
@@ -793,8 +1027,6 @@ if (desktop) {
       return;
     }
     if (commandPalette?.isOpen()) return;
-    // Connected shells own their editing shortcuts, including Ctrl+K.
-    if ((event.target as Element | null)?.closest?.(".ghostty-surface")) return;
     if (
       layouts.shortcut(
         event,
@@ -1001,7 +1233,13 @@ if (desktop) {
   desktop
     .querySelector<HTMLButtonElement>("[data-desktop-reset]")!
     .addEventListener("click", () => {
-      windows.forEach((win, id) => {
+      const currentWindows = [...windows.values()].filter(
+        (win) =>
+          win.dataset.space === spaces?.state.active ||
+          win.dataset.window === "workspaces",
+      );
+      currentWindows.forEach((win, index) => {
+        const id = win.dataset.window;
         layouts.setLayout(win, undefined);
         win.removeAttribute("style");
         const maximize = win.querySelector<HTMLButtonElement>(
@@ -1013,13 +1251,27 @@ if (desktop) {
           `Maximize ${win.dataset.title ?? "Library"}`,
         );
         if (id !== "library") {
-          win.style.left = `${160 + ([...windows.keys()].indexOf(id) % 5) * 28}px`;
-          win.style.top = `${28 + ([...windows.keys()].indexOf(id) % 5) * 28}px`;
+          win.style.left = `${160 + (index % 5) * 28}px`;
+          win.style.top = `${28 + (index % 5) * 28}px`;
         }
         constrain(win);
       });
-      activate(library, true);
-      announce("Windows arranged. Library is open.");
+      const target = currentWindows.includes(library)
+        ? library
+        : currentWindows
+            .filter((win) => !win.hidden)
+            .sort(
+              (a, b) =>
+                Number(b.dataset.lastActive ?? 0) -
+                Number(a.dataset.lastActive ?? 0),
+            )[0];
+      if (target) activate(target, true);
+      scheduleSave();
+      announce(
+        target === library
+          ? "Windows arranged. Library is open."
+          : "Windows on this desktop arranged.",
+      );
     });
   desktop
     .querySelector<HTMLButtonElement>("[data-desktop-theme]")!
@@ -1051,6 +1303,87 @@ if (desktop) {
     scheduleSave();
   });
 
+  setDesktopHost({
+    desktop,
+    windows: () =>
+      [...windows.values()].filter(
+        (win) => win !== library || win.dataset.opened === "true",
+      ),
+    activate: (win) => activate(win, true),
+    minimize: (win) =>
+      win
+        .querySelector<HTMLButtonElement>('[data-window-action="minimize"]')
+        ?.click(),
+    close: (win) =>
+      win
+        .querySelector<HTMLButtonElement>('[data-window-action="close"]')
+        ?.click(),
+    layout: (win, layout) => {
+      layouts.setLayout(win, layout);
+      activate(win, true);
+      scheduleSave();
+    },
+    openApp,
+    openFile: (path) => {
+      const link = readerLinks.get(path.replace(/\/$/, ""));
+      if (link) openFile(link);
+    },
+    pin: (win, pinned) => {
+      const key = win.dataset.source ?? win.dataset.window!;
+      const keys = new Set(pinStore.value.keys);
+      if (pinned) keys.add(key);
+      else keys.delete(key);
+      pinStore.save({ version: 1, keys: [...keys].slice(-64) });
+      win.dataset.pinned = String(pinned);
+      activate(win, true);
+      announce(
+        `${win.dataset.title ?? "Library"} ${pinned ? "kept above other windows" : "returned to normal stacking"}.`,
+      );
+    },
+    canReopen: () => closedWindows.length > 0,
+    reopen: () => {
+      const last = closedWindows.pop();
+      if (!last) return false;
+      if (last.source) {
+        const link = readerLinks.get(last.source);
+        if (link) openFile(link);
+      } else if (last.id === "library") activate(library, true);
+      else if (last.id === "arcade") openArcade(last.activity);
+      else if (last.id === "ghostty") openGhostty();
+      else openApp(last.id as DesktopAppId);
+      announce(
+        "Closed window reopened. Saved app data is restored where available.",
+      );
+      return true;
+    },
+    announce,
+    changed: () => {
+      if (!restoring) windows.forEach(loadWindow);
+      scheduleSave();
+    },
+    prepareDataRestore: () => {
+      layouts.cancel();
+      saveWorkspace();
+      persistenceSuspended = true;
+      clearTimeout(saveTimer);
+      clearTimeout(windowEventTimer);
+      return () => {
+        persistenceSuspended = false;
+        scheduleSave();
+      };
+    },
+  });
+
+  spaces = mountDesktopSpaces(desktop);
+  spaces.register(library);
+  let snapshotSpace = spaces.state.active;
+  document.addEventListener("desktop-spaces-changed", () => {
+    if (snapshotSpace === spaces!.state.active) return;
+    snapshotSpace = spaces!.state.active;
+    desktopSnapshot = undefined;
+    showDesktopButton.setAttribute("aria-pressed", "false");
+  });
+
   // Restore all window shells and placement in one task, before the browser paints.
   // App code remains deferred until a restored window is visible.
   const restored = new Map<string, HTMLElement>();
@@ -1076,9 +1409,13 @@ if (desktop) {
       ?.setAttribute("aria-pressed", "false");
     restored.set(saved.id, win);
   }
+  spaces.finishRestore();
   const savedActive = workspaceStore.state?.active;
+  const savedActiveWindow = savedActive ? restored.get(savedActive) : undefined;
   const active =
-    (savedActive ? restored.get(savedActive) : undefined) ??
+    (savedActiveWindow && !savedActiveWindow.hidden
+      ? savedActiveWindow
+      : undefined) ??
     [...restored.values()].reverse().find((win) => !win.hidden);
   if (active && !active.hidden) activate(active);
   updatePanel();
@@ -1086,6 +1423,7 @@ if (desktop) {
   windowObservers.forEach((observer) => observer.takeRecords());
   restoring = false;
   desktop.dataset.workspaceReady = "true";
+  if (!library.hidden) ensureLibraryTools();
   windows.forEach(loadWindow);
 
   function flushWorkspace() {
@@ -1093,6 +1431,9 @@ if (desktop) {
     saveWorkspace();
   }
   window.addEventListener("pagehide", flushWorkspace);
+  window.addEventListener("pagehide", (event) => {
+    if (!event.persisted) disposeActivity();
+  });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) flushWorkspace();
   });

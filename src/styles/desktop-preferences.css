@@ -1,0 +1,116 @@
+/* Preferences are scoped to the desktop; the rest of the blog keeps its theme. */
+[data-desktop][data-desktop-accent="blue"] {
+  --desk-accent: #9ecaff;
+  --desk-selected: #2a405e;
+}
+[data-desktop][data-desktop-accent="violet"] {
+  --desk-accent: #d4b5ff;
+  --desk-selected: #443557;
+}
+[data-desktop][data-desktop-accent="amber"] {
+  --desk-accent: #f3ce80;
+  --desk-selected: #4c412d;
+}
+:root[data-theme="light"] [data-desktop][data-desktop-accent="blue"] {
+  --desk-accent: #235fa1;
+  --desk-selected: #e1edfa;
+}
+:root[data-theme="light"] [data-desktop][data-desktop-accent="violet"] {
+  --desk-accent: #73499b;
+  --desk-selected: #eee4f7;
+}
+:root[data-theme="light"] [data-desktop][data-desktop-accent="amber"] {
+  --desk-accent: #805b12;
+  --desk-selected: #f7ecd1;
+}
+[data-desktop][data-desktop-wallpaper="plain"]::before {
+  background: none;
+}
+[data-desktop][data-desktop-wallpaper="grid"]::before {
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--desk-wallpaper-ink) 12%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--desk-wallpaper-ink) 12%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 36px 36px;
+}
+[data-desktop][data-desktop-shortcuts="hide"] .desktop-shortcuts {
+  display: none;
+}
+[data-desktop][data-desktop-reduce-motion="true"] *,
+[data-desktop][data-desktop-reduce-motion="true"] *::before,
+[data-desktop][data-desktop-reduce-motion="true"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+[data-desktop][data-desktop-reduce-transparency="true"]
+  :is(.desktop-dock, .shell-popup, .desktop-session-tools) {
+  background: var(--desk-sidebar);
+  backdrop-filter: none;
+}
+[data-desktop][data-desktop-reduce-transparency="true"] .shortcut-art {
+  background: var(--desk-sidebar);
+}
+[data-desktop][data-desktop-text="large"] {
+  font-size: 15px;
+}
+[data-desktop][data-desktop-text="large"]
+  :is(.desktop-app-content, .desktop-search input, .launcher-search input) {
+  font-size: 16px;
+}
+[data-desktop][data-desktop-text="large"]
+  :is(
+    .window-title,
+    .library-sidebar button,
+    .file-copy strong,
+    .desktop-tasks button,
+    .launcher-apps strong,
+    .launcher-results strong
+  ) {
+  font-size: 15px;
+}
+[data-desktop][data-desktop-text="large"]
+  :is(
+    .desk-app-status,
+    .desktop-shortcuts button,
+    .launcher-categories button,
+    .file-kind,
+    .file-date,
+    .library-location,
+    .reader-toolbar
+  ) {
+  font-size: 14px;
+}
+@media (min-width: 761px) and (pointer: fine) {
+  [data-desktop][data-desktop-density="compact"] .window-titlebar {
+    height: 36px;
+    min-height: 36px;
+  }
+  [data-desktop][data-desktop-density="compact"] .library-toolbar {
+    padding-block: 6px;
+  }
+  [data-desktop][data-desktop-density="compact"] .library-sidebar button {
+    padding-block: 6px;
+  }
+  [data-desktop][data-desktop-density="compact"] .desktop-files a {
+    padding-block: 7px;
+  }
+  [data-desktop][data-desktop-density="compact"] .desk-app-toolbar {
+    padding: 8px;
+    gap: 6px;
+  }
+  [data-desktop][data-desktop-density="compact"] .desktop-app-content button {
+    min-height: 30px;
+    padding-block: 4px;
+  }
+  [data-desktop][data-desktop-density="compact"] .settings-choices label {
+    min-height: 32px;
+    padding-block: 4px;
+  }
+}

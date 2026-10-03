@@ -1,0 +1,194 @@
+[data-desktop] .backup-app {
+  overflow: auto;
+  padding: 22px;
+  min-width: 0;
+}
+[data-desktop] .backup-app [hidden] {
+  display: none !important;
+}
+[data-desktop] .backup-heading h2 {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  margin: 0 0 8px;
+}
+[data-desktop] .backup-heading p {
+  margin: 0 0 12px;
+  color: var(--desk-muted);
+}
+[data-desktop] .backup-heading .backup-eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--desk-accent);
+}
+[data-desktop] .backup-notice {
+  padding: 12px;
+  border: 1px solid var(--desk-line);
+  border-radius: 8px;
+  color: var(--desk-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+[data-desktop] .backup-tabs,
+[data-desktop] .backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0;
+}
+[data-desktop] .backup-app button {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+}
+[data-desktop] .backup-tabs button[aria-pressed="true"] {
+  border-color: var(--desk-accent);
+  background: var(--desk-selected);
+  color: var(--desk-accent);
+}
+[data-desktop] .backup-summary {
+  display: grid;
+  gap: 5px;
+  margin-top: 22px;
+}
+[data-desktop] .backup-summary strong {
+  font-size: 18px;
+  font-weight: 500;
+}
+[data-desktop] .backup-summary span,
+[data-desktop] .backup-fine {
+  color: var(--desk-muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+[data-desktop] .backup-categories {
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  margin: 18px 0;
+}
+[data-desktop] .backup-categories legend {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+[data-desktop] .backup-row {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--desk-line);
+  cursor: pointer;
+  min-height: 52px;
+}
+[data-desktop] .backup-row:has(:checked) {
+  background: var(--desk-selected);
+}
+[data-desktop] .backup-row:has(:disabled) {
+  cursor: default;
+}
+[data-desktop] .backup-app input[type="checkbox"] {
+  appearance: auto;
+  accent-color: var(--desk-accent);
+  width: 16px;
+  height: 16px;
+  min-height: 0;
+  padding: 0;
+  margin: 3px 0 0;
+  flex-shrink: 0;
+}
+[data-desktop] .backup-row strong {
+  display: block;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+[data-desktop] .backup-row small {
+  display: block;
+  color: var(--desk-muted);
+  font-size: 11px;
+  margin-top: 3px;
+  line-height: 1.5;
+}
+[data-desktop] .backup-row .backup-warning {
+  color: var(--desk-text);
+}
+[data-desktop] .backup-size {
+  font-size: 11px;
+  color: var(--desk-muted);
+  white-space: nowrap;
+  padding-top: 2px;
+}
+[data-desktop] .backup-file {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+  font-weight: 500;
+}
+[data-desktop] .backup-file input {
+  max-width: 100%;
+  width: 100%;
+  padding: 8px 0;
+  min-width: 0;
+  font-weight: 400;
+}
+[data-desktop] .backup-file input::file-selector-button {
+  background: var(--desk-selected);
+  color: var(--desk-text);
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  padding: 10px;
+  margin-right: 8px;
+  min-height: 44px;
+}
+[data-desktop] .backup-confirm {
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid var(--desk-accent);
+  border-radius: 8px;
+  background: var(--desk-selected);
+}
+[data-desktop] .backup-confirm h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+[data-desktop] .backup-confirm p,
+[data-desktop] .backup-confirm ul {
+  font-size: 12px;
+  line-height: 1.65;
+}
+[data-desktop] .backup-confirm ul {
+  padding-left: 20px;
+}
+[data-desktop] .backup-confirm label {
+  display: flex;
+  align-items: flex-start;
+  min-height: 44px;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+[data-desktop] .backup-status {
+  margin: 18px 0 0;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--desk-muted);
+}
+@media (max-width: 480px) {
+  [data-desktop] .backup-app {
+    padding: 15px 12px;
+  }
+  [data-desktop] .backup-heading h2 {
+    font-size: 20px;
+  }
+  [data-desktop] .backup-row {
+    column-gap: 8px;
+  }
+  [data-desktop] .backup-size {
+    max-width: 68px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  [data-desktop] .backup-confirm {
+    padding: 12px;
+  }
+}

@@ -3,6 +3,39 @@ import { installAppStyle } from "./desktop-app-style";
 installAppStyle("apps", css);
 import type { DesktopAppId } from "../lib/desktop-apps";
 
+// Functions keep every application download behind a launch action.
+const apps = {
+  tasks: () => import("./desktop-tasks"),
+  markdown: () => import("./desktop-markdown"),
+  json: () => import("./desktop-json"),
+  converter: () => import("./desktop-converter"),
+  worldclock: () => import("./desktop-worldclock"),
+  colors: () => import("./desktop-colors"),
+  pixel: () => import("./desktop-pixel"),
+  sequencer: () => import("./desktop-sequencer"),
+  soundscape: () => import("./desktop-soundscape"),
+  dice: () => import("./desktop-dice"),
+  sudoku: () => import("./desktop-sudoku"),
+  connect: () => import("./desktop-connect"),
+  reversi: () => import("./desktop-reversi"),
+  wordsearch: () => import("./desktop-wordsearch"),
+  typing: () => import("./desktop-typing"),
+  life: () => import("./desktop-life"),
+  spirograph: () => import("./desktop-spirograph"),
+  stopwatch: () => import("./desktop-stopwatch"),
+  texttools: () => import("./desktop-texttools"),
+  decision: () => import("./desktop-decision"),
+  settings: () => import("./desktop-settings"),
+  windows: () => import("./desktop-windows"),
+  workspaces: () => import("./desktop-workspaces"),
+  activity: () => import("./desktop-activity"),
+  backup: () => import("./desktop-backup"),
+  agenda: () => import("./desktop-agenda"),
+} satisfies Record<
+  Exclude<DesktopAppId, "notes" | "calculator" | "sketchpad" | "focus">,
+  () => Promise<{ mountApp: (root: HTMLElement) => (() => void) | undefined }>
+>;
+
 /** Returning the mount function lets the host recheck disposal after downloading. */
 export async function loadDesktopApp(id: DesktopAppId) {
   switch (id) {
@@ -14,49 +47,9 @@ export async function loadDesktopApp(id: DesktopAppId) {
       return (await import("./desktop-sketchpad")).mountSketchpad;
     case "focus":
       return (await import("./desktop-focus")).mountFocus;
-    case "tasks":
-      return (await import("./desktop-tasks")).mountApp;
-    case "markdown":
-      return (await import("./desktop-markdown")).mountApp;
-    case "json":
-      return (await import("./desktop-json")).mountApp;
-    case "converter":
-      return (await import("./desktop-converter")).mountApp;
-    case "worldclock":
-      return (await import("./desktop-worldclock")).mountApp;
-    case "colors":
-      return (await import("./desktop-colors")).mountApp;
-    case "pixel":
-      return (await import("./desktop-pixel")).mountApp;
-    case "sequencer":
-      return (await import("./desktop-sequencer")).mountApp;
-    case "soundscape":
-      return (await import("./desktop-soundscape")).mountApp;
-    case "dice":
-      return (await import("./desktop-dice")).mountApp;
-    case "sudoku":
-      return (await import("./desktop-sudoku")).mountApp;
-    case "connect":
-      return (await import("./desktop-connect")).mountApp;
-    case "reversi":
-      return (await import("./desktop-reversi")).mountApp;
-    case "wordsearch":
-      return (await import("./desktop-wordsearch")).mountApp;
-    case "typing":
-      return (await import("./desktop-typing")).mountApp;
-    case "life":
-      return (await import("./desktop-life")).mountApp;
-    case "spirograph":
-      return (await import("./desktop-spirograph")).mountApp;
-    case "stopwatch":
-      return (await import("./desktop-stopwatch")).mountApp;
-    case "texttools":
-      return (await import("./desktop-texttools")).mountApp;
-    case "decision":
-      return (await import("./desktop-decision")).mountApp;
-    default: {
-      const unhandled: never = id;
-      throw new Error(`Unknown desktop application: ${unhandled}`);
-    }
+    default:
+      if (!Object.hasOwn(apps, id))
+        throw new Error(`Unknown desktop application: ${id}`);
+      return (await apps[id]()).mountApp;
   }
 }

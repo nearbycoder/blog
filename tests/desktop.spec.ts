@@ -234,10 +234,14 @@ test("desktop is accessible in both themes and works without browser storage", a
 
 test("without JavaScript the library still links to every page", async ({
   browser,
+  baseURL,
 }) => {
-  const context = await browser.newContext({ javaScriptEnabled: false });
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    baseURL,
+  });
   const page = await context.newPage();
-  await page.goto("http://127.0.0.1:4322/desktop/");
+  await page.goto("/desktop/");
   await expect(page.locator(".desktop-shortcuts")).toBeVisible();
   await expect(page.locator(".desktop-noscript")).toContainText(
     "All file links still open normally",

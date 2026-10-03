@@ -183,9 +183,115 @@ for (const viewport of mobileViewports) {
       });
     }
 
-    test("all 24 apps remain reachable when the mobile taskbar is full", async ({
+    test("compact spacing and larger text preserve touch controls and expanded editors", async ({
       page,
     }) => {
+      await page.goto("/desktop/");
+      const toolbar = page.locator(".desktop-session-tools");
+      const targets = await toolbar.locator("button").evaluateAll((buttons) =>
+        buttons.map((button) => {
+          const bounds = button.getBoundingClientRect();
+          return { width: bounds.width, height: bounds.height };
+        }),
+      );
+      expect(targets).toHaveLength(4);
+      for (const target of targets) {
+        expect(target.width).toBeGreaterThanOrEqual(44);
+        expect(target.height).toBeGreaterThanOrEqual(44);
+      }
+      const settings = await openApp(page, "settings");
+      await settings
+        .getByRole("radio", { name: "Compact", exact: true })
+        .check();
+      await settings
+        .getByRole("radio", { name: "Larger", exact: true })
+        .check();
+      await expect(page.locator("[data-desktop]")).toHaveAttribute(
+        "data-desktop-density",
+        "compact",
+      );
+      await expect(page.locator("[data-desktop]")).toHaveAttribute(
+        "data-desktop-text",
+        "large",
+      );
+      await expectHorizontalContainment(settings);
+      const labelHeights = await settings
+        .locator(".settings-choices label")
+        .evaluateAll((labels) =>
+          labels.map((label) => label.getBoundingClientRect().height),
+        );
+      expect(labelHeights.every((height) => height >= 44)).toBe(true);
+
+      const agenda = await openApp(page, "agenda");
+      await agenda
+        .getByRole("button", { name: "New event", exact: true })
+        .click();
+      await agenda
+        .getByRole("textbox", { name: "Event title", exact: true })
+        .fill("Release planning with the whole team");
+      await agenda
+        .getByLabel("Details (optional)", { exact: true })
+        .fill(
+          "Review architecture, delivery dates, and the desktop's latest improvements.",
+        );
+      await expectHorizontalContainment(agenda);
+      await expectReadableInputs(agenda);
+      await agenda
+        .getByRole("button", { name: "Save event", exact: true })
+        .click();
+      await expect(agenda.locator(".agenda-card").first()).toBeVisible();
+      await expectHorizontalContainment(agenda);
+
+      const backup = await openApp(page, "backup");
+      await expect(backup.locator("[data-backup-total]")).toContainText(
+        "across",
+      );
+      await backup
+        .getByRole("button", { name: "Import a backup", exact: true })
+        .click();
+      await backup.locator("[data-backup-file]").setInputFiles({
+        name: "desktop-backup.json",
+        mimeType: "application/json",
+        buffer: Buffer.from(
+          JSON.stringify({
+            app: "nearby-desktop",
+            version: 1,
+            createdAt: "2026-10-03T12:00:00Z",
+            categories: {
+              notes: {
+                "desktop-notes:v1": JSON.stringify({
+                  version: 1,
+                  activeId: null,
+                  notes: [],
+                }),
+              },
+            },
+          }),
+        ),
+      });
+      await expect(backup.locator("[data-backup-preview]")).toBeVisible();
+      await backup
+        .getByRole("checkbox", { name: "Restore Notes", exact: true })
+        .check();
+      await backup
+        .getByRole("button", { name: "Review selected restore…", exact: true })
+        .click();
+      await expect(backup.locator("[data-backup-confirm]")).toBeFocused();
+      await expectHorizontalContainment(backup);
+      await expectReadableInputs(backup);
+      await backup.getByRole("button", { name: "Cancel", exact: true }).click();
+      await expect(
+        backup.getByRole("button", {
+          name: "Review selected restore…",
+          exact: true,
+        }),
+      ).toBeFocused();
+    });
+
+    test("all 30 apps remain reachable when the mobile taskbar is full", async ({
+      page,
+    }) => {
+      expect(desktopApps).toHaveLength(30);
       await page.goto("/desktop/");
       for (const metadata of desktopApps) {
         await openApp(page, metadata.id);

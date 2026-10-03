@@ -260,7 +260,12 @@ test("publisher excludes the existing archive, future posts and duplicates; esca
 }) => {
   const feed = await (await request.get("/newsletter-feed.json")).json();
   expect(feed.length).toBeGreaterThan(0);
-  expect(eligiblePosts(feed)).toEqual([]);
+  // Newly published posts may be eligible; the original archive must stay excluded.
+  const archive = feed.filter((entry: { id: string }) =>
+    baseline.includes(entry.id),
+  );
+  expect(archive.length).toBeGreaterThan(0);
+  expect(eligiblePosts(archive)).toEqual([]);
   expect(
     eligiblePosts([
       post,
