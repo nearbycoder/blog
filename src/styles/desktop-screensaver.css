@@ -1,0 +1,147 @@
+.desktop-screensaver {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  border: 0;
+  padding: 24px;
+  background: #060b12;
+  color: #eef5f4;
+  overflow: hidden;
+  font:
+    14px/1.5 system-ui,
+    sans-serif;
+  text-align: center;
+}
+.desktop-screensaver::backdrop {
+  background: #060b12;
+}
+.desktop-screensaver[open] {
+  display: grid;
+  place-content: center;
+}
+.desktop-screensaver .saver-content {
+  position: relative;
+  z-index: 1;
+  max-width: 80vw;
+  overflow-wrap: anywhere;
+}
+.desktop-screensaver time {
+  display: block;
+  font-size: clamp(48px, 12vw, 160px);
+  font-weight: 200;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  color: var(--saver-color);
+}
+.desktop-screensaver [hidden] {
+  display: none;
+}
+.desktop-screensaver .saver-date {
+  font-size: clamp(14px, 2vw, 24px);
+  margin: 20px 0;
+}
+.desktop-screensaver .saver-message {
+  margin: 32px 0;
+  font-size: clamp(16px, 2.5vw, 32px);
+  font-weight: 300;
+}
+.desktop-screensaver button {
+  position: absolute;
+  z-index: 2;
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid #82968f;
+  border-radius: 6px;
+  background: #101d24;
+  color: #e7f1ee;
+  padding: 10px 20px;
+  min-height: 44px;
+  font: inherit;
+  cursor: pointer;
+}
+.desktop-screensaver button:focus-visible {
+  outline: 2px solid var(--saver-color);
+  outline-offset: 4px;
+}
+.desktop-screensaver .saver-hint {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  color: #b2bfc5;
+  font-size: 12px;
+}
+.saver-scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  filter: brightness(var(--saver-brightness));
+}
+.saver-scene i {
+  position: absolute;
+  inset: -30%;
+  opacity: 0.3;
+  background: radial-gradient(
+    ellipse at 30% 50%,
+    var(--saver-color),
+    transparent 50%
+  );
+  animation: saver-drift var(--saver-speed) ease-in-out infinite alternate;
+}
+.saver-scene i:nth-child(2) {
+  animation-delay: -13s;
+  transform: rotate(90deg);
+  opacity: 0.2;
+}
+.saver-scene i:nth-child(3) {
+  animation-delay: -27s;
+  transform: rotate(180deg);
+  opacity: 0.1;
+}
+[data-scene="clock"] .saver-scene,
+[data-scene="blank"] .saver-scene {
+  display: none;
+}
+[data-scene="stars"] .saver-scene i {
+  background: radial-gradient(
+      2px 2px at 20px 30px,
+      var(--saver-color) 95%,
+      transparent
+    )
+    0 0/89px 113px;
+  opacity: 0.5;
+}
+[data-scene="drift"] .saver-scene i {
+  inset: 15%;
+  border: 1px solid var(--saver-color);
+  border-radius: 45%;
+  background: transparent;
+  opacity: 0.6;
+}
+@keyframes saver-drift {
+  from {
+    translate: -8% -5%;
+    rotate: -12deg;
+  }
+  to {
+    translate: 8% 5%;
+    rotate: 12deg;
+  }
+}
+.desktop-screensaver:is([data-paused="true"], [data-reduced-motion="true"])
+  .saver-scene
+  i {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .saver-scene i {
+    animation: none !important;
+  }
+}

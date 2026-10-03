@@ -1,0 +1,135 @@
+.personal-nav {
+  position: sticky;
+  top: -22px;
+  z-index: 2;
+  padding-block: 10px;
+  background: var(--desk-paper);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 18px 0;
+}
+.personal-nav button {
+  flex: 1 1 auto;
+}
+.personal-search {
+  display: grid;
+  gap: 6px;
+  color: var(--desk-muted);
+}
+.personal-search input {
+  width: 100%;
+}
+[data-personal-section] {
+  scroll-margin-top: 120px;
+  border: 0;
+  border-bottom: 1px solid var(--desk-line);
+  padding: 24px 0;
+  margin: 0;
+  min-width: 0;
+}
+[data-personal-section] legend {
+  padding: 24px 0 0;
+  color: var(--desk-ink);
+  font-size: 17px;
+  font-weight: 500;
+}
+[data-personal-section] p {
+  color: var(--desk-muted);
+  line-height: 1.6;
+  margin: 10px 0 16px;
+}
+.personal-range {
+  display: grid;
+  gap: 9px;
+  padding: 14px 0;
+}
+.personal-range > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.personal-range output {
+  color: var(--desk-accent);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.personal-range input[type="range"] {
+  appearance: auto;
+  width: 100%;
+  padding: 0;
+  height: 28px;
+  accent-color: var(--desk-accent);
+  cursor: pointer;
+}
+.personal-select {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+}
+.personal-select input,
+.personal-select select {
+  width: 100%;
+  min-width: 0;
+}
+.personal-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+.personal-toggle input[type="checkbox"] {
+  appearance: auto;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--desk-accent);
+  flex-shrink: 0;
+}
+.personal-presets {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.personal-presets button {
+  flex: 1 1 auto;
+}
+.wallpaper-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 9px;
+  margin-block: 16px;
+}
+.wallpaper-gallery button {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+  text-align: left;
+  padding: 6px !important;
+  border: 2px solid transparent !important;
+}
+.wallpaper-gallery button[aria-pressed="true"] {
+  border-color: var(--desk-accent) !important;
+}
+.wallpaper-sample {
+  display: block;
+  height: 62px;
+  border-radius: 3px;
+  background-size: cover !important;
+}
+.wallpaper-gallery button > span:not(.wallpaper-sample) {
+  font-size: 12px;
+}
+.wallpaper-gallery small {
+  color: var(--desk-muted);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+@container (max-width: 400px) {
+  .personal-select {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}

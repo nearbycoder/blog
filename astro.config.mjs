@@ -76,7 +76,7 @@ export default defineConfig({
             if (id.endsWith("/src/lib/desktop-apps.ts"))
               return "desktop-app-registry";
             const shared = id.match(
-              /\/src\/scripts\/(desktop-(?:host|local-state|window-layout|library-history|preferences|spaces|activity-service))\.ts$/,
+              /\/src\/scripts\/(desktop-(?:host|local-state|window-layout|library-history|preferences|customization|wallpapers|spaces|activity-service))\.ts$/,
             );
             return shared?.[1];
           },

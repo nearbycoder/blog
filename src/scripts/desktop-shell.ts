@@ -1,3 +1,4 @@
+import { CUSTOMIZATION_EVENT, getCustomization } from "./desktop-customization";
 import { desktopApps, type DesktopAppId } from "../lib/desktop-apps";
 
 type ShellActions = {
@@ -280,7 +281,8 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
     clock.textContent = now.toLocaleTimeString(undefined, {
       hour: "2-digit",
       minute: "2-digit",
-      hour12: false,
+      hour12: getCustomization().value.clock12,
+      second: getCustomization().value.clockSeconds ? "2-digit" : undefined,
     });
     clock.dateTime = now.toISOString();
     find("[data-panel-date]").textContent = now.toLocaleDateString(undefined, {
@@ -294,9 +296,17 @@ export function mountDesktopShell(desktop: HTMLElement, actions: ShellActions) {
     if (!calendar.hidden) drawCalendar();
   }
   updateClock();
+  let clockMinute = new Date().getMinutes();
   window.setInterval(() => {
-    if (!document.hidden) updateClock();
-  }, 30_000);
+    const minute = new Date().getMinutes();
+    if (
+      !document.hidden &&
+      (getCustomization().value.clockSeconds || minute !== clockMinute)
+    )
+      updateClock();
+    clockMinute = minute;
+  }, 1_000);
+  document.addEventListener(CUSTOMIZATION_EVENT, updateClock);
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden) updateClock();
   });

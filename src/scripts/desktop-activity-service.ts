@@ -285,13 +285,20 @@ export function mountDesktopActivity(desktop: HTMLElement) {
     dismiss.addEventListener("click", hideToast, { once: true });
     dismiss.addEventListener("focus", () => clearTimeout(timer));
     dismiss.addEventListener("blur", () => {
-      if (dismiss.isConnected) timer = setTimeout(hideToast, 8000);
+      if (dismiss.isConnected)
+        timer = setTimeout(
+          hideToast,
+          Number(desktop.dataset.toastSeconds ?? 8) * 1000,
+        );
     });
     toast.append(text, dismiss);
     desktop.append(toast);
     // Shell app/system messages already have a live announcement. Only reminders use this region.
     if (entry.kind === "reminder") announcer.textContent = entry.message;
-    timer = setTimeout(hideToast, 8000);
+    timer = setTimeout(
+      hideToast,
+      Number(desktop.dataset.toastSeconds ?? 8) * 1000,
+    );
   }
   quick.addEventListener("click", launch);
   document.addEventListener(ACTIVITY_CHANGED, draw);

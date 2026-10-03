@@ -1,3 +1,7 @@
+import {
+  saveCustomization,
+  customizationDefaults,
+} from "./desktop-customization";
 import css from "../styles/desktop-settings.css?inline";
 import { installAppStyle } from "./desktop-app-style";
 import {
@@ -16,6 +20,7 @@ export function mountApp(root: HTMLElement) {
   root.classList.add("settings-app");
   root.innerHTML = `
     <header class="settings-heading"><h2>Make this desktop yours</h2><p>Appearance changes apply immediately and stay in this browser.</p></header>
+    <div data-personal-settings></div>
     <div class="settings-options">
       <fieldset><legend>Accent color</legend><p>Highlights, selected controls, and window borders.</p>
         <div class="settings-choices settings-palettes">
@@ -53,7 +58,9 @@ export function mountApp(root: HTMLElement) {
     <footer class="settings-footer"><button type="button" data-settings-reset>Restore default appearance</button><p class="desk-app-status" role="status" data-settings-status></p></footer>
   `;
   const status = root.querySelector<HTMLElement>("[data-settings-status]")!;
-  const inputs = root.querySelectorAll<HTMLInputElement>("input");
+  const inputs = root.querySelectorAll<HTMLInputElement>(
+    ".settings-options input",
+  );
 
   function draw() {
     inputs.forEach((input) => {
@@ -67,12 +74,18 @@ export function mountApp(root: HTMLElement) {
 
   function change(event: Event) {
     const input = event.target;
-    if (!(input instanceof HTMLInputElement)) return;
+    if (
+      !(input instanceof HTMLInputElement) ||
+      !input.closest(".settings-options")
+    )
+      return;
     const next = {
       ...store.value,
       [input.name]: input.type === "checkbox" ? input.checked : input.value,
     };
     store.save(next);
+    if (input.name === "wallpaper")
+      saveCustomization({ wallpaper: "original" });
     draw();
   }
 
@@ -80,12 +93,33 @@ export function mountApp(root: HTMLElement) {
   const reset = root.querySelector<HTMLButtonElement>("[data-settings-reset]")!;
   const restore = () => {
     store.save(defaultDesktopPreferences());
+    saveCustomization(customizationDefaults());
     draw();
     status.textContent = `Default appearance restored. ${store.message}`;
   };
   reset.addEventListener("click", restore);
   draw();
+  let disposed = false;
+  let disposePersonal: (() => void) | undefined;
+  const personal = root.querySelector<HTMLElement>("[data-personal-settings]")!;
+  personal.innerHTML = '<p role="status">Loading desktop personalization…</p>';
+  const loadPersonal = () =>
+    import("./desktop-personalization-settings")
+      .then(({ mountPersonalizationSettings }) => {
+        if (!disposed) disposePersonal = mountPersonalizationSettings(personal);
+      })
+      .catch(() => {
+        if (disposed) return;
+        personal.innerHTML =
+          '<button type="button">Retry loading personalization</button>';
+        personal
+          .querySelector("button")!
+          .addEventListener("click", loadPersonal, { once: true });
+      });
+  void loadPersonal();
   return () => {
+    disposed = true;
+    disposePersonal?.();
     root.removeEventListener("change", change);
     reset.removeEventListener("click", restore);
   };

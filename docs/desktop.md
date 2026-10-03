@@ -111,3 +111,36 @@ Run `npm run verify` for type checking, a production build, and Playwright tests
 [`tests/desktop-performance.spec.ts`](../tests/desktop-performance.spec.ts) measures uncompressed emitted JS/CSS, including static imports. Its ceilings are 87,167 bytes for the homepage, 100,897 bytes for the representative article (including its static dependencies), 160 KiB for desktop startup, 8 KiB for the deferred shared app loader, 24 KiB for each app with its static dependencies, and a separate 160 KiB ceiling for the optional Trellis engine including its inline styles and static dependencies. The two ordinary-page ceilings match the independently rebuilt pre-expansion revision, `01730a61da6cc63c5a59e61d38df5d9738d81b6d`; the expansion does not add to those totals. These are bundle regression budgets, not page-load timing claims; images, fonts, and HTML are outside those totals. Network checks also verify that browsing the launcher starts no app audio, media, or WASM work and that only launched app chunks are requested.
 
 The earlier 20-app expansion used 50 delegated tasks: 20 app builders, 20 individual app reviewers, and 10 cross-cutting audits covering loading/budgets, launcher, windows, icons, context menus, mobile, lifecycle, stored data, accessibility, and documentation. Release checks include the final integrated check/build/test run and verification of the deployed revision.
+
+### Personalization and sleep
+
+Settings now has searchable sections for sizing, wallpapers, sleep, desktop details,
+and app/data controls. App content scales from 60–200% without changing the window
+coordinate system; Settings stays at 100% so the controls remain reachable. Icon
+art ranges from 24–112px, desktop dock height from 44–100px, title bars from 32–72px,
+and window corners from 0–24px. Touch layouts retain their minimum control sizes.
+Floating window size can be set from 30–100% of the workspace, subject to each
+app's minimum dimensions. The default preserves each app's usual opening size;
+changing the slider sets a preferred size for new windows. Applying to open windows
+skips Settings, hidden windows, snapped windows, and Trellis panels.
+
+The wallpaper gallery contains the theme wallpaper plus 29 procedural scenes,
+eight animated. Brightness, blur, animation duration, motion pause, and timed
+rotation are configurable. Wallpapers render locally without external assets or
+video downloads. Animations pause in background tabs and during the screensaver;
+system and desktop reduced-motion preferences take precedence.
+
+The screensaver has minimal clock, aurora, star field, drifting rings, and dark
+screen modes. It can start manually or after 1–120 minutes of inactivity (off by
+default). Clock/date visibility, message, palette, animation duration, scene
+brightness, and pointer-motion wake are configurable. Keyboard/click wake restores
+focus without forwarding the wake event into the app. The browser's modal dialog
+keeps the underlying apps inert while their state remains intact. This is a browser
+screensaver, not a device lock or operating-system sleep command. Idle time pauses
+while the tab is hidden; same-origin Reader interaction resets the timer.
+
+`desktop-customization:v1` is a strict, 4 KiB local record included in Data Center's
+Appearance category. Invalid/future records are preserved and settings remain
+usable for the current visit. The existing eight-field appearance record stays
+compatible. Personalization UI and the screensaver load separately; the normal
+blog routes do not load desktop customization code.

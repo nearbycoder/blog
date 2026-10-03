@@ -311,6 +311,10 @@ export function mountDesktopIcons(
     finish(true);
     reflow();
   });
+  document.addEventListener("desktop-icons-reflow", () => {
+    finish(true);
+    reflow();
+  });
   reflow();
   shortcuts.dataset.iconsReady = "true";
 

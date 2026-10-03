@@ -1,3 +1,4 @@
+import { CUSTOMIZATION_KEY, validCustomization } from "./desktop-customization";
 /** The backup boundary imports only metadata and pure schema helpers, never app interfaces. */
 import { desktopApps } from "../lib/desktop-apps";
 import { isAgendaStore } from "./desktop-agenda-data";
@@ -45,7 +46,7 @@ export const backupCategories: BackupCategory[] = [
   {
     id: "appearance",
     label: "Appearance",
-    keys: ["nearby-desktop-preferences-v1"],
+    keys: ["nearby-desktop-preferences-v1", CUSTOMIZATION_KEY],
     apps: ["settings"],
   },
   {
@@ -374,6 +375,7 @@ const guards: Record<string, (value: unknown) => boolean> = {
   "nearby-desktop-markdown-v1": (value) =>
     v1(value, ["text"], (item) => str(item.text, 100000)),
   "nearby-desktop-preferences-v1": validDesktopPreferences,
+  [CUSTOMIZATION_KEY]: validCustomization,
   "desktop-workspace:v1": validWorkspace,
   [TILING_KEY]: validTilingState,
   "desktop-icons:v1": (value) =>
@@ -570,6 +572,7 @@ const rawLimits: Record<string, number> = {
   "nearby-desktop-markdown-v1": 600100,
   "nearby-desktop-tasks-v1": 4200000,
   "nearby-desktop-preferences-v1": 2048,
+  [CUSTOMIZATION_KEY]: 4096,
   "desktop-workspace:v1": 65536,
   "desktop-spaces:v1": 131072,
   "desktop-library:v1": 786432,
@@ -580,6 +583,7 @@ const byteLimits: Record<string, number> = {
   "nearby-desktop-agenda-v1": 3 * 1024 * 1024,
   "nearby-desktop-activity-v1": 128 * 1024,
   "nearby-desktop-preferences-v1": 2048,
+  [CUSTOMIZATION_KEY]: 4096,
   "desktop-workspace:v1": 65536,
   "desktop-spaces:v1": 131072,
   "desktop-window-pins:v1": 131072,

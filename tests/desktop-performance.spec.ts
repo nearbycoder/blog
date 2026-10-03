@@ -9,7 +9,7 @@ const appStyle = new RegExp(
   `\\.(?:${desktopApps.map((app) => app.id).join("|")})-app\\b`,
 );
 const deferredChunk = new RegExp(
-  `^desktop-(?:tiling|commands|command-catalog|apps|app-style|arcade|ghostty|doom|snake|pong|puzzle|game-host|classics|${desktopApps.map((app) => app.id).join("|")})\\.`,
+  `^desktop-(?:tiling|personalization-settings|screensaver|commands|command-catalog|apps|app-style|arcade|ghostty|doom|snake|pong|puzzle|game-host|classics|${desktopApps.map((app) => app.id).join("|")})\\.`,
 );
 
 function source(asset: string) {
@@ -116,6 +116,15 @@ test("desktop boot and each app retain separate bounded build payloads", () => {
     "Lazy tiling engine including Trellis + CSS",
   ).toBeLessThanOrEqual(160 * 1024);
   expect(tiling.some((asset) => source(asset).includes("trellis"))).toBe(true);
+  for (const [id, limit] of [
+    ["personalization-settings", 24 * 1024],
+    ["screensaver", 12 * 1024],
+  ] as const) {
+    expect(
+      bytes(eagerAssets([chunkFor(id)])),
+      `Lazy ${id} including shared dependencies`,
+    ).toBeLessThanOrEqual(limit);
+  }
   // The loader costs 6,858 B including its style helper, excluding cached boot.
   const loader = eagerAssets([chunkFor("apps")]).filter(
     (asset) => !boot.includes(asset),

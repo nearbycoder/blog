@@ -1,3 +1,5 @@
+import { mountPersonalization } from "./desktop-personalization";
+import { getCustomization } from "./desktop-customization";
 import { desktopApps, type DesktopAppId } from "../lib/desktop-apps";
 import { mountWindowLayout } from "./desktop-window-layout";
 import { mountDesktopShell } from "./desktop-shell";
@@ -19,6 +21,7 @@ const desktop = document.querySelector<HTMLElement>("[data-desktop]");
 
 if (desktop) {
   applyDesktopPreferences(desktop);
+  const disposePersonalization = mountPersonalization(desktop);
   const disposeActivity = mountDesktopActivity(desktop);
   let spaces: ReturnType<typeof mountDesktopSpaces> | undefined;
   let tiling:
@@ -426,7 +429,53 @@ if (desktop) {
     for (const entry of entries) constrain(entry.target as HTMLElement);
   });
 
+  function sizeFloating(win: HTMLElement) {
+    if (
+      mobile.matches ||
+      win.hidden ||
+      win.dataset.tiled === "true" ||
+      win.dataset.snap ||
+      win.dataset.window === "settings"
+    )
+      return false;
+    const scale = getCustomization().value.windowSize / 100;
+    const style = getComputedStyle(win);
+    const width = Math.min(
+      workspace.clientWidth - 16,
+      Math.max(
+        parseFloat(style.minWidth) || 260,
+        workspace.clientWidth * scale,
+      ),
+    );
+    const height = Math.min(
+      workspace.clientHeight - 16,
+      Math.max(
+        parseFloat(style.minHeight) || 200,
+        workspace.clientHeight * scale,
+      ),
+    );
+    Object.assign(win.style, { width: `${width}px`, height: `${height}px` });
+    constrain(win);
+    layouts.capture(win);
+    return true;
+  }
+  document.addEventListener("desktop-resize-floating", () => {
+    layouts.cancel();
+    let count = 0;
+    windows.forEach((win) => {
+      if (sizeFloating(win)) count++;
+    });
+    scheduleSave();
+    announce(
+      count
+        ? `${count} floating windows resized.`
+        : "No visible floating windows to resize. Settings keeps its readable size.",
+    );
+  });
+
   function attachWindow(win: HTMLElement) {
+    if (!restoring && !getCustomization().value.useDefaultWindowSize)
+      sizeFloating(win);
     spaces?.register(win);
     const pinKey = win.dataset.source ?? win.dataset.window!;
     win.dataset.pinned = String(pinStore.value.keys.includes(pinKey));
@@ -1548,7 +1597,10 @@ if (desktop) {
   }
   window.addEventListener("pagehide", flushWorkspace);
   window.addEventListener("pagehide", (event) => {
-    if (!event.persisted) disposeActivity();
+    if (!event.persisted) {
+      disposeActivity();
+      disposePersonalization();
+    }
   });
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) flushWorkspace();
