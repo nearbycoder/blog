@@ -360,3 +360,73 @@ test("cancellation from another pointer leaves the active drag and resize intact
   expect((await win.boundingBox())!.x).toBe(before.x);
   await expect(page.locator("[data-desktop]")).not.toHaveClass(/is-resizing/);
 });
+
+test("moved and resized floating windows restore their latest bounds after maximize, tiling, and reload", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1600, height: 1100 });
+  await page.goto("/desktop/");
+  await page
+    .getByRole("button", { name: "Open application launcher", exact: true })
+    .click();
+  await page.locator('[data-launch-app="notes"]').click();
+  const pane = page.locator('[data-window="notes"]');
+  await expect(pane.locator(".notes-app")).toBeVisible();
+  const bounds = async () => {
+    const rect = (await pane.boundingBox())!;
+    const origin = (await page.locator("[data-workspace]").boundingBox())!;
+    return { ...rect, x: rect.x - origin.x, y: rect.y - origin.y };
+  };
+  async function drag(dx: number, dy: number) {
+    const handle = (await pane.locator("[data-drag-handle]").boundingBox())!;
+    await page.mouse.move(handle.x + 140, handle.y + handle.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(
+      handle.x + 140 + dx,
+      handle.y + handle.height / 2 + dy,
+      { steps: 8 },
+    );
+    await page.waitForTimeout(300);
+    await page.mouse.up();
+    await page.waitForTimeout(300);
+  }
+  await drag(80, 70);
+  const grip = (await pane.locator('[data-resize="se"]').boundingBox())!;
+  await page.mouse.move(grip.x + grip.width / 2, grip.y + grip.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(
+    grip.x + grip.width / 2 + 70,
+    grip.y + grip.height / 2 + 60,
+    { steps: 8 },
+  );
+  await page.waitForTimeout(300);
+  await page.mouse.up();
+  const resized = (await bounds())!;
+  await pane
+    .getByRole("button", { name: "Maximize Notes", exact: true })
+    .click();
+  await pane
+    .getByRole("button", { name: "Restore Notes", exact: true })
+    .click();
+  expect(await bounds()).toEqual(resized);
+  await page.locator("[data-tiling-toggle]").click();
+  await expect(pane).toHaveAttribute("data-tiled", "true");
+  await page.getByRole("button", { name: "Float Notes", exact: true }).click();
+  await expect(pane).not.toHaveAttribute("data-tiled", "true");
+  expect(await bounds()).toEqual(resized);
+  await drag(40, 30);
+  const moved = await bounds();
+  expect(moved!.x).toBeCloseTo(resized.x + 40, 0);
+  await pane
+    .getByRole("button", { name: "Maximize Notes", exact: true })
+    .click();
+  await pane
+    .getByRole("button", { name: "Restore Notes", exact: true })
+    .click();
+  expect(await bounds()).toEqual(moved);
+  await page.waitForTimeout(300);
+  await page.reload();
+  await expect(pane).toBeVisible();
+  await expect(pane).not.toHaveAttribute("data-tiled", "true");
+  expect(await bounds()).toEqual(moved);
+});

@@ -909,3 +909,131 @@ for (const raw of [
     expect(errors).toEqual([]);
   });
 }
+
+test("slow tab tears keep the committed layout intact until drop or cancel", async ({
+  page,
+}) => {
+  await open(page);
+  await launch(page, "notes");
+  await launch(page, "json");
+  await launch(page, "calculator");
+  await enable(page);
+  const notes = tree(page).getByRole("tab", { name: "Notes", exact: true });
+  const json = tree(page).getByRole("tab", { name: "JSON Desk", exact: true });
+  await notes.dragTo(json);
+  await expect(tree(page).getByRole("tablist")).toHaveCount(2);
+  await expect
+    .poll(async () => (await saved(page))?.desks["desk-1"].document?.root?.kind)
+    .toBe("split");
+  const before = (await saved(page))!.desks["desk-1"].document;
+  const start = (await notes.boundingBox())!;
+  const target = (await tree(page)
+    .getByRole("tab", { name: "Calculator", exact: true })
+    .boundingBox())!;
+  await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(target.x + target.width / 2, target.y + 180, {
+    steps: 12,
+  });
+  await expect(page.locator("[data-desktop]")).toHaveAttribute(
+    "data-tiling-dragging",
+    "",
+  );
+  // Longer than the desktop's geometry, reconciliation, and save debounces.
+  await page.waitForTimeout(500);
+  expect((await saved(page))!.desks["desk-1"].document).toEqual(before);
+  await page.keyboard.press("Escape");
+  await page.mouse.up();
+  await expect(tree(page).getByRole("tablist")).toHaveCount(2);
+  await expect
+    .poll(async () => (await saved(page))!.desks["desk-1"].document)
+    .toEqual(before);
+  // A subsequent slow drop into another tab group commits exactly once.
+  const again = (await notes.boundingBox())!;
+  const calc = (await tree(page)
+    .getByRole("tab", { name: "Calculator", exact: true })
+    .boundingBox())!;
+  await page.mouse.move(again.x + again.width / 2, again.y + again.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(calc.x + calc.width / 2, calc.y + calc.height / 2, {
+    steps: 12,
+  });
+  await page.waitForTimeout(500);
+  expect((await saved(page))!.desks["desk-1"].document).toEqual(before);
+  await page.mouse.up();
+  await expect
+    .poll(async () => (await saved(page))!.desks["desk-1"].document)
+    .not.toEqual(before);
+  await expect(tree(page).getByRole("tablist")).toHaveCount(2);
+  await expect(tree(page).getByRole("tab")).toHaveCount(3);
+  const after = (await saved(page))!.desks["desk-1"].document;
+  await page.reload();
+  await ready(page);
+  await expect
+    .poll(async () => (await saved(page))!.desks["desk-1"].document)
+    .toEqual(after);
+});
+
+test("slow divider resizing after tab reordering commits only on release and survives reload", async ({
+  page,
+}) => {
+  await open(page, 1800, 1100);
+  await launch(page, "notes");
+  await launch(page, "json");
+  await launch(page, "calculator");
+  await enable(page);
+  // Reorder the traversal relative to app creation order, exposing false document differences.
+  await tree(page)
+    .getByRole("tab", { name: "Calculator", exact: true })
+    .dragTo(tree(page).getByRole("tab", { name: "Notes", exact: true }));
+  await expect(tree(page).getByRole("tablist")).toHaveCount(2);
+  const before = (await saved(page))!.desks["desk-1"].document;
+  const divider = (await tree(page)
+    .getByRole("separator", { name: "Resize panels" })
+    .first()
+    .boundingBox())!;
+  await page.mouse.move(divider.x + divider.width / 2, divider.y + 80);
+  await page.mouse.down();
+  await page.mouse.move(divider.x + 100, divider.y + 80, { steps: 12 });
+  await page.waitForTimeout(500);
+  expect((await saved(page))!.desks["desk-1"].document).toEqual(before);
+  const moved = await win(page, "json").boundingBox();
+  await page.mouse.up();
+  await expect
+    .poll(async () => (await saved(page))!.desks["desk-1"].document)
+    .not.toEqual(before);
+  await page.waitForTimeout(300);
+  const settled = (await win(page, "json").boundingBox())!;
+  expect(settled.width).toBeCloseTo(moved!.width, 0);
+  const after = (await saved(page))!.desks["desk-1"].document;
+  await page.reload();
+  await ready(page);
+  await expect
+    .poll(async () => (await saved(page))!.desks["desk-1"].document)
+    .toEqual(after);
+  expect((await win(page, "json").boundingBox())!.width).toBeCloseTo(
+    settled.width,
+    0,
+  );
+});
+
+test("canvas dimension drafts survive background window synchronization", async ({
+  page,
+}) => {
+  await open(page);
+  await launch(page, "notes");
+  await enable(page);
+  await page.locator("[data-tiling-width]").fill("2200");
+  await page.locator("[data-tiling-height]").fill("1800");
+  await page.getByRole("button", { name: "Show Notes", exact: true }).click();
+  await page.waitForTimeout(300);
+  await expect(page.locator("[data-tiling-width]")).toHaveValue("2200");
+  await expect(page.locator("[data-tiling-height]")).toHaveValue("1800");
+  await page.locator("[data-tiling-apply-size]").click();
+  await expect
+    .poll(async () => {
+      const desk = (await saved(page))!.desks["desk-1"];
+      return [desk.width, desk.height];
+    })
+    .toEqual([2200, 1800]);
+});

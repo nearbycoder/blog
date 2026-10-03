@@ -104,6 +104,7 @@ export function mountDesktopTiling(
   const ids = new WeakMap<HTMLElement, string>();
   const mounted = new Map<string, HTMLElement>();
   const subscriptions: (() => void)[] = [];
+  const observedSurfaces = new Set<HTMLElement>();
   let engine: WorkspaceHandle | undefined;
   let currentDesk = "";
   let current: TilingDesk;
@@ -119,6 +120,8 @@ export function mountDesktopTiling(
   let pendingReveal: HTMLElement | undefined;
   let hiddenViewport: { desk: string; x: number; y: number } | undefined;
   let geometryChanged = false;
+  let pendingSync = false;
+  let sizeDraft = false;
   let saveIssue: string | undefined;
 
   function updateStatus(message?: string) {
@@ -130,9 +133,9 @@ export function mountDesktopTiling(
         : "Arrange this workspace in nested tiled panels";
     }
     if (controls) controls.hidden = !current?.enabled;
-    if (widthInput && document.activeElement !== widthInput)
+    if (widthInput && !sizeDraft && document.activeElement !== widthInput)
       widthInput.value = String(current?.width ?? 1600);
-    if (heightInput && document.activeElement !== heightInput)
+    if (heightInput && !sizeDraft && document.activeElement !== heightInput)
       heightInput.value = String(current?.height ?? 1100);
     if (status)
       status.textContent =
@@ -190,8 +193,18 @@ export function mountDesktopTiling(
     };
   }
 
+  function gestureActive() {
+    return (
+      !!engine &&
+      (engine.getSnapshot().dragging ||
+        engine.element.hasAttribute("data-resizing"))
+    );
+  }
+
   function rememberDocument() {
-    if (!engine || changing || !current) return;
+    // Trellis exposes a temporary document during tab tears and divider moves.
+    // Only its committed document may enter persistence or reconciliation.
+    if (!engine || changing || !current || gestureActive()) return;
     current = { ...current, document: cleanDocument(engine.getDocument()) };
     persist();
   }
@@ -242,6 +255,9 @@ export function mountDesktopTiling(
     for (const unsubscribe of subscriptions.splice(0)) unsubscribe();
     engine?.destroy();
     engine = undefined;
+    for (const content of observedSurfaces) resizeObserver.unobserve(content);
+    observedSurfaces.clear();
+    pendingSync = false;
     pendingReveal = undefined;
     hiddenViewport = undefined;
     const restored = [...placements.keys()];
@@ -272,11 +288,31 @@ export function mountDesktopTiling(
   function positionWindows() {
     frame = 0;
     if (!engine || suspension || desktop.dataset.showDesktop === "true") return;
+    if (pendingSync && !gestureActive()) {
+      pendingSync = false;
+      sync();
+      if (!engine) return;
+    }
     const origin = workspace.getBoundingClientRect();
     const busy = engine.getSnapshot().dragging;
     if (desktop.hasAttribute("data-tiling-dragging") !== busy)
       desktop.toggleAttribute("data-tiling-dragging", busy);
+    // The native drag preview owns visibility until release. A temporarily
+    // detached tab is still an open app, not a new or minimized window.
+    if (busy) return;
+    for (const content of observedSurfaces) {
+      if (!content.isConnected) {
+        resizeObserver.unobserve(content);
+        observedSurfaces.delete(content);
+      }
+    }
     for (const surface of engine.surfaces()) {
+      // Native divider previews resize content without emitting a committed
+      // change. Follow those rectangles without rewriting the layout document.
+      if (!observedSurfaces.has(surface.content)) {
+        observedSurfaces.add(surface.content);
+        resizeObserver.observe(surface.content);
+      }
       const win = mounted.get(surface.view.id);
       if (!win || win.dataset.spaceHidden === "true") continue;
       if (!surface.view.visible) {
@@ -574,7 +610,17 @@ export function mountDesktopTiling(
       hidden: [],
       views,
     };
-    const changed = JSON.stringify(cleanDocument(base)) !== JSON.stringify(doc);
+    // View maps have no meaningful order: tree traversal changes after docking,
+    // while host.windows() retains creation order. Comparing insertion order
+    // caused setDocument() to interrupt otherwise unchanged layouts repeatedly.
+    const signature = (value: LayoutDocument) =>
+      JSON.stringify({
+        ...value,
+        views: Object.fromEntries(
+          Object.entries(value.views).sort(([a], [b]) => a.localeCompare(b)),
+        ),
+      });
+    const changed = signature(cleanDocument(base)) !== signature(doc);
     changing = true;
     if (!engine) createEngine(doc);
     else if (changed) engine.setDocument(doc, { animate: false });
@@ -587,6 +633,10 @@ export function mountDesktopTiling(
 
   function sync() {
     if (stopped || suspension || changing) return;
+    if (gestureActive()) {
+      pendingSync = true;
+      return;
+    }
     if (desktop.dataset.showDesktop === "true") {
       if (engine && !hiddenViewport) {
         hiddenViewport = {
@@ -611,6 +661,7 @@ export function mountDesktopTiling(
       if (currentDesk) stopEngine();
       excluded.clear();
       currentDesk = desk;
+      sizeDraft = false;
       current = state.value.desks[desk]
         ? { ...state.value.desks[desk] }
         : defaultTilingDesk();
@@ -769,6 +820,7 @@ export function mountDesktopTiling(
       updateStatus("Choose a width and height between 800 and 6000 pixels.");
       return;
     }
+    sizeDraft = false;
     current = { ...current, width, height };
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
@@ -825,6 +877,11 @@ export function mountDesktopTiling(
   const sizeButton = desktop.querySelector("[data-tiling-apply-size]");
   const homeButton = desktop.querySelector("[data-tiling-home]");
   const splitButtons = desktop.querySelectorAll("[data-tiling-split]");
+  const markSizeDraft = () => {
+    sizeDraft = true;
+  };
+  widthInput?.addEventListener("input", markSizeDraft);
+  heightInput?.addEventListener("input", markSizeDraft);
   sizeButton?.addEventListener("click", applySize);
   homeButton?.addEventListener("click", home);
   splitButtons.forEach((button) => button.addEventListener("click", split));
@@ -888,6 +945,8 @@ export function mountDesktopTiling(
       clearTimeout(scrollTimer);
       resizeObserver.disconnect();
       themeObserver.disconnect();
+      widthInput?.removeEventListener("input", markSizeDraft);
+      heightInput?.removeEventListener("input", markSizeDraft);
       sizeButton?.removeEventListener("click", applySize);
       homeButton?.removeEventListener("click", home);
       splitButtons.forEach((button) =>
