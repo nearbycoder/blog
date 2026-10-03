@@ -3,6 +3,10 @@ export const projectStories: Record<
   string,
   { articles: string[]; updates: string[] }
 > = {
+  "clank-run": {
+    articles: ["how-clank-works-from-a-button-click-to-a-running-app"],
+    updates: [],
+  },
   "agfs-dev": {
     articles: [
       "building-agfs-dev-to-make-remote-agent-files-easy-to-share",

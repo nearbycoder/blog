@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1010" viewBox="0 0 720 1010" role="img" aria-labelledby="title desc">
+  <title id="title">One task update through Clank</title>
+  <desc id="desc">A browser with a session or an agent with OAuth and scopes reaches the same typed application action. The action validates inputs and authorization, commits a SQLite transaction with a revision, and invalidates live query results. Server-sent events deliver the new snapshot and signals update the browser DOM.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="m0 0 10 5-10 5z" fill="#616952"/></marker></defs>
+  <rect width="720" height="1010" rx="16" fill="#f4f0e5"/>
+  <g fill="#243127" font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="360" y="61" font-size="21" letter-spacing="3" fill="#7d492f">ONE TASK UPDATE</text>
+    <g stroke="#b7bdab" stroke-width="2">
+      <rect x="36" y="101" width="306" height="126" rx="10" fill="#fffef8"/>
+      <rect x="378" y="101" width="306" height="126" rx="10" fill="#fffef8"/>
+      <rect x="86" y="321" width="548" height="142" rx="10" fill="#e1ead5"/>
+      <rect x="86" y="523" width="548" height="126" rx="10" fill="#fffef8"/>
+      <rect x="86" y="709" width="548" height="108" rx="10" fill="#fffef8"/>
+      <rect x="86" y="877" width="548" height="91" rx="10" fill="#e5edf0"/>
+    </g>
+    <g fill="none" stroke="#616952" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M189 227v48h171v43"/><path d="M531 227v48H361" marker-end="none"/>
+      <path d="M360 463v57"/><path d="M360 649v57"/><path d="M360 817v57"/>
+    </g>
+    <text x="189" y="151" font-size="31" font-weight="700">Browser</text>
+    <text x="189" y="192" font-size="25">Session + request</text>
+    <text x="531" y="151" font-size="31" font-weight="700">Agent</text>
+    <text x="531" y="192" font-size="25">OAuth + scopes + MCP</text>
+    <text x="360" y="366" font-size="31" font-weight="700">Same application action</text>
+    <text x="360" y="406" font-size="26">Validate input · Check access</text>
+    <text x="360" y="440" font-size="24">Apply document version condition</text>
+    <text x="360" y="571" font-size="31" font-weight="700">SQLite transaction</text>
+    <text x="360" y="614" font-size="26">Save data + revision + journal</text>
+    <text x="360" y="752" font-size="31" font-weight="700">Refresh live queries</text>
+    <text x="360" y="792" font-size="26">Send authorized snapshots via SSE</text>
+    <text x="360" y="914" font-size="31" font-weight="700">Update the browser</text>
+    <text x="360" y="950" font-size="25">Signals update the affected DOM</text>
+  </g>
+</svg>
