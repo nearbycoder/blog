@@ -474,3 +474,39 @@ test("Data Center exports, restores, and resets tiling with the Windows & deskto
   expect(disk.has(TILING_KEY)).toBe(false);
   expect(disk.get("unrelated")).toBe("keep");
 });
+
+test("column preferences round-trip through backups with bounded widths and strip scroll", () => {
+  const value = state();
+  const desk = value.desks["desk-main"];
+  desk.flow = "columns";
+  desk.columnWidths = { first: 700, column: 1200 };
+  desk.scrollX = 12000;
+  expect(validTilingState(value)).toBe(true);
+  expect(validateRecord(TILING_KEY, JSON.stringify(value))).toBe("");
+  for (const width of [0, 91, 6001, Infinity, NaN]) {
+    expect(
+      validTilingState({
+        ...value,
+        desks: { "desk-main": { ...desk, columnWidths: { first: width } } },
+      }),
+    ).toBe(false);
+  }
+  expect(
+    validTilingState({
+      ...value,
+      desks: { "desk-main": { ...desk, flow: "canvas" } },
+    }),
+  ).toBe(false);
+  expect(
+    validTilingState({
+      ...value,
+      desks: { "desk-main": { ...desk, flow: "other" } },
+    }),
+  ).toBe(false);
+  expect(
+    validTilingState({
+      ...value,
+      desks: { "desk-main": { ...desk, scrollX: 800000 } },
+    }),
+  ).toBe(false);
+});

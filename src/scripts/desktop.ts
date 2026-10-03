@@ -1152,6 +1152,7 @@ if (desktop) {
       return;
     }
     if (commandPalette?.isOpen()) return;
+    if (tiling?.shortcut(event)) return;
     if (
       layouts.shortcut(
         event,

@@ -20,6 +20,17 @@ import {
   validTilingState,
   type TilingDesk,
 } from "./desktop-tiling-state";
+import {
+  COLUMN_GAP,
+  COLUMN_INSET,
+  columnWidth,
+  defaultColumnWidth,
+  columnsOf,
+  selectedViews,
+  containsView,
+  inheritedWidth,
+  columnRoot,
+} from "./desktop-columns";
 import type { WindowLayout } from "./desktop-window-layout";
 import type { WindowPlacement } from "./desktop-workspace-store";
 
@@ -124,6 +135,338 @@ export function mountDesktopTiling(
   let sizeDraft = false;
   let saveIssue: string | undefined;
 
+  const isColumns = () => current?.flow !== "canvas";
+  const flowInput =
+    desktop.querySelector<HTMLSelectElement>("[data-tiling-flow]");
+  const columnInput = desktop.querySelector<HTMLSelectElement>(
+    "[data-column-width]",
+  );
+  const restoredWidths = new Map<string, number>();
+  const activeId = () => {
+    const active = host
+      .windows()
+      .find(
+        (win) =>
+          win.dataset.tiled === "true" && win.classList.contains("is-active"),
+      );
+    return (active && ids.get(active)) || focused;
+  };
+  const activeColumn = () =>
+    columnsOf(current?.document?.root ?? null).find((column) =>
+      containsView(column, activeId()),
+    );
+
+  function fitCanvas() {
+    if (!current) return;
+    const columns = columnsOf(current.document?.root ?? null);
+    const width = isColumns()
+      ? Math.max(
+          92,
+          columns.reduce(
+            (sum, column) =>
+              sum +
+              (current.columnWidths?.[column.id] ??
+                defaultColumnWidth(workspace.clientWidth)),
+            0,
+          ),
+        ) + COLUMN_INSET
+      : current.width;
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${isColumns() ? workspace.clientHeight : current.height}px`;
+    canvas.style.left = `${isColumns() ? Math.max(0, (workspace.clientWidth - width) / 2) : 0}px`;
+    workspace.classList.toggle("is-column-workspace", isColumns());
+  }
+
+  function prepareColumns(
+    doc: LayoutDocument,
+    resized = false,
+  ): LayoutDocument {
+    if (!isColumns()) return doc;
+    const columns = columnsOf(doc.root);
+    const previous = columnsOf(current.document?.root ?? null);
+    let widths: Record<string, number> = Object.assign(
+      Object.create(null),
+      current.columnWidths,
+    );
+    // A divider commit changes shares, but not the total strip width. Capture
+    // that once on release; never normalize Trellis's in-flight drag document.
+    if (
+      resized &&
+      doc.root?.kind === "split" &&
+      doc.root.axis === "x" &&
+      current.document?.root?.kind === "split" &&
+      JSON.stringify(columns.map((node) => node.id)) ===
+        JSON.stringify(previous.map((node) => node.id)) &&
+      JSON.stringify(doc.root.weights) !==
+        JSON.stringify(current.document.root.weights)
+    ) {
+      const total = previous.reduce(
+        (sum, node) =>
+          sum + (widths[node.id] ?? defaultColumnWidth(workspace.clientWidth)),
+        0,
+      );
+      const weightTotal = doc.root.weights.reduce(
+        (sum, value) => sum + value,
+        0,
+      );
+      columns.forEach(
+        (node, index) =>
+          (widths[node.id] = columnWidth(
+            (total *
+              (doc.root as Extract<LayoutNode, { kind: "split" }>).weights[
+                index
+              ]) /
+              weightTotal,
+          )),
+      );
+    }
+    widths = Object.fromEntries(
+      columns.map((node) => [
+        node.id,
+        columnWidth(
+          inheritedWidth(node, widths) ??
+            widths[
+              previous.find((old) =>
+                selectedViews(node).some((id) => containsView(old, id)),
+              )?.id ?? ""
+            ] ??
+            defaultColumnWidth(workspace.clientWidth),
+        ),
+      ]),
+    );
+    const used = new Set(Object.keys(doc.views));
+    const visit = (node: LayoutNode | null) => {
+      if (!node) return;
+      used.add(node.id);
+      if (node.kind === "split") node.children.forEach(visit);
+      else if (node.kind === "stage") visit(node.child ?? null);
+    };
+    visit(doc.root);
+    const rootId =
+      doc.root?.kind === "split" && doc.root.axis === "x"
+        ? doc.root.id
+        : allocate("columns", used);
+    const next = { ...doc, root: columnRoot(columns, widths, rootId) };
+    current = {
+      ...current,
+      flow: "columns",
+      columnWidths: widths,
+      document: next,
+    };
+    fitCanvas();
+    return next;
+  }
+
+  function scrollColumn(center = false) {
+    if (!engine || !isColumns() || gestureActive()) return;
+    const columns = columnsOf(current.document?.root ?? null);
+    const target = activeColumn() ?? columns[0];
+    if (!target) return;
+    let left = Number.parseFloat(canvas.style.left) + COLUMN_GAP;
+    for (const column of columns) {
+      if (column.id === target.id) break;
+      left += current.columnWidths?.[column.id] ?? 0;
+    }
+    const width = (current.columnWidths?.[target.id] ?? 0) - COLUMN_GAP;
+    const right = left + width;
+    const viewLeft = workspace.scrollLeft;
+    const viewport = workspace.clientWidth;
+    const x =
+      center || width >= viewport - COLUMN_INSET
+        ? left + width / 2 - viewport / 2
+        : left < viewLeft + 12
+          ? left - 12
+          : right > viewLeft + viewport - 12
+            ? right - viewport + 12
+            : viewLeft;
+    workspace.scrollTo({
+      left: Math.max(0, x),
+      top: 0,
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
+  }
+
+  function setColumnWidth(width: number) {
+    if (!engine || gestureActive()) return;
+    const column =
+      activeColumn() ?? columnsOf(current.document?.root ?? null)[0];
+    if (!column) return;
+    current = {
+      ...current,
+      columnWidths: {
+        ...current.columnWidths,
+        [column.id]: columnWidth(Math.max(360, width)),
+      },
+    };
+    changing = true;
+    engine.setDocument(prepareColumns(cleanDocument(engine.getDocument())), {
+      animate: false,
+    });
+    changing = false;
+    persist();
+    updateStatus();
+    scheduleGeometry();
+    requestAnimationFrame(() => scrollColumn(true));
+  }
+
+  function columnAction(action: string, move = false) {
+    if (!engine || !isColumns() || gestureActive()) return;
+    const columns = columnsOf(current.document?.root ?? null);
+    const index = Math.max(
+      0,
+      columns.findIndex((node) => containsView(node, activeId())),
+    );
+    const column = columns[index];
+    if (!column) return;
+    if (action === "center") scrollColumn(true);
+    else if (action === "full") {
+      const width =
+        current.columnWidths?.[column.id] ??
+        defaultColumnWidth(workspace.clientWidth);
+      const full = columnWidth(workspace.clientWidth - COLUMN_INSET);
+      if (Math.abs(width - full) < 2) {
+        setColumnWidth(
+          restoredWidths.get(`${currentDesk}:${column.id}`) ??
+            defaultColumnWidth(workspace.clientWidth),
+        );
+        restoredWidths.delete(`${currentDesk}:${column.id}`);
+      } else {
+        restoredWidths.set(`${currentDesk}:${column.id}`, width);
+        setColumnWidth(full);
+      }
+    } else if (action === "cycle") {
+      const width = current.columnWidths?.[column.id] ?? 0;
+      const presets = [1 / 3, 1 / 2, 2 / 3].map((share) =>
+        columnWidth((workspace.clientWidth - COLUMN_INSET) * share),
+      );
+      setColumnWidth(presets.find((value) => value > width + 2) ?? presets[0]);
+    } else if (action === "up" || action === "down") {
+      const views = selectedViews(column);
+      const next =
+        views[
+          Math.max(
+            0,
+            Math.min(
+              views.length - 1,
+              views.indexOf(activeId() ?? "") + (action === "up" ? -1 : 1),
+            ),
+          )
+        ];
+      const win = mounted.get(next);
+      if (win) host.activate(win);
+    } else {
+      const next = index + (action === "previous" ? -1 : 1);
+      if (!columns[next]) return;
+      if (move) {
+        [columns[index], columns[next]] = [columns[next], columns[index]];
+        const root = current.document!.root!;
+        const rootId =
+          root.kind === "split" && root.axis === "x"
+            ? root.id
+            : "desktop-columns";
+        const doc = {
+          ...current.document!,
+          root: columnRoot(columns, current.columnWidths!, rootId),
+        };
+        changing = true;
+        engine.setDocument(doc, { animate: false });
+        changing = false;
+        current = { ...current, document: doc };
+        persist();
+        scheduleGeometry();
+        scrollColumn();
+      } else {
+        const win = mounted.get(selectedViews(columns[next])[0]);
+        if (win) host.activate(win);
+      }
+    }
+    updateStatus();
+  }
+
+  function shortcut(event: KeyboardEvent) {
+    if (
+      !engine ||
+      !isColumns() ||
+      !event.ctrlKey ||
+      !event.altKey ||
+      event.metaKey ||
+      !host
+        .windows()
+        .some(
+          (win) =>
+            win.dataset.tiled === "true" && win.classList.contains("is-active"),
+        )
+    )
+      return false;
+    const action = (
+      {
+        ArrowLeft: "previous",
+        ArrowRight: "next",
+        ArrowUp: "up",
+        ArrowDown: "down",
+        w: "cycle",
+        f: "full",
+        c: "center",
+      } as Record<string, string>
+    )[event.key];
+    if (
+      !action ||
+      (event.shiftKey && action !== "previous" && action !== "next")
+    )
+      return false;
+    event.preventDefault();
+    columnAction(action, event.shiftKey);
+    return true;
+  }
+
+  function wheelColumns(event: WheelEvent) {
+    if (
+      !engine ||
+      !isColumns() ||
+      event.ctrlKey ||
+      event.metaKey ||
+      gestureActive()
+    )
+      return;
+    const target = event.target instanceof Element ? event.target : null;
+    if (!event.shiftKey && target?.closest(".desktop-window")) return;
+    if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+    const delta =
+      event.deltaY *
+      (event.deltaMode === 1
+        ? 16
+        : event.deltaMode === 2
+          ? workspace.clientWidth
+          : 1);
+    if (!delta || workspace.scrollWidth <= workspace.clientWidth) return;
+    event.preventDefault();
+    workspace.scrollBy({ left: delta, behavior: "instant" });
+  }
+
+  function changeFlow() {
+    if (!current || gestureActive()) return;
+    current = {
+      ...current,
+      flow: flowInput?.value === "canvas" ? "canvas" : "columns",
+      scrollX: 0,
+      scrollY: 0,
+    };
+    workspace.scrollTo(0, 0);
+    sync();
+    fitCanvas();
+    persist();
+    requestAnimationFrame(() => scrollColumn());
+  }
+  const runColumnAction = (event: Event) =>
+    columnAction((event.currentTarget as HTMLElement).dataset.columnAction!);
+  const changeColumnWidth = () => {
+    const share = Number(columnInput?.value);
+    if (share > 0)
+      setColumnWidth((workspace.clientWidth - COLUMN_INSET) * share);
+  };
+
   function updateStatus(message?: string) {
     if (toggleButton) {
       toggleButton.setAttribute("aria-pressed", String(!!current?.enabled));
@@ -132,7 +475,29 @@ export function mountDesktopTiling(
         ? "Return this workspace to floating windows"
         : "Arrange this workspace in nested tiled panels";
     }
-    if (controls) controls.hidden = !current?.enabled;
+    if (controls) {
+      controls.hidden = !current?.enabled;
+      controls.dataset.flow = isColumns() ? "columns" : "canvas";
+    }
+    if (flowInput) flowInput.value = isColumns() ? "columns" : "canvas";
+    const column = activeColumn();
+    const width = column && current.columnWidths?.[column.id];
+    const full = columnWidth(workspace.clientWidth - COLUMN_INSET);
+    desktop
+      .querySelector("[data-column-action='full']")
+      ?.setAttribute(
+        "aria-pressed",
+        String(!!width && Math.abs(width - full) < 2),
+      );
+    if (columnInput) {
+      columnInput.value = "custom";
+      for (const option of columnInput.options)
+        if (
+          width &&
+          Math.abs(width - columnWidth(full * Number(option.value))) < 2
+        )
+          columnInput.value = option.value;
+    }
     if (widthInput && !sizeDraft && document.activeElement !== widthInput)
       widthInput.value = String(current?.width ?? 1600);
     if (heightInput && !sizeDraft && document.activeElement !== heightInput)
@@ -144,7 +509,9 @@ export function mountDesktopTiling(
           ? "Tiling resumes on a wider screen."
           : saveIssue || !state.writable
             ? (saveIssue ?? state.message)
-            : `${mounted.size} ${mounted.size === 1 ? "window" : "windows"} · ${current?.width ?? 1600} × ${current?.height ?? 1100} · scroll both ways`);
+            : isColumns()
+              ? `${columnsOf(current?.document?.root ?? null).length} ${columnsOf(current?.document?.root ?? null).length === 1 ? "column" : "columns"} · Ctrl+Alt+←/→ to navigate · add Shift to move`
+              : `${mounted.size} ${mounted.size === 1 ? "window" : "windows"} · ${current?.width ?? 1600} × ${current?.height ?? 1100} · scroll both ways`);
   }
 
   function persist() {
@@ -205,8 +572,16 @@ export function mountDesktopTiling(
     // Trellis exposes a temporary document during tab tears and divider moves.
     // Only its committed document may enter persistence or reconciliation.
     if (!engine || changing || !current || gestureActive()) return;
-    current = { ...current, document: cleanDocument(engine.getDocument()) };
+    const doc = cleanDocument(engine.getDocument());
+    const next = prepareColumns(doc, true);
+    if (JSON.stringify(doc.root) !== JSON.stringify(next.root)) {
+      changing = true;
+      engine.setDocument(next, { animate: false });
+      changing = false;
+    }
+    current = { ...current, document: next };
     persist();
+    updateStatus();
   }
 
   function rememberScroll() {
@@ -263,7 +638,7 @@ export function mountDesktopTiling(
     const restored = [...placements.keys()];
     for (const win of restored) restoreWindow(win);
     mounted.clear();
-    workspace.classList.remove("is-tiled-workspace");
+    workspace.classList.remove("is-tiled-workspace", "is-column-workspace");
     for (const [name, value] of workspaceAttributes) {
       if (value === null) workspace.removeAttribute(name);
       else workspace.setAttribute(name, value);
@@ -293,6 +668,7 @@ export function mountDesktopTiling(
       sync();
       if (!engine) return;
     }
+    if (!gestureActive()) fitCanvas();
     const origin = workspace.getBoundingClientRect();
     const busy = engine.getSnapshot().dragging;
     if (desktop.hasAttribute("data-tiling-dragging") !== busy)
@@ -359,8 +735,8 @@ export function mountDesktopTiling(
     workspace.setAttribute("role", "region");
     workspace.setAttribute("aria-label", "Scrollable tiled workspace");
     desktop.dataset.tiling = "true";
-    canvas.style.width = `${current.width}px`;
-    canvas.style.height = `${current.height}px`;
+    updateStatus();
+    fitCanvas();
     const keymap = Object.fromEntries(
       Object.keys(DEFAULT_KEYMAP).map((key) => [key, null]),
     ) as Keymap;
@@ -377,6 +753,7 @@ export function mountDesktopTiling(
       theme:
         document.documentElement.dataset.theme === "light" ? "light" : "dark",
       tokens: {
+        "--trellis-gap": `${COLUMN_GAP}px`,
         "--trellis-accent": "var(--desk-accent)",
         "--trellis-text": "var(--desk-ink)",
         "--trellis-panel": "var(--desk-paper)",
@@ -471,6 +848,8 @@ export function mountDesktopTiling(
         host.activate(win);
         focusing = false;
         scheduleGeometry();
+        requestAnimationFrame(() => scrollColumn());
+        updateStatus();
       }),
     );
     workspace.scrollLeft = current.scrollX;
@@ -594,7 +973,17 @@ export function mountDesktopTiling(
       }));
     if (!root && additions.length === 1) root = additions[0];
     else if (additions.length) {
-      const children = [...(root ? [root] : []), ...additions];
+      const children = isColumns()
+        ? columnsOf(root)
+        : [...(root ? [root] : [])];
+      const activeIndex = children.findIndex(
+        (node) => containsView(node, focused) || containsView(node, activeId()),
+      );
+      children.splice(
+        isColumns() && activeIndex >= 0 ? activeIndex + 1 : children.length,
+        0,
+        ...additions,
+      );
       root = {
         kind: "split",
         id: allocate("split", allIds),
@@ -603,13 +992,15 @@ export function mountDesktopTiling(
         weights: children.map(() => 1 / children.length),
       };
     }
-    const doc: LayoutDocument = {
+    const previousFlow = current.flow;
+    const previousWidths = JSON.stringify(current.columnWidths);
+    const doc: LayoutDocument = prepareColumns({
       schema: 1,
       root,
       floating: [],
       hidden: [],
       views,
-    };
+    });
     // View maps have no meaningful order: tree traversal changes after docking,
     // while host.windows() retains creation order. Comparing insertion order
     // caused setDocument() to interrupt otherwise unchanged layouts repeatedly.
@@ -626,7 +1017,13 @@ export function mountDesktopTiling(
     else if (changed) engine.setDocument(doc, { animate: false });
     changing = false;
     current = { ...current, document: cleanDocument(engine!.getDocument()) };
-    if (changed || floatingChanged) persist();
+    if (
+      changed ||
+      floatingChanged ||
+      previousFlow !== current.flow ||
+      previousWidths !== JSON.stringify(current.columnWidths)
+    )
+      persist();
     scheduleGeometry();
     updateStatus();
   }
@@ -728,6 +1125,11 @@ export function mountDesktopTiling(
     scheduleGeometry();
     requestAnimationFrame(() => {
       if (!engine || !win.isConnected || win.hidden) return;
+      if (isColumns()) {
+        scrollColumn();
+        updateStatus();
+        return;
+      }
       const panel = engine.view(id)?.panelId;
       const bar = [
         ...engine.element.querySelectorAll<HTMLElement>(
@@ -856,6 +1258,17 @@ export function mountDesktopTiling(
     );
   }
 
+  function activateTab(event: Event) {
+    const tab =
+      event.target instanceof Element
+        ? event.target.closest<HTMLElement>('[data-trellis-part="tab"]')
+        : null;
+    const win = tab?.dataset.view && mounted.get(tab.dataset.view);
+    // Trellis can retain its focused view while a dock commit activates another
+    // desktop window. A click must always hand focus back to the selected app.
+    if (win && !gestureActive()) host.activate(win);
+  }
+
   function focusWindow(event: Event) {
     if (!engine || focusing) return;
     const target =
@@ -880,14 +1293,22 @@ export function mountDesktopTiling(
   const markSizeDraft = () => {
     sizeDraft = true;
   };
+  const columnButtons = desktop.querySelectorAll("[data-column-action]");
+  columnButtons.forEach((button) =>
+    button.addEventListener("click", runColumnAction),
+  );
+  flowInput?.addEventListener("change", changeFlow);
+  columnInput?.addEventListener("change", changeColumnWidth);
   widthInput?.addEventListener("input", markSizeDraft);
   heightInput?.addEventListener("input", markSizeDraft);
   sizeButton?.addEventListener("click", applySize);
   homeButton?.addEventListener("click", home);
   splitButtons.forEach((button) => button.addEventListener("click", split));
   workspace.addEventListener("scroll", rememberScroll, { passive: true });
+  workspace.addEventListener("wheel", wheelColumns, { passive: false });
   workspace.addEventListener("pointerdown", focusWindow, true);
   workspace.addEventListener("focusin", focusWindow);
+  workspace.addEventListener("click", activateTab);
   document.addEventListener("desktop-spaces-changed", sync);
   document.addEventListener("desktop-windows-changed", sync);
   mobile.addEventListener("change", sync);
@@ -928,6 +1349,7 @@ export function mountDesktopTiling(
     reveal,
     release,
     toggle,
+    shortcut,
     capture: (win: HTMLElement) => placements.get(win),
     suspend() {
       pagehide();
@@ -945,6 +1367,11 @@ export function mountDesktopTiling(
       clearTimeout(scrollTimer);
       resizeObserver.disconnect();
       themeObserver.disconnect();
+      columnButtons.forEach((button) =>
+        button.removeEventListener("click", runColumnAction),
+      );
+      flowInput?.removeEventListener("change", changeFlow);
+      columnInput?.removeEventListener("change", changeColumnWidth);
       widthInput?.removeEventListener("input", markSizeDraft);
       heightInput?.removeEventListener("input", markSizeDraft);
       sizeButton?.removeEventListener("click", applySize);
@@ -953,8 +1380,10 @@ export function mountDesktopTiling(
         button.removeEventListener("click", split),
       );
       workspace.removeEventListener("scroll", rememberScroll);
+      workspace.removeEventListener("wheel", wheelColumns);
       workspace.removeEventListener("pointerdown", focusWindow, true);
       workspace.removeEventListener("focusin", focusWindow);
+      workspace.removeEventListener("click", activateTab);
       document.removeEventListener("desktop-spaces-changed", sync);
       document.removeEventListener("desktop-windows-changed", sync);
       mobile.removeEventListener("change", sync);

@@ -36,6 +36,7 @@ async function enable(page: Page) {
   await expect(toggle(page)).toHaveAttribute("aria-pressed", "true");
   await expect(tree(page)).toBeVisible();
   await expect(page.locator("[data-tiling-controls]")).toBeVisible();
+  await page.locator("[data-tiling-flow]").selectOption("canvas");
 }
 
 async function size(page: Page, width: number, height: number) {
@@ -110,6 +111,7 @@ async function seedTabs(page: Page, keys = ["notes", "json"]) {
           desks: {
             "desk-1": {
               enabled: true,
+              flow: "canvas",
               width: 1200,
               height: 900,
               scrollX: 0,

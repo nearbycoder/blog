@@ -28,8 +28,51 @@ const folderFor = (id: string) =>
       class="desktop-tiling-controls"
       data-tiling-controls
       hidden
-      aria-label="Tiled canvas controls"
+      aria-label="Tiled workspace controls"
     >
+      <div class="tiling-navigation">
+        <label
+          >Layout <select data-tiling-flow aria-label="Tiled layout"
+            ><option value="columns">Scrolling columns</option><option
+              value="canvas">Nested canvas</option
+            ></select
+          ></label
+        >
+        <div class="tiling-column-tools" data-column-tools>
+          <button
+            type="button"
+            data-column-action="previous"
+            title="Previous column (Ctrl+Alt+Left)"
+            aria-label="Previous column">←</button
+          >
+          <button
+            type="button"
+            data-column-action="next"
+            title="Next column (Ctrl+Alt+Right)"
+            aria-label="Next column">→</button
+          >
+          <label
+            >Width <select data-column-width aria-label="Column width"
+              ><option value="custom">Custom</option><option value="0.333333"
+                >⅓ screen</option
+              ><option value="0.5">½ screen</option><option value="0.666667"
+                >⅔ screen</option
+              ></select
+            ></label
+          >
+          <button
+            type="button"
+            data-column-action="full"
+            aria-pressed="false"
+            title="Toggle full width (Ctrl+Alt+F)">Full width</button
+          >
+          <button
+            type="button"
+            data-column-action="center"
+            title="Center column (Ctrl+Alt+C)">Center</button
+          >
+        </div>
+      </div>
       <div class="tiling-canvas-size">
         <label
           >Width <input
@@ -72,7 +115,7 @@ const folderFor = (id: string) =>
         <button
           type="button"
           data-tiling-split="bottom"
-          title="Split the active panel below another panel">Split below</button
+          title="Split the active panel below another panel">Stack below</button
         >
         <span data-tiling-status role="status"
           >Drag panel tabs to nest, group, or rearrange windows.</span
@@ -93,7 +136,7 @@ const folderFor = (id: string) =>
           type="button"
           data-tiling-toggle
           aria-pressed="false"
-          title="Tile windows in a scrollable canvas"
+          title="Arrange windows in scrolling columns"
           ><DesktopIcon name="grid" /><span>Tile</span></button
         >
         <button

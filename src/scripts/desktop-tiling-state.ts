@@ -5,6 +5,8 @@ export const TILING_LIMIT = 256 * 1024;
 
 export type TilingDesk = {
   enabled: boolean;
+  flow?: "columns" | "canvas";
+  columnWidths?: Record<string, number>;
   width: number;
   height: number;
   scrollX: number;
@@ -226,11 +228,22 @@ export function validTilingState(value: unknown): value is TilingState {
         "scrollY",
         "document",
         "floatingKeys",
+        "flow",
+        "columnWidths",
       ]) ||
       typeof desk.enabled !== "boolean" ||
+      (desk.flow !== undefined &&
+        desk.flow !== "columns" &&
+        desk.flow !== "canvas") ||
+      (desk.columnWidths !== undefined &&
+        (!record(desk.columnWidths) ||
+          Object.keys(desk.columnWidths).length > 128 ||
+          !Object.entries(desk.columnWidths).every(
+            ([key, width]) => identifier(key) && number(width, 92, 6000),
+          ))) ||
       !integer(desk.width, 800, 6000) ||
       !integer(desk.height, 800, 6000) ||
-      !number(desk.scrollX, 0, 6000) ||
+      !number(desk.scrollX, 0, desk.flow === "columns" ? 768032 : 6000) ||
       !number(desk.scrollY, 0, 6000) ||
       (desk.floatingKeys !== undefined &&
         (!Array.isArray(desk.floatingKeys) ||
