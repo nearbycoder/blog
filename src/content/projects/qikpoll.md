@@ -2,6 +2,7 @@
 title: "QikPoll"
 summary: "Anonymous StrawPoll-style app with realtime vote updates, privacy-focused anti-repeat guardrails, and Redis-backed polling."
 role: "Creator"
+createdAt: "2026-02-15"
 year: "Ongoing"
 stack: ["React 19", "TypeScript", "TanStack Start", "Redis", "WebSockets", "Vite 7", "Bun"]
 impact: "Built a no-signup polling product with live result streaming, poll visibility controls, and abuse-resistant voting powered by Redis TTL keys and atomic server logic."

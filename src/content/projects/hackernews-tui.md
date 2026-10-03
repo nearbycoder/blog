@@ -2,6 +2,7 @@
 title: "hackernews-tui"
 summary: "A lightweight terminal UI built with OpenTUI to quickly search and browse Hacker News from the command line."
 role: "Creator"
+createdAt: "2026-03-04"
 year: "2026"
 stack: ["TypeScript", "OpenTUI", "Node.js", "npm"]
 impact: "Built and shipped in about 30 minutes using GPT-5.3-Codex in the Codex app, then published directly to npm for instant CLI usage."

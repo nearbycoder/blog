@@ -2,6 +2,7 @@
 title: "uutil.space"
 summary: "A super simple utility app with developer tools baked in for quick use anywhere on the web."
 role: "Creator"
+createdAt: "2026-02-25"
 year: "Ongoing"
 stack: ["TypeScript", "Web Platform", "Developer Utilities"]
 impact: "Reduced repeated context switching by creating one always-available utility surface for recurring browser-side developer tasks."

@@ -2,6 +2,7 @@
 title: "Roomba Wars"
 summary: "A multiplayer browser game that turns a simple Roomba interview prompt into a realtime 3D arena with procedural terrain, enemies, and benchmark tooling."
 role: "Creator"
+createdAt: "2026-03-08"
 year: "2026"
 stack: ["TypeScript", "React 19", "Vite", "React Three Fiber", "three", "Cloudflare Workers", "Durable Objects"]
 impact: "Reimagined an interview exercise as a multiplayer game prototype with realtime simulation, persistent scoring, and benchmark tooling to test rendering limits at higher player counts."

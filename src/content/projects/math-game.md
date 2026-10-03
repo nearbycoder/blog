@@ -2,6 +2,7 @@
 title: "Math Game"
 summary: "Duolingo-inspired math learning game with topic progression, XP, streaks, and lives."
 role: "Creator"
+createdAt: "2022-11-16"
 year: "Ongoing"
 stack: ["React 19", "TypeScript", "Tailwind CSS 4", "Vite 7", "TanStack Router"]
 impact: "Built MathQuest with 20 topics across 7 categories, local progress persistence, and gamified learning loops."

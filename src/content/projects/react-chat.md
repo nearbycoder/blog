@@ -2,6 +2,7 @@
 title: "React Chat"
 summary: "Real-time ephemeral chat with room-based presence, slash commands, private messages, GIFs, and syntax-highlighted code sharing."
 role: "Creator"
+createdAt: "2015-07-15"
 year: "Ongoing"
 stack: ["React 19", "TypeScript", "TanStack Start", "Tailwind CSS 4", "WebSockets", "Nitro", "Shiki"]
 impact: "Built a full-stack realtime chat system with reconnecting WebSockets, room-scoped presence, command-driven UX, and ephemeral in-memory state."

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">NoBo architecture overview</title>
+  <desc id="desc">Slack events flow through a Bolt server to the Flue agent runtime. Redis stores memory and schedules. Tools provide search, reminders and documents. Replies return to Slack.</desc>
+  <defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#d8d8c9" stroke-width="1"/></pattern><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#68694f"/></marker></defs>
+  <rect width="1440" height="900" fill="#f4f2e7"/><rect width="1440" height="900" fill="url(#grid)"/>
+  <g font-family="Arial, sans-serif" fill="#252a26">
+    <text x="88" y="112" font-size="24" letter-spacing="4" fill="#666851">PROJECT / ARCHITECTURE</text>
+    <text x="88" y="205" font-size="76" font-weight="700">NoBo</text>
+    <text x="90" y="255" font-size="28" fill="#5d645d">A Slack assistant with context and useful tools.</text>
+    <g stroke="#68694f" stroke-width="3" fill="none" marker-end="url(#arrow)"><path d="M410 432H535"/><path d="M865 432H990"/><path d="M700 515V620"/></g>
+    <g stroke="#a6ab98" stroke-width="2"><rect x="88" y="345" width="322" height="174" rx="16" fill="#fffef8"/><rect x="535" y="330" width="330" height="200" rx="16" fill="#e5ebd5"/><rect x="990" y="345" width="362" height="174" rx="16" fill="#fffef8"/><rect x="535" y="625" width="330" height="145" rx="16" fill="#fffef8"/></g>
+    <text x="120" y="398" font-size="31" font-weight="700">Slack</text><text x="120" y="445" font-size="23">Mentions · Threads</text><text x="120" y="479" font-size="23">Commands · App Home</text>
+    <text x="568" y="386" font-size="31" font-weight="700">NoBo service</text><text x="568" y="435" font-size="23">Bolt event receiver</text><text x="568" y="475" font-size="23">Flue agent runtime</text>
+    <text x="1022" y="398" font-size="31" font-weight="700">Tools</text><text x="1022" y="445" font-size="23">Search · Reminders</text><text x="1022" y="479" font-size="23">Documents · Follow-ups</text>
+    <text x="568" y="677" font-size="31" font-weight="700">Redis</text><text x="568" y="724" font-size="23">Memory · Schedules</text>
+    <text x="88" y="842" font-size="21" fill="#666851">Based on the public JoshBot README · Diagram, not a product screenshot</text>
+  </g>
+</svg>

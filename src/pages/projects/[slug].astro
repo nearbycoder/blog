@@ -5,7 +5,7 @@ import ProjectStory from "../../components/ProjectStory.astro";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import Icon from "../../components/Icon.astro";
 import { getCollection, render } from "astro:content";
-import { projectImage } from "../../lib/media";
+import { formatDate, projectImage, projectImageAlt } from "../../lib/media";
 export async function getStaticPaths() {
   return (await getCollection("projects"))
     .filter((entry) => !entry.data.draft)
@@ -54,25 +54,40 @@ const lab = labs.find((lab) => lab.project === entry.id);
     </header>
     {
       image && (
-        <div class="reading-cover">
+        <figure class="reading-cover">
           <img
             src={image}
-            alt={`${entry.data.title} project screenshot`}
+            alt={projectImageAlt(entry)}
             width="1200"
             height="600"
             fetchpriority="high"
             style="object-fit:contain"
           />
-        </div>
+          {entry.data.imageCaption && (
+            <figcaption>{entry.data.imageCaption}</figcaption>
+          )}
+        </figure>
       )
     }
     <div class="reading-layout">
       <aside class="reading-sidebar">
         <p class="label">Project details</p><p class="mt-4 text-sm">
           {entry.data.role}
-        </p><p class="label mt-2">{entry.data.year}</p><div
-          class="mt-6 flex flex-wrap gap-2"
-        >
+        </p>{
+          entry.data.createdAt ? (
+            <p class="project-created mt-4">
+              <span class="label">Repository created</span>
+              <time
+                datetime={entry.data.createdAt}
+                title="GitHub repository creation date (UTC)"
+              >
+                {formatDate(entry.data.createdAt)}
+              </time>
+            </p>
+          ) : (
+            <p class="label mt-2">{entry.data.year}</p>
+          )
+        }<div class="mt-6 flex flex-wrap gap-2">
           {
             entry.data.stack.map((item) => (
               <a class="chip" href={`/technologies/${technologySlug(item)}/`}>
@@ -94,7 +109,37 @@ const lab = labs.find((lab) => lab.project === entry.id);
               </>
             </div>
           )
-        }<div class="article-content"><Content /></div><div class="reading-end">
+        }<div class="article-content"><Content /></div>
+        {
+          entry.data.demoVideos.length > 0 && (
+            <section
+              class="project-demos"
+              aria-labelledby="project-demos-heading"
+            >
+              <h2 id="project-demos-heading">See it in action</h2>
+              {entry.data.demoVideos.map((demo, index) => (
+                <figure>
+                  <h3>{demo.title}</h3>
+                  <video
+                    src={demo.src}
+                    poster={demo.poster}
+                    controls
+                    preload="none"
+                    playsinline
+                    aria-label={demo.title}
+                    aria-describedby={`project-demo-caption-${index}`}
+                  >
+                    <a href={demo.src}>Watch {demo.title}</a>
+                  </video>
+                  <figcaption id={`project-demo-caption-${index}`}>
+                    {demo.caption}
+                  </figcaption>
+                </figure>
+              ))}
+            </section>
+          )
+        }
+        <div class="reading-end">
           <a href="/projects" class="text-link"
             >Explore more projects <Icon name="arrow" /></a
           >
@@ -117,3 +162,45 @@ const lab = labs.find((lab) => lab.project === entry.id);
   }
   <ProjectStory projectId={entry.id} />
 </BlogLayout>
+
+<style>
+  .reading-cover figcaption,
+  .project-demos figcaption {
+    margin-top: 12px;
+    color: var(--fg-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+  .reading-cover figcaption {
+    padding: 0 8px 8px;
+  }
+  .project-created time {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.875rem;
+  }
+  .project-demos {
+    margin-top: 48px;
+  }
+  .project-demos h2 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  .project-demos figure {
+    margin-top: 28px;
+  }
+  .project-demos h3 {
+    margin-bottom: 12px;
+    font-size: 1.125rem;
+  }
+  .project-demos video {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+</style>

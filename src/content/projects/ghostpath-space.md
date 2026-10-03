@@ -2,6 +2,7 @@
 title: "ghostpath.space"
 summary: "Puzzle game where you navigate an invisible maze, avoid hidden traps, and find a safe path to the goal."
 role: "Creator"
+createdAt: "2026-01-02"
 year: "Ongoing"
 stack: ["TypeScript", "JavaScript", "Web Platform"]
 impact: "Shipped and maintained an open-source project in public with a clean repository workflow and production-oriented delivery."

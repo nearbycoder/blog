@@ -2,6 +2,7 @@
 title: "imposter.fm"
 summary: "A podcast host for sharing honest engineering conversations about AI, layoffs, and adapting in public."
 role: "Creator"
+createdAt: "2026-01-03"
 year: "Ongoing"
 stack: ["Podcasting", "Audio", "TypeScript", "Personal Brand"]
 impact: "Created a dedicated home for podcast episodes on career reflection, AI workflow shifts, and practical engineering perspective during a layoff period."

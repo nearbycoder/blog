@@ -2,6 +2,7 @@
 title: "agfs.dev"
 summary: "An open-source private filesystem for AI agents, with a web UI and CLI for uploading, previewing, and sharing remote artifacts through signed links."
 role: "Creator"
+createdAt: "2026-03-29"
 year: "Ongoing"
 stack: ["TanStack Start", "TypeScript", "Cloudflare Workers", "Cloudflare R2", "Cloudflare D1", "Better Auth", "CLI"]
 impact: "Turned the annoying problem of retrieving remote-agent artifacts into a simple upload, preview, and signed-link workflow that works across local machines, CI, and hosted agent environments."

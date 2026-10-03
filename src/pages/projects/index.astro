@@ -14,7 +14,11 @@ const sortedProjects = projects
     if (aIsBottom && !bIsBottom) return 1;
     if (!aIsBottom && bIsBottom) return -1;
 
-    return b.data.year.localeCompare(a.data.year);
+    return (
+      (b.data.createdAt ?? "").localeCompare(a.data.createdAt ?? "") ||
+      b.data.year.localeCompare(a.data.year) ||
+      a.data.title.localeCompare(b.data.title)
+    );
   });
 ---
 

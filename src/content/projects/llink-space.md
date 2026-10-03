@@ -2,6 +2,7 @@
 title: "llink.space"
 summary: "A link-in-bio home base that centralizes my projects, writing, and current work in one shareable page."
 role: "Creator"
+createdAt: "2026-02-20"
 year: "Ongoing"
 stack: ["TanStack Start", "TypeScript", "Tailwind CSS", "Content Design", "Personal Brand"]
 impact: "Created a single source of truth for my online presence so projects, posts, and contact paths are easier to discover and keep up to date."

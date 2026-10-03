@@ -2,6 +2,7 @@
 title: "dailystand.dev"
 summary: "Open-source, self-hostable async standup platform for teams with analytics, API keys, a public REST API, and MCP support."
 role: "Creator"
+createdAt: "2026-02-16"
 year: "Ongoing"
 stack:
   [

@@ -50,6 +50,33 @@ const projects = defineCollection({
     summary: z.string(),
     role: z.string(),
     year: z.string(),
+    createdAt: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "Use a UTC date in YYYY-MM-DD format")
+      .refine((value) => {
+        const date = new Date(`${value}T00:00:00.000Z`);
+        return (
+          !Number.isNaN(date.valueOf()) &&
+          date.toISOString().slice(0, 10) === value
+        );
+      }, "Use a real calendar date")
+      .optional(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
+    imageCaption: z.string().optional(),
+    demoVideos: z
+      .array(
+        z.object({
+          src: z.union([
+            z.string().url(),
+            z.string().regex(/^\/videos\/(?:[\w-]+\/)*[\w.-]+\.(?:mp4|webm)$/),
+          ]),
+          title: z.string(),
+          caption: z.string(),
+          poster: z.string().optional(),
+        }),
+      )
+      .default([]),
     stack: z.array(z.string()).default([]),
     impact: z.string().optional(),
     link: z.string().optional(),
@@ -80,7 +107,14 @@ const layoff = defineCollection({
 
 const postmortems = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/postmortems" }),
-  schema: z.object({ title:z.string(), description:z.string(), date:z.string(), project:z.string(), sources:z.array(z.string()).min(1), draft:z.boolean().default(false) }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.string(),
+    project: z.string(),
+    sources: z.array(z.string()).min(1),
+    draft: z.boolean().default(false),
+  }),
 });
 
 export const collections = {

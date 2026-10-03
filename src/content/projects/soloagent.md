@@ -2,6 +2,7 @@
 title: "SoloAgent"
 summary: "Desktop AI harness workspace for coding workflows with project-scoped chat context, terminal execution, and live git visibility."
 role: "Creator"
+createdAt: "2026-02-27"
 year: "Ongoing"
 stack: ["TypeScript", "Electron", "React 19", "TanStack AI", "node-pty", "SQLite", "Tailwind CSS 4"]
 impact: "Built as a practical AI harness experiment to understand state, tool-calling, terminal lifecycle, and git integration tradeoffs in modern AI coding workflows."

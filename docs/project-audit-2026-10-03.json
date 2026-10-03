@@ -1,0 +1,227 @@
+{
+  "reviewedOn": "2026-10-03",
+  "account": "https://github.com/nearbycoder",
+  "scope": "Public, non-fork repositories created on or after 2026-01-01, using GitHub UTC timestamps.",
+  "totalPublicRepositoriesReviewed": 120,
+  "existingPublishedProjectSlugs": [
+    "agfs-dev",
+    "dailystand-dev",
+    "easyaccessqr-com",
+    "ghostpath-space",
+    "hackernews-tui",
+    "imposter-fm",
+    "llink-space",
+    "math-game",
+    "qikbar",
+    "qikpoll",
+    "react-chat",
+    "roomba-wars",
+    "secret-santa-pair",
+    "soloagent",
+    "triphaven",
+    "uutil-space"
+  ],
+  "creationDateMeaning": "GitHub repository creation, not necessarily product inception or launch.",
+  "entries": [
+    {
+      "repository": "https://github.com/nearbycoder/LiliPad-ios",
+      "createdAt": "2026-10-02T05:25:14Z",
+      "license": null,
+      "action": "excluded",
+      "reason": "Privacy/support pages for the LiliPad product; not a separate source project."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/LiliPad",
+      "createdAt": "2026-10-02T03:41:47Z",
+      "license": "GPL-3.0",
+      "action": "added",
+      "page": "/projects/lilipad/",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/LiliPad/main/docs/screenshots/dashboard.png",
+        "https://raw.githubusercontent.com/nearbycoder/LiliPad/main/docs/screenshots/sentence-scramble.png"
+      ]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/rustfire",
+      "createdAt": "2026-09-27T23:37:16Z",
+      "license": "MIT",
+      "action": "added",
+      "page": "/projects/rustfire/",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/rustfire/master/static/icons/app-icon.png"
+      ]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/rizzy",
+      "createdAt": "2026-09-27T23:36:15Z",
+      "license": "NOASSERTION",
+      "action": "added",
+      "page": "/projects/rizzy/",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/rizzy/master/docs/visual-baselines/rizzy-board-1280.png",
+        "https://raw.githubusercontent.com/nearbycoder/rizzy/master/docs/visual-baselines/rizzy-card-1280.png"
+      ]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/nerbs-desktop",
+      "createdAt": "2026-09-07T23:00:41Z",
+      "license": null,
+      "action": "excluded",
+      "reason": "Public installer distribution repository; application server source is private."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/smush.lol",
+      "createdAt": "2026-08-20T23:28:24Z",
+      "license": null,
+      "action": "added",
+      "page": "/projects/smush-lol/",
+      "media": ["https://smush.lol/"]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/yeeet.dev",
+      "createdAt": "2026-08-13T15:01:01Z",
+      "license": "MIT",
+      "action": "added",
+      "page": "/projects/yeeet-dev/",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/yeeet.dev/main/docs/images/yeeet-home.jpg"
+      ]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/Haskellite",
+      "createdAt": "2026-07-17T02:22:17Z",
+      "license": "BSD-3-Clause",
+      "action": "added",
+      "page": "/projects/haskellite/",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/Haskellite/main/docs/screenshots/haskellite-main.png",
+        "https://raw.githubusercontent.com/nearbycoder/Haskellite/main/docs/screenshots/haskellite-overlay.png"
+      ]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/clank.run",
+      "createdAt": "2026-07-16T16:09:04Z",
+      "license": "MIT",
+      "action": "added",
+      "page": "/projects/clank-run/",
+      "media": ["https://design.clank.run/"]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/JoshBot",
+      "createdAt": "2026-05-22T01:30:41Z",
+      "license": null,
+      "action": "added",
+      "page": "/projects/nobo/",
+      "media": [
+        "Original architecture diagram based on public README; no Slack conversations used."
+      ]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/agfs",
+      "createdAt": "2026-03-29T19:22:10Z",
+      "license": null,
+      "action": "already-present",
+      "page": "/projects/agfs-dev/"
+    },
+    {
+      "repository": "https://github.com/nearbycoder/roomba-wars",
+      "createdAt": "2026-03-08T00:06:03Z",
+      "license": null,
+      "action": "already-present",
+      "page": "/projects/roomba-wars/"
+    },
+    {
+      "repository": "https://github.com/nearbycoder/codex-grab",
+      "createdAt": "2026-03-06T22:40:04Z",
+      "license": "MIT",
+      "action": "added",
+      "page": "/projects/codex-grab/",
+      "media": [
+        "Local capture of public repository demo-vite; bridge disconnected; unsent prompt; silent WebM."
+      ]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/hackernews-tui",
+      "createdAt": "2026-03-04T02:46:01Z",
+      "license": null,
+      "action": "already-present",
+      "page": "/projects/hackernews-tui/"
+    },
+    {
+      "repository": "https://github.com/nearbycoder/triphaven",
+      "createdAt": "2026-03-02T15:24:28Z",
+      "license": "MIT",
+      "action": "already-present",
+      "page": "/projects/triphaven/"
+    },
+    {
+      "repository": "https://github.com/nearbycoder/soloagent",
+      "createdAt": "2026-02-27T04:55:39Z",
+      "license": null,
+      "action": "already-present",
+      "page": "/projects/soloagent/"
+    },
+    {
+      "repository": "https://github.com/nearbycoder/uutil.space",
+      "createdAt": "2026-02-25T00:58:34Z",
+      "license": null,
+      "action": "already-present",
+      "page": "/projects/uutil-space/"
+    },
+    {
+      "repository": "https://github.com/nearbycoder/touchgrass.city",
+      "createdAt": "2026-02-20T17:41:45Z",
+      "license": null,
+      "action": "added",
+      "page": "/projects/touchgrass-city/",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/touchgrass.city/main/public/touchgrass-city.png"
+      ]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/llink.space",
+      "createdAt": "2026-02-20T00:05:19Z",
+      "license": null,
+      "action": "already-present",
+      "page": "/projects/llink-space/"
+    },
+    {
+      "repository": "https://github.com/nearbycoder/dailystand.dev",
+      "createdAt": "2026-02-16T00:00:36Z",
+      "license": null,
+      "action": "already-present",
+      "page": "/projects/dailystand-dev/"
+    },
+    {
+      "repository": "https://github.com/nearbycoder/qikpoll",
+      "createdAt": "2026-02-15T20:53:59Z",
+      "license": null,
+      "action": "already-present",
+      "page": "/projects/qikpoll/"
+    },
+    {
+      "repository": "https://github.com/nearbycoder/pong",
+      "createdAt": "2026-02-01T21:24:03Z",
+      "license": null,
+      "action": "added",
+      "page": "/projects/pong/",
+      "media": [
+        "https://github.com/nearbycoder/pong/blob/master/screenshot-retro.png"
+      ]
+    },
+    {
+      "repository": "https://github.com/nearbycoder/imposter.fm",
+      "createdAt": "2026-01-03T03:42:03Z",
+      "license": null,
+      "action": "already-present",
+      "page": "/projects/imposter-fm/"
+    },
+    {
+      "repository": "https://github.com/nearbycoder/ghostpath.space",
+      "createdAt": "2026-01-02T19:24:40Z",
+      "license": null,
+      "action": "already-present",
+      "page": "/projects/ghostpath-space/"
+    }
+  ]
+}

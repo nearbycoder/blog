@@ -2,6 +2,7 @@
 title: "EasyAccessQR.com"
 summary: "An easy and simple QR code generator with analytics tracking and A/B testing."
 role: "Creator"
+createdAt: "2025-06-02"
 year: "Ongoing"
 stack:
   [

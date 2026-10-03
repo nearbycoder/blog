@@ -2,6 +2,7 @@
 title: "TripHaven"
 summary: "A full-stack Expedia-style hotel booking platform with customer flows, admin operations, and an in-app AI assistant wired to MCP tools."
 role: "Creator"
+createdAt: "2026-03-02"
 year: "2026"
 stack: ["TypeScript", "TanStack Start", "tRPC", "Better Auth", "Drizzle ORM", "Postgres", "TanStack AI"]
 impact: "Built a production-style travel booking prototype in roughly six hours, covering search, booking, admin tooling, and AI-assisted discovery in one system."

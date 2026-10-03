@@ -2,6 +2,7 @@
 title: "Secret Santa Pair"
 summary: "Privacy-first Secret Santa app with URL-based state, elegant reveal links, and no backend."
 role: "Creator"
+createdAt: "2025-12-17"
 year: "Ongoing"
 stack: ["React 19", "TypeScript", "Tailwind CSS 4", "Vite 7", "TanStack Router"]
 impact: "Built a no-login, no-database exchange flow where participants, assignments, and reveal links are generated and shared client-side."

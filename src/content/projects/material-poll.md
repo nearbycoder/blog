@@ -2,6 +2,7 @@
 title: "Material Poll"
 summary: "Polling application built with Node, Express, Mongo and Socket.io."
 role: "Creator"
+createdAt: "2015-06-26"
 year: "Ongoing"
 stack: ["Node", "Realtime", "Mongo"]
 impact: "Explored realtime polling flows and live updates."

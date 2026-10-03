@@ -1,5 +1,5 @@
 ---
-import { projectImage } from "../lib/media";
+import { formatDate, projectImage } from "../lib/media";
 import Icon from "./Icon.astro";
 const { project, heading = "h3" } = Astro.props;
 const Heading = heading as "h2" | "h3";
@@ -24,7 +24,20 @@ const image = projectImage(project);
   <div class="project-heading">
     <Heading
       ><a href={`/projects/${project.id}`}>{project.data.title}</a></Heading
-    ><span class="label">{project.data.year}</span>
+    >{
+      project.data.createdAt ? (
+        <time
+          class="label"
+          datetime={project.data.createdAt}
+          title="Repository created"
+          aria-label={`Repository created ${formatDate(project.data.createdAt)}`}
+        >
+          {formatDate(project.data.createdAt)}
+        </time>
+      ) : (
+        <span class="label">{project.data.year}</span>
+      )
+    }
   </div>
   <p>{project.data.summary}</p>
   <div class="mt-4 flex flex-wrap gap-2">

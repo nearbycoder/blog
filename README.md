@@ -33,7 +33,8 @@ Most of the site is driven by content files and a couple of local data modules:
 - `src/content/articles`
   Article posts with `title`, `description`, `date`, optional `publishedAt`, `tags`, `readTime`, `featured`, `accent`, and `draft`.
 - `src/content/projects`
-  Portfolio entries with `title`, `summary`, `role`, `year`, `stack`, optional `impact`, `link`, `githubLink`, `featured`, `accent`, and `draft`.
+  Portfolio entries with `title`, `summary`, `role`, `year`, `stack`, optional `createdAt`, `image`, `imageAlt`, `imageCaption`, `impact`, `link`, `githubLink`, `featured`, `accent`, and `draft`. `createdAt` is the GitHub repository's creation date in UTC (`YYYY-MM-DD`), validated as a real calendar date and displayed as "Repository created"; it is not the product's launch date. Existing entries without it keep their `year` label. Dated entries sort newest first in the archive, with the existing EasyAccessQR placement preserved.
+  Optional `image` paths are used as supplied (for example `/images/projects/project-name.webp`); prepare those assets before publishing and describe the visible image with `imageAlt`. Existing entries retain their screenshot lookup and image optimization. Optional `demoVideos` contain real project recordings with `src` (an absolute URL or a local `.mp4`/`.webm` path under `/videos/`), `title`, `caption`, and optional `poster`. The project page renders them as responsive, user-controlled videos without preloading. Describe silent recordings in the caption; recordings with spoken content need an accessible transcript or captions before publishing.
 - `src/content/layoff`
   Weekly build-log entries with `title`, `summary`, `date`, optional `week` or `day`, `status`, `stack`, `repoUrl`, `siteUrl`, `accent`, and `draft`.
 - `src/data/site.ts`

@@ -29,11 +29,23 @@ const projectImages: Record<string, string> = {
   "math-game": "/images/math.png",
   "material-poll": "/images/poll.png",
 };
-export function projectImage(entry: { id: string; body?: string }) {
+type ProjectMediaEntry = {
+  id: string;
+  body?: string;
+  data?: { title?: string; image?: string; imageAlt?: string };
+};
+export function projectImage(entry: ProjectMediaEntry) {
+  if (entry.data?.image) return entry.data.image;
   const image =
     projectImages[entry.id] ??
     entry.body?.match(/!\[[^\]]*\]\((\/images\/[^)]+)\)/)?.[1];
   return image ? optimizedImage(image) : undefined;
+}
+export function projectImageAlt(entry: ProjectMediaEntry) {
+  return (
+    entry.data?.imageAlt ??
+    `${entry.data?.title ?? entry.id} project screenshot`
+  );
 }
 export function formatDate(value: string) {
   return new Intl.DateTimeFormat("en-US", {
