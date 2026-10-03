@@ -1,0 +1,35 @@
+{
+  "reviewedOn": "2026-10-03",
+  "scope": "The two newly published public game repositories requested by the owner.",
+  "creationDateMeaning": "GitHub repository creation date, not necessarily the start of development.",
+  "entries": [
+    {
+      "repository": "https://github.com/nearbycoder/hapless-wheels",
+      "createdAt": "2026-10-03T17:28:28Z",
+      "reviewedCommit": "c85b518115f4d018baf4e31ab792026184062d07",
+      "page": "/projects/hapless-wheels/",
+      "action": "added",
+      "duplicateCheck": "No existing project matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/hapless-wheels/c85b518115f4d018baf4e31ab792026184062d07/docs/skyscraper.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/hapless-wheels/c85b518115f4d018baf4e31ab792026184062d07/docs/level-select.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/hapless-wheels/c85b518115f4d018baf4e31ab792026184062d07/docs/loop.gif"
+      ],
+      "mediaProcessing": "Screenshots converted to WebP. Original gameplay GIF converted to a silent H.264 MP4 with a poster extracted from the recording. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/geowars",
+      "createdAt": "2026-10-03T17:27:17Z",
+      "reviewedCommit": "5777f902bb4c4c5e14f811852182d3bf1778753c",
+      "page": "/projects/geowars/",
+      "action": "added",
+      "duplicateCheck": "No existing project matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/geowars/5777f902bb4c4c5e14f811852182d3bf1778753c/docs/gameplay.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/geowars/5777f902bb4c4c5e14f811852182d3bf1778753c/docs/blackhole.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/geowars/5777f902bb4c4c5e14f811852182d3bf1778753c/docs/gameplay.gif"
+      ],
+      "mediaProcessing": "Screenshots converted to WebP. Original gameplay GIF converted to a silent H.264 MP4 with a poster extracted from the recording. Playback is user-initiated."
+    }
+  ]
+}
