@@ -179,6 +179,24 @@ const lab = labs.find((lab) => lab.project === entry.id);
     margin-top: 4px;
     font-size: 0.875rem;
   }
+  .article-content :global(.project-media-gallery) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    gap: 16px;
+    align-items: start;
+  }
+  .article-content :global(figure) {
+    margin-inline: 0;
+  }
+  .article-content :global(.project-media-gallery figure) {
+    margin: 0;
+  }
+  .article-content :global(figcaption) {
+    margin-top: 10px;
+    color: var(--fg-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
   .project-demos {
     margin-top: 48px;
   }

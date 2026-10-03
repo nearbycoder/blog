@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 const addedProjects = [
+  "flip-flop-cheer",
   "hapless-wheels",
   "geowars",
   "lilipad",

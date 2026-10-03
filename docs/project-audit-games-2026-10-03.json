@@ -1,6 +1,6 @@
 {
   "reviewedOn": "2026-10-03",
-  "scope": "The two newly published public game repositories requested by the owner.",
+  "scope": "Newly published public game repositories requested by the owner on October 3, 2026.",
   "creationDateMeaning": "GitHub repository creation date, not necessarily the start of development.",
   "entries": [
     {
@@ -30,6 +30,26 @@
         "https://raw.githubusercontent.com/nearbycoder/geowars/5777f902bb4c4c5e14f811852182d3bf1778753c/docs/gameplay.gif"
       ],
       "mediaProcessing": "Screenshots converted to WebP. Original gameplay GIF converted to a silent H.264 MP4 with a poster extracted from the recording. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/flip-flop-cheer",
+      "createdAt": "2026-10-03T18:45:45Z",
+      "reviewedCommit": "655ebaa5e01bbf5fca5fb649c4033a697646f9b4",
+      "page": "/projects/flip-flop-cheer/",
+      "action": "added",
+      "duplicateCheck": "No existing project matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/flip-flop-cheer/655ebaa5e01bbf5fca5fb649c4033a697646f9b4/docs/media/tuck.png",
+        "https://raw.githubusercontent.com/nearbycoder/flip-flop-cheer/655ebaa5e01bbf5fca5fb649c4033a697646f9b4/docs/media/flop.png",
+        "https://raw.githubusercontent.com/nearbycoder/flip-flop-cheer/655ebaa5e01bbf5fca5fb649c4033a697646f9b4/docs/media/gymnast.png",
+        "https://raw.githubusercontent.com/nearbycoder/flip-flop-cheer/655ebaa5e01bbf5fca5fb649c4033a697646f9b4/docs/media/face.png",
+        "https://raw.githubusercontent.com/nearbycoder/flip-flop-cheer/655ebaa5e01bbf5fca5fb649c4033a697646f9b4/docs/media/custom.png",
+        "https://raw.githubusercontent.com/nearbycoder/flip-flop-cheer/655ebaa5e01bbf5fca5fb649c4033a697646f9b4/docs/media/phone-help.png",
+        "https://raw.githubusercontent.com/nearbycoder/flip-flop-cheer/655ebaa5e01bbf5fca5fb649c4033a697646f9b4/docs/media/phone-play.png",
+        "https://raw.githubusercontent.com/nearbycoder/flip-flop-cheer/655ebaa5e01bbf5fca5fb649c4033a697646f9b4/docs/media/phone-customize.png",
+        "https://raw.githubusercontent.com/nearbycoder/flip-flop-cheer/655ebaa5e01bbf5fca5fb649c4033a697646f9b4/docs/media/demo.mp4"
+      ],
+      "mediaProcessing": "All eight README screenshots converted to WebP. Full-quality MP4 copied unchanged; it contains the same scripted demo as the README GIF and has no audio track. Playback is user-initiated."
     }
   ]
 }
