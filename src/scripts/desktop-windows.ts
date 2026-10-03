@@ -9,9 +9,11 @@ const titleOf = (win: HTMLElement) => win.dataset.title ?? "Library";
 const stateOf = (win: HTMLElement) =>
   win.dataset.spaceHidden === "true"
     ? "On another desktop"
-    : win.hidden
-      ? "Minimized"
-      : "Open";
+    : win.dataset.tilingHidden === "true"
+      ? "In a tiled tab"
+      : win.hidden
+        ? "Minimized"
+        : "Open";
 const mobile = () =>
   matchMedia("(max-width: 760px), (pointer: coarse)").matches;
 const layouts: [WindowLayout | "floating", string][] = [
@@ -316,7 +318,12 @@ export function mountApp(root: HTMLElement): () => void {
         // that switch, so windows on the previous desktop keep their state.
         host.activate(win);
         for (const other of host.windows())
-          if (other !== win && !other.hidden) host.minimize(other);
+          if (
+            other !== win &&
+            other.dataset.spaceHidden !== "true" &&
+            (!other.hidden || other.dataset.tilingHidden === "true")
+          )
+            host.minimize(other);
         host.activate(win);
         host.announce(
           `Showing only ${titleOf(win)}. Other windows are minimized, with their work kept open.`,
@@ -370,7 +377,8 @@ export function mountApp(root: HTMLElement): () => void {
         .filter(Boolean)
         .join(" · ");
       if (card.state.textContent !== details) card.state.textContent = details;
-      card.minimize.disabled = win.hidden;
+      card.minimize.disabled =
+        win.hidden && win.dataset.tilingHidden !== "true";
       card.pin.setAttribute(
         "aria-pressed",
         String(win.dataset.pinned === "true"),

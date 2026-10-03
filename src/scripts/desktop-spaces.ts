@@ -64,7 +64,10 @@ let current: DesktopSpaces | undefined;
 export const getDesktopSpaces = () => current;
 
 /** Separates a desk being out of view from a user's choice to minimize an app. */
-export function mountDesktopSpaces(desktop: HTMLElement) {
+export function mountDesktopSpaces(
+  desktop: HTMLElement,
+  visibleMinimized: (win: HTMLElement) => boolean = (win) => win.hidden,
+) {
   const store = localState<DesktopSpacesState>(
     key,
     {
@@ -116,7 +119,8 @@ export function mountDesktopSpaces(desktop: HTMLElement) {
     for (const win of windows) {
       const inactive = !sticky(win) && win.dataset.space !== state.active;
       if (inactive) {
-        if (win.dataset.spaceHidden !== "true") minimized.set(win, win.hidden);
+        if (win.dataset.spaceHidden !== "true")
+          minimized.set(win, visibleMinimized(win));
         win.dataset.spaceHidden = "true";
         if (!win.hidden) win.hidden = true;
         if (win.classList.contains("is-active"))
@@ -179,7 +183,7 @@ export function mountDesktopSpaces(desktop: HTMLElement) {
     isMinimized: (win: HTMLElement) =>
       win.dataset.spaceHidden === "true"
         ? (minimized.get(win) ?? true)
-        : win.hidden,
+        : visibleMinimized(win),
     minimize(win: HTMLElement) {
       if (win.dataset.spaceHidden === "true") minimized.set(win, true);
     },

@@ -48,6 +48,7 @@ export function mountWindowLayout(
     constrain: (win: HTMLElement) => void;
     announce: (message: string) => void;
     changed?: () => void;
+    beforeLayout?: (win: HTMLElement) => void;
   },
 ) {
   const desktop = workspace.closest<HTMLElement>("[data-desktop]")!;
@@ -79,6 +80,7 @@ export function mountWindowLayout(
   }
 
   function setLayout(win: HTMLElement, target?: WindowLayout) {
+    actions.beforeLayout?.(win);
     if (target && !win.dataset.snap) floating.set(win, captureFloating(win));
     if (target) win.dataset.snap = target;
     else {
@@ -161,7 +163,12 @@ export function mountWindowLayout(
         actions.changed?.();
       };
       grip.addEventListener("pointerdown", (event) => {
-        if (actions.isMobile() || event.button !== 0) return;
+        if (
+          actions.isMobile() ||
+          win.dataset.tiled === "true" ||
+          event.button !== 0
+        )
+          return;
         cancelGesture?.();
         const rect = win.getBoundingClientRect(),
           bounds = workspace.getBoundingClientRect();
@@ -169,10 +176,10 @@ export function mountWindowLayout(
           pointer: event.pointerId,
           x: event.clientX,
           y: event.clientY,
-          left: rect.left - bounds.left,
-          top: rect.top - bounds.top,
-          right: rect.right - bounds.left,
-          bottom: rect.bottom - bounds.top,
+          left: rect.left - bounds.left + workspace.scrollLeft,
+          top: rect.top - bounds.top + workspace.scrollTop,
+          right: rect.right - bounds.left + workspace.scrollLeft,
+          bottom: rect.bottom - bounds.top + workspace.scrollTop,
           minWidth: 0,
           minHeight: 0,
           moved: false,
@@ -212,28 +219,27 @@ export function mountWindowLayout(
           );
           desktop.classList.add("is-resizing");
         }
-        const bounds = workspace.getBoundingClientRect();
         const left = direction.includes("w")
           ? Math.max(
-              8,
+              workspace.scrollLeft + 8,
               Math.min(resize.right - resize.minWidth, resize.left + dx),
             )
           : resize.left;
         const right = direction.includes("e")
           ? Math.min(
-              bounds.width - 8,
+              workspace.scrollLeft + workspace.clientWidth - 8,
               Math.max(resize.left + resize.minWidth, resize.right + dx),
             )
           : resize.right;
         const top = direction.includes("n")
           ? Math.max(
-              8,
+              workspace.scrollTop + 8,
               Math.min(resize.bottom - resize.minHeight, resize.top + dy),
             )
           : resize.top;
         const bottom = direction.includes("s")
           ? Math.min(
-              bounds.height - 8,
+              workspace.scrollTop + workspace.clientHeight - 8,
               Math.max(resize.top + resize.minHeight, resize.bottom + dy),
             )
           : resize.bottom;
@@ -302,6 +308,7 @@ export function mountWindowLayout(
     handle.addEventListener("pointerdown", (event) => {
       if (
         actions.isMobile() ||
+        win.dataset.tiled === "true" ||
         event.button !== 0 ||
         (event.target as HTMLElement).closest("button, a")
       )
@@ -313,8 +320,8 @@ export function mountWindowLayout(
         pointer: event.pointerId,
         x: event.clientX,
         y: event.clientY,
-        left: rect.left - bounds.left,
-        top: rect.top - bounds.top,
+        left: rect.left - bounds.left + workspace.scrollLeft,
+        top: rect.top - bounds.top + workspace.scrollTop,
         anchor: (event.clientX - rect.left) / rect.width,
         moved: false,
         before: geometry(win),
@@ -340,27 +347,28 @@ export function mountWindowLayout(
           setLayout(win, undefined);
           drag.left =
             event.clientX -
-            bounds.left -
+            bounds.left +
+            workspace.scrollLeft -
             Math.max(
               40,
               Math.min(win.offsetWidth - 40, win.offsetWidth * drag.anchor),
             );
-          drag.top = event.clientY - bounds.top - 20;
+          drag.top = event.clientY - bounds.top + workspace.scrollTop - 20;
           drag.x = event.clientX;
           drag.y = event.clientY;
         }
       }
-      win.style.left = `${Math.max(8, Math.min(bounds.width - win.offsetWidth - 8, drag.left + event.clientX - drag.x))}px`;
-      win.style.top = `${Math.max(8, Math.min(bounds.height - win.offsetHeight - 8, drag.top + event.clientY - drag.y))}px`;
+      win.style.left = `${Math.max(workspace.scrollLeft + 8, Math.min(workspace.scrollLeft + workspace.clientWidth - win.offsetWidth - 8, drag.left + event.clientX - drag.x))}px`;
+      win.style.top = `${Math.max(workspace.scrollTop + 8, Math.min(workspace.scrollTop + workspace.clientHeight - win.offsetHeight - 8, drag.top + event.clientY - drag.y))}px`;
       drag.target = edgeLayout(
         {
-          left: parseFloat(win.style.left),
-          top: parseFloat(win.style.top),
+          left: parseFloat(win.style.left) - workspace.scrollLeft,
+          top: parseFloat(win.style.top) - workspace.scrollTop,
           width: win.offsetWidth,
           height: win.offsetHeight,
         },
-        bounds.width,
-        bounds.height,
+        workspace.clientWidth,
+        workspace.clientHeight,
       );
       preview.hidden = !drag.target;
       if (drag.target) {

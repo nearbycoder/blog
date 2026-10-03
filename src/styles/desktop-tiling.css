@@ -1,0 +1,168 @@
+.desktop-workspace.is-tiled-workspace {
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--desk-line) var(--desk-sidebar);
+}
+[data-tiling="true"]:not([data-show-desktop="true"])
+  :is(.desktop-shortcuts, .desktop-wallpaper-copy) {
+  visibility: hidden;
+}
+.desktop-tiling-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  box-sizing: border-box;
+  padding: 8px;
+  isolation: isolate;
+}
+.desktop-tiling-canvas[hidden] {
+  display: none;
+}
+.desktop-tiling-controls {
+  display: block;
+  flex-shrink: 0;
+  padding: 12px 16px;
+  min-height: 94px;
+  border-bottom: 1px solid var(--desk-line);
+  background: var(--desk-panel);
+  color: var(--desk-ink);
+  z-index: 1;
+}
+.desktop-tiling-controls[hidden] {
+  display: none;
+}
+.desktop-environment:has(.desktop-tiling-controls:not([hidden]))
+  > .desktop-session-tools {
+  z-index: 2;
+}
+.desktop-tiling-controls .tiling-canvas-size,
+.desktop-tiling-controls .tiling-panel-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+.desktop-tiling-controls .tiling-canvas-size {
+  padding-right: 400px;
+}
+.desktop-tiling-controls .tiling-panel-tools {
+  margin-top: 8px;
+}
+.desktop-tiling-controls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.desktop-tiling-controls button,
+.desktop-tiling-controls input {
+  min-height: 32px;
+  padding: 5px 9px;
+  border: 1px solid var(--desk-line);
+  border-radius: 6px;
+  background: var(--desk-sidebar);
+  color: var(--desk-ink);
+  font: inherit;
+}
+.desktop-tiling-controls input {
+  width: 84px;
+}
+.desktop-tiling-controls button {
+  cursor: pointer;
+}
+.desktop-tiling-controls button:hover {
+  background: var(--desk-selected);
+}
+.desktop-tiling-controls :is(button, input):focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: 2px;
+}
+.desktop-tiling-controls [data-tiling-status] {
+  color: var(--desk-muted);
+  font-size: 12px;
+}
+.desktop-tiling-canvas .trellis {
+  width: 100%;
+  height: 100%;
+  --trellis-radius: 8px;
+  --trellis-tabbar-height: 38px;
+}
+.desktop-workspace .desktop-window[data-tiled="true"] {
+  max-width: none;
+  max-height: none;
+  border: 0;
+  border-radius: 0 0 7px 7px;
+  box-shadow: none;
+  animation: none;
+  transform: none;
+}
+.desktop-window[data-tiled="true"] > .window-titlebar,
+.desktop-window[data-tiled="true"] > .window-resize-handle {
+  display: none;
+}
+.desktop-window[data-tiled="true"][data-tiling-busy="true"] {
+  pointer-events: none;
+}
+[data-tiling-dragging] .desktop-window[data-tiled="true"] {
+  visibility: hidden;
+}
+.desktop-tiling-window-actions {
+  display: flex;
+  gap: 1px;
+  align-items: center;
+}
+.desktop-tiling-window-actions button {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  font-size: 18px;
+  color: var(--desk-muted);
+  background: transparent;
+  cursor: pointer;
+}
+.desktop-tiling-window-actions button:hover {
+  color: var(--desk-ink);
+  background: var(--desk-hover);
+}
+.desktop-tiling-window-actions button:focus-visible {
+  outline: 2px solid var(--desk-accent);
+  outline-offset: -2px;
+}
+.desktop-tiling-window-actions button[data-tiling-action="close"]:hover {
+  background: #b93434;
+  color: #fff;
+}
+.desktop-tiling-canvas [data-trellis-part="empty"] {
+  color: var(--desk-muted);
+  font-size: 15px;
+}
+@media (pointer: coarse) {
+  .desktop-tiling-canvas .trellis {
+    --trellis-tabbar-height: 48px;
+  }
+  .desktop-tiling-window-actions button {
+    width: 44px;
+    height: 44px;
+  }
+  .desktop-tiling-controls button,
+  .desktop-tiling-controls input {
+    min-height: 44px;
+  }
+}
+@media (max-width: 760px) {
+  .desktop-tiling-controls {
+    min-height: 0;
+    padding-top: 58px;
+  }
+  .desktop-tiling-controls .tiling-canvas-size {
+    display: none;
+  }
+  .desktop-tiling-controls .tiling-panel-tools button {
+    display: none;
+  }
+}

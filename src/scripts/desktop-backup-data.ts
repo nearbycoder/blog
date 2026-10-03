@@ -2,6 +2,11 @@
 import { desktopApps } from "../lib/desktop-apps";
 import { isAgendaStore } from "./desktop-agenda-data";
 import { validDesktopPreferences } from "./desktop-preferences";
+import {
+  TILING_KEY,
+  TILING_LIMIT,
+  validTilingState,
+} from "./desktop-tiling-state";
 const appIds = new Set<string>(desktopApps.map((app) => app.id));
 export const MAX_BACKUP_BYTES = 16 * 1024 * 1024;
 type RecordValue = Record<string, unknown>;
@@ -51,6 +56,7 @@ export const backupCategories: BackupCategory[] = [
       "desktop-icons:v1",
       "desktop-spaces:v1",
       "desktop-window-pins:v1",
+      TILING_KEY,
     ],
     apps: ["workspaces", "windows"],
   },
@@ -369,6 +375,7 @@ const guards: Record<string, (value: unknown) => boolean> = {
     v1(value, ["text"], (item) => str(item.text, 100000)),
   "nearby-desktop-preferences-v1": validDesktopPreferences,
   "desktop-workspace:v1": validWorkspace,
+  [TILING_KEY]: validTilingState,
   "desktop-icons:v1": (value) =>
     v1(value, ["layouts"], (item) =>
       object(item.layouts, ["wide", "compact"], (layouts) =>
@@ -547,6 +554,7 @@ const guards: Record<string, (value: unknown) => boolean> = {
     ),
 };
 const rawLimits: Record<string, number> = {
+  [TILING_KEY]: TILING_LIMIT,
   "nearby-desktop-agenda-v1": 3 * 1024 * 1024,
   "nearby-desktop-activity-v1": 128 * 1024,
   "desktop-window-pins:v1": 128 * 1024,
@@ -568,6 +576,7 @@ const rawLimits: Record<string, number> = {
   "desktop-library-recent:v1": 65536,
 };
 const byteLimits: Record<string, number> = {
+  [TILING_KEY]: TILING_LIMIT,
   "nearby-desktop-agenda-v1": 3 * 1024 * 1024,
   "nearby-desktop-activity-v1": 128 * 1024,
   "nearby-desktop-preferences-v1": 2048,
@@ -580,12 +589,12 @@ const byteLimits: Record<string, number> = {
 export const utf8Bytes = (value: string) =>
   new TextEncoder().encode(value).length;
 /** Reject prototype names even in nested JSON, without recursive stack exhaustion. */
-function safeTree(value: unknown) {
+function safeTree(value: unknown, maxDepth = 12) {
   const queue: [unknown, number][] = [[value, 0]];
   let count = 0;
   while (queue.length) {
     const [item, depth] = queue.pop()!;
-    if (++count > 200000 || depth > 12) return false;
+    if (++count > 200000 || depth > maxDepth) return false;
     if (item && typeof item === "object") {
       if (!Array.isArray(item) && !isRecord(item)) return false;
       for (const [key, child] of Object.entries(item)) {
@@ -606,7 +615,7 @@ export function validateRecord(key: string, raw: string): string {
     return "Saved record exceeds the supported size.";
   try {
     const value: unknown = JSON.parse(raw);
-    if (!safeTree(value) || !guards[key](value))
+    if (!safeTree(value, key === TILING_KEY ? 64 : 12) || !guards[key](value))
       return "Incompatible or damaged data; restore is disabled.";
     return "";
   } catch {

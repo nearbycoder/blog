@@ -9,7 +9,7 @@ const appStyle = new RegExp(
   `\\.(?:${desktopApps.map((app) => app.id).join("|")})-app\\b`,
 );
 const deferredChunk = new RegExp(
-  `^desktop-(?:commands|command-catalog|apps|app-style|arcade|ghostty|doom|snake|pong|puzzle|game-host|classics|${desktopApps.map((app) => app.id).join("|")})\\.`,
+  `^desktop-(?:tiling|commands|command-catalog|apps|app-style|arcade|ghostty|doom|snake|pong|puzzle|game-host|classics|${desktopApps.map((app) => app.id).join("|")})\\.`,
 );
 
 function source(asset: string) {
@@ -108,6 +108,14 @@ test("desktop boot and each app retain separate bounded build payloads", () => {
     expect(matches, `One independent chunk for ${id}`).toHaveLength(1);
     return `/_astro/${matches[0]}`;
   };
+  // Trellis is an opt-in workspace engine, separate from boot and individual apps.
+  // Includes inline CSS and every static dependency (not just the entry file).
+  const tiling = eagerAssets([chunkFor("tiling")]);
+  expect(
+    bytes(tiling),
+    "Lazy tiling engine including Trellis + CSS",
+  ).toBeLessThanOrEqual(160 * 1024);
+  expect(tiling.some((asset) => source(asset).includes("trellis"))).toBe(true);
   // The loader costs 6,858 B including its style helper, excluding cached boot.
   const loader = eagerAssets([chunkFor("apps")]).filter(
     (asset) => !boot.includes(asset),

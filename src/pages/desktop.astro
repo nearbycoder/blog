@@ -24,7 +24,100 @@ const folderFor = (id: string) =>
     document.documentElement.classList.add("has-desktop-js");
   </script>
   <div class="desktop-environment" data-desktop>
+    <div
+      class="desktop-tiling-controls"
+      data-tiling-controls
+      hidden
+      aria-label="Tiled canvas controls"
+    >
+      <div class="tiling-canvas-size">
+        <label
+          >Width <input
+            data-tiling-width
+            type="number"
+            min="800"
+            max="6000"
+            step="100"
+            value="1600"
+            inputmode="numeric"
+          />
+          <span>px</span></label
+        >
+        <label
+          >Height <input
+            data-tiling-height
+            type="number"
+            min="800"
+            max="6000"
+            step="100"
+            value="1100"
+            inputmode="numeric"
+          />
+          <span>px</span></label
+        >
+        <button type="button" data-tiling-apply-size>Resize canvas</button>
+        <button
+          type="button"
+          data-tiling-home
+          title="Scroll to the top-left of the canvas">Top left</button
+        >
+      </div>
+      <div class="tiling-panel-tools">
+        <button
+          type="button"
+          data-tiling-split="right"
+          title="Split the active panel to the right of another panel"
+          >Split right</button
+        >
+        <button
+          type="button"
+          data-tiling-split="bottom"
+          title="Split the active panel below another panel">Split below</button
+        >
+        <span data-tiling-status role="status"
+          >Drag panel tabs to nest, group, or rearrange windows.</span
+        >
+      </div>
+    </div>
     <div class="desktop-workspace" data-workspace>
+      <nav class="desktop-session-tools" aria-label="Workspace tools">
+        <button
+          type="button"
+          data-open-app="workspaces"
+          title="Manage virtual desktops"
+          ><DesktopIcon name="files" /><span data-active-space-label
+            >Desk 1</span
+          ></button
+        >
+        <button
+          type="button"
+          data-tiling-toggle
+          aria-pressed="false"
+          title="Tile windows in a scrollable canvas"
+          ><DesktopIcon name="grid" /><span>Tile</span></button
+        >
+        <button
+          type="button"
+          data-open-app="windows"
+          aria-label="Open Window Overview"
+          title="Window Overview (Ctrl+Shift+Space)"
+          ><DesktopIcon name="grid" /></button
+        >
+        <button
+          type="button"
+          data-open-app="activity"
+          aria-label="Open Activity"
+          title="Activity"
+          ><DesktopIcon name="list" /><span data-activity-unread hidden>0</span
+          ></button
+        >
+        <button
+          type="button"
+          data-open-app="settings"
+          aria-label="Open Settings"
+          title="Desktop settings"><DesktopIcon name="desktop" /></button
+        >
+      </nav>
       <nav class="desktop-shortcuts" aria-label="Desktop shortcuts">
         {
           desktopFolders
@@ -73,37 +166,7 @@ const folderFor = (id: string) =>
       <div class="desktop-wallpaper-copy" aria-hidden="true">
         <strong>nearby</strong><span>DESKTOP</span>
       </div>
-      <nav class="desktop-session-tools" aria-label="Workspace tools">
-        <button
-          type="button"
-          data-open-app="workspaces"
-          title="Manage virtual desktops"
-          ><DesktopIcon name="files" /><span data-active-space-label
-            >Desk 1</span
-          ></button
-        >
-        <button
-          type="button"
-          data-open-app="windows"
-          aria-label="Open Window Overview"
-          title="Window Overview (Ctrl+Shift+Space)"
-          ><DesktopIcon name="grid" /></button
-        >
-        <button
-          type="button"
-          data-open-app="activity"
-          aria-label="Open Activity"
-          title="Activity"
-          ><DesktopIcon name="list" /><span data-activity-unread hidden>0</span
-          ></button
-        >
-        <button
-          type="button"
-          data-open-app="settings"
-          aria-label="Open Settings"
-          title="Desktop settings"><DesktopIcon name="desktop" /></button
-        >
-      </nav>
+
       <section
         class="desktop-window library-window is-active"
         data-window="library"

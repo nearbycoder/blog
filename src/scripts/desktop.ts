@@ -21,7 +21,69 @@ if (desktop) {
   applyDesktopPreferences(desktop);
   const disposeActivity = mountDesktopActivity(desktop);
   let spaces: ReturnType<typeof mountDesktopSpaces> | undefined;
+  let tiling:
+    | ReturnType<typeof import("./desktop-tiling").mountDesktopTiling>
+    | undefined;
+  let tilingLoading: Promise<void> | undefined;
+  let tilingRestoring = false;
+  let resumeTilingLoad: (() => void) | undefined;
+  const tilingButton = desktop.querySelector<HTMLButtonElement>(
+    "[data-tiling-toggle]",
+  )!;
+  function ensureTiling(toggle = false) {
+    if (tiling) {
+      if (toggle) tiling.toggle();
+      return;
+    }
+    if (tilingLoading) return;
+    tilingButton.disabled = true;
+    tilingButton.setAttribute("aria-busy", "true");
+    tilingLoading = import("./desktop-tiling")
+      .then(async ({ mountDesktopTiling }) => {
+        if (persistenceSuspended)
+          await new Promise<void>((resolve) => {
+            resumeTilingLoad = resolve;
+          });
+        tiling = mountDesktopTiling(desktop!, {
+          capture: layouts.capture,
+          constrain,
+        });
+        if (toggle) tiling.toggle();
+      })
+      .catch(() =>
+        announce("Tiled windows could not load. Try the Tile button again."),
+      )
+      .finally(async () => {
+        if (tilingRestoring) {
+          await new Promise<void>((resolve) =>
+            requestAnimationFrame(() => resolve()),
+          );
+          tilingRestoring = false;
+          if (!library.hidden) ensureLibraryTools();
+          windows.forEach(loadWindow);
+        }
+        tilingLoading = undefined;
+        tilingButton.disabled = false;
+        tilingButton.removeAttribute("aria-busy");
+      });
+  }
+  const logicalMinimized = (win: HTMLElement) =>
+    win.dataset.tilingHidden === "true" ? false : win.hidden;
   const workspace = desktop.querySelector<HTMLElement>("[data-workspace]")!;
+  workspace.addEventListener(
+    "scroll",
+    () => {
+      workspace.style.setProperty(
+        "--desktop-scroll-x",
+        `${workspace.scrollLeft}px`,
+      );
+      workspace.style.setProperty(
+        "--desktop-scroll-y",
+        `${workspace.scrollTop}px`,
+      );
+    },
+    { passive: true },
+  );
   const library = desktop.querySelector<HTMLElement>(
     '[data-window="library"]',
   )!;
@@ -180,7 +242,7 @@ if (desktop) {
       .map((win) => ({
         id: win.dataset.window!,
         minimized: spaces?.isMinimized(win) ?? win.hidden,
-        placement: layouts.capture(win),
+        placement: tiling?.capture(win) ?? layouts.capture(win),
         ...(win.dataset.source ? { source: win.dataset.source } : {}),
         ...(win.dataset.window === "arcade"
           ? { activity: win.dataset.arcadeActivity as ArcadeActivity }
@@ -230,6 +292,7 @@ if (desktop) {
     const load = pendingLoads.get(win);
     if (
       !load ||
+      tilingRestoring ||
       win.hidden ||
       (mobile.matches && !win.classList.contains("is-active"))
     )
@@ -248,6 +311,7 @@ if (desktop) {
   function activate(win: HTMLElement, focus = false) {
     if (!restoring) spaces?.reveal(win);
     desktopSnapshot = undefined;
+    delete desktop!.dataset.showDesktop;
     showDesktopButton.setAttribute("aria-pressed", "false");
     win.dataset.opened = "true";
     win.hidden = false;
@@ -290,7 +354,10 @@ if (desktop) {
       if (win === library) ensureLibraryTools();
       constrain(win);
       loadWindow(win);
-      if (focus) win.focus({ preventScroll: true });
+      if (focus) {
+        tiling?.reveal(win);
+        win.focus({ preventScroll: true });
+      }
       scheduleSave();
     }
   }
@@ -310,11 +377,13 @@ if (desktop) {
     constrain,
     announce,
     changed: scheduleSave,
+    beforeLayout: (win) => tiling?.release(win),
   });
 
   function constrain(win: HTMLElement) {
     if (
       mobile.matches ||
+      win.dataset.tiled === "true" ||
       win.dataset.snap ||
       win.classList.contains("is-maximized") ||
       win.hidden
@@ -330,21 +399,27 @@ if (desktop) {
     }
     const style = getComputedStyle(win);
     const x = Math.max(
-      8,
+      workspace.scrollLeft + 8,
       Math.min(
         parseFloat(style.left),
-        bounds.width - parseFloat(style.width) - 8,
+        workspace.scrollLeft +
+          workspace.clientWidth -
+          parseFloat(style.width) -
+          8,
       ),
     );
     const y = Math.max(
-      8,
+      workspace.scrollTop + 8,
       Math.min(
         parseFloat(style.top),
-        bounds.height - parseFloat(style.height) - 8,
+        workspace.scrollTop +
+          workspace.clientHeight -
+          parseFloat(style.height) -
+          8,
       ),
     );
-    win.style.left = `${x}px`;
-    win.style.top = `${y}px`;
+    if (win.style.left !== `${x}px`) win.style.left = `${x}px`;
+    if (win.style.top !== `${y}px`) win.style.top = `${y}px`;
   }
 
   const resizeObserver = new ResizeObserver((entries) => {
@@ -384,6 +459,7 @@ if (desktop) {
             constrain(win);
           } else {
             // Closing Library retains its DOM, so clear any hidden-desk visibility memory too.
+            delete win.dataset.tilingHidden;
             spaces?.minimize(win);
             if (action === "close" && !restoring) {
               closedWindows.push({
@@ -394,7 +470,7 @@ if (desktop) {
               });
               if (closedWindows.length > 10) closedWindows.shift();
             }
-            layouts.capture(win);
+            if (!tiling?.capture(win)) layouts.capture(win);
             win.hidden = true;
             win.classList.remove("is-active");
             tasks
@@ -470,7 +546,7 @@ if (desktop) {
     search.value = "";
     filterFiles();
     desktop!.querySelector(".library-content")!.scrollTop = 0;
-    if (activateWindow) activate(library);
+    if (activateWindow) activate(library, true);
   }
 
   function addTask(win: HTMLElement, id: string, title: string) {
@@ -1161,10 +1237,14 @@ if (desktop) {
     if (desktopSnapshot) {
       const saved = desktopSnapshot;
       desktopSnapshot = undefined;
+      delete desktop.dataset.showDesktop;
       saved.windows.forEach((win) => {
         win.hidden = false;
       });
-      if (saved.active) activate(saved.active, true);
+      if (saved.active) {
+        activate(saved.active);
+        saved.active.focus({ preventScroll: true });
+      }
       showDesktopButton.setAttribute("aria-pressed", "false");
       announce("Windows restored.");
     } else {
@@ -1174,8 +1254,9 @@ if (desktop) {
         windows: visible,
         active: visible.find((win) => win.classList.contains("is-active")),
       };
+      desktop.dataset.showDesktop = "true";
       visible.forEach((win) => {
-        layouts.capture(win);
+        if (!tiling?.capture(win)) layouts.capture(win);
         win.hidden = true;
         win.classList.remove("is-active");
       });
@@ -1185,6 +1266,7 @@ if (desktop) {
       showDesktopButton.setAttribute("aria-pressed", "true");
       announce("Desktop shown. Press Show desktop again to restore windows.");
     }
+    tiling?.sync();
     updatePanel();
     scheduleSave();
   });
@@ -1365,22 +1447,27 @@ if (desktop) {
       layouts.cancel();
       saveWorkspace();
       persistenceSuspended = true;
+      const resumeTiling = tiling?.suspend();
       clearTimeout(saveTimer);
       clearTimeout(windowEventTimer);
       return () => {
         persistenceSuspended = false;
+        resumeTiling?.();
+        resumeTilingLoad?.();
+        resumeTilingLoad = undefined;
         scheduleSave();
       };
     },
   });
 
-  spaces = mountDesktopSpaces(desktop);
+  spaces = mountDesktopSpaces(desktop, logicalMinimized);
   spaces.register(library);
   let snapshotSpace = spaces.state.active;
   document.addEventListener("desktop-spaces-changed", () => {
     if (snapshotSpace === spaces!.state.active) return;
     snapshotSpace = spaces!.state.active;
     desktopSnapshot = undefined;
+    delete desktop!.dataset.showDesktop;
     showDesktopButton.setAttribute("aria-pressed", "false");
   });
 
@@ -1423,8 +1510,37 @@ if (desktop) {
   windowObservers.forEach((observer) => observer.takeRecords());
   restoring = false;
   desktop.dataset.workspaceReady = "true";
-  if (!library.hidden) ensureLibraryTools();
-  windows.forEach(loadWindow);
+  tilingButton.addEventListener("click", () => {
+    layouts.cancel();
+    if (desktopSnapshot) showDesktopButton.click();
+    ensureTiling(true);
+  });
+  document.addEventListener("desktop-windows-changed", () => tiling?.sync());
+  const restoreTiling = () => {
+    if (mobile.matches || tiling || tilingLoading) return;
+    try {
+      const raw = localStorage.getItem("desktop-tiling:v1");
+      if (!raw || raw.length > 256 * 1024) return;
+      // This is only a loading hint. The lazy controller validates the full record.
+      const saved = JSON.parse(raw);
+      if (
+        saved?.version === 1 &&
+        saved.desks?.[desktop.dataset.activeSpace ?? "desk-1"]?.enabled === true
+      ) {
+        tilingRestoring = true;
+        ensureTiling();
+      }
+    } catch {
+      /* Tile remains available when browser storage is inaccessible. */
+    }
+  };
+  restoreTiling();
+  if (!tilingRestoring) {
+    if (!library.hidden) ensureLibraryTools();
+    windows.forEach(loadWindow);
+  }
+  mobile.addEventListener("change", restoreTiling);
+  document.addEventListener("desktop-spaces-changed", restoreTiling);
 
   function flushWorkspace() {
     layouts.cancel();

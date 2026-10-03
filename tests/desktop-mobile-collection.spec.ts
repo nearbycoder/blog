@@ -194,7 +194,8 @@ for (const viewport of mobileViewports) {
           return { width: bounds.width, height: bounds.height };
         }),
       );
-      expect(targets).toHaveLength(4);
+      // The Tile toggle joins the four desktop management buttons.
+      expect(targets).toHaveLength(5);
       for (const target of targets) {
         expect(target.width).toBeGreaterThanOrEqual(44);
         expect(target.height).toBeGreaterThanOrEqual(44);
