@@ -29,7 +29,7 @@ Now I am channeling that energy into projects like **React Chat**, **Secret Sant
   [Project](/projects/secret-santa-pair) | [Site](https://santa.nrby.xyz) | [Repo](https://github.com/nearbycoder/santa)
   ![Secret Santa Pair app screenshot](/images/santa.png)
 - **Math Game** pulled me into game loops again: progression, streaks, feedback, retention, and motivation design.  
-  [Project](/projects/math-game) | [Site](https://math.nrby.xyz) | [Repo](https://github.com/nearbycoder/math-game)
+  [Game](/games/math-game) | [Site](https://math.nrby.xyz) | [Repo](https://github.com/nearbycoder/math-game)
   ![Math Game app screenshot](/images/math.png)
 - **QikPoll** let me revisit realtime systems from another angle: anonymous voting, live results, and practical anti-abuse guardrails.  
   [Project](/projects/qikpoll) | [Site](https://poll.nrby.xyz) | [Repo](https://github.com/nearbycoder/qikpoll)

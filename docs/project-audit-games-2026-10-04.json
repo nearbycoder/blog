@@ -1,0 +1,363 @@
+{
+  "reviewedOn": "2026-10-04",
+  "scope": "Fifteen public game repositories published by the owner on October 4, 2026, plus the separation of games from projects.",
+  "creationDateMeaning": "GitHub repository creation date, not necessarily the start of development.",
+  "moved": {
+    "summary": "Existing game entries moved from src/content/projects to src/content/games. Old /projects/<slug> URLs redirect permanently in vercel.json.",
+    "entries": [
+      "flip-flop-cheer",
+      "geowars",
+      "hapless-wheels",
+      "ghostpath-space",
+      "pong",
+      "roomba-wars",
+      "touchgrass-city",
+      "math-game"
+    ],
+    "kept": {
+      "lilipad": "A reading practice app that uses game-like activities; it stays under projects."
+    }
+  },
+  "entries": [
+    {
+      "repository": "https://github.com/nearbycoder/Jeste",
+      "createdAt": "2026-10-04T22:49:29Z",
+      "reviewedCommit": "8a38434a185b86380d9451da5c4077501deaf2d2",
+      "page": "/games/jeste/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/screenshot_cathedral.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/screenshot_chapter_select.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/screenshot_chase.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/screenshot_curtains.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/screenshot_dash.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/screenshot_gondola.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/screenshot_story.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/screenshot_summit.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/screenshot_title.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/screenshot_undertow.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/trailer_poster.png",
+        "https://raw.githubusercontent.com/nearbycoder/Jeste/8a38434a185b86380d9451da5c4077501deaf2d2/docs/media/jeste_trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/LostAndFound",
+      "createdAt": "2026-10-04T22:47:26Z",
+      "reviewedCommit": "232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8",
+      "page": "/games/lost-and-found/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/screenshot_drawers.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/screenshot_frost.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/screenshot_hum.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/screenshot_inspect.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/screenshot_lamp.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/screenshot_ledger.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/screenshot_liar.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/screenshot_photographs.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/screenshot_title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/screenshot_vell.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/trailer_poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LostAndFound/232249d30ac5163c4a0c74bd72bb1c4df0bd5ef8/docs/media/trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/OneMoreFloor",
+      "createdAt": "2026-10-04T22:40:07Z",
+      "reviewedCommit": "035c30f6da544aab69f240633af70bdf18bb3d4e",
+      "page": "/games/one-more-floor/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/screenshots/core-shuffle.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/screenshots/gamepad-closeup.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/screenshots/graveyard-flip.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/screenshots/houseplant-sun.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/screenshots/ocean-moment.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/screenshots/roster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/screenshots/route-preview.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/screenshots/title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/screenshots/triple-drop.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/screenshots/vampire-poof.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/OneMoreFloor/035c30f6da544aab69f240633af70bdf18bb3d4e/docs/media/trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/LastLight",
+      "createdAt": "2026-10-04T22:37:44Z",
+      "reviewedCommit": "cc2debc72472694292c38cfccb208aecbe382f4e",
+      "page": "/games/last-light/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/chart.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/false_light.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/foghorn.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/logbook.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/night_watch.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/play.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/results.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/storm.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/trailer_poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/wreck.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/LastLight/cc2debc72472694292c38cfccb208aecbe382f4e/docs/media/LastLight_trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/PainKiller",
+      "createdAt": "2026-10-04T22:37:33Z",
+      "reviewedCommit": "4672978086998c94549c82c38a706c7463c2d2b9",
+      "page": "/games/purgatory/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/screenshots/01-title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/screenshots/02-cemetery-horde.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/screenshots/03-freeze-shatter.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/screenshots/04-chain-lightning.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/screenshots/05-general.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/screenshots/06-wraith-form.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/screenshots/07-the-abyss.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/screenshots/08-level-select.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/screenshots/09-grave-tarot.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PainKiller/4672978086998c94549c82c38a706c7463c2d2b9/docs/media/trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/PackTheTrunk",
+      "createdAt": "2026-10-04T22:36:53Z",
+      "reviewedCommit": "2ef8b74ae09e29de817aebb43494c5c2c28bf86e",
+      "page": "/games/pack-the-trunk/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/screenshots/01-title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/screenshots/02-packing.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/screenshots/03-slam.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/screenshots/04-story.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/screenshots/05-fragile.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/screenshots/06-clown-car.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/screenshots/07-everyone-everything.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/screenshots/08-postcard.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/screenshots/09-trip-map.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/screenshots/10-family-album.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PackTheTrunk/2ef8b74ae09e29de817aebb43494c5c2c28bf86e/docs/media/pack-the-trunk-trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/PocketWeather",
+      "createdAt": "2026-10-04T22:35:04Z",
+      "reviewedCommit": "41a6f0956809445612ee7f923d49b87ab94c5241",
+      "page": "/games/pocket-weather/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/screenshot-campfire.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/screenshot-day-saved.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/screenshot-drink.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/screenshot-map.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/screenshot-rain.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/screenshot-rainbow.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/screenshot-regatta.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/screenshot-shade.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/screenshot-title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/screenshot-wedding.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/PocketWeather/41a6f0956809445612ee7f923d49b87ab94c5241/docs/media/pocket-weather-trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/BorrowedSeconds",
+      "createdAt": "2026-10-04T22:32:44Z",
+      "reviewedCommit": "1425016ea4fde789aa3de8415fc162bbe6f5dd29",
+      "page": "/games/borrowed-seconds/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/screenshots/01_title.png",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/screenshots/02_aim-and-focus.png",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/screenshots/03_exactly-now.png",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/screenshots/04_in-the-beams.png",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/screenshots/05_settled.png",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/screenshots/06_crystal-bar.png",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/screenshots/07_the-ledger.png",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/screenshots/08_chapter-card.png",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/screenshots/09_defaulted.png",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/screenshots/10_settlement.png",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/BorrowedSeconds/1425016ea4fde789aa3de8415fc162bbe6f5dd29/docs/media/trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/Ocarina",
+      "createdAt": "2026-10-04T22:32:07Z",
+      "reviewedCommit": "546eafc9aaacea86fbfba971738441ff2fcfb8a3",
+      "page": "/games/bell-of-ages/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/screenshots/01-title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/screenshots/02-village.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/screenshots/03-story.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/screenshots/04-combat.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/screenshots/05-boss.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/screenshots/06-flute.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/screenshots/07-mirrors.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/screenshots/08-crownfall.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/screenshots/09-map.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/screenshots/10-promise.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/Ocarina/546eafc9aaacea86fbfba971738441ff2fcfb8a3/docs/media/trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/AfterHours",
+      "createdAt": "2026-10-04T22:26:34Z",
+      "reviewedCommit": "7e07dc5e167658792abf36cce007e3d1ddd9ab43",
+      "page": "/games/after-hours/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/screenshots/01-title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/screenshots/02-wipe.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/screenshots/03-whiteboard.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/screenshots/04-throw.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/screenshots/05-vacuum.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/screenshots/06-window.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/screenshots/07-uv.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/screenshots/08-evidence.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/screenshots/09-report.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/screenshots/10-corner-office.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AfterHours/7e07dc5e167658792abf36cce007e3d1ddd9ab43/docs/media/AfterHours-trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/AlibiAndCo",
+      "createdAt": "2026-10-04T22:21:29Z",
+      "reviewedCommit": "a9d1db9415f252d87052429dbb0d4965c5c45d7e",
+      "page": "/games/alibi-and-co/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/screenshot-alibi-breaks.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/screenshot-board-ribbons.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/screenshot-case-file.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/screenshot-case-files.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/screenshot-late-game.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/screenshot-notebook.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/screenshot-title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/screenshot-town-map.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/screenshot-unknown-faces.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AlibiAndCo/a9d1db9415f252d87052429dbb0d4965c5c45d7e/docs/media/alibi-and-co-trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/AgentClicker",
+      "createdAt": "2026-10-04T22:20:58Z",
+      "reviewedCommit": "4fd88714acb4691e57c2efeaaeb9fed1b27f5bda",
+      "page": "/games/agent-clicker/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/screenshots/01-title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/screenshots/02-ship-code.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/screenshots/03-gadget-showcase.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/screenshots/04-phone-call.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/screenshots/05-corpos-late-game.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/screenshots/06-office-late-game.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/screenshots/07-performance-review.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/screenshots/08-software-factory.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/screenshots/09-frontier-agents.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/screenshots/10-board-room.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/AgentClicker/4fd88714acb4691e57c2efeaaeb9fed1b27f5bda/docs/media/trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/HandleWithCare",
+      "createdAt": "2026-10-04T22:16:44Z",
+      "reviewedCommit": "4915cce3c2209b1f245bf16795805d88eb115423",
+      "page": "/games/handle-with-care/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/screenshots/01-title.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/screenshots/02-packing.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/screenshots/03-ember-sneezes.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/screenshots/04-unboxing.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/screenshots/05-box-on-fire.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/screenshots/06-catapult.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/screenshots/07-ferry.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/screenshots/08-doorstep.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/screenshots/09-last-trip-trails.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/screenshots/10-results.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/HandleWithCare/4915cce3c2209b1f245bf16795805d88eb115423/docs/media/trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/gravewake",
+      "createdAt": "2026-10-04T21:38:20Z",
+      "reviewedCommit": "ff7a7227de141ad4cbba1d67f45406f1fac01cf8",
+      "page": "/games/gravewake/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/ash-orchard.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/bestiary.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/binding.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/combat.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/hero.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/melee.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/mourning-court.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/occult.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/packs.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/powers.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/ruined-chapel.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/shotgun.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/trailer-poster.jpg",
+        "https://raw.githubusercontent.com/nearbycoder/gravewake/ff7a7227de141ad4cbba1d67f45406f1fac01cf8/docs/media/gravewake-trailer.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated."
+    },
+    {
+      "repository": "https://github.com/nearbycoder/Cinderwake",
+      "createdAt": "2026-10-04T21:02:57Z",
+      "reviewedCommit": "81a9c073286ca53c0c700553516b7acaa12dfd0e",
+      "page": "/games/cinderwake/",
+      "action": "added",
+      "duplicateCheck": "No existing project or game matched the repository URL, name, or game title.",
+      "media": [
+        "https://raw.githubusercontent.com/nearbycoder/Cinderwake/81a9c073286ca53c0c700553516b7acaa12dfd0e/docs/media/atlas.png",
+        "https://raw.githubusercontent.com/nearbycoder/Cinderwake/81a9c073286ca53c0c700553516b7acaa12dfd0e/docs/media/combat.png",
+        "https://raw.githubusercontent.com/nearbycoder/Cinderwake/81a9c073286ca53c0c700553516b7acaa12dfd0e/docs/media/crown.png",
+        "https://raw.githubusercontent.com/nearbycoder/Cinderwake/81a9c073286ca53c0c700553516b7acaa12dfd0e/docs/media/foundry.png",
+        "https://raw.githubusercontent.com/nearbycoder/Cinderwake/81a9c073286ca53c0c700553516b7acaa12dfd0e/docs/media/rooftops.png",
+        "https://raw.githubusercontent.com/nearbycoder/Cinderwake/81a9c073286ca53c0c700553516b7acaa12dfd0e/docs/media/undercroft.png",
+        "https://raw.githubusercontent.com/nearbycoder/Cinderwake/81a9c073286ca53c0c700553516b7acaa12dfd0e/docs/media/cinderwake-demo.mp4"
+      ],
+      "mediaProcessing": "README screenshots and the trailer poster converted to WebP (max 1280 px). The README trailer re-encoded to 960 × 540, 30 fps H.264 with AAC audio and faststart; the page links to the full-resolution original on GitHub. Trailers contain music and game sound with on-screen captions and no narration. Playback is user-initiated. No poster exists in the repository, so one was extracted from the demo at 3 seconds."
+    }
+  ]
+}

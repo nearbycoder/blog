@@ -43,47 +43,61 @@ const articles = defineCollection({
   }),
 });
 
+// Projects and games share one shape; games add how and where to play.
+const work = z.object({
+  title: z.string(),
+  summary: z.string(),
+  role: z.string(),
+  year: z.string(),
+  createdAt: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Use a UTC date in YYYY-MM-DD format")
+    .refine((value) => {
+      const date = new Date(`${value}T00:00:00.000Z`);
+      return (
+        !Number.isNaN(date.valueOf()) &&
+        date.toISOString().slice(0, 10) === value
+      );
+    }, "Use a real calendar date")
+    .optional(),
+  image: z.string().optional(),
+  imageAlt: z.string().optional(),
+  imageCaption: z.string().optional(),
+  demoVideos: z
+    .array(
+      z.object({
+        src: z.union([
+          z.string().url(),
+          z.string().regex(/^\/videos\/(?:[\w-]+\/)*[\w.-]+\.(?:mp4|webm)$/),
+        ]),
+        title: z.string(),
+        caption: z.string(),
+        poster: z.string().optional(),
+        original: z.string().url().optional(),
+      }),
+    )
+    .default([]),
+  stack: z.array(z.string()).default([]),
+  impact: z.string().optional(),
+  link: z.string().optional(),
+  githubLink: z.string().optional(),
+  featured: z.boolean().default(false),
+  accent: accent.default("mist"),
+  draft: z.boolean().default(false),
+});
+
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/projects" }),
-  schema: z.object({
-    title: z.string(),
-    summary: z.string(),
-    role: z.string(),
-    year: z.string(),
-    createdAt: z
-      .string()
-      .regex(/^\d{4}-\d{2}-\d{2}$/, "Use a UTC date in YYYY-MM-DD format")
-      .refine((value) => {
-        const date = new Date(`${value}T00:00:00.000Z`);
-        return (
-          !Number.isNaN(date.valueOf()) &&
-          date.toISOString().slice(0, 10) === value
-        );
-      }, "Use a real calendar date")
-      .optional(),
-    image: z.string().optional(),
-    imageAlt: z.string().optional(),
-    imageCaption: z.string().optional(),
-    demoVideos: z
-      .array(
-        z.object({
-          src: z.union([
-            z.string().url(),
-            z.string().regex(/^\/videos\/(?:[\w-]+\/)*[\w.-]+\.(?:mp4|webm)$/),
-          ]),
-          title: z.string(),
-          caption: z.string(),
-          poster: z.string().optional(),
-        }),
-      )
-      .default([]),
-    stack: z.array(z.string()).default([]),
-    impact: z.string().optional(),
-    link: z.string().optional(),
-    githubLink: z.string().optional(),
-    featured: z.boolean().default(false),
-    accent: accent.default("mist"),
-    draft: z.boolean().default(false),
+  schema: work,
+});
+
+const games = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/games" }),
+  schema: work.extend({
+    genre: z.string(),
+    platforms: z.array(z.string()).min(1),
+    engine: z.string(),
+    download: z.string().url().optional(),
   }),
 });
 
@@ -121,5 +135,6 @@ export const collections = {
   postmortems,
   articles,
   projects,
+  games,
   layoff,
 };

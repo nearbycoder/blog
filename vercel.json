@@ -1,8 +1,31 @@
 {
   "functions": {
-    "api/newsletter.ts": { "maxDuration": 30 },
-    "api/newsletter-confirm.ts": { "maxDuration": 30 },
-    "api/newsletter-publish.ts": { "maxDuration": 60 }
+    "api/newsletter.ts": {
+      "maxDuration": 30
+    },
+    "api/newsletter-confirm.ts": {
+      "maxDuration": 30
+    },
+    "api/newsletter-publish.ts": {
+      "maxDuration": 60
+    }
   },
-  "crons": [{ "path": "/api/newsletter-publish", "schedule": "0 14 * * *" }]
+  "crons": [
+    {
+      "path": "/api/newsletter-publish",
+      "schedule": "0 14 * * *"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/projects/:slug(flip-flop-cheer|geowars|hapless-wheels|ghostpath-space|pong|roomba-wars|touchgrass-city|math-game)",
+      "destination": "/games/:slug",
+      "permanent": true
+    },
+    {
+      "source": "/projects/:slug(flip-flop-cheer|geowars|hapless-wheels|ghostpath-space|pong|roomba-wars|touchgrass-city|math-game)/",
+      "destination": "/games/:slug/",
+      "permanent": true
+    }
+  ]
 }

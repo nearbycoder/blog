@@ -14,6 +14,7 @@ import {
   compareArticlesByPublishDateDesc,
   isArticlePublished,
 } from "../lib/articles";
+import { compareWorkByDate } from "../lib/work";
 
 const articles = (await getCollection("articles")) as any[];
 const includeScheduled = !import.meta.env.PROD;
@@ -50,6 +51,10 @@ const featuredProjects = [
       entry.data.featured && !selectedBuildProjectSet.has(entry.id),
   ),
 ].slice(0, 2);
+const featuredGames = (await getCollection("games"))
+  .filter((entry) => !entry.data.draft && entry.data.featured)
+  .sort(compareWorkByDate)
+  .slice(0, 2);
 const layoffEntries = (await getCollection("layoff")) as any[];
 const recentLayoffEntries = layoffEntries
   .filter((entry: any) => !entry.data.draft)
@@ -125,6 +130,23 @@ const latest = sortedArticles[0];
       {featuredProjects.map((project) => <ProjectCard project={project} />)}
     </div>
   </section>
+  {
+    featuredGames.length > 0 && (
+      <section class="home-section">
+        <header class="section-head">
+          <h2>Made to be played.</h2>
+          <a href="/games" class="text-link">
+            All games <Icon name="arrow" />
+          </a>
+        </header>
+        <div class="project-grid">
+          {featuredGames.map((game) => (
+            <ProjectCard project={game} />
+          ))}
+        </div>
+      </section>
+    )
+  }
   {
     recentLayoffEntries.length > 0 && (
       <section class="home-section home-log">

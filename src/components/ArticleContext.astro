@@ -1,15 +1,13 @@
 ---
 import { getReadingPaths } from "../lib/discovery";
 import { projectStories } from "../data/project-stories";
-import { getCollection } from "astro:content";
+import { getPublishedWork, workHref } from "../lib/work";
 const { articleId } = Astro.props as { articleId: string };
 const paths = (await getReadingPaths()).filter((path) =>
   path.entries.some((item) => item.entry.id === articleId),
 );
-const projects = (await getCollection("projects")).filter(
-  (project) =>
-    !project.data.draft &&
-    projectStories[project.id]?.articles.includes(articleId),
+const projects = (await getPublishedWork()).filter((project) =>
+  projectStories[project.id]?.articles.includes(articleId),
 );
 ---
 
@@ -20,7 +18,7 @@ const projects = (await getCollection("projects")).filter(
         <div>
           <h2>Behind this story</h2>
           {projects.map((project) => (
-            <a href={`/projects/${project.id}`} class="text-link">
+            <a href={workHref(project)} class="text-link">
               Explore {project.data.title} →
             </a>
           ))}

@@ -48,6 +48,9 @@ const samples = [
   "/articles/building-agfs-dev-on-my-wifes-green-macbook-neo-with-ai/",
   "/articles/gettting-started-with-react-and-vitejs/",
   "/projects/agfs-dev/",
+  "/games/",
+  "/games/pocket-weather/",
+  "/technologies/unity-6/",
   "/layoff/week-003-2026-03-08-roomba-wars/",
 ];
 

@@ -7,12 +7,13 @@ import {
 } from "./articles";
 import { getReadingPaths } from "./discovery";
 import { getTopics } from "./topics";
-import { getTechnologies } from "./technologies";
+import { describeTechnologyCount, getTechnologies } from "./technologies";
 
 export const desktopFolders = [
   { id: "all", label: "All files", icon: "files" },
   { id: "articles", label: "Articles", icon: "writing" },
   { id: "projects", label: "Projects", icon: "code" },
+  { id: "games", label: "Games", icon: "game" },
   { id: "layoff", label: "Layoff log", icon: "journal" },
   { id: "postmortems", label: "Postmortems", icon: "journal" },
   { id: "lab", label: "Lab", icon: "lab" },
@@ -22,16 +23,25 @@ export const desktopFolders = [
 ] as const;
 
 export async function getDesktopFiles() {
-  const [articles, projects, layoff, postmortems, paths, topics, technologies] =
-    await Promise.all([
-      getCollection("articles"),
-      getCollection("projects"),
-      getCollection("layoff"),
-      getCollection("postmortems"),
-      getReadingPaths(),
-      getTopics(),
-      getTechnologies(),
-    ]);
+  const [
+    articles,
+    projects,
+    games,
+    layoff,
+    postmortems,
+    paths,
+    topics,
+    technologies,
+  ] = await Promise.all([
+    getCollection("articles"),
+    getCollection("projects"),
+    getCollection("games"),
+    getCollection("layoff"),
+    getCollection("postmortems"),
+    getReadingPaths(),
+    getTopics(),
+    getTechnologies(),
+  ]);
   return [
     ...articles
       .filter((entry) =>
@@ -57,6 +67,23 @@ export async function getDesktopFiles() {
         kind: "Project",
         detail: entry.data.year,
         keywords: [entry.body, ...entry.data.stack].join(" "),
+      })),
+    ...games
+      .filter((entry) => !entry.data.draft)
+      .map((entry) => ({
+        title: entry.data.title,
+        description: entry.data.summary,
+        url: `/games/${entry.id}/`,
+        folder: "games",
+        kind: "Game",
+        detail: entry.data.year,
+        keywords: [
+          entry.body,
+          entry.data.genre,
+          entry.data.engine,
+          ...entry.data.platforms,
+          ...entry.data.stack,
+        ].join(" "),
       })),
     ...layoff
       .filter((entry) => !entry.data.draft)
@@ -110,11 +137,11 @@ export async function getDesktopFiles() {
     })),
     ...technologies.map((tech) => ({
       title: tech.name,
-      description: `Projects built with ${tech.name}.`,
+      description: `Projects and games built with ${tech.name}.`,
       url: `/technologies/${tech.slug}/`,
       folder: "topics",
       kind: "Technology",
-      detail: `${tech.projects.length} projects`,
+      detail: describeTechnologyCount(tech),
       keywords: "",
     })),
     ...[{ label: "Home", href: "/" }, ...site.nav, ...site.explore]

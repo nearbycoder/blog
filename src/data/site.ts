@@ -17,6 +17,7 @@ export const site = {
     { label: "About", href: "/about" },
     { label: "Articles", href: "/articles" },
     { label: "Projects", href: "/projects" },
+    { label: "Games", href: "/games" },
     { label: "Layoff Log", href: "/layoff" },
     { label: "Uses", href: "/uses" },
   ],
@@ -71,10 +72,11 @@ export const site = {
       home: "/projects",
       links: [
         { href: "/projects", note: "Shipped products and side projects" },
+        { href: "/games", note: "Games to play, with how each was made" },
         { href: "/layoff", note: "A build a week after a layoff" },
         { href: "/lab", note: "Small experiments you can play with" },
         { href: "/postmortems", note: "What worked, what didn’t" },
-        { href: "/technologies/", note: "Projects grouped by stack" },
+        { href: "/technologies/", note: "Projects and games grouped by stack" },
       ],
     },
     {

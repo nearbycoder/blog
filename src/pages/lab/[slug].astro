@@ -4,12 +4,13 @@ import { labs } from "../../data/labs";
 import Roomba from "../../components/lab/Roomba.astro";
 import Poll from "../../components/lab/Poll.astro";
 import Agent from "../../components/lab/Agent.astro";
-import { getEntry } from "astro:content";
+import { findWork, isGame, workHref } from "../../lib/work";
 export function getStaticPaths() {
   return labs.map((lab) => ({ params: { slug: lab.slug }, props: { lab } }));
 }
 const { lab } = Astro.props;
-const project = await getEntry("projects", lab.project);
+const project = await findWork(lab.project);
+if (!project) throw new Error(`Missing lab project: ${lab.project}`);
 ---
 
 <BlogLayout title={lab.title} description={lab.description}>
@@ -34,8 +35,10 @@ const project = await getEntry("projects", lab.project);
     </p></noscript
   >
   <section class="lab-source">
-    <h2>The project behind the experiment</h2><p>{project!.data.summary}</p><a
-      class="text-link"
-      href={`/projects/${lab.project}`}>Explore {project!.data.title} →</a>
+    <h2>The {isGame(project) ? "game" : "project"} behind the experiment</h2><p>
+      {project.data.summary}
+    </p><a class="text-link" href={workHref(project)}
+      >Explore {project.data.title} →</a
+    >
   </section>
 </BlogLayout>

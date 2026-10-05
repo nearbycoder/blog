@@ -21,7 +21,7 @@ This Week 3 build is [Roomba Wars](https://github.com/nearbycoder/roomba-wars), 
 - Open source repo: [nearbycoder/roomba-wars](https://github.com/nearbycoder/roomba-wars)
 - Live app: [roomba.nerb.dev](https://roomba.nerb.dev)
 - New article: [When AI in an interview fails you](/articles/when-ai-in-an-interview-fails-you)
-- New project page: [Roomba Wars](/projects/roomba-wars)
+- Game page: [Roomba Wars](/games/roomba-wars)
 
 ## Why this mattered
 

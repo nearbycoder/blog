@@ -468,7 +468,7 @@ test("technology directory leads to real project collections", async ({
   await expect(page.locator("h1")).toHaveText("TypeScript");
   expect(await page.locator(".project-grid > *").count()).toBeGreaterThan(1);
   await expect(page.locator(".page-intro")).toContainText(
-    "projects using this technology",
+    /\d+ projects?(?: and \d+ games?)? using this technology/,
   );
 });
 

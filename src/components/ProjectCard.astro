@@ -1,18 +1,16 @@
 ---
 import { formatDate, projectImage } from "../lib/media";
+import { isGame, workHref } from "../lib/work";
 import Icon from "./Icon.astro";
 const { project, heading = "h3" } = Astro.props;
 const Heading = heading as "h2" | "h3";
 const image = projectImage(project);
+const href = workHref(project);
+const game = isGame(project);
 ---
 
 <article class="project-card">
-  <a
-    href={`/projects/${project.id}`}
-    class="project-image"
-    tabindex="-1"
-    aria-hidden="true"
-  >
+  <a href={href} class="project-image" tabindex="-1" aria-hidden="true">
     {
       image ? (
         <img src={image} alt="" loading="lazy" width="720" height="450" />
@@ -22,9 +20,7 @@ const image = projectImage(project);
     }
   </a>
   <div class="project-heading">
-    <Heading
-      ><a href={`/projects/${project.id}`}>{project.data.title}</a></Heading
-    >{
+    <Heading><a href={href}>{project.data.title}</a></Heading>{
       project.data.createdAt ? (
         <time
           class="label"
@@ -39,6 +35,13 @@ const image = projectImage(project);
       )
     }
   </div>
+  {
+    game && (
+      <p class="label game-meta">
+        {project.data.genre} · {project.data.platforms.join(" · ")}
+      </p>
+    )
+  }
   <p>{project.data.summary}</p>
   <div class="mt-4 flex flex-wrap gap-2">
     {
@@ -48,8 +51,8 @@ const image = projectImage(project);
     }
   </div>
   <div class="project-links">
-    <a href={`/projects/${project.id}`} class="text-link"
-      >The project <Icon name="arrow" /></a
+    <a href={href} class="text-link"
+      >{game ? "The game" : "The project"} <Icon name="arrow" /></a
     >{
       project.data.link && (
         <a
@@ -58,7 +61,18 @@ const image = projectImage(project);
           target="_blank"
           rel="noreferrer"
         >
-          Visit site <Icon name="external" />
+          {game ? "Play" : "Visit site"} <Icon name="external" />
+        </a>
+      )
+    }{
+      game && !project.data.link && project.data.download && (
+        <a
+          href={project.data.download}
+          class="nav-link"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Download <Icon name="external" />
         </a>
       )
     }{
@@ -75,3 +89,9 @@ const image = projectImage(project);
     }
   </div>
 </article>
+
+<style>
+  .game-meta {
+    margin-top: 8px;
+  }
+</style>

@@ -34,6 +34,7 @@ const articles = ((await getCollection("articles")) as any[]).sort(
   (a: any, b: any) => compareArticlesByPublishDateDesc(a, b),
 );
 const projects = (await getCollection("projects")) as any[];
+const games = (await getCollection("games")) as any[];
 const layoffEntries = (await getCollection("layoff")) as any[];
 
 const readingPaths = await getReadingPaths();
@@ -109,6 +110,21 @@ const searchItems = [
       url: `/projects/${entry.id}`,
       subtitle: [entry.data.year, entry.data.role].filter(Boolean).join(" · "),
       keywords: [entry.data.summary, ...(entry.data.stack ?? [])].join(" "),
+    })),
+  ...games
+    .filter((entry) => !entry.data.draft)
+    .map((entry) => ({
+      type: "Game",
+      title: entry.data.title,
+      url: `/games/${entry.id}`,
+      subtitle: [entry.data.genre, entry.data.platforms.join(", ")]
+        .filter(Boolean)
+        .join(" · "),
+      keywords: [
+        entry.data.summary,
+        entry.data.engine,
+        ...(entry.data.stack ?? []),
+      ].join(" "),
     })),
   ...layoffEntries
     .filter((entry) => !entry.data.draft)

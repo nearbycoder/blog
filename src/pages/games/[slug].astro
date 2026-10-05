@@ -1,0 +1,12 @@
+---
+import WorkDetail from "../../components/WorkDetail.astro";
+import { getCollection } from "astro:content";
+export async function getStaticPaths() {
+  return (await getCollection("games"))
+    .filter((entry) => !entry.data.draft)
+    .map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+---
+
+<WorkDetail entry={entry} />

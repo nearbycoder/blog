@@ -58,9 +58,11 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
     ? "Articles"
     : path.startsWith("/projects/")
       ? "Projects"
-      : path.startsWith("/layoff/")
-        ? "Layoff Log"
-        : "Nearbycoder";
+      : path.startsWith("/games/")
+        ? "Games"
+        : path.startsWith("/layoff/")
+          ? "Layoff Log"
+          : "Nearbycoder";
   // Fit the longest published title without truncating its meaning.
   const size =
     displayTitle.length > 105
@@ -133,7 +135,11 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                 "span",
                 {
                   key: "coder",
-                  style: { fontStyle: "italic", fontWeight: 300, color: "#a8390b" },
+                  style: {
+                    fontStyle: "italic",
+                    fontWeight: 300,
+                    color: "#a8390b",
+                  },
                 },
                 "coder",
               ),

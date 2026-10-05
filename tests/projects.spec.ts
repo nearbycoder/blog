@@ -1,9 +1,6 @@
 import { test, expect } from "@playwright/test";
 
 const addedProjects = [
-  "flip-flop-cheer",
-  "hapless-wheels",
-  "geowars",
   "lilipad",
   "rustfire",
   "rizzy",
@@ -13,8 +10,6 @@ const addedProjects = [
   "clank-run",
   "nobo",
   "codex-grab",
-  "touchgrass-city",
-  "pong",
 ];
 
 test("project archive contains each repository once and orders dated projects newest first", async ({

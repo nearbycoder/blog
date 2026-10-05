@@ -2,6 +2,7 @@
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import { getCollection, render } from "astro:content";
 import { isArticlePublished } from "../../lib/articles";
+import { findWork, workHref } from "../../lib/work";
 export async function getStaticPaths() {
   return (await getCollection("postmortems"))
     .filter((e) => !e.data.draft)
@@ -19,9 +20,7 @@ const sources = entry.data.sources.flatMap((id) => {
     ? [article]
     : [];
 });
-const project = (await getCollection("projects")).find(
-  (p) => p.id === entry.data.project && !p.data.draft,
-);
+const project = await findWork(entry.data.project);
 ---
 
 <BlogLayout
@@ -48,7 +47,7 @@ const project = (await getCollection("projects")).find(
           }
         </div>{
           project && (
-            <a href={`/projects/${project.id}`} class="text-link mt-6">
+            <a href={workHref(project)} class="text-link mt-6">
               Explore {project.data.title} →
             </a>
           )

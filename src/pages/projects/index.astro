@@ -33,9 +33,11 @@ const sortedProjects = projects
       </p>
     </header>
 
-    <a class="text-link" href="/technologies/"
-      >Explore projects by technology →</a
-    >
+    <p class="flex flex-wrap gap-x-6 gap-y-2">
+      <a class="text-link" href="/technologies/"
+        >Explore projects by technology →</a
+      ><a class="text-link" href="/games">Games have their own shelf →</a>
+    </p>
     <div class="project-grid">
       {
         sortedProjects.map((project: any, index: number) => (
