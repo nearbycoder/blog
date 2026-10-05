@@ -6,7 +6,7 @@ genre: "Precision platformer"
 platforms: ["Linux"]
 engine: "Godot 4.7"
 year: "2026"
-createdAt: "2026-10-04"
+createdAt: "2026-10-04T22:49:29Z"
 stack: ["Godot", "GDScript", "Python", "NumPy", "FFmpeg"]
 githubLink: "https://github.com/nearbycoder/Jeste"
 download: "https://github.com/nearbycoder/Jeste/releases/latest"

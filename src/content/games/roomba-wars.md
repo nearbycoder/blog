@@ -5,7 +5,7 @@ role: "Creator"
 genre: "Multiplayer arena"
 platforms: ["Web"]
 engine: "React Three Fiber"
-createdAt: "2026-03-08"
+createdAt: "2026-03-08T00:06:03Z"
 year: "2026"
 stack:
   [

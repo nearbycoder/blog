@@ -5,7 +5,7 @@ role: "Creator"
 genre: "Learning game"
 platforms: ["Web"]
 engine: "React"
-createdAt: "2022-11-16"
+createdAt: "2022-11-16T15:08:35Z"
 year: "Ongoing"
 stack: ["React 19", "TypeScript", "Tailwind CSS 4", "Vite 7", "TanStack Router"]
 impact: "Built MathQuest with 20 topics across 7 categories, local progress persistence, and gamified learning loops."

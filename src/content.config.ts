@@ -51,14 +51,21 @@ const work = z.object({
   year: z.string(),
   createdAt: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Use a UTC date in YYYY-MM-DD format")
+    // A UTC date, or a full UTC timestamp to order same-day repositories.
+    .regex(
+      /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}Z)?$/,
+      "Use a UTC date (YYYY-MM-DD) or timestamp (YYYY-MM-DDTHH:MM:SSZ)",
+    )
     .refine((value) => {
-      const date = new Date(`${value}T00:00:00.000Z`);
+      const date = new Date(
+        value.length === 10 ? `${value}T00:00:00.000Z` : value,
+      );
       return (
         !Number.isNaN(date.valueOf()) &&
-        date.toISOString().slice(0, 10) === value
+        date.toISOString().slice(0, 19) ===
+          (value.length === 10 ? `${value}T00:00:00` : value.slice(0, 19))
       );
-    }, "Use a real calendar date")
+    }, "Use a real calendar date and time")
     .optional(),
   image: z.string().optional(),
   imageAlt: z.string().optional(),

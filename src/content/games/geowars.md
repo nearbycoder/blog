@@ -6,7 +6,7 @@ genre: "Twin-stick shooter"
 platforms: ["Web"]
 engine: "Three.js"
 year: "2026"
-createdAt: "2026-10-03"
+createdAt: "2026-10-03T17:27:17Z"
 stack: ["JavaScript", "Three.js", "WebGL", "Web Audio API"]
 link: "https://geowars-bice.vercel.app"
 githubLink: "https://github.com/nearbycoder/geowars"

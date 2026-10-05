@@ -6,7 +6,7 @@ genre: "Action-adventure"
 platforms: ["Web"]
 engine: "Three.js"
 year: "2026"
-createdAt: "2026-10-04"
+createdAt: "2026-10-04T22:32:07Z"
 stack:
   [
     "TypeScript",

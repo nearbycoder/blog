@@ -6,7 +6,7 @@ genre: "Deduction"
 platforms: ["Linux"]
 engine: "Unity 6 (URP)"
 year: "2026"
-createdAt: "2026-10-04"
+createdAt: "2026-10-04T22:47:26Z"
 stack: ["Unity 6", "C#", "Blender", "Python", "NumPy", "SciPy", "FFmpeg"]
 githubLink: "https://github.com/nearbycoder/LostAndFound"
 download: "https://github.com/nearbycoder/LostAndFound/releases/latest"

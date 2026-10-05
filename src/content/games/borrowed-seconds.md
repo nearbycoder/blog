@@ -6,7 +6,7 @@ genre: "Puzzle"
 platforms: ["Linux"]
 engine: "Unity 6 (URP)"
 year: "2026"
-createdAt: "2026-10-04"
+createdAt: "2026-10-04T22:32:44Z"
 stack: ["Unity 6", "C#", ".NET", "Blender", "Python", "NumPy", "FFmpeg"]
 githubLink: "https://github.com/nearbycoder/BorrowedSeconds"
 download: "https://github.com/nearbycoder/BorrowedSeconds/releases/latest"

@@ -6,7 +6,7 @@ genre: "Arena shooter"
 platforms: ["Linux", "Web"]
 engine: "Three.js + Rapier"
 year: "2026"
-createdAt: "2026-10-04"
+createdAt: "2026-10-04T22:37:33Z"
 stack:
   [
     "TypeScript",

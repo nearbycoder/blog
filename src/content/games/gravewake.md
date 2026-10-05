@@ -6,7 +6,7 @@ genre: "Arena roguelite"
 platforms: ["macOS"]
 engine: "Custom Rust (wgpu)"
 year: "2026"
-createdAt: "2026-10-04"
+createdAt: "2026-10-04T21:38:20Z"
 stack: ["Rust", "wgpu", "WGSL", "winit", "egui", "Rapier", "rodio", "Blender"]
 githubLink: "https://github.com/nearbycoder/gravewake"
 featured: false

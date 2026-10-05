@@ -6,7 +6,7 @@ genre: "Idle clicker"
 platforms: ["Linux", "macOS"]
 engine: "Unity 6 (URP)"
 year: "2026"
-createdAt: "2026-10-04"
+createdAt: "2026-10-04T22:20:58Z"
 stack: ["Unity 6", "C#", "Blender", "Python", "FFmpeg"]
 githubLink: "https://github.com/nearbycoder/AgentClicker"
 download: "https://github.com/nearbycoder/AgentClicker/releases/latest"

@@ -5,7 +5,7 @@ role: "Creator"
 genre: "Puzzle"
 platforms: ["Web"]
 engine: "Custom TypeScript"
-createdAt: "2026-01-02"
+createdAt: "2026-01-02T19:24:40Z"
 year: "Ongoing"
 stack: ["TypeScript", "JavaScript", "Web Platform"]
 impact: "Shipped and maintained an open-source project in public with a clean repository workflow and production-oriented delivery."

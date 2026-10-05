@@ -6,7 +6,7 @@ genre: "Multiplayer arcade"
 platforms: ["Web"]
 engine: "React + WebSockets"
 year: "2026"
-createdAt: "2026-02-20"
+createdAt: "2026-02-20T17:41:45Z"
 stack:
   [
     "TypeScript",

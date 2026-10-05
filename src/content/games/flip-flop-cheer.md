@@ -6,7 +6,7 @@ genre: "Physics sports"
 platforms: ["Web"]
 engine: "Three.js + Planck.js"
 year: "2026"
-createdAt: "2026-10-03"
+createdAt: "2026-10-03T18:45:45Z"
 stack: ["JavaScript", "Three.js", "Planck.js", "Vite", "Web Audio API"]
 link: "https://flip-flop-cheer.vercel.app"
 githubLink: "https://github.com/nearbycoder/flip-flop-cheer"

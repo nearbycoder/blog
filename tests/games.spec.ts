@@ -41,12 +41,15 @@ test("games have their own archive, and projects no longer list them", async ({
   expect(new Set(hrefs).size).toBe(hrefs.length);
   for (const slug of [...newGames, ...movedGames])
     expect(hrefs, slug).toContain(`/games/${slug}`);
-  await expect(
-    page.getByRole("heading", { name: "Play in your browser" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { name: "Download and play" }),
-  ).toBeVisible();
+  // Newest repository first, to the second, so same-day games stay in order.
+  const created = await page
+    .locator(".project-card time")
+    .evaluateAll((times) => times.map((time) => time.getAttribute("datetime")));
+  expect(created).toHaveLength(hrefs.length);
+  expect(created).toEqual(
+    [...created].sort((a, b) => Date.parse(b!) - Date.parse(a!)),
+  );
+  expect(hrefs[0]).toBe("/games/jeste");
 
   await page.goto("/projects/");
   const projectHrefs = await page

@@ -5,7 +5,7 @@ role: "Creator"
 genre: "Arcade"
 platforms: ["Web"]
 engine: "HTML5 Canvas"
-createdAt: "2026-02-01"
+createdAt: "2026-02-01T21:24:03Z"
 year: "2026"
 stack: ["JavaScript", "HTML5 Canvas", "Web Audio API", "CSS"]
 link: "https://pong.nearbylabs.dev"

@@ -7,21 +7,6 @@ import { compareWorkByDate } from "../../lib/work";
 const games = (await getCollection("games"))
   .filter((entry) => !entry.data.draft)
   .sort(compareWorkByDate);
-// Hosted games are one click away; the rest ship as downloads or source.
-const shelves = [
-  {
-    id: "browser",
-    title: "Play in your browser",
-    note: "Hosted builds. Open one and start playing, no install needed.",
-    games: games.filter((game) => game.data.link),
-  },
-  {
-    id: "download",
-    title: "Download and play",
-    note: "Desktop releases and source builds, each with a trailer and screenshots on its page.",
-    games: games.filter((game) => !game.data.link),
-  },
-].filter((shelf) => shelf.games.length > 0);
 ---
 
 <BlogLayout
@@ -33,52 +18,19 @@ const shelves = [
       <p class="paper-strip">Games / {games.length} builds</p>
       <h1 class="display">Made to be<br /><em>played.</em></h1>
       <p style="color:var(--fg-muted)">
-        Browser toys, cozy puzzle games, and the occasional gothic shooter.
-        Every game has its own page covering how it plays, what it was built
-        with, and how it was made.
+        Browser toys, cozy puzzle games, and the occasional gothic shooter,
+        newest first. Every game has its own page covering how it plays, what it
+        was built with, and how it was made.
       </p>
     </header>
 
-    <nav class="game-shelf-nav" aria-label="Game shelves">
+    <a class="text-link" href="/projects">Looking for projects? →</a>
+    <div class="project-grid">
       {
-        shelves.map((shelf) => (
-          <a class="chip" href={`#${shelf.id}`}>
-            {shelf.title} · {shelf.games.length}
-          </a>
+        games.map((game, index) => (
+          <ProjectCard project={game} index={index} heading="h2" />
         ))
       }
-      <a class="chip" href="/projects">Looking for projects? →</a>
-    </nav>
-
-    {
-      shelves.map((shelf) => (
-        <section class="game-shelf" aria-labelledby={shelf.id}>
-          <header class="section-head">
-            <h2 id={shelf.id}>{shelf.title}</h2>
-            <p class="label">{shelf.note}</p>
-          </header>
-          <div class="project-grid">
-            {shelf.games.map((game, index) => (
-              <ProjectCard project={game} index={index} heading="h3" />
-            ))}
-          </div>
-        </section>
-      ))
-    }
+    </div>
   </section>
 </BlogLayout>
-
-<style>
-  .game-shelf-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .game-shelf {
-    padding-top: 28px;
-    scroll-margin-top: 96px;
-  }
-  .game-shelf .section-head {
-    margin-bottom: 32px;
-  }
-</style>

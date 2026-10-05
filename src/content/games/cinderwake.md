@@ -6,7 +6,7 @@ genre: "Action roguelite"
 platforms: ["macOS"]
 engine: "Macroquad (Rust)"
 year: "2026"
-createdAt: "2026-10-04"
+createdAt: "2026-10-04T21:02:57Z"
 stack: ["Rust", "Macroquad", "GLSL", "Python"]
 githubLink: "https://github.com/nearbycoder/Cinderwake"
 featured: false

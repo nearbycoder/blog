@@ -6,7 +6,7 @@ genre: "Cozy puzzle"
 platforms: ["Linux", "Web"]
 engine: "Unity 6 (URP)"
 year: "2026"
-createdAt: "2026-10-04"
+createdAt: "2026-10-04T22:35:04Z"
 stack:
   ["Unity 6", "C#", "HLSL", "Blender", "Python", "NumPy", "SciPy", "FFmpeg"]
 githubLink: "https://github.com/nearbycoder/PocketWeather"
