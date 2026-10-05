@@ -1,5 +1,5 @@
 import React from "react";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import sharp from "sharp";
 import artwork from "../data/article-artwork.json" with { type: "json" };
 
@@ -18,6 +18,74 @@ async function coverData(src) {
     );
   }
   return artCache.get(src);
+}
+
+// Games get real screenshots instead of editorial art: a mosaic of the newest
+// covers for the archive, and a game's own screenshots for its page.
+const PANEL = { width: 390, height: 630, gap: 6, background: "#faf6ec" };
+const gamesDir = new URL("../../src/content/games/", import.meta.url);
+function gameImages(slug) {
+  const source = readFileSync(new URL(`${slug}.md`, gamesDir), "utf8");
+  const cover = source.match(/^image:\s*"([^"]+)"/m)?.[1];
+  const body = source.slice(source.indexOf("\n---", 3) + 4);
+  const shots = [
+    ...body.matchAll(/src="(\/images\/[^"]+\.(?:webp|png|jpe?g))"/g),
+  ]
+    .map((match) => match[1])
+    .filter((src) => src !== cover);
+  return [cover, ...shots].filter(Boolean);
+}
+function newestGameCovers(count) {
+  return readdirSync(gamesDir)
+    .filter((file) => file.endsWith(".md"))
+    .map((file) => {
+      const source = readFileSync(new URL(file, gamesDir), "utf8");
+      return {
+        createdAt: source.match(/^createdAt:\s*"([^"]+)"/m)?.[1] ?? "",
+        cover: source.match(/^image:\s*"([^"]+)"/m)?.[1],
+      };
+    })
+    .filter((game) => game.cover)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+    .slice(0, count)
+    .map((game) => game.cover);
+}
+const mosaicCache = new Map();
+/** Tile screenshots into the card's art panel, `columns` across. */
+function mosaicData(srcs, columns) {
+  const key = `${columns}:${srcs.join("|")}`;
+  if (!mosaicCache.has(key)) {
+    const rows = Math.ceil(srcs.length / columns);
+    const { width, height, gap, background } = PANEL;
+    const tileWidth = Math.floor((width - gap * (columns - 1)) / columns);
+    const tileHeight = Math.floor((height - gap * (rows - 1)) / rows);
+    mosaicCache.set(
+      key,
+      Promise.all(
+        srcs.map((src) =>
+          sharp(readFileSync(new URL(`../../public${src}`, import.meta.url)))
+            .resize(tileWidth, tileHeight, { fit: "cover" })
+            .toBuffer(),
+        ),
+      )
+        .then((tiles) =>
+          sharp({
+            create: { width, height, channels: 3, background },
+          })
+            .composite(
+              tiles.map((input, index) => ({
+                input,
+                left: (index % columns) * (tileWidth + gap),
+                top: Math.floor(index / columns) * (tileHeight + gap),
+              })),
+            )
+            .png()
+            .toBuffer(),
+        )
+        .then((buffer) => `data:image/png;base64,${buffer.toString("base64")}`),
+    );
+  }
+  return mosaicCache.get(key);
 }
 
 // The theme's contour map, inked in survey brown for the card background.
@@ -47,9 +115,16 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
   const articleArt = articleId
     ? artwork[decodeURIComponent(articleId)]
     : undefined;
-  const art = await coverData(
-    articleArt?.src ?? "/images/editorial-curiosity.webp",
-  );
+  const gameId = path.match(/^\/games\/([^/]+)\/?$/)?.[1];
+  const shots = gameId ? gameImages(decodeURIComponent(gameId)) : [];
+  const art =
+    path === "/games/"
+      ? await mosaicData(newestGameCovers(8), 2)
+      : shots.length > 1
+        ? await mosaicData(shots.slice(0, 2), 1)
+        : await coverData(
+            shots[0] ?? articleArt?.src ?? "/images/editorial-curiosity.webp",
+          );
   const contours = await contourData();
   const displayTitle = home
     ? "Always curious. Still building."

@@ -23,6 +23,8 @@ githubLink: "https://github.com/nearbycoder/roomba-wars"
 featured: false
 accent: "lime"
 draft: false
+image: "/images/optimized/roomba-1.webp"
+imageAlt: "A Roomba cleans a grid of dirt tiles in the Infinite Dirt Arena, with live standings in the corner."
 ---
 
 Roomba Wars takes a very small interview prompt and pushes it into something much closer to a real product and systems exercise.

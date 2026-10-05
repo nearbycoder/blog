@@ -13,6 +13,8 @@ link: "https://math.nrby.xyz"
 githubLink: "https://github.com/nearbycoder/math-game"
 featured: false
 accent: "cyan"
+image: "/images/optimized/math.webp"
+imageAlt: "The MathQuest start screen with a name field, a choice of animal buddies, and a Start Learning button."
 ---
 
 MathQuest is a browser-based learning game for 6th-grade math with a skill-tree style progression system, daily streak tracking, XP levels, hearts, crowns, and localStorage-backed progress.
