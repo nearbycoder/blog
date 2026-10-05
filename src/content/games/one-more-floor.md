@@ -3,7 +3,7 @@ title: "One More Floor"
 summary: "A short-shift score-attack game where you run the elevator in a hotel that rearranges its floors every time you stop, for guests including a vampire, a houseplant, and a soaked swimmer."
 role: "Creator"
 genre: "Arcade puzzle"
-platforms: ["Linux"]
+platforms: ["Windows", "macOS", "Linux"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:40:07Z"
@@ -81,6 +81,6 @@ The trailer is recorded by the game. Each shot plays from a fixed seed and skips
 
 ## Play it
 
-Version 0.1.0 has the full scope: ten floors, eight guests, ten shifts, Overtime, menus, saves, and gamepad support. [Download the Linux build](https://github.com/nearbycoder/OneMoreFloor/releases/latest) and run `./OneMoreFloor.x86_64`. Difficulty is fitted to the player model rather than real playtests so far, and the README is candid that the audio has been measured more than it's been listened to.
+Version 0.1.0 has the full scope: ten floors, eight guests, ten shifts, Overtime, menus, saves, and gamepad support. [Download it from GitHub releases](https://github.com/nearbycoder/OneMoreFloor/releases/latest). Difficulty is fitted to the player model rather than real playtests so far, and the README is candid that the audio has been measured more than it's been listened to.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/OneMoreFloor). GitHub records the repository's creation on **October 4, 2026**.

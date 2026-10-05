@@ -3,7 +3,7 @@ title: "Alibi & Co."
 summary: "A cozy-noir deduction game: pin receipts, phone logs, and statements to a timeline, watch walking-time ribbons turn red, and break the alibi that can't be true."
 role: "Creator"
 genre: "Deduction"
-platforms: ["Linux"]
+platforms: ["Windows", "macOS", "Linux"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:21:29Z"
@@ -79,6 +79,6 @@ The recorder pipes raw frames to FFmpeg while the game clock steps exactly one f
 
 ## Play it
 
-Version 0.1.0 is a complete, small game: three cases from start to finish. [Download the Linux build](https://github.com/nearbycoder/AlibiAndCo/releases/latest) and run `./AlibiAndCo.x86_64`. It's played with a mouse and keyboard.
+Version 0.1.0 is a complete, small game: three cases from start to finish. [Download it from GitHub releases](https://github.com/nearbycoder/AlibiAndCo/releases/latest). It's played with a mouse and keyboard.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/AlibiAndCo). GitHub records the repository's creation on **October 4, 2026**.

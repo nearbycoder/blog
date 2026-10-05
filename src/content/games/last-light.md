@@ -3,7 +3,7 @@ title: "Last Light"
 summary: "Keep the last lighthouse on a wrecking coast: sweep a heavy beam to guide ships home, chart hidden reefs ahead of them, and douse the wreckers' false lights across twelve nights."
 role: "Creator"
 genre: "Strategy"
-platforms: ["Linux"]
+platforms: ["Windows", "macOS", "Linux"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:37:44Z"
@@ -81,6 +81,6 @@ Balance comes from bots. The AutoKeeper wins all twelve nights in the pure simul
 
 ## Play it
 
-Version 0.1.0 includes all twelve nights, the ending, and the Night Watch. [Download the Linux build](https://github.com/nearbycoder/LastLight/releases/latest) and run `./LastLight.sh`; it needs a GPU with OpenGL 4.5. It supports mouse, keyboard, and gamepad, though the gamepad has only been tested with a simulated device and balance hasn't been tuned with human players yet.
+Version 0.1.0 includes all twelve nights, the ending, and the Night Watch. [Download it from GitHub releases](https://github.com/nearbycoder/LastLight/releases/latest). It supports mouse, keyboard, and gamepad, though the gamepad has only been tested with a simulated device and balance hasn't been tuned with human players yet.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/LastLight). GitHub records the repository's creation on **October 4, 2026**.

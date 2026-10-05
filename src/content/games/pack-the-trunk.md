@@ -3,7 +3,7 @@ title: "Pack The Trunk"
 summary: "A cozy voxel packing puzzle about one family, thirty years, and one very full trunk: 33 trips, 11 vehicles, and 116 Blender-modelled items, every level proven solvable."
 role: "Creator"
 genre: "Packing puzzle"
-platforms: ["Linux"]
+platforms: ["Windows", "macOS", "Linux"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:36:53Z"
@@ -80,6 +80,6 @@ Unlike most of the other games here, the music and many sound effects come from 
 
 ## Play it
 
-Version 0.1.0 includes all 33 trips, the story, the album, menus, and settings. [Download the Linux build](https://github.com/nearbycoder/PackTheTrunk/releases/latest) and run `./PackTheTrunk.sh`. It's mouse and keyboard only for now.
+Version 0.1.0 includes all 33 trips, the story, the album, menus, and settings. [Download it from GitHub releases](https://github.com/nearbycoder/PackTheTrunk/releases/latest). It's mouse and keyboard only for now.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/PackTheTrunk). GitHub records the repository's creation on **October 4, 2026**.

@@ -3,7 +3,7 @@ title: "Handle With Care"
 summary: "A physics packing puzzle where you pack bizarre deliveries, from a sleeping armadillo to a sneezing dragon, then watch a deterministic journey decide whether they survive."
 role: "Creator"
 genre: "Physics puzzle"
-platforms: ["Linux"]
+platforms: ["Windows", "macOS", "Linux"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:16:44Z"
@@ -80,6 +80,6 @@ Every 3D model is built by Python in Blender from bevelled primitives and voxel-
 
 ## Play it
 
-Version 0.1.0 is complete: 20 deliveries, every one validated solvable with three stars. [Download the Linux build](https://github.com/nearbycoder/HandleWithCare/releases/latest) and run `./HandleWithCare.x86_64`. It's mouse and keyboard only.
+Version 0.1.0 is complete: 20 deliveries, every one validated solvable with three stars. [Download it from GitHub releases](https://github.com/nearbycoder/HandleWithCare/releases/latest). It's mouse and keyboard only.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/HandleWithCare). GitHub records the repository's creation on **October 4, 2026**.

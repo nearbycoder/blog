@@ -99,41 +99,53 @@ const linkLabel = game ? "Play in your browser" : "Visit project";
       )
     }
     <div class="reading-layout">
-      <aside class="reading-sidebar">
-        <p class="label">{index.label}</p><p class="mt-4 text-sm">
-          {entry.data.role}
-        </p>{
-          game && (
-            <dl class="game-facts">
-              <div>
-                <dt class="label">Genre</dt>
-                <dd>{game.genre}</dd>
+      <aside class="reading-sidebar work-sidebar">
+        <p class="label">{index.label}</p>
+        <dl class:list={["work-facts", game && "game-facts"]}>
+          <div>
+            <dt class="label">Role</dt>
+            <dd>{entry.data.role}</dd>
+          </div>
+          {
+            game && (
+              <>
+                <div>
+                  <dt class="label">Genre</dt>
+                  <dd>{game.genre}</dd>
+                </div>
+                <div>
+                  <dt class="label">Plays on</dt>
+                  <dd>{game.platforms.join(" · ")}</dd>
+                </div>
+                <div>
+                  <dt class="label">Engine</dt>
+                  <dd>{game.engine}</dd>
+                </div>
+              </>
+            )
+          }
+          {
+            entry.data.createdAt ? (
+              <div class="project-created">
+                <dt class="label">Repository created</dt>
+                <dd>
+                  <time
+                    datetime={entry.data.createdAt}
+                    title="GitHub repository creation date (UTC)"
+                  >
+                    {formatDate(entry.data.createdAt)}
+                  </time>
+                </dd>
               </div>
+            ) : (
               <div>
-                <dt class="label">Plays on</dt>
-                <dd>{game.platforms.join(" · ")}</dd>
+                <dt class="label">Year</dt>
+                <dd>{entry.data.year}</dd>
               </div>
-              <div>
-                <dt class="label">Engine</dt>
-                <dd>{game.engine}</dd>
-              </div>
-            </dl>
-          )
-        }{
-          entry.data.createdAt ? (
-            <p class="project-created mt-4">
-              <span class="label">Repository created</span>
-              <time
-                datetime={entry.data.createdAt}
-                title="GitHub repository creation date (UTC)"
-              >
-                {formatDate(entry.data.createdAt)}
-              </time>
-            </p>
-          ) : (
-            <p class="label mt-2">{entry.data.year}</p>
-          )
-        }<div class="mt-6 flex flex-wrap gap-2">
+            )
+          }
+        </dl>
+        <div class="work-stack">
           {
             entry.data.stack.map((item) => (
               <a class="chip" href={`/technologies/${technologySlug(item)}/`}>
@@ -225,14 +237,35 @@ const linkLabel = game ? "Play in your browser" : "Visit project";
   .reading-cover figcaption {
     padding: 0 8px 8px;
   }
-  .game-facts {
-    margin-top: 16px;
+  .work-facts {
     display: grid;
-    gap: 12px;
+    gap: 14px;
+    margin: 16px 0 0;
   }
-  .game-facts dd {
+  .work-facts dd {
     margin: 4px 0 0;
     font-size: 0.875rem;
+    overflow-wrap: anywhere;
+  }
+  .work-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  /* The shared phone sidebar is a wrapping row for article tools; project and
+     game details read better as a two-column list. */
+  @media (max-width: 767px) {
+    .reading-sidebar.work-sidebar {
+      display: block;
+    }
+    .work-facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px 20px;
+    }
+    .work-stack {
+      margin-top: 20px;
+    }
   }
   .project-demos figcaption a {
     display: block;
@@ -240,11 +273,6 @@ const linkLabel = game ? "Play in your browser" : "Visit project";
     color: var(--accent);
     text-decoration: underline;
     text-underline-offset: 3px;
-  }
-  .project-created time {
-    display: block;
-    margin-top: 4px;
-    font-size: 0.875rem;
   }
   .article-content :global(.project-media-gallery) {
     display: grid;

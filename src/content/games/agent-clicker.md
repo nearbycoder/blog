@@ -3,7 +3,7 @@ title: "Agent Clicker"
 summary: "An idle clicker about a developer who quietly hands their whole job to AI agents, played on a computer inside a 3D office that fills up as the numbers climb toward a centillion."
 role: "Creator"
 genre: "Idle clicker"
-platforms: ["Linux", "macOS"]
+platforms: ["Windows", "macOS", "Linux"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:20:58Z"
@@ -78,6 +78,6 @@ The game ships with zero audio files. Key clicks, chimes, the phone ring, the of
 
 ## Play it
 
-Version 0.1.0 is complete and playable from the first click to the endless game. [Download it from GitHub releases](https://github.com/nearbycoder/AgentClicker/releases/latest). The Linux build is tested on CachyOS; the macOS universal build is experimental, unsigned, and hasn't been run on a Mac. It's mouse and keyboard only. Every lab, AI model, company, and person in the game is fictional.
+Version 0.1.0 is complete and playable from the first click to the endless game. [Download it from GitHub releases](https://github.com/nearbycoder/AgentClicker/releases/latest). The macOS build is experimental and unsigned. It's mouse and keyboard only. Every lab, AI model, company, and person in the game is fictional.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/AgentClicker). GitHub records the repository's creation on **October 4, 2026**.

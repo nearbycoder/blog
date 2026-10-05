@@ -3,7 +3,7 @@ title: "Pocket Weather"
 summary: "A cozy puzzle game where you play Pip, a tiny cloud who rains, shades, and gusts a miniature world through its day across twelve tilt-shift dioramas."
 role: "Creator"
 genre: "Cozy puzzle"
-platforms: ["Linux", "Web"]
+platforms: ["Windows", "macOS", "Linux", "Web"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:35:04Z"
@@ -63,7 +63,7 @@ Hold to rain, and the soil darkens, the grass greens, and sprouts pop into flowe
 
 ## What it's built with
 
-Pocket Weather is a **Unity 6** URP game with Linux and WebGL builds, playable with mouse, touch, keyboard, or gamepad. Each level is a JSON file used three ways: Blender reads it to sculpt the island's terrain, Unity reads it to build the diorama, and a validator reads it to check that every need is reachable and the water budget works.
+Pocket Weather is a **Unity 6** URP game for desktop and the web, playable with mouse, touch, keyboard, or gamepad. Each level is a JSON file used three ways: Blender reads it to sculpt the island's terrain, Unity reads it to build the diorama, and a validator reads it to check that every need is reachable and the water budget works.
 
 Many of the details are small, specific pieces of engineering:
 
@@ -83,6 +83,6 @@ An AutoPilot plays every level through the same input intents as a player and re
 
 ## Play it
 
-Version 0.1.0 has all twelve days, the finale and ending, and every input method. [Download it from GitHub releases](https://github.com/nearbycoder/PocketWeather/releases/latest): a Linux build, or a web build to serve over HTTP. Touch and gamepad have only been tested through virtual devices so far.
+Version 0.1.0 has all twelve days, the finale and ending, and every input method. [Download it from GitHub releases](https://github.com/nearbycoder/PocketWeather/releases/latest): a desktop build, or a web build to serve over HTTP. Touch and gamepad have only been tested through virtual devices so far.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/PocketWeather). GitHub records the repository's creation on **October 4, 2026**.

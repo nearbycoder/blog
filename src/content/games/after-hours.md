@@ -3,7 +3,7 @@ title: "After Hours"
 summary: "A first-person cleaning game with a mystery underneath: scrub an office over seven nights, find what the day shift is hiding, and decide which evidence survives until morning."
 role: "Creator"
 genre: "First-person mystery"
-platforms: ["Linux"]
+platforms: ["Windows", "macOS", "Linux"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:26:34Z"
@@ -79,6 +79,6 @@ The story logic is pure C#, and an EditMode test enumerates every combination of
 
 ## Play it
 
-Version 0.1.0 includes all seven nights, four endings, menus, and saves. [Download the Linux build](https://github.com/nearbycoder/AfterHours/releases/latest) and run `./AfterHours.x86_64`. No one outside development has played it yet, so pacing and how obvious the clues are remain untested with real players.
+Version 0.1.0 includes all seven nights, four endings, menus, and saves. [Download it from GitHub releases](https://github.com/nearbycoder/AfterHours/releases/latest). No one outside development has played it yet, so pacing and how obvious the clues are remain untested with real players.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/AfterHours). GitHub records the repository's creation on **October 4, 2026**.

@@ -3,7 +3,7 @@ title: "Lost & Found"
 summary: "A small deduction game set at the lost-property desk of a 1962 railway station, where you inspect objects, catch liars, and decide which belongings should never be returned."
 role: "Creator"
 genre: "Deduction"
-platforms: ["Linux"]
+platforms: ["Windows", "macOS", "Linux"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:47:26Z"
@@ -84,6 +84,6 @@ The trailer was shot by the game itself. A frame-locked recorder runs at 30 fps,
 
 ## Play it
 
-Version 0.1.0 includes all five days, every case, and all three endings. [Download the Linux build](https://github.com/nearbycoder/LostAndFound/releases/latest) and run `LostAndFound.x86_64`. It's mouse and keyboard only, and it hasn't had broad human playtesting yet.
+Version 0.1.0 includes all five days, every case, and all three endings. [Download it from GitHub releases](https://github.com/nearbycoder/LostAndFound/releases/latest). It's mouse and keyboard only, and it hasn't had broad human playtesting yet.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/LostAndFound). GitHub records the repository's creation on **October 4, 2026**.
