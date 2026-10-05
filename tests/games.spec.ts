@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 
 // Games published on October 4, 2026, each with README screenshots and a trailer.
 const newGames = [
@@ -111,7 +112,10 @@ test("game pages show details, real screenshots, and user-started trailers witho
     await expect(video, slug).toHaveCount(1);
     await expect(video).toHaveAttribute("controls", "");
     await expect(video).toHaveAttribute("preload", "none");
-    await expect(video).toHaveAttribute("src", /^\/videos\/games\/.+\.mp4$/);
+    await expect(video).toHaveAttribute(
+      "src",
+      /^https:\/\/media\.nerb\.dev\/videos\/games\/.+\.mp4$/,
+    );
     await expect(video).toHaveAttribute("poster", /^\/images\/games\//);
     expect(
       await video.evaluate((element: HTMLVideoElement) => element.paused),
@@ -126,16 +130,26 @@ test("game pages show details, real screenshots, and user-started trailers witho
   }
 });
 
-test("trailers are served as playable MP4 files", async ({ request }) => {
-  for (const slug of newGames) {
-    const response = await request.get(`/videos/games/${slug}-trailer.mp4`, {
-      headers: { Range: "bytes=0-15" },
-    });
-    expect(response.ok(), slug).toBe(true);
-    // An MP4 starts with an ftyp box after its 4-byte size.
-    expect((await response.body()).subarray(4, 8).toString(), slug).toBe(
-      "ftyp",
+test("every referenced video has a source in media/ for the CDN upload, and none ship with the site", () => {
+  const referenced = readdirSync("src/content", { recursive: true })
+    .map(String)
+    .filter((file) => file.endsWith(".md"))
+    .flatMap((file) =>
+      [
+        ...readFileSync(`src/content/${file}`, "utf8").matchAll(
+          /src: "(\/videos\/[^"]+)"/g,
+        ),
+      ].map((match) => match[1]),
     );
+  expect(referenced.length).toBeGreaterThanOrEqual(newGames.length);
+  for (const src of referenced) {
+    const file = readFileSync(`media${src}`);
+    if (src.endsWith(".webm"))
+      // WebM is an EBML document.
+      expect(file.subarray(0, 4).toString("hex"), src).toBe("1a45dfa3");
+    // An MP4 starts with an ftyp box after its 4-byte size.
+    else expect(file.subarray(4, 8).toString(), src).toBe("ftyp");
+    expect(existsSync(`dist${src}`), `${src} is deployed`).toBe(false);
   }
 });
 

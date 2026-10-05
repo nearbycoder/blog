@@ -5,7 +5,12 @@ import ProjectStory from "./ProjectStory.astro";
 import BlogLayout from "../layouts/BlogLayout.astro";
 import Icon from "./Icon.astro";
 import { render, type CollectionEntry } from "astro:content";
-import { formatDate, projectImage, projectImageAlt } from "../lib/media";
+import {
+  formatDate,
+  mediaUrl,
+  projectImage,
+  projectImageAlt,
+} from "../lib/media";
 import { isGame, type WorkEntry } from "../lib/work";
 
 interface Props {
@@ -162,7 +167,7 @@ const linkLabel = game ? "Play in your browser" : "Visit project";
                 <figure>
                   <h3>{demo.title}</h3>
                   <video
-                    src={demo.src}
+                    src={mediaUrl(demo.src)}
                     poster={demo.poster}
                     controls
                     preload="none"
@@ -170,7 +175,7 @@ const linkLabel = game ? "Play in your browser" : "Visit project";
                     aria-label={demo.title}
                     aria-describedby={`project-demo-caption-${index}`}
                   >
-                    <a href={demo.src}>Watch {demo.title}</a>
+                    <a href={mediaUrl(demo.src)}>Watch {demo.title}</a>
                   </video>
                   <figcaption id={`project-demo-caption-${index}`}>
                     {demo.caption}

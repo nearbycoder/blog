@@ -12,7 +12,8 @@
     "verify": "npm run check && npm run build && npm test",
     "images:optimize": "node scripts/optimize-images.mjs",
     "prebuild": "npm run images:optimize",
-    "predev": "npm run images:optimize"
+    "predev": "npm run images:optimize",
+    "media:upload": "node scripts/upload-media.mjs"
   },
   "dependencies": {
     "@danfessler/trellis": "0.3.0",

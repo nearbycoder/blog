@@ -1,10 +1,41 @@
 // @ts-check
 import { defineConfig } from "astro/config";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import sharp from "sharp";
 
 import tailwindcss from "@tailwindcss/vite";
 import opengraphImages from "astro-opengraph-images";
 import { renderNearbycoderOg } from "./src/lib/opengraph-renderer.js";
+
+// The generated social cards are full-color PNGs; a palette keeps them about
+// 70% smaller with no visible change. Runs after astro-opengraph-images.
+const compressSocialCards = {
+  name: "compress-social-cards",
+  hooks: {
+    "astro:build:done": async ({ dir, logger }) => {
+      const root = fileURLToPath(dir);
+      const cards = readdirSync(root, { recursive: true })
+        .map(String)
+        .filter((file) => file === "index.png" || file.endsWith("/index.png"));
+      let before = 0;
+      let after = 0;
+      for (const file of cards) {
+        const path = `${root}${file}`;
+        const source = readFileSync(path);
+        const output = await sharp(source)
+          .png({ palette: true, quality: 85, effort: 10 })
+          .toBuffer();
+        before += source.length;
+        if (output.length < source.length) writeFileSync(path, output);
+        after += Math.min(output.length, source.length);
+      }
+      logger.info(
+        `Compressed ${cards.length} social cards: ${(before / 1048576).toFixed(1)} MB → ${(after / 1048576).toFixed(1)} MB`,
+      );
+    },
+  },
+};
 
 // https://astro.build/config
 export default defineConfig({
@@ -60,6 +91,7 @@ export default defineConfig({
       },
       render: renderNearbycoderOg,
     }),
+    compressSocialCards,
   ],
   vite: {
     plugins: [tailwindcss()],

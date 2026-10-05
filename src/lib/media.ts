@@ -47,6 +47,16 @@ export function projectImageAlt(entry: ProjectMediaEntry) {
     `${entry.data?.title ?? entry.id} project screenshot`
   );
 }
+/**
+ * Large media is served from Cloudflare R2 instead of every Vercel deployment.
+ * Sources live in `media/` (for example `media/videos/games/jeste-trailer.mp4`)
+ * and are uploaded with `npm run media:upload`.
+ */
+export const mediaOrigin = "https://media.nerb.dev";
+/** Resolve a `/videos/...` path to the media CDN; other URLs pass through. */
+export function mediaUrl(src: string) {
+  return src.startsWith("/videos/") ? `${mediaOrigin}${src}` : src;
+}
 export function formatDate(value: string) {
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
