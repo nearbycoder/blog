@@ -138,5 +138,10 @@
     "src": "/images/optimized/roomba-1.webp",
     "alt": "Roomba Wars screenshot one",
     "kind": "existing"
+  },
+  "orchestrating-15-games-with-t3-code": {
+    "src": "/images/articles/orchestrating-15-games-with-t3-code.webp",
+    "alt": "A grid of nine game title screens: Pocket Weather, Lost & Found, The Bell of Ages, Pack The Trunk, Alibi & Co., Gravewake, Last Light, Jeste and Agent Clicker.",
+    "kind": "existing"
   }
 }
