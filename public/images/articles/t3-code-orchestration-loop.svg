@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1060" viewBox="0 0 720 1060" role="img" aria-labelledby="title desc">
+  <title id="title">One improvement round, orchestrated in T3 Code</title>
+  <desc id="desc">One orchestrator thread launches fifteen game sessions with t3_thread_launch. A scheduled task wakes the orchestrator every thirty minutes. It reads each session's status and final report, runs a verification script, and only then fast-forwards main and pushes to GitHub. Finished sessions are settled and archived, and the next round starts from fresh sessions.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="m0 0 10 5-10 5z" fill="#616952"/></marker></defs>
+  <rect width="720" height="1060" rx="16" fill="#f4f0e5"/>
+  <g fill="#243127" font-family="Arial, sans-serif" text-anchor="middle">
+    <text x="360" y="61" font-size="21" letter-spacing="3" fill="#7d492f">ONE IMPROVEMENT ROUND</text>
+    <g stroke="#b7bdab" stroke-width="2">
+      <rect x="86" y="96" width="548" height="126" rx="10" fill="#e1ead5"/>
+      <rect x="30" y="282" width="630" height="168" rx="10" fill="#fffef8"/>
+      <rect x="86" y="510" width="548" height="126" rx="10" fill="#e5edf0"/>
+      <rect x="86" y="696" width="548" height="142" rx="10" fill="#fffef8"/>
+      <rect x="86" y="898" width="548" height="116" rx="10" fill="#e1ead5"/>
+    </g>
+    <g fill="none" stroke="#616952" stroke-width="3" marker-end="url(#arrow)">
+      <path d="M360 222v57"/><path d="M360 450v57"/><path d="M360 636v57"/><path d="M360 838v57"/>
+    </g>
+    <path d="M634 573h58v-420h-55" fill="none" stroke="#7d492f" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+    <text x="360" y="141" font-size="31" font-weight="700">Orchestrator thread</text>
+    <text x="360" y="180" font-size="24">t3_thread_launch × 15 · Opus 5.5 high</text>
+    <text x="360" y="208" font-size="20" fill="#616952">one brief per game, same rules</text>
+    <text x="360" y="325" font-size="31" font-weight="700">15 game sessions</text>
+    <g font-size="17" fill="#3f4a3c">
+      <text x="130" y="368">Jeste</text><text x="265" y="368">Lost &amp; Found</text><text x="415" y="368">One More Floor</text><text x="565" y="368">Last Light</text>
+      <text x="130" y="398">Purgatory</text><text x="265" y="398">Pack The Trunk</text><text x="415" y="398">Pocket Weather</text><text x="565" y="398">Borrowed Seconds</text>
+      <text x="130" y="428">Bell of Ages</text><text x="265" y="428">After Hours</text><text x="415" y="428">Alibi &amp; Co.</text><text x="565" y="428">Agent Clicker · …</text>
+    </g>
+    <text x="360" y="555" font-size="31" font-weight="700">schedule_task, every 30 min</text>
+    <text x="360" y="594" font-size="24">t3_thread_list · t3_thread_read</text>
+    <text x="360" y="622" font-size="20" fill="#616952">steer stalled work, read finished reports</text>
+    <text x="360" y="741" font-size="31" font-weight="700">verify_push.sh</text>
+    <text x="360" y="780" font-size="22">commits exist · clean tree · fast-forward only</text>
+    <text x="360" y="810" font-size="22">no files over 10 MB · no build output · no secrets</text>
+    <text x="360" y="943" font-size="31" font-weight="700">Push, then settle</text>
+    <text x="360" y="982" font-size="24">main → GitHub · t3_thread_organize</text>
+    <text x="706" y="370" font-size="16" fill="#7d492f" transform="rotate(90 706 370)">next check-in</text>
+  </g>
+</svg>
