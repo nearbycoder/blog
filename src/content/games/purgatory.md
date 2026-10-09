@@ -98,9 +98,22 @@ The game was built with AI coding agents, following OpenAI's guide to [building 
 
 The trailer is rendered by the game itself: a Python script drives scripted shots offscreen at 1920×1080 on Ultra in virtual time, so every frame is identical on every run, then scores the cut with the game's own synthesized sound and chapter themes.
 
+## On phones and tablets
+
+The likeliest reason the browser version crashed on iPhones was texture memory. The game uploaded 141 embedded 1024-pixel textures with mipmaps, though only 54 of them were different images. Identical images are now shared on every platform with no visible change, and phones and tablets also get 512-pixel textures, a half-size sky, and the later arenas only when a level needs them. In a fight on the iPhone profile, graphics memory fell from 960 MB to 123 MB, and the test browser's own peak from 7.7 GB to 2.3 GB.
+
+On a touchscreen there's a move stick, a drag to look, **FIRE**, **ALT**, **JUMP**, **RUN**, weapon ◀ and ▶, **USE**, **TAROT**, **INSPECT** and pause. Every button is at least 44 pixels and clear of the notch and home indicator. The session also fixed quick taps on JUMP or FIRE that were lost between frames, and a stick that dropped the first finger when a second one landed. The controls appear only on touchscreens with no mouse or trackpad, or after a touch, and the menus, which were cut off on phones, now fit either way up. If the browser kills the tab, the next visit says so and offers the lightest settings.
+
+<figure>
+  <img src="/images/games/purgatory-phone.webp" alt="Hallowed Ground on an iPhone-sized screen, with a move stick on the left and ALT, FIRE, JUMP and RUN on the right." width="1280" height="598" loading="lazy" />
+  <figcaption>Hallowed Ground on a phone, in a headless iPhone 15 profile on its lightest settings.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/PainKiller](https://nearbycoder.github.io/PainKiller/). It's the current game, about 53 MB before the title screen, needing a browser with WebGL 2. Saves are kept in the browser, and sound starts on your first click or key.
+Play it in your browser at [nearbycoder.github.io/PainKiller](https://nearbycoder.github.io/PainKiller/), on a desktop or on a phone or tablet. It's the current game, about 53 MB before the title screen, needing a browser with WebGL 2. Saves are kept in the browser, and sound starts on your first click, key or tap.
 
 [Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/PainKiller/releases/latest) as an AppImage, a portable Linux archive, or a web build you can serve yourself. That release is the October 4 launch build: the whole campaign is there, but not the improvements above. For the current desktop version, build it from source with Node 22 or later. It supports keyboard and mouse, controllers, and touch, though controllers and touch have only been tested with synthetic input. Four of the themes use Blender-authored scenes and the other eighteen are compact procedural arenas, and the five generals share one rig.
 

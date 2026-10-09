@@ -68,7 +68,7 @@ The soundtrack is lounge music that panics: five stems play in sync, and a troub
 
 ## Settings and graphics fidelity
 
-It plays with mouse, keyboard (arrows or WASD) or gamepad, with PlayStation and Nintendo button names where the pad is recognized, and the pause card lists the controls. Settings include **RELAXED SHIFTS**, an assist with 1.5× patience where complaints never end the shift; **REDUCED MOTION**, which stills the camera and turns the doors into a short fade; **LARGER TEXT**, so no capital is drawn under 12 px on any screen; mute in background; and the shuffle forecast on or off. Layouts were checked down to 1280×800, the Steam Deck's size.
+It plays with mouse, keyboard (arrows or WASD), gamepad, or touch in the browser, with PlayStation and Nintendo button names where the pad is recognized, and the pause card lists the controls. Settings include **RELAXED SHIFTS**, an assist with 1.5× patience where complaints never end the shift; **REDUCED MOTION**, which stills the camera and turns the doors into a short fade; **LARGER TEXT**, so no capital is drawn under 12 px on any screen; mute in background; and the shuffle forecast on or off. Layouts were checked down to 1280×800, the Steam Deck's size.
 
 **GRAPHICS FIDELITY** is a four-notch slider. HIGH is the default, with 4× MSAA, soft two-cascade shadows, ambient occlusion and bloom. ULTRA adds 8× MSAA, a sharper four-cascade sun shadow, soft shadows from every floor's lamp, stronger ambient occlusion, depth of field on the far city and denser particles. On the shared integrated Radeon it was measured on, the Graveyard Shift ran at 49 to 51 fps on LOW, 47 to 48 on HIGH and 33 to 36 on ULTRA at 1920×1080.
 
@@ -91,13 +91,26 @@ One More Floor was one of eight games built in parallel from short designer brie
 
 Every model is a Blender script. `ArtSource/*.py` builds the ten floors, nine characters, the car, the brass panel, and props from primitives, and the characters have real armatures with keyframed clips. Every sound is synthesized with NumPy: the music stems and about 100 effects and "animalese" voices, each checked by an audit script for loudness, true peak, clicks, and loop seams.
 
-After launch, the game went through [twelve rounds of improvements](/articles/orchestrating-15-games-with-t3-code/), each run by a fresh AI session and pushed only after its logs were checked. Those rounds added Today's Shift, the late pass, the floor tags, the Guest Guide, the time card, relaxed shifts, larger text, the city, the brass doors and the fidelity slider. They also found that text shadows, gilded outlines and the designed bloom had never drawn in a build, because URP had stripped the shader variants. The autopilot now runs 180 checks across all ten shifts in a private, invisible KWin desktop, alongside 69 EditMode tests.
+After launch, the game went through [twelve rounds of improvements](/articles/orchestrating-15-games-with-t3-code/), each run by a fresh AI session and pushed only after its logs were checked. Those rounds added Today's Shift, the late pass, the floor tags, the Guest Guide, the time card, relaxed shifts, larger text, the city, the brass doors and the fidelity slider. They also found that text shadows, gilded outlines and the designed bloom had never drawn in a build, because URP had stripped the shader variants. The autopilot now runs 180 checks across all ten shifts in a private, invisible KWin desktop, alongside 70 EditMode tests.
 
 The trailer is recorded by the game. Each shot plays from a fixed seed and skips ahead to a moment found by playing the same seed headlessly. It's recorded twice, once offline on ULTRA at a locked 30 fps for video and once in real time for sound, and the two line up because the simulation is deterministic. A Python script cuts the shots on the beat of the game's 104 BPM track.
 
+## On phones and tablets
+
+The browser version now plays by touch. **ALL IN** and **LET OFF** sit at the bottom left, zoom and pause at the top right, and they appear only during a shift, on a device with no mouse or trackpad or after a touch; a mouse move, key or gamepad press hides them. The first tap on a guest or a floor previews it, with the guest's card or the trip, and a second tap acts. A long press on a rider lets them off, as a right-click does, and pinching zooms. Held upright, the page asks you to turn the device and pauses the shift.
+
+Phones start on LOW graphics and render at most two pixels per CSS pixel. On the iPhone profile that took graphics memory at the title from 187 MB to 91 MB, and 104 MB in play. If a tab dies or runs out of memory, the page shows a message with a RELOAD button, and the next start is lighter. The game's own panel buttons are still about 36 points across, under the 44-point guideline, and the Settings rows are smaller still.
+
+<figure>
+  <img src="/images/games/one-more-floor-phone.webp" alt="The hotel on an iPhone-sized screen, with ALL IN and LET OFF at the bottom left and zoom and pause at the top right." width="1280" height="598" loading="lazy" />
+  <figcaption>A shift on a phone, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/OneMoreFloor](https://nearbycoder.github.io/OneMoreFloor/). It's the current game as a WebGL build of about 26 MB, starting on MEDIUM, with saves kept in the browser. The browser version skips a few audio effects, such as the muffle behind menus, because Unity's web audio has no filters.
+Play it in your browser at [nearbycoder.github.io/OneMoreFloor](https://nearbycoder.github.io/OneMoreFloor/), on a desktop or on a phone or tablet held sideways. It's the current game as a WebGL build of about 26 MB, starting on MEDIUM on a desktop and LOW on a phone, with saves kept in the browser. The browser version skips a few audio effects, such as the muffle behind menus, because Unity's web audio has no filters.
 
 [Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/OneMoreFloor/releases/latest) for Linux. That release is the October 4 launch build with the full scope (ten floors, eight guests, ten shifts and Overtime) but none of the improvements above; for the current game on the desktop, build it from source with Unity 6000.6.2f1. Difficulty is fitted to the player model rather than real playtests so far, gamepads have only been tested as virtual devices, and the README is candid that the audio has been measured more than it's been listened to.
 

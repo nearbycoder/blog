@@ -86,13 +86,26 @@ The economy is a plain C# model with no Unity dependencies, covered by EditMode 
 
 Everything is generated from code. Blender scripts build all the models from primitives, and material names carry meaning: `EMIT_*` glows, `GLASS_*` is transparent, `Screen` marks a monitor. An import pipeline turns them into URP materials. Sam is a rigged employee made of rigid parts, with animations such as typing, sipping, facepalming, and feet-up baked on one timeline and split into clips on import. Typing speed follows your click rate. The game ships with zero audio files: key clicks, chimes, the phone ring, the office hum, and the music are synthesized on a worker thread when the game starts.
 
-After launch, the game went through [twelve rounds of improvements](/articles/orchestrating-15-games-with-t3-code/), each run by a fresh AI session and pushed only after its logs were checked. Those rounds found that the browser build leaked about 15 MB an hour, traced to the engine's WebGL glue and fixed with a small plugin, and added touch play, scrollbars, one-click mute, longer music, the day chart, hold to keep shipping, keyboard menus, the window's light and the fidelity slider. The suite now has 163 EditMode tests, a tour of 93 checks at five window shapes in a private, invisible KWin desktop, and browser tests in Chromium and Firefox.
+After launch, the game went through [twelve rounds of improvements](/articles/orchestrating-15-games-with-t3-code/), each run by a fresh AI session and pushed only after its logs were checked. Those rounds found that the browser build leaked about 15 MB an hour, traced to the engine's WebGL glue and fixed with a small plugin, and added touch play, scrollbars, one-click mute, longer music, the day chart, hold to keep shipping, keyboard menus, the window's light and the fidelity slider. The suite now has 165 EditMode tests, a tour of 93 checks at five window shapes in a private, invisible KWin desktop, and browser tests in Chromium and Firefox.
 
 The trailer is played by a scripted director that clicks real UI through Input System events while the game records itself offline at Ultra. It was developed with [Claude Code](https://claude.com/claude-code).
 
+## On phones and tablets
+
+The browser version's WebAssembly heap peaked at 355 MB, and two things accounted for most of it. The first new character drawn in a text loaded the font's kerning and ligature tables, which the engine then kept, about 135 MB; the browser build now skips those tables everywhere. The long music piece cost about 75 MB, so phones and tablets keep the 25-second loop. The heap now peaks at 205 MB, phones start on Low graphics, and the download is unchanged at 14 MB.
+
+On a touchscreen, **MENU** and **SOUND** sit on the left, **OFFICE** and **ZOOM** on the right, and a round **SHIP** button ships code: hold it to keep shipping, or use two fingers to ship twice. ZOOM steps through the SHIP CODE column, the store and the whole screen. Each button is at least 48 pixels and works independently with several fingers. Page zoom is blocked, sound starts on the first tap, and a phone held upright is asked to turn. The game's own menu buttons are still only about 23 to 28 pixels tall on a phone.
+
+<figure>
+  <img src="/images/games/agent-clicker-phone.webp" alt="The CorpOS desktop on a phone, with Menu and Sound on the left, Office and Zoom on the right, and a round Ship button." width="1280" height="598" loading="lazy" />
+  <figcaption>Shipping code on a phone, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/AgentClicker](https://nearbycoder.github.io/AgentClicker/). It's the current game, updated from the October 6 copy that used to be there, as a WebGL build of about 14 MB, starting on Medium graphics. Saves are kept in the browser, and a background tab earns at the offline rate.
+Play it in your browser at [nearbycoder.github.io/AgentClicker](https://nearbycoder.github.io/AgentClicker/), on a desktop or on a phone or tablet held sideways. It's the current game as a WebGL build of about 14 MB, starting on Medium graphics on a desktop and Low on a phone. Saves are kept in the browser, and a background tab earns at the offline rate.
 
 [Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/AgentClicker/releases/latest) for Linux, with an experimental, unsigned macOS build. That's the October 4 launch build without the later improvements; for the current game on the desktop, build it from source with Unity. Every lab, AI model, company, and person in the game is fictional.
 

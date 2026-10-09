@@ -94,9 +94,22 @@ After launch, the game went through [twelve rounds of improvements](/articles/or
 
 The trailer mode plays a data-driven shot list at ULTRA with real mouse and keyboard events on a fixed 30 fps game clock, so slow frames are drawn late, not dropped.
 
+## On phones and tablets
+
+The browser version crashed on iPhones because of its textures. Phones can't use the desktop's DXT format, so the game unpacked every texture to full size, and it also rendered at three times the resolution. Phones now get a second data file with ETC2 textures they decode in hardware, start on LOW graphics, render at most twice the density and about 1600×900, and use smaller text atlases. WebGL memory at the title fell from 183 MB to 46 MB on the iPhone profile. If a tab dies, the next visit says so and starts lighter, and running out of memory shows a RELOAD button instead of a dead tab.
+
+The touch controls are large buttons over the game: pause, **UNDO** and **REDO**, **EMPTY BOX**, **MY BEST**, **ASK MABEL**, **SEAL & SHIP**, **TURN**, **BACK** or **DONE**, **ERASE**, **SKIP**, and the replay's scrub bar and buttons. Drag an item from the shelf into the box, where it rides above your finger, or tap it and then tap the box; hold a finger on an item for its card. The game's own menus and review buttons are still only 27 to 35 pixels tall on a phone.
+
+<figure>
+  <img src="/images/games/handle-with-care-phone.webp" alt="Packing Edna's teacup on a phone, with Empty Box, Undo and Redo on the left and Seal & Ship on the right." width="1280" height="598" loading="lazy" />
+  <figcaption>Packing a teacup on a phone, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/HandleWithCare](https://nearbycoder.github.io/HandleWithCare/), with Overtime included. It's a WebGL build of about 71 MB, starting on MEDIUM, with saves kept in the browser; GIFs and photos become downloads.
+Play it in your browser at [nearbycoder.github.io/HandleWithCare](https://nearbycoder.github.io/HandleWithCare/), with Overtime included, on a desktop or on a phone or tablet held sideways. It's a WebGL build of about 71 MB, or 74 MB on a phone, starting on MEDIUM on a desktop and LOW on a phone, with saves kept in the browser; GIFs and photos become downloads.
 
 [Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/HandleWithCare/releases/latest) for Linux. It's the October 4 launch build with the 20 story deliveries, but none of the improvements above; for the current game on the desktop, build it from source with Unity. A macOS app builds but hasn't been run on a Mac, and gamepads have only been tested as virtual devices.
 

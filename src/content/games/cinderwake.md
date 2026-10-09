@@ -52,7 +52,7 @@ Chests raise your weapon tier and offer a random weapon to take or leave, memori
 
 ## Settings and graphics fidelity
 
-Cinderwake plays on keyboard, mouse, or controller, and on-screen prompts follow whichever you used last. Every menu works with the mouse alone, and gameplay keys can be rebound. The options page has music and effects volume, screen shake, hit-stop, **reduce flashes**, a **game speed** from 50% to 100% for players who need more time to react, one-time tips, and fullscreen. The game pauses when its window loses focus or a controller is removed, and it draws motion between simulation steps, so play stays even at any refresh rate.
+Cinderwake plays on keyboard, mouse, controller, or touch in the browser, and on-screen prompts follow whichever you used last. Every menu works with the mouse alone, and gameplay keys can be rebound. The options page has music and effects volume, screen shake, hit-stop, **reduce flashes**, a **game speed** from 50% to 100% for players who need more time to react, one-time tips, and fullscreen. The game pauses when its window loses focus or a controller is removed, and it draws motion between simulation steps, so play stays even at any refresh rate.
 
 **Graphics fidelity** has four steps, on the options page or **F9**. Low turns off bloom, lighting and colour grading for slower graphics. Medium and High, the default, add bloom, combat lights and grading, with even-pixel scaling at any window size. Ultra draws the world at 2560×1440 and filters it down, samples the art from mipmaps, lets lamps, forges, wells and the bellgate light their surroundings with up to sixteen lights, and adds a wide bloom halo and half again as many sparks. On the shared development GPU, Low, Medium and High cost about the same and Ultra 15 to 25% more.
 
@@ -73,13 +73,26 @@ All runtime art, fonts, shaders, and audio are embedded in the executable, so th
 
 The setting, characters, and encounters are original. Dead Cells was the initial reference for genre and feel, but no Dead Cells assets or code are used. The artwork, including character sheets, environments, animated scenery, vertical backdrops, and interface elements, was generated with an AI image-generation tool, and the original outputs and prompts are kept in the repository. The score, with a loop for each biome, and seventeen sound effects are synthesized by a Python script.
 
-After launch, Cinderwake went through [twelve rounds of improvements](/articles/orchestrating-15-games-with-t3-code/), each run by a fresh AI session and pushed only after its logs were checked. Those rounds added the settings and accessibility options, controller and mouse support, saving mid-run, the off-screen warnings, input buffering, the camera's look-ahead, the browser build and the fidelity steps. The test suite has 177 tests covering physics, combat, progression, settings, saving, menus driven by keyboard, mouse and controller, and multi-biome traversal, and Clippy runs with warnings as errors on both the native and WebAssembly builds.
+After launch, Cinderwake went through [twelve rounds of improvements](/articles/orchestrating-15-games-with-t3-code/), each run by a fresh AI session and pushed only after its logs were checked. Those rounds added the settings and accessibility options, controller and mouse support, saving mid-run, the off-screen warnings, input buffering, the camera's look-ahead, the browser build and the fidelity steps. The test suite has 180 tests covering physics, combat, progression, settings, saving, menus driven by keyboard, mouse and controller, and multi-biome traversal, and Clippy runs with warnings as errors on both the native and WebAssembly builds.
 
 The trailer is recorded by the game itself: a capture-only mode saves frames at a fixed simulated rate and logs which sound cues each frame played, and a Python script mixes the game's own music and effects under the cut.
 
+## On phones and tablets
+
+In the iPhone and iPad test profiles, the browser version never reached the title: Macroquad waits forever for any sound that fails to decode. It also had a bug that let its glyph cache grow to 8192×8192 pixels, which took 584 MB of WebAssembly memory on the iPhone profile. An undecodable sound now plays silent instead of stopping the load, and the glyph cache is fixed with a one-line change in a copy of Macroquad kept in the repository, which fixes the desktop too. The download is held in one buffer, the canvas drops multisampling, phones render at most twice the density, and only the current biome's backgrounds are decoded. WebAssembly memory fell from 584 MB to 111 MB.
+
+The touch controls are a stick (down drops through ledges, slams and looks below), **JUMP**, **STRIKE**, **DODGE**, **PARRY**, **BOLT**, **VESSEL**, **SNARE**, **FLASK**, **USE**, **MAP** and pause, each at least 44 pixels, clear of the notch and usable with several fingers at once. They appear on touch-first devices or after a touch, and never on a desktop. Menus work by tap, prompts say TAP, and held upright the game asks you to turn the phone and pauses the run.
+
+<figure>
+  <img src="/images/games/cinderwake-phone.webp" alt="The Drowned Aqueduct on a phone, with a stick on the left and a cluster of action buttons on the right." width="1280" height="598" loading="lazy" />
+  <figcaption>Running and striking on a phone, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/Cinderwake](https://nearbycoder.github.io/Cinderwake/). It's the current game as a WebAssembly build of about 50 MB, since all the art and audio are embedded. Saves stay in the browser, and fullscreen has to be asked for on each visit.
+Play it in your browser at [nearbycoder.github.io/Cinderwake](https://nearbycoder.github.io/Cinderwake/), on a desktop or on a phone or tablet held sideways. It's the current game as a WebAssembly build of about 50 MB, since all the art and audio are embedded. Saves stay in the browser, and fullscreen has to be asked for on each visit.
 
 Cinderwake has no release download yet. To play on the desktop, install Rust, clone the repository, and run `cargo run --release --locked`; scripts also build a local macOS app and a portable Linux tarball. It was checked on macOS on Apple Silicon at launch and on Linux since; Windows hasn't been tried, controllers have only been tested as simulated devices, and balance hasn't been playtested. The code and generated assets are MIT licensed.
 

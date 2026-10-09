@@ -110,10 +110,23 @@ After launch, the game went through [twelve rounds of improvements](/articles/or
 
 The trailer is rebuilt the same way it was made. A headless twin of each scripted night runs first to find the frame where the moment happens; the real night is then fast-forwarded off camera and recorded on Ultra at a fixed 30 fps, and a Python script cuts the clips to the bars of the title waltz.
 
+## On phones and tablets
+
+Before this pass, the menus could be tapped but nothing in a night or the briefing could. Now you drag anywhere to aim the beam, hold a large **FOCUS** button (or tap it, with Toggle on), sound the **HORN** with its cooldown drawn as a ring, and use a top-left button to pause or go back. The dawn chart's timeline can be dragged and tapped. The controls show on touch-first devices or after a touch and hide for a mouse, key or pad, and a phone held upright is asked to turn while the night pauses.
+
+New saves on phones and tablets start on Low at 70% resolution, with the picture capped near 1920×1080. Graphics memory at the title fell from 246 MB to 67 MB on the iPad profile and from 76 MB to 41 MB on the iPhone. Along the way the session fixed title music that sometimes never started after the first click on strict browsers, Safari on iOS among them. Menu rows are still only about 20 points tall on a phone.
+
+<figure>
+  <img src="/images/games/last-light-phone.webp" alt="A foggy night on an iPhone-sized screen, with pause at the top left and HORN and FOCUS buttons on the right." width="1280" height="598" loading="lazy" />
+  <figcaption>Sea Fret on a phone, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/LastLight](https://nearbycoder.github.io/LastLight/). It's the current game as a WebGL build of about 25 MB, starting on Medium graphics, with saves kept in the browser and a night saved when you leave the tab.
+Play it in your browser at [nearbycoder.github.io/LastLight](https://nearbycoder.github.io/LastLight/), on a desktop or on a phone or tablet held sideways. It's the current game as a WebGL build of about 25 MB, starting on Medium graphics on a desktop and Low on a phone, with saves kept in the browser and a night saved when you leave the tab.
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/LastLight/releases/latest) for Linux, then run `./LastLight.sh`. That release is the October 4 launch build: twelve nights, the ending and the Night Watch, but none of the improvements above. For the current game on the desktop, build it from source with Unity 6000.6.2f1 as the README describes. It supports mouse, keyboard, and gamepad, though gamepads have only been tested as simulated devices, and balance hasn't been tuned with human players yet.
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/LastLight/releases/latest) for Linux, then run `./LastLight.sh`. That release is the October 4 launch build: twelve nights, the ending and the Night Watch, but none of the improvements above. For the current game on the desktop, build it from source with Unity 6000.6.2f1 as the README describes. It supports mouse, keyboard, gamepad, and touch in the browser, though gamepads have only been tested as simulated devices, and balance hasn't been tuned with human players yet.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/LastLight). GitHub records the repository's creation on **October 4, 2026**.

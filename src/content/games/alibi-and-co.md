@@ -94,9 +94,22 @@ After launch, the game went through [twelve rounds of improvements](/articles/or
 
 The trailer recorder pipes raw frames to FFmpeg while the game clock steps exactly one frame at a time, and an audio director logs what every voice plays on each frame so the soundtrack can be rebuilt offline.
 
+## On phones and tablets
+
+Phones can't use the desktop's texture format, so the browser version used to unpack every texture to full size there. Phones now get a separate copy of the game data with ASTC textures, which took WebGL memory at the title from 235 MB to 89 MB on the iPhone profile. They also start on Low graphics, with the picture capped at twice the density and about 2.6 megapixels. A tab the browser killed makes the next visit start on Low with a short notice.
+
+On a touch-first device, a column of large buttons sits beside the picture: **Menu** or **Back**, **Notes**, **Hint**, **Fit**, and **Full screen** where the browser supports it, replacing the game's own small buttons. Two fingers pinch-zoom the board, held upright the page asks you to turn your phone, and sound starts on the first tap. The session also fixed a tap that started and ended between two frames being silently lost.
+
+<figure>
+  <img src="/images/games/alibi-and-co-phone.webp" alt="The timeline board on a phone, with a column of Menu, Notes and Hint buttons at the right." width="1280" height="598" loading="lazy" />
+  <figcaption>Pinning a card on a phone, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/AlibiAndCo](https://nearbycoder.github.io/AlibiAndCo/), with all five cases and the Daily Docket. It's a WebGL build of about 27 MB, starting on Medium graphics, with saves kept in the browser.
+Play it in your browser at [nearbycoder.github.io/AlibiAndCo](https://nearbycoder.github.io/AlibiAndCo/), with all five cases and the Daily Docket, on a desktop or on a phone or tablet held sideways. It's a WebGL build of about 27 MB, or 30 MB on a phone, starting on Medium graphics on a desktop and Low on a phone, with saves kept in the browser.
 
 [Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/AlibiAndCo/releases/latest) for Linux. That's the October 4 launch build with the first three cases and none of the improvements above; for the current game on the desktop, build it from source with Unity. Controllers and touch have only been tested with simulated input.
 
