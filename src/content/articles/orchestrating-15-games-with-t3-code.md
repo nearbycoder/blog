@@ -1,9 +1,9 @@
 ---
 title: "One thread, fifteen games: orchestrating AI game studios with T3 Code"
-description: "How I built fifteen games in a day, then let a single T3 Code thread run twelve rounds of improvements and a trailer refresh across all of them, using the new orchestration layer: launched threads, scheduled check-ins, verified pushes, and a lot of guardrails."
+description: "How I built fifteen games in a day, then let a single T3 Code thread run twelve rounds of improvements, a trailer refresh, and passes that put every game in the browser and on phones, using the new orchestration layer: launched threads, scheduled check-ins, verified pushes, and a lot of guardrails."
 date: "2026-10-07"
 tags: ["t3-code", "ai", "agents", "games", "orchestration", "claude"]
-readTime: "18 min read"
+readTime: "22 min read"
 featured: true
 accent: "violet"
 draft: false
@@ -11,13 +11,13 @@ draft: false
 
 On October 4 I published fifteen games. Two days later I stopped touching them.
 
-Not because they were finished. Because one T3 Code thread was now running a studio of fifteen AI sessions, one per game, in rounds: plan, build, test, write it up, get checked, get pushed, start over. By the time it was done, that thread had run twelve improvement rounds and a final trailer-and-README refresh, launched 180 sessions, pushed 1,339 verified commits to fifteen GitHub repositories, and found bugs I would never have looked for, like two treasure chests in [The Bell of Ages](/games/bell-of-ages/) that no player could ever open, and post-processing effects that three Unity games had been configured to draw but never actually shipped.
+Not because they were finished. Because one T3 Code thread was now running a studio of fifteen AI sessions, one per game, in rounds: plan, build, test, write it up, get checked, get pushed, start over. By the time it was done, that thread had run twelve improvement rounds, a trailer-and-README refresh, and two passes that put every game in the browser and then made it work on phones. It launched 210 sessions, pushed 1,475 verified commits to fifteen GitHub repositories, and found bugs I would never have looked for, like two treasure chests in [The Bell of Ages](/games/bell-of-ages/) that no player could ever open, and post-processing effects that three Unity games had been configured to draw but never actually shipped.
 
 This post is about how that works. Most of it is about [T3 Code](https://t3.codes) and the orchestration layer that shipped in its V2 rewrite, because that is what made it possible to run all of this from one conversation instead of fifteen browser tabs and a spreadsheet.
 
 ![A grid of nine game title screens: Pocket Weather, Lost & Found, The Bell of Ages, Pack The Trunk, Alibi & Co., Gravewake, Last Light, Jeste and Agent Clicker.](/images/articles/orchestrating-15-games-with-t3-code.webp)
 
-_Nine of the fifteen. Every one of them went through twelve rounds of improvements and a re-recorded trailer without me opening its repository._
+_Nine of the fifteen. Every one of them went through twelve rounds of improvements, a re-recorded trailer and a pass for phones without me opening its repository._
 
 ## What T3 Code is
 
@@ -146,21 +146,23 @@ Rounds 1 and 2 ran in the same session per game. From round 3 on, every round ge
 
 Fifteen agents with full access to one machine will find every sharp edge. The orchestrator's job was not to stop that from happening once; it was to make sure it only happened once. Each incident became a line in every later brief:
 
-| What happened                                                                                   | The rule it produced                                                                                                      |
-| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| A round-2 test overwrote a game's real save file                                                | Never let tests or tools touch real save or settings files; use throwaway folders and hash the real ones before and after |
-| A `pkill -f` pattern may have killed another session's process                                  | Never kill a process you didn't start; no `pkill -f`, no `killall`, only PIDs you recorded                                |
-| `rm /tmp/ll_*` deleted a file another session owned, and a stuck run wrote a 6 GB log to `/tmp` | `/tmp` is a shared RAM disk: keep output in the repo's ignored folders, cap logs, delete only your own files by name      |
-| Input-driven tests failed when the load average passed 40                                       | Check `uptime` first, wait if the load is above about 24, and note the load next to any measurement                       |
-| A sandboxing change briefly left the shared Unity editor without its licence                    | Don't change anything that affects licensing or other sessions' editors                                                   |
-| Two test runs went fullscreen on my actual desktop                                              | Keep test windows windowed; install nothing into the real desktop                                                         |
-| Two flags passed as one argument opened a normal game window on my desktop for ten minutes      | Pass flags as separate words, and run test windows in a private nested KWin                                               |
-| A session reported passes for tests it hadn't run yet (it said so itself, a few messages later) | Report only results read from a test's own log, and name the log; the orchestrator now opens the logs before pushing      |
-| Commits were amended after their hashes had been reported                                       | Report the hashes actually on the branch; the orchestrator checks the reflog when one goes missing                        |
-| Private test desktops left about 80 `ksecretd` processes running                                | A nested KWin must stop the helpers it started, and only those                                                            |
-| Final checks ran on uncommitted changes                                                         | Run final checks on the committed tip and say which commit                                                                |
-| The orchestrator itself pushed one game before confirming the autopilot result in its report    | Confirm every quoted result before pushing, not after                                                                     |
-| Sessions had opinions about difficulty, trailers and hosting                                    | Owner decisions are noted, never acted on                                                                                 |
+| What happened                                                                                      | The rule it produced                                                                                                      |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| A round-2 test overwrote a game's real save file                                                   | Never let tests or tools touch real save or settings files; use throwaway folders and hash the real ones before and after |
+| A `pkill -f` pattern may have killed another session's process                                     | Never kill a process you didn't start; no `pkill -f`, no `killall`, only PIDs you recorded                                |
+| `rm /tmp/ll_*` deleted a file another session owned, and a stuck run wrote a 6 GB log to `/tmp`    | `/tmp` is a shared RAM disk: keep output in the repo's ignored folders, cap logs, delete only your own files by name      |
+| Input-driven tests failed when the load average passed 40                                          | Check `uptime` first, wait if the load is above about 24, and note the load next to any measurement                       |
+| A sandboxing change briefly left the shared Unity editor without its licence                       | Don't change anything that affects licensing or other sessions' editors                                                   |
+| Two test runs went fullscreen on my actual desktop                                                 | Keep test windows windowed; install nothing into the real desktop                                                         |
+| Two flags passed as one argument opened a normal game window on my desktop for ten minutes         | Pass flags as separate words, and run test windows in a private nested KWin                                               |
+| A session reported passes for tests it hadn't run yet (it said so itself, a few messages later)    | Report only results read from a test's own log, and name the log; the orchestrator now opens the logs before pushing      |
+| Commits were amended after their hashes had been reported                                          | Report the hashes actually on the branch; the orchestrator checks the reflog when one goes missing                        |
+| Private test desktops left about 80 `ksecretd` processes running                                   | A nested KWin must stop the helpers it started, and only those                                                            |
+| Final checks ran on uncommitted changes                                                            | Run final checks on the committed tip and say which commit                                                                |
+| The orchestrator itself pushed one game before confirming the autopilot result in its report       | Confirm every quoted result before pushing, not after                                                                     |
+| My push left a repository checked out on `main`, and a session's follow-up fix started there       | After pushing, switch back to the work branch; follow-up fixes are committed on that branch only                          |
+| Checks that waited a fixed two seconds failed once the machine was busy, in the test, not the game | Wait for the thing itself (the save landing, the menu appearing), never for a number of seconds                           |
+| Sessions had opinions about difficulty, trailers and hosting                                       | Owner decisions are noted, never acted on                                                                                 |
 
 That last rule matters most. Every report ends with "decisions for you", and the orchestrator carries them forward: whether Purgatory's toggle sprint should be the default on controllers, whether Borrowed Seconds should unlock the next level after a few failed attempts, whether Pack The Trunk's high-contrast labels are a keeper, whether Ultra is worth its cost. The sessions keep shipping around those questions instead of guessing at the answers.
 
@@ -210,20 +212,47 @@ Two things had to change for that. The push script's 10 MB limit would have reje
 
 It also caught an orchestration mistake of my own making. Fifteen sessions recording video at once kept the load average around 70, and two of them sat waiting for it to drop below the 24 the rules asked for. It never would have. Most of these pipelines render in fixed or virtual time, where load only costs time, so the orchestrator told them to go ahead, and to check real-time audio captures for dropouts afterwards instead.
 
+## Into the browser, then onto phones
+
+The trailers made people want to play the games, and most of them could only be built from source. So the next pass gave every game a browser version on GitHub Pages, at `nearbycoder.github.io/<repository>/`.
+
+Pages is static hosting with no custom headers, and that shaped every build. Unity can't ask Pages to send its Brotli files with the right encoding, so its builds decompress themselves in the page. Godot's threaded export needs headers Pages can't send, so Jeste ships single-threaded. Gravewake's WebAssembly is gzip-compressed and the page unpacks it with `DecompressionStream`. No file may pass 100 MB, and the paths are case-sensitive. Fifteen sessions built and checked their sites, 56 commits in all; the orchestrator deployed each one to a `gh-pages` branch, always on top of what was already there and never with a force-push, and then ran the game's own `check-pages` script against the live URL before calling it done. Agent Clicker's site, which I had published by hand back in round 4, finally got the current game.
+
+Then I opened Gravewake on my iPhone, and Chrome said "Can't open this page".
+
+So the last pass was about phones: make every browser version survive on one, and give each game proper on-screen controls that appear only on a touch device. The first problem was that the orchestrator didn't have an iPhone. It had Linux, the WebKit build Playwright ships, and no administrator rights. It pulled the missing system libraries out of Ubuntu packages into a private copy of that WebKit, and from then on every session and every check could load a game as an iPhone 15, an iPad Pro or a Pixel 7, with real multi-finger touch. That WebKit reports a coarse pointer and WebGL 2 but no WebGPU, like an iPhone, but it doesn't enforce iOS's memory limit, so "it loads" proved little. Every brief asked for memory measured before and after on each profile, as well as for the controls: shown only on touch-first devices or after a real touch, hidden again by any key, mouse or gamepad, at least 44 points, clear of the notch, sound unlocked by the first tap, a request to turn the phone sideways, and a message instead of a dead tab when iOS kills it. Desktop browsers had to stay exactly as they were, and each game's desktop check had to prove the controls never appear there.
+
+The sessions found a different reason in nearly every game:
+
+| Game                                        | Why phones were in trouble                                                                                                        | After                                                         |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| Gravewake                                   | WebAssembly memory peaked at 1,499 MB and never shrinks; two more crashes hit only browsers without WebGPU, such as iPhones       | 447 MB, with the art moved into a separate pack               |
+| Cinderwake                                  | Never reached the title: the engine waited forever for a sound that failed to decode, and its glyph cache pushed memory to 584 MB | 111 MB, with a one-line fix to a vendored Macroquad           |
+| Purgatory                                   | 141 textures uploaded with mipmaps, only 54 of them different images                                                              | Graphics memory in a fight from 960 MB to 123 MB              |
+| Handle With Care, Alibi & Co., Lost & Found | Phones can't read the desktop's compressed textures, so every one was unpacked to full size                                       | Separate ETC2 or ASTC copies: 183 → 46, 235 → 89, 154 → 55 MB |
+| Borrowed Seconds, Agent Clicker             | The text engine loaded the fonts' full kerning tables and kept them, about 140 MB each                                            | Heaps down by 237 and 150 MB                                  |
+| Jeste                                       | The engine kept every music track it had decoded, about 350 MB over a playthrough                                                 | Music streams on phones                                       |
+| Pack The Trunk, After Hours, Last Light     | They loaded, but nothing in play could be done by touch                                                                           | Full touch controls                                           |
+
+The orchestrator's checks grew to match. Before pushing a game it read the touch-session logs, looked at an iPhone screenshot of the controls in play, and checked that the site had been built from the committed code. After deploying, it ran the game's desktop check against the live site and loaded the live site as an iPhone. It sent three games back. Gravewake's menus were drawn about 15 pixels tall on a phone, and came back with a touch layout for every menu and a unit test that draws all 27 of them on three devices; it had found 1,041 targets too small before the change and none after. Jeste and One More Floor passed locally and failed live, and both turned out to be test bugs a busy machine exposed. Jeste's check reloaded two seconds after changing a setting, but at ten frames a second the engine needed five seconds or more to finish saving it. One More Floor's check counted Pages answering "not modified" for the cached game data as a failed request.
+
+The test browser had a blind spot of its own. It crashes as soon as a Unity game starts its sound, so the Unity games were tested with sound off. To make sure that wasn't something this pass had caused, the orchestrator loaded Borrowed Seconds' previous build the same way, and it crashed identically. That makes the honest status of all fifteen phone versions "works in an emulator". Memory, sound and feel on a real iPhone are the next thing to check, and After Hours, which still used about 1.5 GB in the test browser, is the one most likely to struggle.
+
 ## By the numbers
 
-| Measure                                     | Value                                                                       |
-| ------------------------------------------- | --------------------------------------------------------------------------- |
-| Games                                       | 15 (Unity, Godot, Three.js, two Rust engines)                               |
-| Improvement rounds                          | 12, then a trailer and README refresh                                       |
-| Sessions launched                           | 180: 165 for improvement rounds, 15 for the refresh                         |
-| Commits pushed to `main` since October 6    | 1,339                                                                       |
-| Lines added across the fifteen repositories | about 220,000                                                               |
-| Model                                       | Claude Opus 5.5 at high effort, for every session and the orchestrator      |
-| Machine                                     | one 32-core CachyOS box with 109 GB of RAM and an integrated Radeon GPU     |
-| Human time per round                        | reading tables, answering "decisions for you", and occasionally saying "go" |
+| Measure                                     | Value                                                                                    |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Games                                       | 15 (Unity, Godot, Three.js, two Rust engines)                                            |
+| Improvement rounds                          | 12, then a trailer and README refresh, browser builds and a phone pass                   |
+| Sessions launched                           | 210: 165 for improvement rounds, then 15 each for the refresh, browser builds and phones |
+| Commits pushed to `main` since October 6    | 1,475                                                                                    |
+| Lines added across the fifteen repositories | about 274,000, 16,000 of them a vendored copy of Macroquad                               |
+| Games playable in the browser               | 15, on a desktop or a phone, at `nearbycoder.github.io`                                  |
+| Model                                       | Claude Opus 5.5 at high effort, for every session and the orchestrator                   |
+| Machine                                     | one 32-core CachyOS box with 109 GB of RAM and an integrated Radeon GPU                  |
+| Human time per round                        | reading tables, answering "decisions for you", and occasionally saying "go"              |
 
-The machine is the real constraint. Fifteen sessions building Unity players, running autopilots, baking Blender scenes and recording trailers at once regularly pushed the load average past 50, and past 100 during the refresh. Most of the rules about load, `/tmp` and "one heavy build at a time" exist because of that.
+The machine is the real constraint. Fifteen sessions building Unity players, running autopilots, baking Blender scenes and recording trailers at once regularly pushed the load average past 50, and past 100 during the refresh and the phone pass. Most of the rules about load, `/tmp` and "one heavy build at a time" exist because of that.
 
 ## What I'd tell you if you want to try this
 
@@ -239,4 +268,4 @@ The machine is the real constraint. Fifteen sessions building Unity players, run
 
 **Keep a human for taste.** Agents can tell you that Ultra costs 2.5 times High's frame time on this GPU. They cannot tell you whether the bloom suits the game. That is still my job, and the "decisions for you" list keeps it from getting lost.
 
-All fifteen games, with screenshots, their new trailers and the story of how each was made, are on the [Games](/games/) page. T3 Code is at [t3.codes](https://t3.codes) and on [GitHub](https://github.com/pingdotgg/t3code).
+All fifteen games, with screenshots, their new trailers, links to play them in your browser or on your phone, and the story of how each was made, are on the [Games](/games/) page. T3 Code is at [t3.codes](https://t3.codes) and on [GitHub](https://github.com/pingdotgg/t3code).

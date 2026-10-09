@@ -91,9 +91,22 @@ After launch, Jeste went through [twelve rounds of improvements](/articles/orche
 
 The trailer is reproducible too. `tools/trailer/` drives the real game through Godot's Movie Maker at Ultra using the solver's proven routes, draws captions in the game's own pixel font, and assembles the cut with FFmpeg, with transitions on the music grid and loudness normalized to EBU R128. Jeste was built with [Claude Code](https://claude.com/claude-code).
 
+## On phones and tablets
+
+The browser version's menus always worked by tap, but on a touchscreen Mira couldn't move, jump, dash, grab or pause. Phones and tablets now get a d-pad on the left, **Jump**, **Dash** and **Grab** on the right, and pause at the top right. Dash goes the way the d-pad points, Grab lights up while latched when Grab Mode is Toggle, and holding pause skips a cutscene. The controls appear only on touch-first devices or after a touch, and a key, the mouse or a gamepad hides them again. A phone held upright is asked to turn sideways; a tablet works either way up, with the controls below the picture.
+
+Memory was the other risk. The engine kept every music track it had decoded, about 350 MB over a full playthrough, so phones and tablets now stream music instead. On the iPhone profile, decoded audio after the first level fell from 103 MB to 6 MB and the WebAssembly heap's peak from 115 MB to 67 MB. Painted room art is kept for one chapter rather than every chapter visited, phones start on Medium graphics, and if iOS closes the tab mid-game, the next visit starts on Low and says why.
+
+<figure>
+  <img src="/images/games/jeste-phone.webp" alt="Mira running on an iPhone-sized screen, with the d-pad on the left and Grab, Dash and Jump on the right." width="1280" height="598" loading="lazy" />
+  <figcaption>On a phone held sideways, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/Jeste](https://nearbycoder.github.io/Jeste/). It's the current game, exported from Godot as a single-threaded web build of about 27 MB over the wire. Saves stay in the browser, fullscreen is in Options, and there are no touch controls.
+Play it in your browser at [nearbycoder.github.io/Jeste](https://nearbycoder.github.io/Jeste/), on a desktop or on a phone or tablet held sideways. It's the current game, exported from Godot as a single-threaded web build of about 27 MB over the wire. Saves stay in the browser, and fullscreen is in Options.
 
 To play on the desktop, install Godot 4.6 or later, clone the repository, and run `godot --path .`. [The v0.1.0 Linux build](https://github.com/nearbycoder/Jeste/releases/latest) is the October 4 launch build, a complete game from prologue to credits, but without any of the fixes and features above. Difficulty was tuned against the bot rather than a range of human players, so some rooms may feel tighter than intended; Assist mode and the Route Ghost are there for that.
 

@@ -88,9 +88,22 @@ After launch, the game went through [twelve rounds of improvements](/articles/or
 
 The trailer recorder runs the game on a fixed 30 fps clock at Ultra and captures the mixed audio, so every shot is scripted and repeatable.
 
+## On phones and tablets
+
+Before this pass, the browser version only reached its title on a phone after a "Load it anyway" tap, and nothing in a night could be done by touch. Now a stick appears under your left thumb, a drag on the right looks around, and buttons cover **Clean** (it becomes **Throw** while you hold something), **Use**, **Spray**, **Drop**, **UV**, **Tool**, the **Crouch** and **Brisk** switches, pause, the shift **Sheet** and fullscreen. The clipboard and the document reader get extra soft keys. All of them are at least 44 pixels and clear of the notch, they show only while touch is the input in use, and a phone held upright pauses the night and asks to be turned.
+
+Phones and tablets start on Low and draw about a million pixels, with the grime made at half resolution. On every platform, the grime is now built in reused buffers and the dirt from earlier nights is freed. On the iPhone profile, estimated graphics memory fell from 315 MB to 90 MB and the WebAssembly heap from 531 MB to 443 MB. Even so, the test browser's page still used about 1.5 GB, which may be more than a real iPhone allows, so After Hours is the game most likely to still struggle on a phone. When it does run out of memory, it now shows a readable message instead of a frozen tab.
+
+<figure>
+  <img src="/images/games/after-hours-phone.webp" alt="The janitor's closet on a phone, with a stick, Crouch and Brisk on the left and Tool, Spray, Use and Clean on the right." width="1280" height="598" loading="lazy" />
+  <figcaption>Starting a night on a phone, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/AfterHours](https://nearbycoder.github.io/AfterHours/). It's the current game as a WebGL build of about 44 MB, starting on Medium graphics, with saves kept in the browser. Esc frees the mouse and pauses the night; click to look around again.
+Play it in your browser at [nearbycoder.github.io/AfterHours](https://nearbycoder.github.io/AfterHours/), on a desktop or on a phone or tablet held sideways. It's the current game as a WebGL build of about 44 MB, starting on Medium graphics on a desktop and Low on a phone, with saves kept in the browser. On a desktop, Esc frees the mouse and pauses the night; click to look around again.
 
 [Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/AfterHours/releases/latest). It's the October 4 launch build, with all seven nights, four endings, menus and saves, but none of the improvements above; for the current game on the desktop, build it from source with Unity. No one outside development has played it yet, so pacing and how obvious the clues are remain untested with real players, and the README ships a playtest kit for the first sessions.
 

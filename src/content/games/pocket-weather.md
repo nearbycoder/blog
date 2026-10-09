@@ -90,6 +90,19 @@ After launch, the game went through [twelve rounds of improvements](/articles/or
 
 The trailer is a shot list run by the game on a fixed clock, recorded at Ultra. It was developed with [Claude Code](https://claude.com/claude-code).
 
+## On phones and tablets
+
+Pocket Weather already played by touch, but a phone pass found rough edges. The **Rain** and **Gust** buttons now show from the start on a device with no mouse, instead of only after the first touch in play, and they're bigger: Rain is 80 pixels and Gust 59. The game and its buttons stay inside the notch and home-indicator margins, and one finger can hold Rain while another steers. Sound used to try to start only on a touch's first contact, which iOS doesn't accept; it now starts on the first tap. Page zoom and long-press menus are blocked.
+
+A 27 MB leftover copy of the game's code is now freed once the game starts, and a tab that iOS kills is noticed on the next visit, which starts on low graphics. The game's memory was already modest, with a 171 MB heap and 57 to 71 MB of graphics on the iPhone profile, and the download stays at 17 MB.
+
+<figure>
+  <img src="/images/games/pocket-weather-phone.webp" alt="Pip over Rosa's garden on an iPhone-sized screen, with the Gust and Rain buttons at the bottom right." width="1280" height="598" loading="lazy" />
+  <figcaption>Raining with one finger while steering with another, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
 Play it in your browser at [nearbycoder.github.io/PocketWeather](https://nearbycoder.github.io/PocketWeather/). It's the current game as a WebGL build, about 17 MB before the title, with saves kept in the browser and touch controls on phones and tablets.

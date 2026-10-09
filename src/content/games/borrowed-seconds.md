@@ -89,9 +89,22 @@ After launch, the game went through [twelve rounds of improvements](/articles/or
 
 The trailer is a shot list played by the release build using solver replays, captured frame-locked at 60 fps on Ultra, with the soundtrack rebuilt offline from the game's audio event log.
 
+## On phones and tablets
+
+The browser version's WebAssembly heap reached 386 MB, which is risky on a phone. About 144 MB of that came from TextMeshPro reading the Fira fonts' full kerning tables, found by logging Unity's own memory figures at each step of start-up. The game also rendered at the phone's full pixel density, three times on an iPhone. On touch devices the fonts now skip kerning, graphics start on Low with the HUD at 150%, and rendering is capped at twice the density and about 1080p. The heap at the title fell from 386 MB to 149 MB, and a tab the browser killed reloads lighter and says why.
+
+The controls are a d-pad (hold to walk), **Focus**, **Borrow**, **Rewind**, **Restart**, **Hint** and pause, plus OK and Back in menus. Tapping a piece aims at it, and the aim stays so you can read the forecast. Menu rows, cards and sliders all take taps, and holding the device upright pauses and asks you to turn it. The controls appear only on touch-first devices or after a touch, and desktop browsers keep kerning and the old defaults.
+
+<figure>
+  <img src="/images/games/borrowed-seconds-phone.webp" alt="Level 1-1 on a phone, with a d-pad and Focus on the left and Restart, Rewind and Borrow on the right." width="1280" height="764" loading="lazy" />
+  <figcaption>Borrowing on a phone, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/BorrowedSeconds](https://nearbycoder.github.io/BorrowedSeconds/). It's the current game as a WebGL build of about 18 MB, starting on Medium graphics, with saves kept in the browser. The browser skips the low-pass muffle while you're frozen, because Unity's web audio has no filters.
+Play it in your browser at [nearbycoder.github.io/BorrowedSeconds](https://nearbycoder.github.io/BorrowedSeconds/), on a desktop or on a phone or tablet held sideways. It's the current game as a WebGL build of about 18 MB, starting on Medium graphics on a desktop and Low on a phone, with saves kept in the browser. The browser skips the low-pass muffle while you're frozen, because Unity's web audio has no filters.
 
 [Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/BorrowedSeconds/releases/latest) for Linux. That release is the October 4 launch build, with 30 levels in six chapters and none of the improvements above; for the current game on the desktop, build it from source with Unity 6000.6.2f1. It hasn't been playtested by people yet, so some levels may be harder than they look, and chapters VIII to XII are named but not shipped.
 

@@ -59,7 +59,7 @@ Between descents, the Collector pays you in gold. Spend it on equipment and supp
 
 ## Settings and graphics fidelity
 
-Gravewake plays with keyboard and mouse or a controller, and prompts follow whichever you touched last. Keys and controller buttons can be rebound, key names follow your keyboard layout, and a controller gets its own look speed and an aim assist that slows the stick near a visible creature without ever moving your aim. Settings include aim sensitivity, field of view, flash reduction, hold or toggle sprint, the reticle's size and colour, HUD size, a frame limit, and field tips. Menu buttons tick on hover and clack when pressed, screens fade in, and a synthesized score adds a heartbeat drum and strings as the crowd grows.
+Gravewake plays with keyboard and mouse, a controller, or touch in the browser, and prompts follow whichever you used last. Keys and controller buttons can be rebound, key names follow your keyboard layout, and a controller gets its own look speed and an aim assist that slows the stick near a visible creature without ever moving your aim. Settings include aim sensitivity, field of view, flash reduction, hold or toggle sprint, the reticle's size and colour, HUD size, a frame limit, and field tips. Menu buttons tick on hover and clack when pressed, screens fade in, and a synthesized score adds a heartbeat drum and strings as the crowd grows.
 
 **Graphics fidelity** has four steps on the journal's Display page. High is the default and draws exactly what the game drew before the setting existed. Ultra renders at twice the resolution and supersamples it, adds shadows from the three nearest braziers, eight lights, finer occlusion, mist and bloom, 16× anisotropic filtering, and denser fire. On the one GPU it was measured on, the game's own passes took 0.82 ms on Low, 1.18 on Medium, 1.43 on High and 7.31 on Ultra at 1440×900.
 
@@ -80,13 +80,28 @@ The twelve creatures are original Blender meshes, with recessed skull cavities, 
 
 Gravewake began as a study inspired by **Dark Veil — The Blackwood** by Thomas Ricouard ([@Dimillian](https://github.com/Dimillian)), and the repository keeps the reference credits. It isn't affiliated with that project, and the reference images and videos aren't redistributed. Some UI artwork is generated, with its provenance recorded in the repository, and the recorded firearm and reload sounds are CC0.
 
-After launch, Gravewake went through [twelve rounds of improvements](/articles/orchestrating-15-games-with-t3-code/), each run by a fresh AI session and pushed only after its logs were checked. Those rounds brought it to Linux and added controllers, rebinding, settings, accessibility, records, the adaptive score, the next-descent preview and the fidelity steps. They also found that quick key taps never toggled sprint or fired, and that a failing sound device could write 395 MB of log lines; the game now carries on silently and reconnects. `cargo test` runs 173 tests, and smoke runs fight a wave and open a pack through the real UI with keyboard or controller inside a private, invisible KWin desktop.
+After launch, Gravewake went through [twelve rounds of improvements](/articles/orchestrating-15-games-with-t3-code/), each run by a fresh AI session and pushed only after its logs were checked. Those rounds brought it to Linux and added controllers, rebinding, settings, accessibility, records, the adaptive score, the next-descent preview and the fidelity steps. They also found that quick key taps never toggled sprint or fired, and that a failing sound device could write 395 MB of log lines; the game now carries on silently and reconnects. `cargo test` runs 180 tests, and smoke runs fight a wave and open a pack through the real UI with keyboard or controller inside a private, invisible KWin desktop.
 
 The trailer is recorded by the game at Ultra in fixed time steps, so no frame is dropped, with the game's own full audio mix.
 
+## On phones and tablets
+
+On an iPhone the browser version crashed before it reached the title, and the cause was memory. WebAssembly memory never shrinks, and building and deduplicating the world took it from 371 MB to a peak of 1,499 MB. WebKit spent another 334 MB compiling a module that carried 56 MB of embedded art, and the 136 weapon previews took about 450 MB of graphics memory. Behind that were two more crashes that only hit browsers without WebGPU, such as iPhones: a panic on the first frame, and a call to Pointer Lock, which iPhones don't have.
+
+The world is now deduplicated in place, with identical output that a test checks, and uploaded in 8 MB pieces. The art moved out of the module into a separate pack, phones and tablets start on Low with smaller art and use WebGL 2 on iOS, and every weapon card is drawn with one shared depth buffer. On the iPhone profile, WebAssembly memory fell from 1,499 MB to 447 MB and graphics memory from 774 MB to 267 MB; desktop Chromium fell to 530 MB too. A load that never finished is reported on the next visit with a Try again button.
+
+The touch controls are a left stick that sprints at its rim, a drag to look, **Fire**, **Reload**, **Dodge**, **Melee**, **Bolt** and pause, shown only on touchscreens. The menus took more work. The interface is a 1440×900 page scaled to fit, so on an iPhone held sideways a design unit is 0.38 pixels, and every menu got its own touch layout. A unit test draws all 27 menus in touch mode on an iPhone 15, an iPhone SE and an iPad and checks that every control is at least 44 pixels; it found 1,041 problems before the change and none after. In touch mode the journal leaves out the Keyboard and Controller pages.
+
+<figure>
+  <img src="/images/games/gravewake-phone.webp" alt="The Mourning Court on a phone, with a move circle on the left and Melee, Bolt, Dodge, Reload and Fire on the right." width="1280" height="598" loading="lazy" />
+  <figcaption>The first descent on a phone, in a headless iPhone 15 profile on Low.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/gravewake](https://nearbycoder.github.io/gravewake/). The browser version is a WebAssembly port of the same game, about 16 MB to download, using WebGPU where the browser has it and WebGL 2 otherwise. It starts on Medium, keeps saves in the browser, and Esc releases mouse look. It needs a real graphics card: a software renderer is far too slow.
+Play it in your browser at [nearbycoder.github.io/gravewake](https://nearbycoder.github.io/gravewake/), on a desktop or on a phone or tablet held sideways. The browser version is a WebAssembly port of the same game, about 16 MB to download, using WebGPU where the browser has it and WebGL 2 otherwise. It starts on Medium on a desktop and Low on a phone, keeps saves in the browser, and on a desktop Esc releases mouse look. It needs a real graphics chip: a software renderer is far too slow.
 
 Gravewake has no release download yet. To play on the desktop, install Rust, clone the repository, and run `cargo run --release --locked`; scripts also package a Linux tarball and a local macOS app. It's been tested on Linux with an AMD Radeon GPU, macOS is built and tested in CI but hasn't been run on a Mac since the Linux work, Windows hasn't been built, and controllers have only been tested with simulated input.
 

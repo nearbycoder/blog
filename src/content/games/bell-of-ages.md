@@ -106,9 +106,22 @@ The game was developed with AI coding assistants following OpenAI's guide to [bu
 
 The trailer and screenshots are reproducible. A Playwright harness runs the game under a fake clock, so every frame advances the simulation by exactly 1/30 second, captures each frame in full at Ultra, and records the game's own Web Audio output through an offline audio context.
 
+## On phones and tablets
+
+The Bell of Ages already had touch controls, and a phone pass tightened them. They used to show whenever the screen reported a coarse pointer, and a key press didn't hide them; now they show only on touch-first devices or after a real touch, and hide for any key, mouse movement or gamepad. The pause button was 40 pixels and menu choices 27 to 42; every control and menu choice is now at least 44 points, and the HUD, controls, title and menus all keep clear of the notch and home indicator. Scrolling, zooming, text selection and long-press menus are off, sound starts on the first tap, and the minimap opens the kingdom map.
+
+Phones now start on Low graphics, and Medium is capped at 1.25 times the resolution on phones and tablets. WebGL memory fell from 111 MB to 65 MB on the iPhone profile and from 119 MB to 66 MB on an Android one. If a visit ends without the page closing, as when iOS kills a tab, the next one starts a step lower and says why.
+
+<figure>
+  <img src="/images/games/bell-of-ages-phone.webp" alt="The boy in Alder Village on a phone, with a thumbstick on the left and Lock, Flute, Shield, Dodge, Use and Sword buttons on the right." width="1280" height="764" loading="lazy" />
+  <figcaption>Alder Village on a phone, with simulated notch insets, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/Ocarina](https://nearbycoder.github.io/Ocarina/). It's the current game, about 8 MB in all, needing a browser with WebGL 2; journeys are saved in the browser, and Export and Import journey file move one between browsers.
+Play it in your browser at [nearbycoder.github.io/Ocarina](https://nearbycoder.github.io/Ocarina/), on a desktop or on a phone or tablet. It's the current game, about 8 MB in all, needing a browser with WebGL 2; journeys are saved in the browser, and Export and Import journey file move one between browsers.
 
 The Bell of Ages is a playable prototype with a complete story from opening to epilogue. [The v0.1.0 web build](https://github.com/nearbycoder/Ocarina/releases/latest) is the October 4 launch build, without any of the improvements above. The README is upfront about its limits: all seven sanctuaries share one three-chamber spine, every enemy uses one reshaped model, combat is forgiving, and gamepad and touch have only been tested with synthetic input.
 

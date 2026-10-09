@@ -73,7 +73,7 @@ After chapter II, the trip map gets one more page: **favours for the neighbours*
 
 ## Settings and graphics fidelity
 
-The whole game plays with a mouse alone, a keyboard alone, or a gamepad, and every key and the pad's packing buttons can be remapped. Accessibility settings switch the green and red ghosts to blue and orange, let X-ray be held or toggled, turn off screen shake, reduce motion so cards fade instead of sliding, and set the story texts' speed. A self-test measures every text on every screen at eight window sizes from 800×600 to 2100×900, so nothing is drawn under 12 pixels and no word breaks across two lines.
+The whole game plays with a mouse alone, a keyboard alone, a gamepad, or touch in the browser, and every key and the pad's packing buttons can be remapped. Accessibility settings switch the green and red ghosts to blue and orange, let X-ray be held or toggled, turn off screen shake, reduce motion so cards fade instead of sliding, and set the story texts' speed. A self-test measures every text on every screen at eight window sizes from 800×600 to 2100×900, so nothing is drawn under 12 pixels and no word breaks across two lines.
 
 **Graphics fidelity** has four steps, with fine-tune rows underneath. High is the game's own look, with MSAA, soft shadows, ambient occlusion, bloom and depth of field. Ultra renders at 150%, with an 8192 shadow map, 12-sample ambient occlusion, high-quality bloom, the picnic blanket woven at twice the texel density, and more dust and confetti. The street around the driveway, with asphalt, a mown lawn and curb joints, is drawn procedurally from Medium up. On the integrated Radeon it was measured on, a frame took about 0.45 ms of GPU time on Low, 1.1 on Medium, 2.0 on High and 4.8 on Ultra at 1600×900.
 
@@ -101,9 +101,22 @@ After launch, the game went through [twelve rounds of improvements](/articles/or
 
 Unlike most of the other games here, the music and many sound effects come from CC0 packs: TAD's "lofi Compilation" from OpenGameArt, Kenney's interface and impact sounds, and Thimras's park ambiences. The stingers, horn, engine, and whooshes are synthesized by a project script. It was developed with [Claude Code](https://claude.com/claude-code).
 
+## On phones and tablets
+
+Before this pass, the browser version reached its title on a phone, but no tap or drag reached the game. Now one finger works like the mouse: drag an item, and its ghost rides a fingertip above your finger, then lift to drop it. Two fingers orbit the trunk and pinch to zoom. Buttons cover **X-ray** (hold), hint, menu, undo and redo, and while you hold an item, **TURN**, **TIP**, **ROLL**, **UP**, **DOWN** and **BACK**. They're 46 pixels on a phone and 60 on a tablet, clear of the notch, and only appear on touch-first devices or after a touch. A phone held upright is asked to turn sideways.
+
+Phones and tablets start on lighter settings. Graphics memory fell from 271 MB to 89 MB on the iPhone profile and from 414 MB to 128 MB on the iPad. The game's own text is still small on a phone.
+
+<figure>
+  <img src="/images/games/pack-the-trunk-phone.webp" alt="Packing the little red wagon on a phone, with X-ray, hint, menu, undo and redo on the left and Turn, Tip, Roll, Up, Down and Back along the bottom." width="1280" height="764" loading="lazy" />
+  <figcaption>Holding an item on a phone, in a headless iPhone 15 profile.</figcaption>
+</figure>
+
+It has only been played in headless test browsers with iPhone, iPad and Android phone profiles so far. A real phone still has to confirm iOS's memory limit, sound, frame rate, and how the controls feel under a thumb.
+
 ## Play it
 
-Play it in your browser at [nearbycoder.github.io/PackTheTrunk](https://nearbycoder.github.io/PackTheTrunk/). It's the current game as a WebGL build of about 48 MB, starting on Medium graphics, with saves and album photos kept in the browser. Closing a trunk or a favour can pause for a moment there, because the browser does that work on its only thread.
+Play it in your browser at [nearbycoder.github.io/PackTheTrunk](https://nearbycoder.github.io/PackTheTrunk/), on a desktop or on a phone or tablet held sideways. It's the current game as a WebGL build of about 48 MB, starting on Medium graphics on a desktop, with saves and album photos kept in the browser. Closing a trunk or a favour can pause for a moment there, because the browser does that work on its only thread.
 
 [Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/PackTheTrunk/releases/latest) for Linux. That's the October 4 launch build with all 33 trips, the story and the album, but none of the improvements above; for the current game on the desktop, build it from source with Unity. Gamepads have only been tested as simulated devices, and favours haven't been played by a person yet.
 
