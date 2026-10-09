@@ -10,6 +10,7 @@ import { renderNearbycoderOg } from "./src/lib/opengraph-renderer.js";
 
 // The generated social cards are full-color PNGs; a palette keeps them about
 // 70% smaller with no visible change. Runs after astro-opengraph-images.
+/** @type {import("astro").AstroIntegration} */
 const compressSocialCards = {
   name: "compress-social-cards",
   hooks: {
