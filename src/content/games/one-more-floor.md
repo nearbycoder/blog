@@ -3,11 +3,12 @@ title: "One More Floor"
 summary: "A short-shift score-attack game where you run the elevator in a hotel that rearranges its floors every time you stop, for guests including a vampire, a houseplant, and a soaked swimmer, with a daily shift, an endless Overtime, and a four-step graphics fidelity slider."
 role: "Creator"
 genre: "Arcade puzzle"
-platforms: ["Windows", "macOS", "Linux"]
+platforms: ["Windows", "macOS", "Linux", "Web"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:40:07Z"
 stack: ["Unity 6", "C#", "Blender", "Python", "NumPy", ".NET", "FFmpeg"]
+link: "https://nearbycoder.github.io/OneMoreFloor/"
 githubLink: "https://github.com/nearbycoder/OneMoreFloor"
 download: "https://github.com/nearbycoder/OneMoreFloor/releases/latest"
 featured: false
@@ -96,6 +97,8 @@ The trailer is recorded by the game. Each shot plays from a fixed seed and skips
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/OneMoreFloor/releases/latest) for Linux. That release is the October 4 launch build with the full scope (ten floors, eight guests, ten shifts and Overtime) but none of the improvements above; to play the current game, build it from source with Unity 6000.6.2f1. Difficulty is fitted to the player model rather than real playtests so far, gamepads have only been tested as virtual devices, and the README is candid that the audio has been measured more than it's been listened to.
+Play it in your browser at [nearbycoder.github.io/OneMoreFloor](https://nearbycoder.github.io/OneMoreFloor/). It's the current game as a WebGL build of about 26 MB, starting on MEDIUM, with saves kept in the browser. The browser version skips a few audio effects, such as the muffle behind menus, because Unity's web audio has no filters.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/OneMoreFloor/releases/latest) for Linux. That release is the October 4 launch build with the full scope (ten floors, eight guests, ten shifts and Overtime) but none of the improvements above; for the current game on the desktop, build it from source with Unity 6000.6.2f1. Difficulty is fitted to the player model rather than real playtests so far, gamepads have only been tested as virtual devices, and the README is candid that the audio has been measured more than it's been listened to.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/OneMoreFloor). GitHub records the repository's creation on **October 4, 2026**.

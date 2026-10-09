@@ -18,6 +18,7 @@ stack:
     "Blender",
     "Web Audio API",
   ]
+link: "https://nearbycoder.github.io/PainKiller/"
 githubLink: "https://github.com/nearbycoder/PainKiller"
 download: "https://github.com/nearbycoder/PainKiller/releases/latest"
 featured: false
@@ -99,6 +100,8 @@ The trailer is rendered by the game itself: a Python script drives scripted shot
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/PainKiller/releases/latest) as an AppImage, a portable Linux archive, or a web build you can serve with any static file server. That release is the October 4 launch build: the whole campaign is there, but not the improvements above. To play the current game, build it from source with Node 22 or later. It supports keyboard and mouse, controllers, and touch, though controllers and touch have only been tested with synthetic input. Four of the themes use Blender-authored scenes and the other eighteen are compact procedural arenas, and the five generals share one rig.
+Play it in your browser at [nearbycoder.github.io/PainKiller](https://nearbycoder.github.io/PainKiller/). It's the current game, about 53 MB before the title screen, needing a browser with WebGL 2. Saves are kept in the browser, and sound starts on your first click or key.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/PainKiller/releases/latest) as an AppImage, a portable Linux archive, or a web build you can serve yourself. That release is the October 4 launch build: the whole campaign is there, but not the improvements above. For the current desktop version, build it from source with Node 22 or later. It supports keyboard and mouse, controllers, and touch, though controllers and touch have only been tested with synthetic input. Four of the themes use Blender-authored scenes and the other eighteen are compact procedural arenas, and the five generals share one rig.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/PainKiller). GitHub records the repository's creation on **October 4, 2026**.

@@ -3,11 +3,12 @@ title: "Handle With Care"
 summary: "A physics packing puzzle where you pack bizarre deliveries, from a sleeping armadillo to a sneezing dragon, then watch a deterministic journey decide whether they survive, with Mabel's hints, care meters, and an Overtime shift."
 role: "Creator"
 genre: "Physics puzzle"
-platforms: ["Windows", "macOS", "Linux"]
+platforms: ["Windows", "macOS", "Linux", "Web"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:16:44Z"
 stack: ["Unity 6", "C#", ".NET", "Blender", "Python", "NumPy", "FFmpeg"]
+link: "https://nearbycoder.github.io/HandleWithCare/"
 githubLink: "https://github.com/nearbycoder/HandleWithCare"
 download: "https://github.com/nearbycoder/HandleWithCare/releases/latest"
 featured: false
@@ -95,6 +96,8 @@ The trailer mode plays a data-driven shot list at ULTRA with real mouse and keyb
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/HandleWithCare/releases/latest) for Linux. It's the October 4 launch build with the 20 story deliveries, but none of the improvements above; to play the current game, with Overtime, build it from source with Unity. A macOS app builds but hasn't been run on a Mac, and gamepads have only been tested as virtual devices.
+Play it in your browser at [nearbycoder.github.io/HandleWithCare](https://nearbycoder.github.io/HandleWithCare/), with Overtime included. It's a WebGL build of about 71 MB, starting on MEDIUM, with saves kept in the browser; GIFs and photos become downloads.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/HandleWithCare/releases/latest) for Linux. It's the October 4 launch build with the 20 story deliveries, but none of the improvements above; for the current game on the desktop, build it from source with Unity. A macOS app builds but hasn't been run on a Mac, and gamepads have only been tested as virtual devices.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/HandleWithCare). GitHub records the repository's creation on **October 4, 2026**.

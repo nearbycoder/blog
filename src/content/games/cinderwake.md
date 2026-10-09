@@ -8,6 +8,7 @@ engine: "Macroquad (Rust)"
 year: "2026"
 createdAt: "2026-10-04T21:02:57Z"
 stack: ["Rust", "Macroquad", "GLSL", "Python"]
+link: "https://nearbycoder.github.io/Cinderwake/"
 githubLink: "https://github.com/nearbycoder/Cinderwake"
 featured: false
 accent: "amber"
@@ -78,6 +79,8 @@ The trailer is recorded by the game itself: a capture-only mode saves frames at 
 
 ## Play it
 
-Cinderwake is a playable prototype with no release download or hosted version yet. Install Rust, clone the repository, and run `cargo run --release --locked`. Scripts also build a local macOS app, a portable Linux tarball, and the experimental browser build. It was checked on macOS on Apple Silicon at launch and on Linux since; Windows hasn't been tried, controllers have only been tested as simulated devices, and balance hasn't been playtested. The code and generated assets are MIT licensed.
+Play it in your browser at [nearbycoder.github.io/Cinderwake](https://nearbycoder.github.io/Cinderwake/). It's the current game as a WebAssembly build of about 50 MB, since all the art and audio are embedded. Saves stay in the browser, and fullscreen has to be asked for on each visit.
+
+Cinderwake has no release download yet. To play on the desktop, install Rust, clone the repository, and run `cargo run --release --locked`; scripts also build a local macOS app and a portable Linux tarball. It was checked on macOS on Apple Silicon at launch and on Linux since; Windows hasn't been tried, controllers have only been tested as simulated devices, and balance hasn't been playtested. The code and generated assets are MIT licensed.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/Cinderwake). GitHub records the repository's creation on **October 4, 2026**.

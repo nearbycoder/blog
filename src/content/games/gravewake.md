@@ -3,11 +3,12 @@ title: "Gravewake: The Hollow Tithe"
 summary: "A first-person gothic arena roguelite built in Rust on a custom wgpu renderer, with 33 weapons, soul powers, location-based dismemberment, Rapier ragdolls, controller support, and a four-step graphics fidelity setting, in a haunted cemetery."
 role: "Creator"
 genre: "Arena roguelite"
-platforms: ["Linux", "macOS"]
+platforms: ["Linux", "macOS", "Web"]
 engine: "Custom Rust (wgpu)"
 year: "2026"
 createdAt: "2026-10-04T21:38:20Z"
 stack: ["Rust", "wgpu", "WGSL", "winit", "egui", "Rapier", "rodio", "Blender"]
+link: "https://nearbycoder.github.io/gravewake/"
 githubLink: "https://github.com/nearbycoder/gravewake"
 featured: false
 accent: "purple"
@@ -85,6 +86,8 @@ The trailer is recorded by the game at Ultra in fixed time steps, so no frame is
 
 ## Play it
 
-Gravewake is a playable development build with no release download or browser build yet. Install Rust, clone the repository, and run `cargo run --release --locked`; scripts also package a Linux tarball and a local macOS app. It's been tested on Linux with an AMD Radeon GPU, macOS is built and tested in CI but hasn't been run on a Mac since the Linux work, Windows hasn't been built, and controllers have only been tested with simulated input.
+Play it in your browser at [nearbycoder.github.io/gravewake](https://nearbycoder.github.io/gravewake/). The browser version is a WebAssembly port of the same game, about 16 MB to download, using WebGPU where the browser has it and WebGL 2 otherwise. It starts on Medium, keeps saves in the browser, and Esc releases mouse look. It needs a real graphics card: a software renderer is far too slow.
+
+Gravewake has no release download yet. To play on the desktop, install Rust, clone the repository, and run `cargo run --release --locked`; scripts also package a Linux tarball and a local macOS app. It's been tested on Linux with an AMD Radeon GPU, macOS is built and tested in CI but hasn't been run on a Mac since the Linux work, Windows hasn't been built, and controllers have only been tested with simulated input.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/gravewake). GitHub records the repository's creation on **October 4, 2026**.

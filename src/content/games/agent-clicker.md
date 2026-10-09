@@ -8,6 +8,7 @@ engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:20:58Z"
 stack: ["Unity 6", "C#", "Blender", "Python", "FFmpeg"]
+link: "https://nearbycoder.github.io/AgentClicker/"
 githubLink: "https://github.com/nearbycoder/AgentClicker"
 download: "https://github.com/nearbycoder/AgentClicker/releases/latest"
 featured: false
@@ -91,6 +92,8 @@ The trailer is played by a scripted director that clicks real UI through Input S
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/AgentClicker/releases/latest) for Linux, with an experimental, unsigned macOS build. That's the October 4 launch build, and a browser copy on [GitHub Pages](https://nearbycoder.github.io/AgentClicker/) is from October 6; neither has the later improvements above, which you can play by building from source with Unity. Every lab, AI model, company, and person in the game is fictional.
+Play it in your browser at [nearbycoder.github.io/AgentClicker](https://nearbycoder.github.io/AgentClicker/). It's the current game, updated from the October 6 copy that used to be there, as a WebGL build of about 14 MB, starting on Medium graphics. Saves are kept in the browser, and a background tab earns at the offline rate.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/AgentClicker/releases/latest) for Linux, with an experimental, unsigned macOS build. That's the October 4 launch build without the later improvements; for the current game on the desktop, build it from source with Unity. Every lab, AI model, company, and person in the game is fictional.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/AgentClicker). GitHub records the repository's creation on **October 4, 2026**.

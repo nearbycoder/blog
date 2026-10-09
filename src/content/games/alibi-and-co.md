@@ -9,6 +9,7 @@ year: "2026"
 createdAt: "2026-10-04T22:21:29Z"
 stack:
   ["Unity 6", "C#", ".NET", "Blender", "Python", "NumPy", "SciPy", "FFmpeg"]
+link: "https://nearbycoder.github.io/AlibiAndCo/"
 githubLink: "https://github.com/nearbycoder/AlibiAndCo"
 download: "https://github.com/nearbycoder/AlibiAndCo/releases/latest"
 featured: false
@@ -95,6 +96,8 @@ The trailer recorder pipes raw frames to FFmpeg while the game clock steps exact
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/AlibiAndCo/releases/latest) for Linux. That's the October 4 launch build with the first three cases and none of the improvements above; to play the current game, with all five cases and the Daily Docket, build it from source with Unity. A 27 MB browser build can be made from source too, but it isn't hosted yet. Controllers and touch have only been tested with simulated input.
+Play it in your browser at [nearbycoder.github.io/AlibiAndCo](https://nearbycoder.github.io/AlibiAndCo/), with all five cases and the Daily Docket. It's a WebGL build of about 27 MB, starting on Medium graphics, with saves kept in the browser.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/AlibiAndCo/releases/latest) for Linux. That's the October 4 launch build with the first three cases and none of the improvements above; for the current game on the desktop, build it from source with Unity. Controllers and touch have only been tested with simulated input.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/AlibiAndCo). GitHub records the repository's creation on **October 4, 2026**.

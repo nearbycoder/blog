@@ -3,12 +3,13 @@ title: "Last Light"
 summary: "Keep the last lighthouse on a wrecking coast: sweep a heavy beam to guide ships home, chart hidden reefs ahead of them, and douse the wreckers' false lights across twelve nights and an endless Night Watch."
 role: "Creator"
 genre: "Strategy"
-platforms: ["Windows", "macOS", "Linux"]
+platforms: ["Windows", "macOS", "Linux", "Web"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:37:44Z"
 stack:
   ["Unity 6", "C#", "HLSL", "Blender", "Python", "NumPy", "SciPy", "FFmpeg"]
+link: "https://nearbycoder.github.io/LastLight/"
 githubLink: "https://github.com/nearbycoder/LastLight"
 download: "https://github.com/nearbycoder/LastLight/releases/latest"
 featured: true
@@ -111,6 +112,8 @@ The trailer is rebuilt the same way it was made. A headless twin of each scripte
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/LastLight/releases/latest) for Linux, then run `./LastLight.sh`. That release is the October 4 launch build: twelve nights, the ending and the Night Watch, but none of the improvements above. To play the current game, build it from source with Unity 6000.6.2f1 as the README describes. It supports mouse, keyboard, and gamepad, though gamepads have only been tested as simulated devices, and balance hasn't been tuned with human players yet.
+Play it in your browser at [nearbycoder.github.io/LastLight](https://nearbycoder.github.io/LastLight/). It's the current game as a WebGL build of about 25 MB, starting on Medium graphics, with saves kept in the browser and a night saved when you leave the tab.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/LastLight/releases/latest) for Linux, then run `./LastLight.sh`. That release is the October 4 launch build: twelve nights, the ending and the Night Watch, but none of the improvements above. For the current game on the desktop, build it from source with Unity 6000.6.2f1 as the README describes. It supports mouse, keyboard, and gamepad, though gamepads have only been tested as simulated devices, and balance hasn't been tuned with human players yet.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/LastLight). GitHub records the repository's creation on **October 4, 2026**.

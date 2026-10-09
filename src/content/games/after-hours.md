@@ -3,12 +3,13 @@ title: "After Hours"
 summary: "A first-person cleaning game with a mystery underneath: scrub an office over seven nights, find what the day shift is hiding, and decide which evidence survives until morning."
 role: "Creator"
 genre: "First-person mystery"
-platforms: ["Windows", "macOS", "Linux"]
+platforms: ["Windows", "macOS", "Linux", "Web"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:26:34Z"
 stack:
   ["Unity 6", "C#", "HLSL", "Blender", "Python", "NumPy", "SciPy", "FFmpeg"]
+link: "https://nearbycoder.github.io/AfterHours/"
 githubLink: "https://github.com/nearbycoder/AfterHours"
 download: "https://github.com/nearbycoder/AfterHours/releases/latest"
 featured: false
@@ -89,6 +90,8 @@ The trailer recorder runs the game on a fixed 30 fps clock at Ultra and captures
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/AfterHours/releases/latest). It's the October 4 launch build, with all seven nights, four endings, menus and saves, but none of the improvements above; to play the current game, build it from source with Unity. No one outside development has played it yet, so pacing and how obvious the clues are remain untested with real players, and the README ships a playtest kit for the first sessions.
+Play it in your browser at [nearbycoder.github.io/AfterHours](https://nearbycoder.github.io/AfterHours/). It's the current game as a WebGL build of about 44 MB, starting on Medium graphics, with saves kept in the browser. Esc frees the mouse and pauses the night; click to look around again.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/AfterHours/releases/latest). It's the October 4 launch build, with all seven nights, four endings, menus and saves, but none of the improvements above; for the current game on the desktop, build it from source with Unity. No one outside development has played it yet, so pacing and how obvious the clues are remain untested with real players, and the README ships a playtest kit for the first sessions.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/AfterHours). GitHub records the repository's creation on **October 4, 2026**.
