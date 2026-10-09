@@ -9,6 +9,7 @@ year: "2026"
 createdAt: "2026-10-04T22:35:04Z"
 stack:
   ["Unity 6", "C#", "HLSL", "Blender", "Python", "NumPy", "SciPy", "FFmpeg"]
+link: "https://nearbycoder.github.io/PocketWeather/"
 githubLink: "https://github.com/nearbycoder/PocketWeather"
 download: "https://github.com/nearbycoder/PocketWeather/releases/latest"
 featured: false
@@ -91,6 +92,8 @@ The trailer is a shot list run by the game on a fixed clock, recorded at Ultra. 
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/PocketWeather/releases/latest): a Linux build, or a web build to serve over HTTP. That release is the October 4 launch build with all twelve days and the finale, but none of the improvements above; to play the current game, build it from source with Unity. Touch and gamepad have only been tested through virtual devices so far, and the web build isn't hosted anywhere yet.
+Play it in your browser at [nearbycoder.github.io/PocketWeather](https://nearbycoder.github.io/PocketWeather/). It's the current game as a WebGL build, about 17 MB before the title, with saves kept in the browser and touch controls on phones and tablets.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/PocketWeather/releases/latest) for Linux. That release is the October 4 launch build with all twelve days and the finale, but none of the improvements above; for the current game on the desktop, build it from source with Unity. Touch and gamepad have only been tested through virtual devices so far.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/PocketWeather). GitHub records the repository's creation on **October 4, 2026**.

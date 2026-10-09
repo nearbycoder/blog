@@ -3,11 +3,12 @@ title: "Lost & Found"
 summary: "A small deduction game set at the lost-property desk of a 1962 railway station, where you inspect objects, catch liars, and decide which belongings should never be returned."
 role: "Creator"
 genre: "Deduction"
-platforms: ["Windows", "macOS", "Linux"]
+platforms: ["Windows", "macOS", "Linux", "Web"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:47:26Z"
 stack: ["Unity 6", "C#", "Blender", "Python", "NumPy", "SciPy", "FFmpeg"]
+link: "https://nearbycoder.github.io/LostAndFound/"
 githubLink: "https://github.com/nearbycoder/LostAndFound"
 download: "https://github.com/nearbycoder/LostAndFound/releases/latest"
 featured: true
@@ -104,6 +105,8 @@ The trailer was shot by the game itself. A frame-locked recorder runs at 30 fps 
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/LostAndFound/releases/latest) for Linux. That's the October 4 build, with all five days, every case, and all three endings, but none of the improvements above; to play the current game, build it from source with Unity. Gamepads have only been tested as virtual devices, and it hasn't had broad human playtesting yet.
+Play it in your browser at [nearbycoder.github.io/LostAndFound](https://nearbycoder.github.io/LostAndFound/). It's the current game as a WebGL build, about 69 MB to download, starting on the Medium graphics step, with saves kept in the browser.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/LostAndFound/releases/latest) for Linux. That's the October 4 build, with all five days, every case, and all three endings, but none of the improvements above; for the current game on the desktop, build it from source with Unity. Gamepads have only been tested as virtual devices, and it hasn't had broad human playtesting yet.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/LostAndFound). GitHub records the repository's creation on **October 4, 2026**.

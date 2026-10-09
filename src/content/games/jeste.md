@@ -3,11 +3,12 @@ title: "Jeste"
 summary: "A pixel-art precision platformer about a young jester climbing a mountain that laughs back, with nine chapters, an eight-way dash, an Assist mode with a Route Ghost, and every room proven beatable by an automated solver."
 role: "Creator"
 genre: "Precision platformer"
-platforms: ["Linux"]
+platforms: ["Linux", "Web"]
 engine: "Godot 4.7"
 year: "2026"
 createdAt: "2026-10-04T22:49:29Z"
 stack: ["Godot", "GDScript", "Python", "NumPy", "FFmpeg"]
+link: "https://nearbycoder.github.io/Jeste/"
 githubLink: "https://github.com/nearbycoder/Jeste"
 download: "https://github.com/nearbycoder/Jeste/releases/latest"
 featured: false
@@ -92,6 +93,8 @@ The trailer is reproducible too. `tools/trailer/` drives the real game through G
 
 ## Play it
 
-To play the current game, install Godot 4.6 or later, clone the repository, and run `godot --path .`. [The v0.1.0 Linux build](https://github.com/nearbycoder/Jeste/releases/latest) is the October 4 launch build, a complete game from prologue to credits, but without any of the fixes and features above. It needs a Vulkan-capable GPU. Windows, macOS, and web export presets exist but haven't been built or tested. Difficulty was tuned against the bot rather than a range of human players, so some rooms may feel tighter than intended; Assist mode and the Route Ghost are there for that.
+Play it in your browser at [nearbycoder.github.io/Jeste](https://nearbycoder.github.io/Jeste/). It's the current game, exported from Godot as a single-threaded web build of about 27 MB over the wire. Saves stay in the browser, fullscreen is in Options, and there are no touch controls.
+
+To play on the desktop, install Godot 4.6 or later, clone the repository, and run `godot --path .`. [The v0.1.0 Linux build](https://github.com/nearbycoder/Jeste/releases/latest) is the October 4 launch build, a complete game from prologue to credits, but without any of the fixes and features above. Difficulty was tuned against the bot rather than a range of human players, so some rooms may feel tighter than intended; Assist mode and the Route Ghost are there for that.
 
 [Browse the source and README media on GitHub](https://github.com/nearbycoder/Jeste). GitHub records the repository's creation on **October 4, 2026**.

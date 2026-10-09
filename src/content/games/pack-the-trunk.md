@@ -3,11 +3,12 @@ title: "Pack The Trunk"
 summary: "A cozy voxel packing puzzle about one family, thirty years, and one very full trunk: 33 trips, 11 vehicles, and 116 Blender-modelled items, every level proven solvable, with favours for the neighbours after the story."
 role: "Creator"
 genre: "Packing puzzle"
-platforms: ["Windows", "macOS", "Linux"]
+platforms: ["Windows", "macOS", "Linux", "Web"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:36:53Z"
 stack: ["Unity 6", "C#", "Blender", "Python", "NumPy", "SciPy", "FFmpeg"]
+link: "https://nearbycoder.github.io/PackTheTrunk/"
 githubLink: "https://github.com/nearbycoder/PackTheTrunk"
 download: "https://github.com/nearbycoder/PackTheTrunk/releases/latest"
 featured: false
@@ -102,6 +103,8 @@ Unlike most of the other games here, the music and many sound effects come from 
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/PackTheTrunk/releases/latest) for Linux. That's the October 4 launch build with all 33 trips, the story and the album, but none of the improvements above; to play the current game, build it from source with Unity. Gamepads have only been tested as simulated devices, and favours haven't been played by a person yet.
+Play it in your browser at [nearbycoder.github.io/PackTheTrunk](https://nearbycoder.github.io/PackTheTrunk/). It's the current game as a WebGL build of about 48 MB, starting on Medium graphics, with saves and album photos kept in the browser. Closing a trunk or a favour can pause for a moment there, because the browser does that work on its only thread.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/PackTheTrunk/releases/latest) for Linux. That's the October 4 launch build with all 33 trips, the story and the album, but none of the improvements above; for the current game on the desktop, build it from source with Unity. Gamepads have only been tested as simulated devices, and favours haven't been played by a person yet.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/PackTheTrunk). GitHub records the repository's creation on **October 4, 2026**.

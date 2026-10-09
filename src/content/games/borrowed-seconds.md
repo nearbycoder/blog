@@ -3,11 +3,12 @@ title: "Borrowed Seconds"
 summary: "A deterministic puzzle game where you freeze obstacles by borrowing time from your future self, across 35 single-screen levels in seven chapters that an exhaustive solver proves solvable."
 role: "Creator"
 genre: "Puzzle"
-platforms: ["Windows", "macOS", "Linux"]
+platforms: ["Windows", "macOS", "Linux", "Web"]
 engine: "Unity 6 (URP)"
 year: "2026"
 createdAt: "2026-10-04T22:32:44Z"
 stack: ["Unity 6", "C#", ".NET", "Blender", "Python", "NumPy", "FFmpeg"]
+link: "https://nearbycoder.github.io/BorrowedSeconds/"
 githubLink: "https://github.com/nearbycoder/BorrowedSeconds"
 download: "https://github.com/nearbycoder/BorrowedSeconds/releases/latest"
 featured: false
@@ -90,6 +91,8 @@ The trailer is a shot list played by the release build using solver replays, cap
 
 ## Play it
 
-[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/BorrowedSeconds/releases/latest) for Linux. That release is the October 4 launch build, with 30 levels in six chapters and none of the improvements above; to play the current game, build it from source with Unity 6000.6.2f1. It hasn't been playtested by people yet, so some levels may be harder than they look, and chapters VIII to XII are named but not shipped.
+Play it in your browser at [nearbycoder.github.io/BorrowedSeconds](https://nearbycoder.github.io/BorrowedSeconds/). It's the current game as a WebGL build of about 18 MB, starting on Medium graphics, with saves kept in the browser. The browser skips the low-pass muffle while you're frozen, because Unity's web audio has no filters.
+
+[Download v0.1.0 from GitHub releases](https://github.com/nearbycoder/BorrowedSeconds/releases/latest) for Linux. That release is the October 4 launch build, with 30 levels in six chapters and none of the improvements above; for the current game on the desktop, build it from source with Unity 6000.6.2f1. It hasn't been playtested by people yet, so some levels may be harder than they look, and chapters VIII to XII are named but not shipped.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/BorrowedSeconds). GitHub records the repository's creation on **October 4, 2026**.

@@ -18,6 +18,7 @@ stack:
     "Web Audio API",
     "Playwright",
   ]
+link: "https://nearbycoder.github.io/Ocarina/"
 githubLink: "https://github.com/nearbycoder/Ocarina"
 download: "https://github.com/nearbycoder/Ocarina/releases/latest"
 featured: false
@@ -107,6 +108,8 @@ The trailer and screenshots are reproducible. A Playwright harness runs the game
 
 ## Play it
 
-The Bell of Ages is a playable prototype with a complete story from opening to epilogue. [The v0.1.0 web build](https://github.com/nearbycoder/Ocarina/releases/latest) is the October 4 launch build, without any of the improvements above; to play the current game, clone the repository and run `npm install`, then `npm run build && npm run preview` (Node 22.12 or newer). There's no hosted build yet. The README is upfront about its limits: all seven sanctuaries share one three-chamber spine, every enemy uses one reshaped model, combat is forgiving, and gamepad and touch have only been tested with synthetic input.
+Play it in your browser at [nearbycoder.github.io/Ocarina](https://nearbycoder.github.io/Ocarina/). It's the current game, about 8 MB in all, needing a browser with WebGL 2; journeys are saved in the browser, and Export and Import journey file move one between browsers.
+
+The Bell of Ages is a playable prototype with a complete story from opening to epilogue. [The v0.1.0 web build](https://github.com/nearbycoder/Ocarina/releases/latest) is the October 4 launch build, without any of the improvements above. The README is upfront about its limits: all seven sanctuaries share one three-chamber spine, every enemy uses one reshaped model, combat is forgiving, and gamepad and touch have only been tested with synthetic input.
 
 [Browse the source on GitHub](https://github.com/nearbycoder/Ocarina). GitHub records the repository's creation on **October 4, 2026**.
