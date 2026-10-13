@@ -17,7 +17,7 @@ test('recaps cite original sources and Now has a fixed editorial date',async({pa
  await expect(page.locator('.reading-sidebar a').filter({hasText:'When AI in an interview fails you'})).toHaveAttribute('href','/articles/when-ai-in-an-interview-fails-you');
  await expect(page.locator('.article-content')).toContainText('What would change next time');
  await page.goto('/now/');
- await expect(page.locator('time')).toHaveAttribute('datetime','2026-09-06');
+ await expect(page.locator('time')).toHaveAttribute('datetime','2026-10-13');
  await page.getByRole('button',{name:'Open search'}).click();
  await page.getByRole('combobox').fill('make the handoff');
  await expect(page.getByRole('option')).toContainText('Postmortem');

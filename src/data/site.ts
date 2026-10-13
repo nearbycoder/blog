@@ -3,9 +3,9 @@ export const site = {
   handle: "nearbycoder",
   title: "Josh Hamilton · Nearbycoder",
   description:
-    "Member of Technical Staff @ Augment Code focused on resilient systems, pragmatic leadership, and building tools that keep teams shipping.",
+    "Staff Software Engineer II @ Harness focused on resilient systems, pragmatic leadership, and building tools that keep teams shipping.",
   location: "Tulsa, Oklahoma",
-  role: "Member of Technical Staff @ Augment Code",
+  role: "Staff Software Engineer II @ Harness",
   socials: [
     { label: "X", url: "https://twitter.com/nearbycoder" },
     { label: "GitHub", url: "https://github.com/nearbycoder" },
@@ -98,7 +98,7 @@ export const site = {
   ],
   hero: {
     title:
-      "Member of Technical Staff @ Augment Code, loving husband, father of two girls.",
+      "Staff Software Engineer II @ Harness, loving husband, father of two girls.",
     subtitle:
       "I build resilient systems, write about the messy parts of shipping, and try to keep teams calm when things get noisy.",
     ctaPrimary: { label: "Read the latest", href: "/articles" },
@@ -111,9 +111,15 @@ export const site = {
   },
   work: [
     {
+      company: "Harness",
+      role: "Staff Software Engineer II",
+      range: "2026 - current",
+      accent: "rose",
+    },
+    {
       company: "Augment Code",
       role: "Member of Technical Staff",
-      range: "2026 - current",
+      range: "2026",
       accent: "cyan",
     },
     {
