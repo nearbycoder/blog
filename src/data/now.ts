@@ -1,11 +1,11 @@
 /** Update this date and copy together; never imply freshness from the build date. */
 export const now = {
-  updated: "2026-09-06",
+  updated: "2026-10-13",
   items: [
     {
       title: "At work",
       description:
-        "Member of Technical Staff at Augment Code, as listed in my current work history.",
+        "Staff Software Engineer II at Harness, which acquired Augment Code in October 2026.",
       href: "/about",
       link: "More about me",
     },
