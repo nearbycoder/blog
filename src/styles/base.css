@@ -9,23 +9,23 @@
 
 :root {
   color-scheme: light;
-  --bg: #f3ecdc;
-  --bg-alt: #eae1cc;
-  --surface: #faf6ec;
-  --surface-2: #e2d7bd;
-  --fg: #1c2620;
-  --fg-muted: #5a5545;
-  --fg-dim: #686150;
-  --border: #cdbf9f;
-  --border-dim: #ded3ba;
+  --bg: #e8ecdd;
+  --bg-alt: #dde3cd;
+  --surface: #f4f6ea;
+  --surface-2: #cfd8bb;
+  --fg: #18231b;
+  --fg-muted: #4f5b47;
+  --fg-dim: #5d6a53;
+  --border: #b8c4a2;
+  --border-dim: #cbd5b8;
   --accent: #a8390b;
   --accent-ink: #a8390b;
   --accent-fg: #fff8ec;
-  --accent-soft: #f5dfcb;
+  --accent-soft: #ecdfc4;
   --water: #23637b;
   --moss: #45622a;
-  --contour: #8a6d4a;
-  --contour-strength: 0.32;
+  --contour: #6f7a52;
+  --contour-strength: 0.3;
   --ink-shadow: #1c262033;
   --paper-grain: 0.09;
   --blaze-read: var(--accent);
