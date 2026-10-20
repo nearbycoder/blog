@@ -2,7 +2,7 @@
 title: "Snaps"
 summary: "A small, free macOS menu bar app for screenshots with a Liquid Glass look. Every capture goes to the clipboard and a floating preview, ready to paste, drag, or mark up."
 role: "Creator"
-createdAt: "2026-10-10T22:39:25Z"
+createdAt: "2026-10-10"
 year: "2026"
 stack:
   [
