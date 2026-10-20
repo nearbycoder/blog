@@ -226,6 +226,31 @@ const linkLabel = game ? "Play in your browser" : "Visit project";
   <ProjectStory projectId={entry.id} />
 </BlogLayout>
 
+<script>
+  // Screenshots taken in both themes are a <picture> with a dark <source>.
+  // Its media query defaults to the system theme; this points it at the
+  // site's theme instead, so the screenshot changes with the theme menu.
+  const sources = document.querySelectorAll<HTMLSourceElement>(
+    ".article-content source[data-theme-dark]",
+  );
+  if (sources.length > 0) {
+    const update = () => {
+      const theme = document.documentElement.dataset.theme;
+      const media =
+        theme === "dark"
+          ? "all"
+          : theme === "light"
+            ? "not all"
+            : "(prefers-color-scheme: dark)";
+      sources.forEach((source) => (source.media = media));
+    };
+    new MutationObserver(update).observe(document.documentElement, {
+      attributeFilter: ["data-theme"],
+    });
+    update();
+  }
+</script>
+
 <style>
   .reading-cover figcaption,
   .project-demos figcaption {
