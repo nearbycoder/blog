@@ -2,7 +2,7 @@
 title: "Qikbar Next"
 summary: "A ground-up rewrite of Qikbar, from a hosted SaaS into a free, open-source command bar library with fuzzy search, routing, actions, extensions and AI, in one dependency-free package."
 role: "Creator"
-createdAt: "2026-10-12T18:56:17Z"
+createdAt: "2026-10-12"
 year: "2026"
 stack:
   [

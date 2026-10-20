@@ -10,6 +10,10 @@ const addedProjects = [
   "clank-run",
   "nobo",
   "codex-grab",
+  "snaps",
+  "qikbar-next",
+  "dex",
+  "tabz-space",
 ];
 
 test("project archive contains each repository once and orders dated projects newest first", async ({
