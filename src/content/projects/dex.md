@@ -1,6 +1,6 @@
 ---
 title: "Dex"
-summary: "A personal AI agent on Cloudflare. Each user gets an agent in a Durable Object that answers with live UI, works on its own cloud VM you can watch, and brings along skills, MCP servers, GitHub and a phone app."
+summary: "A personal AI agent on Cloudflare. Each user gets an agent in a Durable Object that answers with live UI, works on its own cloud VM you can watch, and brings along skills, MCP servers, GitHub and native apps for iPhone, iPad and Android."
 role: "Creator"
 createdAt: "2026-10-17"
 year: "2026"
@@ -20,6 +20,10 @@ stack:
     "boat.dev",
     "MCP",
     "Tailwind CSS 4",
+    "Swift",
+    "SwiftUI",
+    "Kotlin",
+    "Jetpack Compose",
   ]
 link: "https://trydex.dev"
 githubLink: "https://github.com/nearbycoder/dex"
@@ -90,9 +94,24 @@ Projects bundle one or more repositories with a setup script, notes for the mode
   <figcaption>Dex installed on a phone, from the README.</figcaption>
 </figure>
 
-Dex installs to a phone or tablet Home Screen and runs full screen. The composer stays above the keyboard, and a swipe from the left edge opens the sidebar. Push notifications cover replies, errors, scheduled prompts and snoozed chats coming back, and a chat open on any device stays quiet. On iPhone, which has no Vibration API, every tap plays the system haptic through a hidden switch input.
+The web app installs to a phone or tablet Home Screen and runs full screen. The composer stays above the keyboard, and a swipe from the left edge opens the sidebar. Push notifications cover replies, errors, scheduled prompts and snoozed chats coming back, and a chat open on any device stays quiet. On iPhone, which has no Vibration API, every tap plays the system haptic through a hidden switch input.
 
 The chat list works like an inbox. Settle a chat when you're done for now, or snooze it until this evening or next week and it returns to the top with a notification. Messages sent while a chat is working wait in a queue, where you can edit, reorder or delete them, or steer one into the current run.
+
+## Native apps for iPhone, iPad and Android
+
+Dex also has native apps: one for iPhone and iPad in Swift and SwiftUI with Liquid Glass, and one for Android in Kotlin, Jetpack Compose and Material 3 Expressive. They cover the whole app, not a companion subset. That includes chats with the activity row, the model menu, the queue, `/` skills, inbox triage, machines with the live desktop and picture-in-picture, files, projects, agents, skills, MCP servers, secrets, usage and settings. Generated UI is drawn with native controls, so cards, tables, charts and forms look like they belong on the phone, and live data and action buttons still work.
+
+<div class="project-media-gallery">
+  <figure><picture><source srcset="/images/projects/dex-ios-chat-dark.webp" media="(prefers-color-scheme: dark)" data-theme-dark /><img src="/images/projects/dex-ios-chat.webp" alt="The Dex iPhone app in a chat called Plan a weekend in Lisbon, with a Sunday schedule table, a bash code block, a Dex wants to change the default model to Kimi K3 card with Confirm and Decline, the composer, and a Liquid Glass tab bar for Chats, Machines, Files, Library and Settings." width="600" height="1304" loading="lazy" /></picture><figcaption>The iPhone app, with a table, a code block and a confirmation card.</figcaption></figure>
+  <figure><picture><source srcset="/images/projects/dex-android-chat-dark.webp" media="(prefers-color-scheme: dark)" data-theme-dark /><img src="/images/projects/dex-android-chat.webp" alt="The Dex Android app in the Weekly metrics dashboard chat, with a stacked bar chart of chats by day for ClinePass and OpenCode Go, a live table of recent chats, Refresh and Explain the dip on Saturday buttons, and the composer." width="600" height="1301" loading="lazy" /></picture><figcaption>The Android app, with a live chart and table card.</figcaption></figure>
+</div>
+
+The screenshots follow this site's theme: switch between light and dark and they change with it.
+
+The apps talk to the same agent as the web app, over its WebSocket and RPC, so there's no separate server for them. You sign in through your Dex's own sign-in page in a system browser sheet with a PKCE handoff, and Sign out everywhere covers the apps too. The iOS app adapts from a tab bar on iPhone to a sidebar with split views on iPad and the unfolded foldable iPhone. The Android app goes from flip phones' cover screens to tablets, ChromeOS and desktop windows, with panes that split at a foldable's hinge, dynamic color, predictive back and real picture-in-picture for the VM desktop.
+
+Both apps have a demo mode that runs on a built-in mock agent, so you can try every screen without an account. They're not in the App Store or Play Store yet. You build them from the repository with Xcode or Gradle.
 
 ## Built to be driven
 
@@ -106,7 +125,7 @@ The browser runs a TanStack Start app with React 19. It talks to a Cloudflare Wo
 
 Pages render from the agent's synced state, so switching pages never waits on the network. The last state and the last eight chats you opened are kept on the device, so a launch shows them right away while a cold agent wakes up. The service worker serves the app shell from its last copy, so recent chats open even offline.
 
-The web app is about 26,000 lines of TypeScript, in an npm workspace with room for native iOS and Android apps. I built it in three days, over 96 commits from 17 to 19 October 2026.
+The web app is about 26,000 lines of TypeScript. The iOS app adds about 24,000 lines of Swift and the Android app about 26,000 lines of Kotlin, all in one monorepo where each app builds and ships on its own. I built it in four days, over 164 commits from 17 to 20 October 2026.
 
 ## Try it
 
