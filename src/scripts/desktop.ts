@@ -71,7 +71,7 @@ if (desktop) {
       });
   }
   const logicalMinimized = (win: HTMLElement) =>
-    win.dataset.tilingHidden === "true" ? false : win.hidden;
+    win.dataset.tilingHidden === "true" ? false : Boolean(win.hidden);
   const workspace = desktop.querySelector<HTMLElement>("[data-workspace]")!;
   workspace.addEventListener(
     "scroll",
@@ -244,7 +244,7 @@ if (desktop) {
       .sort((a, b) => Number(a.style.zIndex) - Number(b.style.zIndex))
       .map((win) => ({
         id: win.dataset.window!,
-        minimized: spaces?.isMinimized(win) ?? win.hidden,
+        minimized: spaces?.isMinimized(win) ?? Boolean(win.hidden),
         placement: tiling?.capture(win) ?? layouts.capture(win),
         ...(win.dataset.source ? { source: win.dataset.source } : {}),
         ...(win.dataset.window === "arcade"

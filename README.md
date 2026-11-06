@@ -21,7 +21,7 @@ Personal site for Josh Hamilton (`nearbycoder`) built with Astro. The app combin
 
 ## Stack
 
-- Astro 6
+- Astro 7
 - Tailwind CSS 4 via Vite
 - React 19
 - `astro:content` collections for structured Markdown content
@@ -73,6 +73,28 @@ To add or replace a video, put it under `media/`, run `npx wrangler login` once,
 - `/og/site.svg`
 - `/og/[slug].svg`
 - `/card-art/[slug].svg`
+
+## Runtime and security notes
+
+Use Node 24 (see `.nvmrc` and `engines`); configure the Vercel project and any
+external CI to use Node 24 as well. This repository has no checked-in CI workflow
+or Vercel Node-version setting, so the deployed setting must be verified in the
+Vercel dashboard before integration. TypeScript 7 is deferred: `@astrojs/check`
+currently declares support for TypeScript 5 or 6, so this project uses 6.
+
+Astro uses its default static output with no server adapter; the built pages and
+social cards are prerendered. The separate `api/` Vercel functions handle the
+newsletter, and media is served from R2. This configuration does not imply an
+Astro runtime image-optimization endpoint is deployed, which reduces likely
+exposure to GHSA-26w7-cxv4-gfx2. Dashboard settings, rewrites and the deployed
+artifacts were not independently verified, so actual exposure cannot be ruled
+out. No deployment or newsletter send is part of dependency verification.
+
+`fflate`, `postcss` and `postcss-selector-parser` overrides patch vulnerable
+transitive dependencies of the social-card tooling, including dependencies
+pinned by `tw-to-css`; revisit them as upstream releases fixes. Social-card
+generation is batched because the integration otherwise renders all pages
+concurrently and can exhaust build memory.
 
 ## Local development
 

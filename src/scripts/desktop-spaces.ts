@@ -66,7 +66,7 @@ export const getDesktopSpaces = () => current;
 /** Separates a desk being out of view from a user's choice to minimize an app. */
 export function mountDesktopSpaces(
   desktop: HTMLElement,
-  visibleMinimized: (win: HTMLElement) => boolean = (win) => win.hidden,
+  visibleMinimized: (win: HTMLElement) => boolean = (win) => Boolean(win.hidden),
 ) {
   const store = localState<DesktopSpacesState>(
     key,

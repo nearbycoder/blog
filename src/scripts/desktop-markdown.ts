@@ -698,7 +698,7 @@ export function mountApp(root: HTMLElement): () => void {
       } else if (button.hasAttribute("data-markdown-html")) {
         exportHTML();
       } else if (button.hasAttribute("data-markdown-find-toggle")) {
-        toggleFind(query("[data-markdown-find]").hidden);
+        toggleFind(Boolean(query("[data-markdown-find]").hidden));
       } else if (button.hasAttribute("data-markdown-find-close")) {
         toggleFind(false);
       } else if (button.hasAttribute("data-markdown-find-next")) {

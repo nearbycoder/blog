@@ -91,7 +91,7 @@ export function mountCalculator(root: HTMLElement): () => void {
         <div class="calculator-keypad" role="group" aria-label="Calculator keypad">
           <button type="button" data-calculator-key="(" aria-label="Open parenthesis">(</button>
           <button type="button" data-calculator-key=")" aria-label="Close parenthesis">)</button>
-          <button type="button" data-calculator-action="clear" aria-label="Clear calculation">AC</button>
+          <button type="button" data-calculator-action="clear" aria-label="AC — Clear calculation">AC</button>
           <button type="button" data-calculator-action="delete" aria-label="Delete last character">⌫</button>
           ${[
             ["7", "7"],

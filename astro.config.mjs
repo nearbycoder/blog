@@ -8,6 +8,26 @@ import tailwindcss from "@tailwindcss/vite";
 import opengraphImages from "astro-opengraph-images";
 import { renderNearbycoderOg } from "./src/lib/opengraph-renderer.js";
 
+// The integration renders every page concurrently, which can exhaust build memory.
+// Run its unchanged build hook on small batches; all pages still get cards.
+/** @param {import("astro").AstroIntegration} integration */
+function batchSocialCards(integration) {
+  const hook = integration.hooks["astro:build:done"];
+  if (!hook) throw new Error("Social-card build hook is missing");
+  return {
+    ...integration,
+    hooks: {
+      ...integration.hooks,
+      /** @param {Parameters<NonNullable<import("astro").AstroIntegration["hooks"]["astro:build:done"]>>[0]} context */
+      "astro:build:done": async (context) => {
+        for (let i = 0; i < context.pages.length; i += 4) {
+          await hook({ ...context, pages: context.pages.slice(i, i + 4) });
+        }
+      },
+    },
+  };
+}
+
 // The generated social cards are full-color PNGs; a palette keeps them about
 // 70% smaller with no visible change. Runs after astro-opengraph-images.
 /** @type {import("astro").AstroIntegration} */
@@ -40,10 +60,12 @@ const compressSocialCards = {
 
 // https://astro.build/config
 export default defineConfig({
+  // Preserve pre-Astro 7 whitespace semantics across existing templates.
+  compressHTML: true,
   devToolbar: { enabled: false },
   site: "https://nearbycoder.com",
   integrations: [
-    opengraphImages({
+    batchSocialCards(opengraphImages({
       options: {
         width: 1200,
         height: 630,
@@ -91,7 +113,7 @@ export default defineConfig({
         ],
       },
       render: renderNearbycoderOg,
-    }),
+    })),
     compressSocialCards,
   ],
   vite: {
@@ -103,7 +125,6 @@ export default defineConfig({
           // access a small service or Vite's dynamic-import preload helper.
           // Keep these shared modules independent; app payload checks follow
           // their static imports and still count their full cost.
-          onlyExplicitManualChunks: true,
           manualChunks(id) {
             if (id.includes("vite/preload-helper")) return "module-preload";
             if (id.endsWith("/src/lib/desktop-apps.ts"))

@@ -32,7 +32,7 @@ async function create(page: Page, name: string) {
 }
 async function switchTo(page: Page, name: string) {
   await card(page, name)
-    .getByRole("button", { name: `Switch to ${name}`, exact: true })
+    .getByRole("button", { name: `Switch here: ${name}`, exact: true })
     .click();
   await expect(page.locator("[data-active-space-label]")).toHaveText(name);
 }

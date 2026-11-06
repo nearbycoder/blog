@@ -159,6 +159,10 @@ export function mountDesktopActivity(desktop: HTMLElement) {
         badge.textContent = unread > 99 ? "99+" : String(unread);
         badge.setAttribute("aria-label", `${unread} unread notifications`);
       });
+    desktop.querySelector('[data-open-app="activity"]')?.setAttribute(
+      "aria-label",
+      unread ? `Open Activity: ${unread > 99 ? "99+" : unread} unread notifications` : "Open Activity",
+    );
     desktop.dataset.doNotDisturb = String(state.dnd);
     if (state.dnd) hideToast();
     const signature = JSON.stringify([state.favorites, state.recent]);

@@ -146,7 +146,7 @@ export function mountApp(root: HTMLElement): () => void {
         "aria-pressed",
         String(state.active === space.id),
       );
-      item.select.setAttribute("aria-label", `Switch to ${space.name}`);
+      item.select.setAttribute("aria-label", `${item.select.textContent}: ${space.name}`);
       item.name.setAttribute("aria-label", `Name for ${space.name}`);
       if (document.activeElement !== item.name) item.name.value = space.name;
       item.remove.disabled = state.spaces.length === 1;
