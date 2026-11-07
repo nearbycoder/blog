@@ -60,7 +60,38 @@ test("every generated route has a single main heading, local canonical, working 
 }) => {
   for (const route of routes) {
     const response = await page.goto(route);
-    await expect(page.locator("select")).toHaveCount(0);
+    // Desktop has two native controls for the opt-in tiling workspace; all
+    // other selects (including any elsewhere on desktop) remain disallowed.
+    if (route === "/desktop/") {
+      await expect(
+        page.locator("select"),
+        `Expected exactly two desktop tiling selects on ${route}`,
+      ).toHaveCount(2);
+      await expect(
+        page.locator("select[data-tiling-flow]"),
+        route,
+      ).toHaveAttribute("aria-label", "Tiled layout");
+      await expect(
+        page.locator("select[data-column-width]"),
+        route,
+      ).toHaveAttribute("aria-label", "Column width");
+      await expect(page.locator("select[data-tiling-flow]"), route).toHaveCount(
+        1,
+      );
+      await expect(
+        page.locator("select[data-column-width]"),
+        route,
+      ).toHaveCount(1);
+      await expect(
+        page.locator("select:not([data-tiling-flow]):not([data-column-width])"),
+        `Unexpected native select on ${route}`,
+      ).toHaveCount(0);
+    } else {
+      await expect(
+        page.locator("select"),
+        `Unexpected native select on ${route}`,
+      ).toHaveCount(0);
+    }
     expect(response?.status(), route).toBe(200);
     await expect(page.locator("h1"), route).toHaveCount(1);
     await expect(page.locator("main")).toBeVisible();
