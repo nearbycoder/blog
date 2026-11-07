@@ -134,6 +134,9 @@ test("every generated route has a single main heading, local canonical, working 
 test("all pages fit phone and desktop widths without browser errors", async ({
   page,
 }) => {
+  // This checks every generated route at four widths (over 1,000 navigations).
+  // Allow enough time for the full production preview on slower CI machines.
+  test.setTimeout(300_000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   for (const width of [320, 390, 768, 1440]) {
