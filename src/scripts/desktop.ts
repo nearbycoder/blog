@@ -10,7 +10,7 @@ import { localState } from "./desktop-local-state";
 import { libraryPath, recordLibraryOpen } from "./desktop-library-history";
 import { applyDesktopPreferences } from "./desktop-preferences";
 import { mountDesktopSpaces } from "./desktop-spaces";
-import { mountDesktopActivity } from "./desktop-activity-service";
+import { mountDesktopActivity } from "./desktop-activity-shell";
 import {
   createWorkspaceStore,
   type SavedWindow,

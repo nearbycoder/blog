@@ -164,17 +164,17 @@ ${[{ id: "all", label: "All" }, ...STAGES].map(({ id, label }) => `<button type=
 <form data-tasks-form novalidate>
 <h2 data-tasks-editor-heading>New task</h2>
 <p class="tasks-editor-hint">Keep it small enough to start.</p>
-<label for="desktop-tasks-title">Task title <span aria-hidden="true">*</span></label>
-<input id="desktop-tasks-title" name="title" maxlength="160" required autocomplete="off" placeholder="What would you like to do?" aria-describedby="desktop-tasks-error" />
-<label for="desktop-tasks-details">Details <span class="tasks-optional">Optional</span></label>
-<textarea id="desktop-tasks-details" name="details" maxlength="2000" rows="3" placeholder="A note, a next step, a useful reminder…"></textarea>
-<label for="desktop-tasks-stage">Stage</label>
-<select id="desktop-tasks-stage" name="stage"><option value="todo">To do</option><option value="doing">Doing</option><option value="done">Done</option></select>
+<label for="task-title">Task title <span aria-hidden="true">*</span></label>
+<input id="task-title" name="title" maxlength="160" required autocomplete="off" placeholder="What would you like to do?" aria-describedby="task-error" />
+<label for="task-details">Details <span class="tasks-optional">Optional</span></label>
+<textarea id="task-details" name="details" maxlength="2000" rows="3" placeholder="A note, a next step, a useful reminder…"></textarea>
+<label for="task-stage">Stage</label>
+<select id="task-stage" name="stage"><option value="todo">To do</option><option value="doing">Doing</option><option value="done">Done</option></select>
 <div class="tasks-editor-metadata">
-<div><label for="desktop-tasks-priority">Priority</label><select id="desktop-tasks-priority" name="priority"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div>
-<div><label for="desktop-tasks-due">Due date <span class="tasks-optional">Optional</span></label><input type="date" id="desktop-tasks-due" name="dueDate" min="0001-01-01" max="9999-12-31" /></div>
+<div><label for="task-priority">Priority</label><select id="task-priority" name="priority"><option value="normal">Normal</option><option value="high">High</option><option value="low">Low</option></select></div>
+<div><label for="task-due">Due date <span class="tasks-optional">Optional</span></label><input type="date" id="task-due" name="dueDate" min="0001-01-01" max="9999-12-31" /></div>
 </div>
-<p class="tasks-error" id="desktop-tasks-error" role="alert" hidden></p>
+<p class="tasks-error" id="task-error" role="alert" hidden></p>
 <div class="tasks-editor-actions">
 <button type="submit" data-tasks-submit>Add task</button>
 <button type="button" data-tasks-cancel>Cancel</button>
@@ -191,14 +191,14 @@ ${[{ id: "all", label: "All" }, ...STAGES].map(({ id, label }) => `<button type=
   const query = <T extends HTMLElement>(selector: string) =>
     root.querySelector<T>(selector)!;
   const board = query<HTMLDivElement>("[data-tasks-board]");
-  const title = query<HTMLInputElement>("#desktop-tasks-title");
-  const details = query<HTMLTextAreaElement>("#desktop-tasks-details");
-  const stageInput = query<HTMLSelectElement>("#desktop-tasks-stage");
-  const priorityInput = query<HTMLSelectElement>("#desktop-tasks-priority");
-  const dueInput = query<HTMLInputElement>("#desktop-tasks-due");
+  const title = query<HTMLInputElement>("#task-title");
+  const details = query<HTMLTextAreaElement>("#task-details");
+  const stageInput = query<HTMLSelectElement>("#task-stage");
+  const priorityInput = query<HTMLSelectElement>("#task-priority");
+  const dueInput = query<HTMLInputElement>("#task-due");
   const importPanel = query<HTMLElement>("[data-tasks-import-panel]");
   const fileInput = query<HTMLInputElement>("[data-tasks-file]");
-  const error = query<HTMLParagraphElement>("#desktop-tasks-error");
+  const error = query<HTMLParagraphElement>("#task-error");
   const editor = query<HTMLDivElement>("[data-tasks-editor]");
   const status = query<HTMLDivElement>("[data-tasks-status]");
 
@@ -256,11 +256,6 @@ ${[{ id: "all", label: "All" }, ...STAGES].map(({ id, label }) => `<button type=
       exportBusy = false;
       if (!signal.aborted) render();
     }
-  }
-
-  function importCandidates() {
-    const ids = new Set(store.tasks.map((task) => task.id));
-    return pendingImport?.tasks.filter((task) => !ids.has(task.id)) ?? [];
   }
 
   function renderImport() {
@@ -501,7 +496,8 @@ ${[{ id: "all", label: "All" }, ...STAGES].map(({ id, label }) => `<button type=
         closeImport();
         announce("Import cancelled. Your tasks are unchanged.");
       } else if (button.hasAttribute("data-tasks-merge") && pendingImport) {
-        const candidates = importCandidates();
+        const candidates =
+          exporter?.importCandidates(pendingImport, store) ?? [];
         if (
           !candidates.length ||
           store.tasks.length + candidates.length > MAX_TASKS

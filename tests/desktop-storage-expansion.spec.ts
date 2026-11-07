@@ -199,7 +199,7 @@ test("all storage reads blocked leaves shell controls usable without overwriting
     .getByRole("button", { name: "Create desktop", exact: true })
     .click();
   await spaces
-    .getByRole("button", { name: "Switch to Session desktop", exact: true })
+    .getByRole("button", { name: "Switch here: Session desktop", exact: true })
     .click();
   await expect(page.locator("[data-active-space-label]")).toHaveText(
     "Session desktop",

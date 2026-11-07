@@ -96,6 +96,13 @@ pinned by `tw-to-css`; revisit them as upstream releases fixes. Social-card
 generation is batched because the integration otherwise renders all pages
 concurrently and can exhaust build memory.
 
+The Vite build emits font subsets as separate cacheable files instead of inlining
+small WOFF subsets in shared CSS. Rolldown's entry-aware chunk grouping keeps
+the desktop shell, app registry and lazy apps from pulling in unrelated code;
+the Activity store is separate from its shell UI, and task-backup CSS loads
+only with backup tools. `tests/desktop-performance.spec.ts` checks these
+boundaries along with the existing (unchanged) JS/CSS budgets.
+
 ## Local development
 
 ```sh

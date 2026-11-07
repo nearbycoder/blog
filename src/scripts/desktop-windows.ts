@@ -54,7 +54,7 @@ export function openWindowSwitcher() {
   const dialog = document.createElement("dialog");
   dialog.className = "desktop-window-switcher";
   dialog.setAttribute("aria-label", "Switch windows");
-  dialog.innerHTML = `<header><div><h2>Switch windows</h2><p>Most recently used first</p></div><button type="button" data-switcher-close aria-label="Close window switcher">Esc</button></header><div class="window-switcher-list" role="group" aria-label="Open windows"></div><p class="window-switcher-empty" hidden>No open windows. Open an app from the launcher.</p><footer>Arrow keys to choose · Enter to switch · Escape to cancel</footer>`;
+  dialog.innerHTML = `<header><div><h2>Switch windows</h2><p>Most recently used first</p></div><button type="button" data-switcher-close aria-label="Esc — Close window switcher">Esc</button></header><div class="window-switcher-list" role="group" aria-label="Open windows"></div><p class="window-switcher-empty" hidden>No open windows. Open an app from the launcher.</p><footer>Arrow keys to choose · Enter to switch · Escape to cancel</footer>`;
   const list = dialog.querySelector<HTMLElement>(".window-switcher-list")!;
   const empty = dialog.querySelector<HTMLElement>(".window-switcher-empty")!;
   const closeButton = dialog.querySelector<HTMLButtonElement>(

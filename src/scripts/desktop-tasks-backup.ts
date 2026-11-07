@@ -1,3 +1,5 @@
+import css from "../styles/desktop-tasks-backup.css?inline";
+import { installAppStyle } from "./desktop-app-style";
 import type { TaskStore } from "./desktop-tasks";
 
 export type TaskExporter = ReturnType<typeof createTaskExporter>;
@@ -12,7 +14,13 @@ function csvCell(value: string): string {
   return `"${safe.replaceAll('"', '""')}"`;
 }
 
+function importCandidates(pending: TaskStore, current: TaskStore) {
+  const ids = new Set(current.tasks.map((task) => task.id));
+  return pending.tasks.filter((task) => !ids.has(task.id));
+}
+
 export function createTaskExporter(root: HTMLElement) {
+  installAppStyle("tasks-backup", css);
   // The import preview is only needed after a backup action starts.
   const preview = root.querySelector<HTMLElement>("[data-tasks-import-panel]")!;
   preview.setAttribute("aria-labelledby", "desktop-tasks-import-heading");
@@ -29,11 +37,11 @@ export function createTaskExporter(root: HTMLElement) {
   `;
   const urls = new Map<string, ReturnType<typeof setTimeout>>();
   return {
+    importCandidates,
     renderPreview(pending: TaskStore, current: TaskStore) {
       const query = <T extends HTMLElement>(selector: string) =>
         root.querySelector<T>(selector)!;
-      const ids = new Set(current.tasks.map((task) => task.id));
-      const candidates = pending.tasks.filter((task) => !ids.has(task.id));
+      const candidates = importCandidates(pending, current);
       const skipped = pending.tasks.length - candidates.length;
       query("[data-tasks-import-summary]").textContent =
         `${candidates.length} new tasks to add. ${skipped} existing task IDs will be skipped.`;
