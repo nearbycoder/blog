@@ -21,9 +21,12 @@ test("boots to wallpaper; launcher searches content and opens applications", asy
   });
   await page.goto("/desktop/");
   await expect(page.locator(library)).toBeHidden();
-  expect((await request.get("/images/desktop/emerald-glass.webp")).ok()).toBe(
-    true,
-  );
+  for (const asset of [
+    "deco-skyline-night.svg",
+    "deco-skyline-day.svg",
+    "emerald-glass.webp",
+  ])
+    expect((await request.get(`/images/desktop/${asset}`)).ok()).toBe(true);
   await page.keyboard.press("Control+Escape");
   const search = page.getByRole("searchbox", {
     name: "Search applications and files",
@@ -237,14 +240,14 @@ test("theme toggle updates the wallpaper, shortcut tiles and app icons and survi
     });
   const dark = await appearance();
   expect(dark.scheme).toBe("dark");
-  expect(dark.wallpaper).toContain("emerald-glass.webp");
-  expect(wallpapers.some((url) => url.includes("emerald-glass-light"))).toBe(
-    false,
-  );
+  expect(dark.wallpaper).toContain("deco-skyline-night.svg");
+  expect(
+    wallpapers.some((url) => /deco-skyline-day|emerald-glass/.test(url)),
+  ).toBe(false);
   await page.getByRole("button", { name: "Toggle color theme" }).click();
   const light = await appearance();
   expect(light.scheme).toBe("light");
-  expect(light.wallpaper).toContain("emerald-glass-light.webp");
+  expect(light.wallpaper).toContain("deco-skyline-day.svg");
   for (const key of ["label", "tile", "files", "arcade"] as const)
     expect(light[key]).not.toEqual(dark[key]);
   light.glyphs.forEach((color, i) => expect(color).not.toBe(dark.glyphs[i]));

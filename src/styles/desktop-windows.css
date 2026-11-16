@@ -10,9 +10,11 @@
 }
 .window-overview-heading h2 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
+  font-family: var(--desk-font-display, inherit);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 .window-overview-heading > span {
   color: var(--desk-muted);
@@ -111,11 +113,12 @@
   margin: auto;
   padding: 0;
   border: 1px solid var(--desk-line);
-  border-radius: 12px;
+  border-top: 3px double var(--desk-gilt, var(--desk-line));
+  border-radius: 6px;
   box-shadow: 0 24px 80px #0005;
   color: var(--desk-ink);
   background: var(--desk-paper);
-  font-family: var(--font-sans, sans-serif);
+  font-family: var(--desk-font-ui, var(--font-sans, sans-serif));
   overflow: auto;
 }
 .desktop-window-switcher::backdrop {
@@ -130,9 +133,12 @@
   border-bottom: 1px solid var(--desk-line);
 }
 .desktop-window-switcher h2 {
-  font-size: 19px;
+  font-family: var(--desk-font-display, inherit);
+  font-size: 21px;
+  font-weight: 700;
   margin: 0;
-  letter-spacing: -0.03em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 .desktop-window-switcher header p {
   color: var(--desk-muted);

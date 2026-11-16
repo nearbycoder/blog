@@ -3,10 +3,12 @@
   padding: 22px 24px;
 }
 [data-desktop] .settings-heading h2 {
-  font-size: 21px;
-  font-weight: 500;
+  font-family: var(--desk-font-display, inherit);
+  font-size: 24px;
+  font-weight: 700;
   margin: 0 0 6px;
-  letter-spacing: -0.025em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 [data-desktop] .settings-heading p,
 [data-desktop] .settings-options fieldset > p {
@@ -23,6 +25,7 @@
 }
 [data-desktop] .settings-options legend {
   font-weight: 600;
+  letter-spacing: 0.02em;
   padding: 0;
   margin-bottom: 7px;
 }
@@ -38,7 +41,7 @@
   min-height: 40px;
   padding: 6px 10px;
   border: 1px solid var(--desk-line);
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
 }
 [data-desktop] .settings-choices label:has(:checked) {
@@ -60,6 +63,9 @@
   border-radius: 50%;
   background: var(--swatch-color);
   box-shadow: 0 0 0 1px #0002;
+}
+[data-desktop] [data-palette="brass"] {
+  --swatch-color: #d9a441;
 }
 [data-desktop] [data-palette="emerald"] {
   --swatch-color: #3bac86;

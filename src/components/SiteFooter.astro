@@ -2,9 +2,10 @@
 import { site } from "../data/site";
 import { sections } from "../lib/sections";
 import Icon from "./Icon.astro";
+import BrandMark from "./BrandMark.astro";
 // The intro already links to /subscribe, so the About group skips it.
 const groups = sections.map((section) => ({
-  title: `${section.number} · ${section.label}`,
+  title: `Floor ${section.number} · ${section.label}`,
   links: section.links.filter((link) => link.href !== "/subscribe"),
 }));
 ---
@@ -14,10 +15,13 @@ const groups = sections.map((section) => ({
     <div class="footer-top">
       <div class="footer-intro">
         <div>
-          <p class="display footer-title">
-            Good things start<br />with <em>curiosity.</em>
+          <p class="footer-sign">
+            <span>Good things start</span>
+            <span>with <em>curiosity.</em></span>
           </p>
-          <p class="footer-coords">Surveyed from 36.154° N · 95.993° W</p>
+          <p class="footer-coords">
+            <BrandMark class="footer-mark" /> The Nearby Building · Tulsa, OK
+          </p>
         </div><a href="/subscribe" class="text-link mt-5"
           ><Icon name="rss" /> Follow along</a
         >
@@ -42,7 +46,7 @@ const groups = sections.map((section) => ({
           ))
         }
         <div class="footer-group">
-          <h2 class="label">Elsewhere</h2><ul>
+          <h2 class="label">Off-site</h2><ul>
             {
               site.socials.map((social) => (
                 <li>
@@ -71,7 +75,7 @@ const groups = sections.map((section) => ({
     </div>
     <div class="footer-bottom">
       <p>© {new Date().getFullYear()} Josh Hamilton</p><p>
-        Made with care. Shared with curiosity.
+        Built floor by floor in Tulsa, Oklahoma.
       </p><div class="footer-utilities">
         <button class="text-link" type="button" data-keyboard-help
           >Keyboard shortcuts</button

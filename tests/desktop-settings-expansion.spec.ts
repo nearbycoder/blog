@@ -4,8 +4,8 @@ import AxeBuilder from "@axe-core/playwright";
 const key = "nearby-desktop-preferences-v1";
 const defaults = {
   version: 1,
-  accent: "emerald",
-  wallpaper: "glass",
+  accent: "brass",
+  wallpaper: "skyline",
   density: "comfortable",
   textSize: "standard",
   reduceMotion: false,
@@ -266,7 +266,7 @@ test("unreadable or future preference data survives changes and restoring defaul
       .getByRole("button", { name: "Restore default appearance", exact: true })
       .click();
     await expect(
-      app.getByRole("radio", { name: "Emerald", exact: true }),
+      app.getByRole("radio", { name: "Brass", exact: true }),
     ).toBeChecked();
     expect(await page.evaluate((key) => localStorage.getItem(key), key)).toBe(
       raw,
@@ -322,7 +322,7 @@ test("palette and wallpaper treatments adapt to both blog themes", async ({
     await page.evaluate((theme) => {
       document.documentElement.dataset.theme = theme;
     }, theme);
-    for (const palette of ["Blue", "Violet", "Amber", "Emerald"]) {
+    for (const palette of ["Blue", "Violet", "Amber", "Emerald", "Brass"]) {
       await app.getByRole("radio", { name: palette, exact: true }).check();
       const color = await desktop.evaluate((element) =>
         getComputedStyle(element).getPropertyValue("--desk-accent").trim(),
@@ -334,12 +334,14 @@ test("palette and wallpaper treatments adapt to both blog themes", async ({
               Violet: "#73499b",
               Amber: "#805b12",
               Emerald: "#11775a",
+              Brass: "#845414",
             }
           : {
               Blue: "#9ecaff",
               Violet: "#d4b5ff",
               Amber: "#f3ce80",
               Emerald: "#83dfbd",
+              Brass: "#ffc35a",
             };
       expect(color).toBe(expected[palette as keyof typeof expected]);
     }
@@ -366,6 +368,14 @@ test("palette and wallpaper treatments adapt to both blog themes", async ({
       ),
     ).toContain(
       theme === "light" ? "emerald-glass-light.webp" : "emerald-glass.webp",
+    );
+    await app.getByRole("radio", { name: "Deco skyline", exact: true }).check();
+    expect(
+      await desktop.evaluate(
+        (element) => getComputedStyle(element, "::before").backgroundImage,
+      ),
+    ).toContain(
+      theme === "light" ? "deco-skyline-day.svg" : "deco-skyline-night.svg",
     );
   }
 });

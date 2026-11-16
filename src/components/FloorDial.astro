@@ -1,0 +1,63 @@
+---
+// An Art Deco elevator floor indicator. The needle points at the floor you're
+// on: L (the lobby, home), 01 Read, 02 Workshop, or 03 About.
+const floors = ["L", "1", "2", "3"] as const;
+const { floor = "L", class: className = "" } = Astro.props as {
+  floor?: string;
+  class?: string;
+};
+const key = floor.replace(/^0/, "");
+const index = Math.max(0, floors.indexOf(key as (typeof floors)[number]));
+const angleOf = (i: number) => -67.5 + i * 45;
+const point = (deg: number, r: number) => {
+  const rad = ((deg - 90) * Math.PI) / 180;
+  return { x: 50 + r * Math.cos(rad), y: 52 + r * Math.sin(rad) };
+};
+const ticks = Array.from({ length: 19 }, (_, i) => {
+  const deg = -90 + i * 10;
+  const major = i % 3 === 0;
+  const a = point(deg, major ? 36 : 39);
+  const b = point(deg, 43);
+  return { a, b, major };
+});
+---
+
+<svg
+  viewBox="0 0 100 58"
+  class:list={["floor-dial", className]}
+  style={`--needle:${angleOf(index)}deg`}
+  aria-hidden="true"
+>
+  <path class="dial-face" d="M5 52a45 45 0 0 1 90 0Z"></path>
+  <path class="dial-rim" d="M5 52a45 45 0 0 1 90 0" fill="none"></path>
+  {
+    ticks.map(({ a, b, major }) => (
+      <line
+        class={major ? "dial-tick major" : "dial-tick"}
+        x1={a.x.toFixed(2)}
+        y1={a.y.toFixed(2)}
+        x2={b.x.toFixed(2)}
+        y2={b.y.toFixed(2)}
+      />
+    ))
+  }
+  {
+    floors.map((label, i) => {
+      const p = point(angleOf(i), 27);
+      return (
+        <text
+          x={p.x.toFixed(2)}
+          y={(p.y + 3.4).toFixed(2)}
+          text-anchor="middle"
+          class:list={["dial-floor", { current: i === index }]}
+        >
+          {label}
+        </text>
+      );
+    })
+  }
+  <g class="dial-needle">
+    <path d="M50 52 48.4 50 50 13 51.6 50Z"></path>
+  </g>
+  <circle class="dial-hub" cx="50" cy="52" r="4.2"></circle>
+</svg>

@@ -72,43 +72,43 @@ export default defineConfig({
           height: 630,
           fonts: [
             {
-              name: "Space Grotesk",
+              name: "Big Shoulders Display",
+              weight: 800,
+              style: "normal",
+              data: readFileSync(
+                "node_modules/@fontsource/big-shoulders-display/files/big-shoulders-display-latin-800-normal.woff",
+              ),
+            },
+            {
+              name: "Jost",
               weight: 500,
               style: "normal",
               data: readFileSync(
-                "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-500-normal.woff",
+                "node_modules/@fontsource/jost/files/jost-latin-500-normal.woff",
               ),
             },
             {
-              name: "Space Grotesk",
-              weight: 700,
+              name: "Jost",
+              weight: 600,
               style: "normal",
               data: readFileSync(
-                "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff",
+                "node_modules/@fontsource/jost/files/jost-latin-600-normal.woff",
               ),
             },
             {
-              name: "Fraunces",
+              name: "Newsreader",
+              weight: 400,
+              style: "italic",
+              data: readFileSync(
+                "node_modules/@fontsource/newsreader/files/newsreader-latin-400-italic.woff",
+              ),
+            },
+            {
+              name: "Limelight",
               weight: 400,
               style: "normal",
               data: readFileSync(
-                "node_modules/@fontsource/fraunces/files/fraunces-latin-400-normal.woff",
-              ),
-            },
-            {
-              name: "Fraunces",
-              weight: 300,
-              style: "italic",
-              data: readFileSync(
-                "node_modules/@fontsource/fraunces/files/fraunces-latin-300-italic.woff",
-              ),
-            },
-            {
-              name: "JetBrains Mono",
-              weight: 700,
-              style: "normal",
-              data: readFileSync(
-                "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff",
+                "node_modules/@fontsource/limelight/files/limelight-latin-400-normal.woff",
               ),
             },
           ],

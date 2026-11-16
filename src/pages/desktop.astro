@@ -7,6 +7,9 @@ import "../styles/desktop-arcade.css";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import DesktopIcon from "../components/desktop/DesktopIcon.astro";
 import { desktopFolders, getDesktopFiles } from "../lib/desktop";
+import "@fontsource-variable/jost/wght";
+import "@fontsource-variable/big-shoulders-display/wght";
+import "@fontsource/limelight/latin-400";
 import "../styles/desktop.css";
 import "../styles/desktop-context-menu.css";
 import "../styles/desktop-preferences.css";
@@ -207,7 +210,9 @@ const folderFor = (id: string) =>
         >
       </nav>
       <div class="desktop-wallpaper-copy" aria-hidden="true">
-        <strong>nearby</strong><span>DESKTOP</span>
+        <span class="plaque-floor">PH</span><strong>nearby</strong><span
+          class="plaque-caption">The Penthouse</span
+        >
       </div>
 
       <section
@@ -523,7 +528,7 @@ const folderFor = (id: string) =>
         aria-expanded="false"
         aria-label="Open application launcher"
         title="Application launcher (Ctrl+Esc)"
-        ><DesktopIcon name="apps" /></button
+        ><DesktopIcon name="sunburst" /></button
       >
       <span class="dock-divider" aria-hidden="true"></span>
       <button
