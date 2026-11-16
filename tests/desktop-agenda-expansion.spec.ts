@@ -307,7 +307,7 @@ test.describe("Agenda in local time", () => {
       .getByRole("button", { name: "Create desktop", exact: true })
       .click();
     await spaces
-      .getByRole("button", { name: "Switch to Elsewhere", exact: true })
+      .getByRole("button", { name: "Switch here: Elsewhere", exact: true })
       .click();
     await expect(app).toBeHidden();
     await page.clock.fastForward(60_000);

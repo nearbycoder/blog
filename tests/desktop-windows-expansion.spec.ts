@@ -257,7 +257,7 @@ test("windows on other desktops are labeled correctly and Minimize others acts o
     .getByRole("button", { name: "Create desktop", exact: true })
     .click();
   await spaces
-    .getByRole("button", { name: "Switch to Reading", exact: true })
+    .getByRole("button", { name: "Switch here: Reading", exact: true })
     .click();
   await launch(page, "stopwatch");
   await overview(page);

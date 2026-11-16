@@ -80,7 +80,7 @@ test("keypad supports result chaining, deletion, a fresh calculation and clear",
   await key("Delete last character");
   await key("Calculate result");
   await expect(result).toHaveText("9");
-  await key("Clear calculation");
+  await key("AC — Clear calculation");
   await expect(calculator.locator("[data-calculator-expression]")).toHaveValue(
     "",
   );

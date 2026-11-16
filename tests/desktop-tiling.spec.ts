@@ -401,7 +401,7 @@ test("each desktop remembers its own tiling mode, dimensions, and panel tree", a
   });
   const researchId = (await research.getAttribute("data-space-card"))!;
   await research
-    .getByRole("button", { name: "Switch to Research", exact: true })
+    .getByRole("button", { name: "Switch here: Research", exact: true })
     .click();
   await expect(toggle(page)).toHaveAttribute("aria-pressed", "false");
   await expect(win(page, "notes")).toBeHidden();

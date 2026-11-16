@@ -18,10 +18,10 @@ test("color conversion, harmony and WCAG contrast use real color values", async 
   const app = await openColors(page);
   await app.getByLabel("Hex color", { exact: true }).fill("#f00");
   await expect(
-    app.getByRole("button", { name: "Copy RGB code", exact: true }),
+    app.getByRole("button", { name: "Copy RGB code: rgb(255, 0, 0)", exact: true }),
   ).toHaveText("rgb(255, 0, 0)");
   await expect(
-    app.getByRole("button", { name: "Copy HSL code", exact: true }),
+    app.getByRole("button", { name: "Copy HSL code: hsl(0, 100%, 50%)", exact: true }),
   ).toHaveText("hsl(0, 100%, 50%)");
   await expect(
     app.getByRole("button", {
@@ -78,7 +78,7 @@ test("invalid hex cannot be saved and clipboard errors offer a usable code", asy
   );
   await hex.fill("abc");
   await expect(hex).toHaveAttribute("aria-invalid", "false");
-  await app.getByRole("button", { name: "Copy hex code", exact: true }).click();
+  await app.getByRole("button", { name: "Copy HEX code: #AABBCC", exact: true }).click();
   await expect(app.locator("[data-colors-status]")).toHaveText(
     "Clipboard unavailable. Copy manually: #AABBCC",
   );

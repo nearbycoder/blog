@@ -181,6 +181,7 @@ export function mountApp(root: HTMLElement): () => void {
     for (const [format, value] of Object.entries(codes)) {
       const code = find<HTMLButtonElement>(`[data-colors-code="${format}"]`);
       code.textContent = value;
+      code.setAttribute("aria-label", `Copy ${format.toUpperCase()} code: ${value}`);
       code.dataset.colorsValue = value;
     }
     picker.value = selected.toLowerCase();

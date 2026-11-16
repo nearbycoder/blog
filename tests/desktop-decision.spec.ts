@@ -24,7 +24,7 @@ test("rejection sampling picks the expected line and renders text safely", async
     const original = crypto.getRandomValues.bind(crypto);
     let calls = 0;
     Object.defineProperty(crypto, "getRandomValues", {
-      value: (values: ArrayBufferView) => {
+      value: (values: ArrayBufferView<ArrayBuffer>) => {
         if (values instanceof Uint32Array && values.length === 1) {
           values[0] = calls++ === 0 ? 0xffffffff : 1;
           return values;

@@ -89,6 +89,10 @@ for (const [route, budget] of [
 }
 
 test("desktop boot and each app retain separate bounded build payloads", () => {
+  const desktopEntry = pageAssets("desktop/index.html").find((asset) =>
+    /desktop\.astro_astro_type_script_index_0_lang\..*\.js$/.test(asset),
+  );
+  expect(desktopEntry).toBeDefined();
   const boot = eagerAssets(pageAssets("desktop/index.html"));
   // Expanded shell measured 145,297 B; reserve about 12% for shell evolution.
   expect(bytes(boot)).toBeLessThanOrEqual(160 * 1024);
@@ -116,6 +120,7 @@ test("desktop boot and each app retain separate bounded build payloads", () => {
     "Lazy tiling engine including Trellis + CSS",
   ).toBeLessThanOrEqual(160 * 1024);
   expect(tiling.some((asset) => source(asset).includes("trellis"))).toBe(true);
+  expect(tiling).not.toContain(desktopEntry);
   for (const [id, limit] of [
     ["personalization-settings", 24 * 1024],
     ["screensaver", 12 * 1024],
@@ -136,6 +141,10 @@ test("desktop boot and each app retain separate bounded build payloads", () => {
     // Count static dependencies too, so moving code into a vendor file cannot
     // conceal growth. Shared loader + one app must remain below 32 KiB total.
     expect(bytes(assets), app.title).toBeLessThanOrEqual(24 * 1024);
+    expect(
+      assets,
+      `${app.title} must not import the executing desktop entry`,
+    ).not.toContain(desktopEntry);
   }
 });
 
@@ -208,4 +217,27 @@ test("opening the desktop launcher starts no audio, WASM, or media downloads", a
         (window as unknown as Record<string, unknown>).__desktopBootResources,
     ),
   ).toEqual({ audio: 0, wasm: 0 });
+});
+
+test("font subsets stay separately cacheable and task backup styles stay lazy", () => {
+  const homeCss = pageAssets("index.html").filter((asset) =>
+    asset.endsWith(".css"),
+  );
+  const css = homeCss.map(source).join("\n");
+  expect(css).not.toContain("data:font/");
+  const fonts = [
+    ...css.matchAll(/url\(["']?(\/_astro\/[^)"']+\.woff2?)["']?\)/g),
+  ].map((match) => match[1]);
+  expect(fonts.length).toBeGreaterThan(0);
+  for (const font of fonts)
+    expect(statSync(join(output, font)).size).toBeGreaterThan(0);
+  const chunks = readdirSync(join(output, "_astro"));
+  const tasks = chunks.find((file) => /^desktop-tasks\..*\.js$/.test(file))!;
+  const backup = chunks.find((file) =>
+    /^desktop-tasks-backup\..*\.js$/.test(file),
+  )!;
+  expect(tasks).toBeTruthy();
+  expect(backup).toBeTruthy();
+  expect(source(`/_astro/${tasks}`)).not.toContain(".tasks-import-hint");
+  expect(source(`/_astro/${backup}`)).toContain(".tasks-import-hint");
 });

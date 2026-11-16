@@ -8,6 +8,26 @@ import tailwindcss from "@tailwindcss/vite";
 import opengraphImages from "astro-opengraph-images";
 import { renderNearbycoderOg } from "./src/lib/opengraph-renderer.js";
 
+// The integration renders every page concurrently, which can exhaust build memory.
+// Run its unchanged build hook on small batches; all pages still get cards.
+/** @param {import("astro").AstroIntegration} integration */
+function batchSocialCards(integration) {
+  const hook = integration.hooks["astro:build:done"];
+  if (!hook) throw new Error("Social-card build hook is missing");
+  return {
+    ...integration,
+    hooks: {
+      ...integration.hooks,
+      /** @param {Parameters<NonNullable<import("astro").AstroIntegration["hooks"]["astro:build:done"]>>[0]} context */
+      "astro:build:done": async (context) => {
+        for (let i = 0; i < context.pages.length; i += 4) {
+          await hook({ ...context, pages: context.pages.slice(i, i + 4) });
+        }
+      },
+    },
+  };
+}
+
 // The generated social cards are full-color PNGs; a palette keeps them about
 // 70% smaller with no visible change. Runs after astro-opengraph-images.
 /** @type {import("astro").AstroIntegration} */
@@ -40,78 +60,91 @@ const compressSocialCards = {
 
 // https://astro.build/config
 export default defineConfig({
+  // Preserve pre-Astro 7 whitespace semantics across existing templates.
+  compressHTML: true,
   devToolbar: { enabled: false },
   site: "https://nearbycoder.com",
   integrations: [
-    opengraphImages({
-      options: {
-        width: 1200,
-        height: 630,
-        fonts: [
-          {
-            name: "Space Grotesk",
-            weight: 500,
-            style: "normal",
-            data: readFileSync(
-              "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-500-normal.woff",
-            ),
-          },
-          {
-            name: "Space Grotesk",
-            weight: 700,
-            style: "normal",
-            data: readFileSync(
-              "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff",
-            ),
-          },
-          {
-            name: "Fraunces",
-            weight: 400,
-            style: "normal",
-            data: readFileSync(
-              "node_modules/@fontsource/fraunces/files/fraunces-latin-400-normal.woff",
-            ),
-          },
-          {
-            name: "Fraunces",
-            weight: 300,
-            style: "italic",
-            data: readFileSync(
-              "node_modules/@fontsource/fraunces/files/fraunces-latin-300-italic.woff",
-            ),
-          },
-          {
-            name: "JetBrains Mono",
-            weight: 700,
-            style: "normal",
-            data: readFileSync(
-              "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff",
-            ),
-          },
-        ],
-      },
-      render: renderNearbycoderOg,
-    }),
+    batchSocialCards(
+      opengraphImages({
+        options: {
+          width: 1200,
+          height: 630,
+          fonts: [
+            {
+              name: "Space Grotesk",
+              weight: 500,
+              style: "normal",
+              data: readFileSync(
+                "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-500-normal.woff",
+              ),
+            },
+            {
+              name: "Space Grotesk",
+              weight: 700,
+              style: "normal",
+              data: readFileSync(
+                "node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff",
+              ),
+            },
+            {
+              name: "Fraunces",
+              weight: 400,
+              style: "normal",
+              data: readFileSync(
+                "node_modules/@fontsource/fraunces/files/fraunces-latin-400-normal.woff",
+              ),
+            },
+            {
+              name: "Fraunces",
+              weight: 300,
+              style: "italic",
+              data: readFileSync(
+                "node_modules/@fontsource/fraunces/files/fraunces-latin-300-italic.woff",
+              ),
+            },
+            {
+              name: "JetBrains Mono",
+              weight: 700,
+              style: "normal",
+              data: readFileSync(
+                "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff",
+              ),
+            },
+          ],
+        },
+        render: renderNearbycoderOg,
+      }),
+    ),
     compressSocialCards,
   ],
   vite: {
     plugins: [tailwindcss()],
     build: {
+      // Cache font subsets separately; avoid base64 in render-blocking CSS.
+      assetsInlineLimit: (path) => (/\.woff2?$/.test(path) ? false : undefined),
       rollupOptions: {
         output: {
           // A lazy app must not import the executing desktop entry just to
           // access a small service or Vite's dynamic-import preload helper.
           // Keep these shared modules independent; app payload checks follow
           // their static imports and still count their full cost.
-          onlyExplicitManualChunks: true,
-          manualChunks(id) {
-            if (id.includes("vite/preload-helper")) return "module-preload";
-            if (id.endsWith("/src/lib/desktop-apps.ts"))
-              return "desktop-app-registry";
-            const shared = id.match(
-              /\/src\/scripts\/(desktop-(?:host|local-state|window-layout|library-history|preferences|customization|wallpapers|spaces|activity-service))\.ts$/,
-            );
-            return shared?.[1];
+          codeSplitting: {
+            groups: [
+              {
+                entriesAware: true,
+                name(id) {
+                  if (id.includes("vite/preload-helper"))
+                    return "module-preload";
+                  if (id.endsWith("/src/lib/desktop-apps.ts"))
+                    return "desktop-app-registry";
+                  const shared = id.match(
+                    /\/src\/scripts\/(desktop-(?:host|local-state|window-layout|library-history|preferences|customization|wallpapers|spaces|activity-service))\.ts$/,
+                  );
+                  return shared?.[1] ?? null;
+                },
+              },
+            ],
           },
         },
       },

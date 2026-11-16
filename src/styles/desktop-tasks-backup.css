@@ -1,0 +1,25 @@
+.tasks-import {
+  flex: 1;
+  min-height: 0;
+  padding: 18px;
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+.tasks-import h2 {
+  margin: 0 0 10px;
+  font-size: 19px;
+}
+.tasks-import p,
+.tasks-import li {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.tasks-import-hint {
+  color: var(--desk-muted);
+}
+.tasks-import ul {
+  padding-left: 20px;
+}
+.tasks-import li + li {
+  margin-top: 7px;
+}
