@@ -14,6 +14,17 @@ const addedProjects = [
   "qikbar-next",
   "dex",
   "tabz-space",
+  "ferravex",
+  "ventriloquist",
+  "wow-forever-touch",
+  "frame-dashboard",
+  "dabble",
+  "axolotl",
+  "scrub",
+  "murmur",
+  "slip",
+  "couch-potato",
+  "thumb-potato",
 ];
 
 test("project archive contains each repository once and orders dated projects newest first", async ({
