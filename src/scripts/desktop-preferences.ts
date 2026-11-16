@@ -4,8 +4,8 @@ export const DESKTOP_PREFERENCES_KEY = "nearby-desktop-preferences-v1";
 
 export type DesktopPreferences = {
   version: 1;
-  accent: "emerald" | "blue" | "violet" | "amber";
-  wallpaper: "glass" | "plain" | "grid";
+  accent: "brass" | "emerald" | "blue" | "violet" | "amber";
+  wallpaper: "skyline" | "glass" | "plain" | "grid";
   density: "comfortable" | "compact";
   textSize: "standard" | "large";
   reduceMotion: boolean;
@@ -15,8 +15,8 @@ export type DesktopPreferences = {
 
 export const defaultDesktopPreferences = (): DesktopPreferences => ({
   version: 1,
-  accent: "emerald",
-  wallpaper: "glass",
+  accent: "brass",
+  wallpaper: "skyline",
   density: "comfortable",
   textSize: "standard",
   reduceMotion: false,
@@ -32,8 +32,10 @@ export function validDesktopPreferences(
   return (
     data.version === 1 &&
     Object.keys(data).length === 8 &&
-    ["emerald", "blue", "violet", "amber"].includes(data.accent as string) &&
-    ["glass", "plain", "grid"].includes(data.wallpaper as string) &&
+    ["brass", "emerald", "blue", "violet", "amber"].includes(
+      data.accent as string,
+    ) &&
+    ["skyline", "glass", "plain", "grid"].includes(data.wallpaper as string) &&
     ["comfortable", "compact"].includes(data.density as string) &&
     ["standard", "large"].includes(data.textSize as string) &&
     typeof data.reduceMotion === "boolean" &&

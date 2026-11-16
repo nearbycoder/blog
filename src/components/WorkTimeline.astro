@@ -1,17 +1,30 @@
 ---
 import { site } from "../data/site";
+// Each job is a floor of the building, newest at the top. Upper floors step
+// back like a Deco setback tower, so the list reads as a skyline.
+const total = site.work.length;
 ---
 
-<ol class="timeline">
-  {
-    site.work.map((item) => (
-      <li>
-        <>
+<div class="tower">
+  <div class="tower-crown" aria-hidden="true">
+    <span class="tower-spire"></span>
+    <span class="tower-beacon"></span>
+  </div>
+  <ol class="timeline" reversed>
+    {
+      site.work.map((item, index) => (
+        <li style={`--setback:${Math.max(0, 4 - index)}`}>
+          <span class="floor-tag" aria-hidden="true">
+            {String(total - index).padStart(2, "0")}
+          </span>
           <span class="label">{item.range}</span>
           <h3>{item.company}</h3>
           <p>{item.role}</p>
-        </>
-      </li>
-    ))
-  }
-</ol>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="tower-base" aria-hidden="true">
+    <span>Ground floor · 2013</span>
+  </div>
+</div>

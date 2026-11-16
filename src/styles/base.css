@@ -1,7 +1,7 @@
 @import "@fontsource/jetbrains-mono/400.css";
 /*
  * Shared foundation for every page, including /desktop: Tailwind's reset,
- * theme tokens, and element defaults. The blog's Field Survey theme lives in
+ * theme tokens, and element defaults. The blog's Nearby Building (Art Deco) theme lives in
  * global.css, which only blog pages load (via SiteHeader).
  */
 @layer theme, base, components, utilities;
@@ -9,80 +9,111 @@
 
 :root {
   color-scheme: light;
-  --bg: #f3ecdc;
-  --bg-alt: #eae1cc;
-  --surface: #faf6ec;
-  --surface-2: #e2d7bd;
-  --fg: #1c2620;
-  --fg-muted: #5a5545;
-  --fg-dim: #686150;
-  --border: #cdbf9f;
-  --border-dim: #ded3ba;
-  --accent: #a8390b;
-  --accent-ink: #a8390b;
-  --accent-fg: #fff8ec;
-  --accent-soft: #f5dfcb;
-  --water: #23637b;
-  --moss: #45622a;
-  --contour: #8a6d4a;
-  --contour-strength: 0.32;
-  --ink-shadow: #1c262033;
-  --paper-grain: 0.09;
-  --blaze-read: var(--accent);
-  --blaze-workshop: var(--water);
-  --blaze-about: var(--moss);
+  --bg: #efe6d4;
+  --bg-alt: #e6dbc4;
+  --surface: #f7f1e4;
+  --surface-2: #ddd0b4;
+  --fg: #1b1714;
+  --fg-muted: #574c41;
+  --fg-dim: #675b4e;
+  --border: #c9b791;
+  --border-dim: #dccfb3;
+  --accent: #b03d24;
+  --accent-ink: #b03d24;
+  --accent-fg: #fff7ea;
+  --accent-soft: #f2d6c6;
+  --jade: #1d6b5b;
+  --jade-soft: #cfe1d6;
+  --brass: #a87b2a;
+  --brass-ink: #82601a;
+  --lacquer: #17131f;
+  --water: var(--jade);
+  --moss: var(--brass-ink);
+  --contour: var(--brass);
+  --contour-strength: 0.5;
+  --ink-shadow: #2a1d1033;
+  --paper-grain: 0.07;
+  --glow-accent: none;
+  --glow-jade: none;
+  --glow-brass: none;
+  --bulb-off: #d8c8a6;
+  --bulb-on: #f6c25a;
   --rule: 1px;
   --rule-heavy: 2px;
-  --radius: 4px;
-  --font-body: "Instrument Sans Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
-  --font-serif: "Fraunces Variable", "Iowan Old Style", Georgia, serif;
+  --radius: 3px;
+  --blaze-read: var(--accent);
+  --blaze-workshop: var(--jade);
+  --blaze-about: var(--brass-ink);
+  --font-body: "Jost Variable", "Futura", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Big Shoulders Display Variable", "Bebas Neue", "Arial Narrow", Impact, sans-serif;
+  --font-serif: "Newsreader Variable", "Iowan Old Style", Georgia, serif;
+  --font-deco: "Limelight", "Big Shoulders Display Variable", Georgia, serif;
   --font-mono: "JetBrains Mono", monospace;
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0e1714;
-  --bg-alt: #14211c;
-  --surface: #182a23;
-  --surface-2: #20372d;
-  --fg: #ece5d3;
-  --fg-muted: #b5ae99;
-  --fg-dim: #a39c87;
-  --border: #2f473b;
-  --border-dim: #22362c;
-  --accent: #ff9159;
-  --accent-ink: #ff9159;
-  --accent-fg: #1b0d04;
-  --accent-soft: #3b2619;
-  --water: #86c9dd;
-  --moss: #b0cf86;
-  --contour: #5f9a80;
-  --contour-strength: 0.3;
-  --ink-shadow: #00000066;
+  --bg: #0d0b18;
+  --bg-alt: #13101f;
+  --surface: #1a1628;
+  --surface-2: #241f36;
+  --fg: #f4e9d6;
+  --fg-muted: #bcb0c2;
+  --fg-dim: #a99db0;
+  --border: #3b3252;
+  --border-dim: #29223d;
+  --accent: #ff5c7f;
+  --accent-ink: #ff6f8e;
+  --accent-fg: #1a0610;
+  --accent-soft: #3a1628;
+  --jade: #3fe6c8;
+  --jade-soft: #0f302f;
+  --brass: #ffc35a;
+  --brass-ink: #ffc96b;
+  --lacquer: #07060d;
+  --water: var(--jade);
+  --moss: var(--brass-ink);
+  --contour: var(--brass);
+  --contour-strength: 0.32;
+  --ink-shadow: #00000080;
   --paper-grain: 0.05;
+  --glow-accent: 0 0 2px #fff6, 0 0 10px #ff5c7f99, 0 0 28px #ff2d6366;
+  --glow-jade: 0 0 2px #fff5, 0 0 10px #3fe6c888, 0 0 26px #1fc7aa55;
+  --glow-brass: 0 0 2px #fff6, 0 0 10px #ffc35a88, 0 0 26px #ff9f1c55;
+  --bulb-off: #3a3150;
+  --bulb-on: #ffd27a;
 }
 @media (prefers-color-scheme: dark) {
   :root[data-theme="system"] {
     color-scheme: dark;
-    --bg: #0e1714;
-    --bg-alt: #14211c;
-    --surface: #182a23;
-    --surface-2: #20372d;
-    --fg: #ece5d3;
-    --fg-muted: #b5ae99;
-    --fg-dim: #a39c87;
-    --border: #2f473b;
-    --border-dim: #22362c;
-    --accent: #ff9159;
-    --accent-ink: #ff9159;
-    --accent-fg: #1b0d04;
-    --accent-soft: #3b2619;
-    --water: #86c9dd;
-    --moss: #b0cf86;
-    --contour: #5f9a80;
-    --contour-strength: 0.3;
-    --ink-shadow: #00000066;
+    --bg: #0d0b18;
+    --bg-alt: #13101f;
+    --surface: #1a1628;
+    --surface-2: #241f36;
+    --fg: #f4e9d6;
+    --fg-muted: #bcb0c2;
+    --fg-dim: #a99db0;
+    --border: #3b3252;
+    --border-dim: #29223d;
+    --accent: #ff5c7f;
+    --accent-ink: #ff6f8e;
+    --accent-fg: #1a0610;
+    --accent-soft: #3a1628;
+    --jade: #3fe6c8;
+    --jade-soft: #0f302f;
+    --brass: #ffc35a;
+    --brass-ink: #ffc96b;
+    --lacquer: #07060d;
+    --water: var(--jade);
+    --moss: var(--brass-ink);
+    --contour: var(--brass);
+    --contour-strength: 0.32;
+    --ink-shadow: #00000080;
     --paper-grain: 0.05;
+    --glow-accent: 0 0 2px #fff6, 0 0 10px #ff5c7f99, 0 0 28px #ff2d6366;
+    --glow-jade: 0 0 2px #fff5, 0 0 10px #3fe6c888, 0 0 26px #1fc7aa55;
+    --glow-brass: 0 0 2px #fff6, 0 0 10px #ffc35a88, 0 0 26px #ff9f1c55;
+    --bulb-off: #3a3150;
+    --bulb-on: #ffd27a;
   }
 }
 * {

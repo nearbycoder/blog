@@ -101,7 +101,7 @@ test("a quota failure keeps current session preferences and permits a later succ
     );
     expect(state.save({ ...initial, accent: "blue" })).toBe(false);
     expect(state.value.accent).toBe("blue");
-    expect(JSON.parse(stored).accent).toBe("emerald");
+    expect(JSON.parse(stored).accent).toBe("brass");
     expect(state.message).toContain("last for this visit");
     full = false;
     expect(state.save({ ...state.value, wallpaper: "plain" })).toBe(true);

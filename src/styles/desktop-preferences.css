@@ -1,4 +1,9 @@
-/* Preferences are scoped to the desktop; the rest of the blog keeps its theme. */
+/* Preferences are scoped to the desktop; the rest of the blog keeps its theme.
+   Brass is the default accent, so its values live in desktop.css tokens. */
+[data-desktop][data-desktop-accent="emerald"] {
+  --desk-accent: #83dfbd;
+  --desk-selected: #284a43;
+}
 [data-desktop][data-desktop-accent="blue"] {
   --desk-accent: #9ecaff;
   --desk-selected: #2a405e;
@@ -11,6 +16,10 @@
   --desk-accent: #f3ce80;
   --desk-selected: #4c412d;
 }
+:root[data-theme="light"] [data-desktop][data-desktop-accent="emerald"] {
+  --desk-accent: #11775a;
+  --desk-selected: #dceee7;
+}
 :root[data-theme="light"] [data-desktop][data-desktop-accent="blue"] {
   --desk-accent: #235fa1;
   --desk-selected: #e1edfa;
@@ -22,6 +31,11 @@
 :root[data-theme="light"] [data-desktop][data-desktop-accent="amber"] {
   --desk-accent: #805b12;
   --desk-selected: #f7ecd1;
+}
+/* Skyline is the default wallpaper; Emerald glass is the earlier artwork. */
+[data-desktop][data-desktop-wallpaper="glass"]::before {
+  background-image: var(--desk-wallpaper-glass);
+  background-position: center;
 }
 [data-desktop][data-desktop-wallpaper="plain"]::before {
   background: none;

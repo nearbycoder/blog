@@ -10,15 +10,14 @@
   padding: 0;
   overflow: hidden;
   border: 1px solid var(--desk-line);
-  border-radius: 14px;
+  border-radius: 6px;
   background: var(--desk-paper);
   color: var(--desk-ink);
   box-shadow:
     0 24px 80px var(--desk-shadow),
     0 2px 8px var(--desk-shadow-soft);
-  font:
-    13px/1.45 system-ui,
-    sans-serif;
+  border-top: 3px double var(--desk-gilt, var(--desk-line));
+  font: 13px/1.45 var(--desk-font-ui, system-ui, sans-serif);
 }
 .desktop-commands[open] {
   display: flex;
@@ -56,9 +55,7 @@
   border-radius: 0;
   background: transparent;
   color: var(--desk-ink);
-  font:
-    400 16px/1.5 system-ui,
-    sans-serif;
+  font: 400 16px/1.5 var(--desk-font-ui, system-ui, sans-serif);
   box-shadow: none;
 }
 .desktop-commands-search > input::placeholder {
@@ -204,9 +201,7 @@
   border: 1px solid var(--desk-line);
   border-radius: 3px;
   color: var(--desk-ink);
-  font:
-    10px/1.5 system-ui,
-    sans-serif;
+  font: 10px/1.5 var(--desk-font-ui, system-ui, sans-serif);
 }
 @keyframes desktop-commands-enter {
   from {

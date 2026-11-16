@@ -65,14 +65,15 @@ function bytes(assets: string[]) {
   );
 }
 
-// Clean HEAD 01730a6 before the October desktop expansion: 87,167 B homepage
-// and 100,897 B article including static imports. Reproduced with git archive
-// and an isolated production build; older ceilings predated the Field Survey
-// theme. This expansion gets no additional budget on ordinary blog routes.
+// The Nearby Building theme (November 2026) measured 101,742 B homepage and
+// 115,472 B article including static imports; the ceilings add 2% headroom.
+// Its ornament is CSS (sunbursts, setbacks, marquee, neon), so the growth is
+// stylesheet bytes, not JavaScript. Earlier ceilings: 87,167 B and 100,897 B
+// at HEAD 01730a6 (Field Survey). Desktop work gets no budget on blog routes.
 // These are uncompressed build bytes, independent of network speed and caching.
 for (const [route, budget] of [
-  ["index.html", 87_167],
-  ["articles/gettting-started-with-react-and-vitejs/index.html", 100_897],
+  ["index.html", 103_800],
+  ["articles/gettting-started-with-react-and-vitejs/index.html", 117_800],
 ] as const) {
   test(`${route} stays within its pre-expansion JS/CSS budget`, () => {
     const assets = eagerAssets(pageAssets(route));
@@ -94,8 +95,9 @@ test("desktop boot and each app retain separate bounded build payloads", () => {
   );
   expect(desktopEntry).toBeDefined();
   const boot = eagerAssets(pageAssets("desktop/index.html"));
-  // Expanded shell measured 145,297 B; reserve about 12% for shell evolution.
-  expect(bytes(boot)).toBeLessThanOrEqual(160 * 1024);
+  // The Penthouse reskin measured 165,289 B (Deco chrome, fonts' @font-face
+  // rules, skyline tokens); reserve about 4% for shell evolution.
+  expect(bytes(boot)).toBeLessThanOrEqual(168 * 1024);
   for (const asset of boot) {
     expect(posix.basename(asset)).not.toMatch(deferredChunk);
     expect(source(asset), asset).not.toMatch(appStyle);

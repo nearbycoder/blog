@@ -1,0 +1,35 @@
+---
+// The Nearby Building: a stepped Deco tower rising in front of a sunburst.
+// Rays take --brass, the tower takes currentColor, the beacon takes --accent.
+const rays = Array.from({ length: 9 }, (_, index) => {
+  const angle = Math.PI + (index * Math.PI) / 8;
+  return {
+    x1: 16 + 7.5 * Math.cos(angle),
+    y1: 29 + 7.5 * Math.sin(angle),
+    x2: 16 + 14.5 * Math.cos(angle),
+    y2: 29 + 14.5 * Math.sin(angle),
+  };
+});
+const { class: className = "brand-mark" } = Astro.props;
+---
+
+<svg viewBox="0 0 32 32" class={className} aria-hidden="true">
+  <g class="brand-rays" stroke-width="1.5" stroke-linecap="round">
+    {
+      rays.map((ray) => (
+        <line
+          x1={ray.x1.toFixed(2)}
+          y1={ray.y1.toFixed(2)}
+          x2={ray.x2.toFixed(2)}
+          y2={ray.y2.toFixed(2)}
+        />
+      ))
+    }
+  </g>
+  <path
+    class="brand-tower"
+    d="M10 30V19h2v-4h2v-4h1.2V4h1.6v7H18v4h2v4h2v11Z"></path>
+  <path class="brand-windows" d="M15.2 15h1.6v3h-1.6zM15.2 21h1.6v6h-1.6z"
+  ></path>
+  <circle class="brand-beacon" cx="16" cy="3.2" r="1.6"></circle>
+</svg>

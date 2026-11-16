@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Icon from "./Icon.astro";
+import FloorDial from "./FloorDial.astro";
 import { sections } from "../lib/sections";
 import { isArticlePublished } from "../lib/articles";
 import { getReadingPaths } from "../lib/discovery";
@@ -55,15 +56,16 @@ const doors = sections.map((section) => ({
 <section class="home-section section-doors" aria-labelledby="doors-heading">
   <header class="section-head">
     <h2 id="doors-heading">Three ways in</h2>
-    <p class="label">Pick a door</p>
+    <p class="label">Take the elevator</p>
   </header>
   <ol class="door-grid">
     {
       doors.map((door) => (
         <li class="door" data-section={door.id}>
-          <p class="door-number" aria-hidden="true">
-            {door.number}
-          </p>
+          <div class="door-transom" aria-hidden="true">
+            <FloorDial floor={door.number} class="door-dial" />
+            <p class="door-number">Floor {door.number}</p>
+          </div>
           <h3>{door.label}</h3>
           <p class="door-title">{door.title}</p>
           <p class="door-blurb">{door.blurb}</p>

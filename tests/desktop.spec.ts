@@ -265,7 +265,8 @@ test("reader navigation updates its window and the search shortcut escapes the f
   await expect(page.locator("[data-reader-location]")).toHaveText(
     /\/articles\/.+/,
   );
-  const title = await frame.locator("h1").innerText();
+  // textContent: the blog may style its headings in uppercase.
+  const title = (await frame.locator("h1").textContent())!.trim();
   await expect(page.locator("[data-reader-title]")).toHaveText(title);
   await expect(page.locator("[data-reader-original]")).toHaveAttribute(
     "href",

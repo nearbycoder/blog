@@ -1,3 +1,4 @@
+import projectImageMap from "../data/project-images.json";
 export function optimizedImage(src: string) {
   return src
     .replace("/images/", "/images/optimized/")
@@ -13,22 +14,9 @@ export function articleImage(entry: { id: string; body?: string }) {
 export function articleImageAlt(entry: { id: string }) {
   return artwork[entry.id as keyof typeof artwork]?.alt ?? "";
 }
-const projectImages: Record<string, string> = {
-  "agfs-dev": "/images/agfs.png",
-  "dailystand-dev": "/images/dailystand-screenshot.png",
-  "easyaccessqr-com": "/images/easyaccessqr.com_1.jpg",
-  "llink-space": "/images/llink-space.png",
-  "uutil-space": "/images/uutils_space.png",
-  triphaven: "/images/triphaven.png",
-  soloagent: "/images/soloagent.jpg",
-  "roomba-wars": "/images/roomba-1.png",
-  "hackernews-tui": "/images/hackernews-tui.jpg",
-  "imposter-fm": "/images/imposter-fm.png",
-  "secret-santa-pair": "/images/santa.png",
-  "react-chat": "/images/chat.png",
-  "math-game": "/images/math.png",
-  "material-poll": "/images/poll.png",
-};
+// Screenshots for projects whose frontmatter has no `image` (also used by
+// the social-card renderer).
+const projectImages: Record<string, string> = projectImageMap;
 type ProjectMediaEntry = {
   id: string;
   body?: string;
