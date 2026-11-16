@@ -1,11 +1,11 @@
-FROM node:24.22.2-trixie-slim AS build
-RUN apt-get update && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*
+FROM node:24.22.3-trixie-slim AS build
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends python3 make g++ && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
-FROM node:24.22.2-trixie-slim AS runtime
-RUN apt-get update && apt-get install -y --no-install-recommends openssh-client tmux ca-certificates \
+FROM node:24.22.3-trixie-slim AS runtime
+RUN apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends openssh-client tmux ca-certificates \
     && rm -rf /var/lib/apt/lists/* /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn-* \
     && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack /usr/local/bin/yarn /usr/local/bin/yarnpkg
 WORKDIR /app
