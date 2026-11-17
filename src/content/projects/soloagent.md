@@ -50,3 +50,4 @@ I wanted first-hand implementation experience with AI harness constraints instea
 
 - Launch article: [Building SoloAgent to understand AI harnesses](/articles/building-soloagent-to-understand-ai-harnesses)
 - Layoff log: [Week 3: SoloAgent AI harness experiment](/layoff/week-003-2026-03-03-soloagent)
+- A separate, later project with the same name: [soloagent.dev](/projects/soloagent-dev), a self-hosted control plane for durable AI agents

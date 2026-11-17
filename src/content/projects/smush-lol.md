@@ -33,4 +33,6 @@ Browser-only mode keeps image bytes on the device. Local WebP and AVIF exports u
 
 The [live editor](https://smush.lol) is available alongside [API and MCP documentation](https://smush.lol/docs). Remote transformation URLs, upload endpoints, and MCP tools expose the conversion workflow to applications and agents. The repository includes the application, tests, container configuration, and deployment instructions.
 
+An earlier, smaller Bun image tool from August 2025 is [bun-sharp](/projects/bun-sharp), an image server that transforms images with sharp through query parameters.
+
 The screenshot uses the app's own sample image and shows a completed conversion. Project details and the repository creation date come from [the public GitHub repository](https://github.com/nearbycoder/smush.lol).

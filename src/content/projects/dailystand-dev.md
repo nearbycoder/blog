@@ -44,3 +44,5 @@ DailyStand is an open-source, self-hostable async standup app for modern teams.
 - Bun (runtime/package manager)
 - Vitest + Playwright
 - Optional integrations: Stripe, Sentry, PostHog, React Email, Resend
+
+The name was used once before, in 2021, for a small task tracker with a React client and a Rails GraphQL API. That separate codebase is at [DailyStand (2021)](/projects/dailystand-2021).
