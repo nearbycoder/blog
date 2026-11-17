@@ -36,3 +36,5 @@ I wanted a polling tool that feels immediate like classic internet utility apps,
 ## Product and engineering notes
 
 QikPoll balances speed and trust. The core loop is intentionally simple for users, while the backend enforces practical anti-repeat constraints and consistent live updates. That balance was the central product goal.
+
+An earlier StrawPoll clone from 2017, with React, Redux and live results over socket.io, is [ReactPoll](/projects/reactpoll).

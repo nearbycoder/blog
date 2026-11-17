@@ -19,6 +19,11 @@ const newGames = [
   "gravewake",
   "cinderwake",
 ];
+// Games added in November 2026, with README screenshots and a trailer that
+// streams from the game's own GitHub Pages site instead of the media CDN.
+const siteTrailerGames = ["elderglen"];
+// Games with screenshots and a trailer, wherever the trailer is hosted.
+const showcasedGames = [...newGames, ...siteTrailerGames];
 // Games that used to live in the projects archive.
 const movedGames = [
   "flip-flop-cheer",
@@ -40,7 +45,7 @@ test("games have their own archive, and projects no longer list them", async ({
     .locator(".project-card .project-heading a")
     .evaluateAll((links) => links.map((link) => link.getAttribute("href")));
   expect(new Set(hrefs).size).toBe(hrefs.length);
-  for (const slug of [...newGames, ...movedGames])
+  for (const slug of [...showcasedGames, ...movedGames])
     expect(hrefs, slug).toContain(`/games/${slug}`);
   // Newest repository first, to the second, so same-day games stay in order.
   const created = await page
@@ -50,13 +55,13 @@ test("games have their own archive, and projects no longer list them", async ({
   expect(created).toEqual(
     [...created].sort((a, b) => Date.parse(b!) - Date.parse(a!)),
   );
-  expect(hrefs[0]).toBe("/games/jeste");
+  expect(hrefs[0]).toBe("/games/elderglen");
 
   await page.goto("/projects/");
   const projectHrefs = await page
     .locator(".project-card .project-heading a")
     .evaluateAll((links) => links.map((link) => link.getAttribute("href")));
-  for (const slug of [...newGames, ...movedGames])
+  for (const slug of [...showcasedGames, ...movedGames])
     expect(projectHrefs, slug).not.toContain(`/projects/${slug}`);
   expect(projectHrefs.every((href) => href?.startsWith("/projects/"))).toBe(
     true,
@@ -67,7 +72,7 @@ test("game pages show details, real screenshots, and user-started trailers witho
   page,
 }) => {
   await page.setViewportSize({ width: 360, height: 800 });
-  for (const slug of [...newGames, ...movedGames]) {
+  for (const slug of [...showcasedGames, ...movedGames]) {
     const response = await page.goto(`/games/${slug}/`);
     expect(response?.status(), slug).toBe(200);
     await expect(page.locator("h1"), slug).toHaveCount(1);
@@ -86,7 +91,7 @@ test("game pages show details, real screenshots, and user-started trailers witho
       ),
       `${slug} mobile overflow`,
     ).toBe(false);
-    if (!newGames.includes(slug)) continue;
+    if (!showcasedGames.includes(slug)) continue;
 
     const cover = page.locator(".reading-cover img");
     await expect(cover, slug).toHaveAttribute("src", /^\/images\/games\//);
@@ -114,7 +119,9 @@ test("game pages show details, real screenshots, and user-started trailers witho
     await expect(video).toHaveAttribute("preload", "none");
     await expect(video).toHaveAttribute(
       "src",
-      /^https:\/\/media\.nerb\.dev\/videos\/games\/.+\.mp4$/,
+      siteTrailerGames.includes(slug)
+        ? /^https:\/\/nearbycoder\.github\.io\/[^/]+\/.+\.mp4$/
+        : /^https:\/\/media\.nerb\.dev\/videos\/games\/.+\.mp4$/,
     );
     await expect(video).toHaveAttribute("poster", /^\/images\/games\//);
     expect(

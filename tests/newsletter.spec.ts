@@ -321,6 +321,8 @@ test("configured signup handles failures and confirmation requires a button clic
   page,
   browser,
 }) => {
+  // This builds the whole site a second time, social cards included.
+  test.setTimeout(300000);
   mkdirSync("test-results", { recursive: true });
   const output = mkdtempSync(
     join(process.cwd(), "test-results", "newsletter-"),
@@ -332,7 +334,7 @@ test("configured signup handles failures and confirmation requires a button clic
       {
         env: { ...process.env, NEWSLETTER_ENABLED: "true" },
         stdio: "pipe",
-        timeout: 90000,
+        timeout: 240000,
       },
     );
     const html = readFileSync(join(output, "subscribe/index.html"), "utf8");

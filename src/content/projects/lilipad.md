@@ -36,4 +36,6 @@ The interface uses React and TypeScript with Vinext. Moonshine recognizes speech
 
 Models download on first use. Full offline support is not implemented, and actual iPad performance still needs testing. The optional browser device voice may use a network service, depending on the voice provided by the browser.
 
+LiliPad also has a sibling for iPad and iPhone. [LiliPad Reading](/projects/lilipad-reading) has the same frog and the same six adventures, and its website lives in a separate repository.
+
 The original source is GPL-3.0-only, with separate notices for dependencies, artwork, and models. [The repository](https://github.com/nearbycoder/LiliPad) includes setup instructions and the current browser requirements. Its [GitHub creation date](https://api.github.com/repos/nearbycoder/LiliPad) is October 2, 2026 (UTC).
