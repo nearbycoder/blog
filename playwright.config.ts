@@ -1,10 +1,10 @@
 import { defineConfig } from "@playwright/test";
+// A small smoke test against the built site; see tests/smoke.spec.ts.
 export default defineConfig({
   testDir: "./tests",
-  timeout: 120000,
-  expect: { timeout: 10000 },
-  fullyParallel: false,
-  workers: 1,
+  timeout: 30000,
+  expect: { timeout: 5000 },
+  fullyParallel: true,
   reporter: "list",
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:4322",

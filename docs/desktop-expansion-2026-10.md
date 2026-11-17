@@ -148,25 +148,29 @@ Each group has an implementation review and focused regression coverage. The
 tests below describe the behavior being checked; this table does not substitute
 for the final integrated test run.
 
-| Features                    | Coverage                                                                | Important cases                                                                                                                             |
-| --------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| 01–06 Notes                 | [Notes expansion tests](../tests/desktop-notes-expansion.spec.ts)       | Search, pins, independent duplicates, text and notebook imports, merge conflicts, undo, unreadable storage, narrow windows.                 |
-| 07–12 Tasks                 | [Tasks expansion tests](../tests/desktop-tasks-expansion.spec.ts)       | Combined filters, priorities and dates, exports, CSV formula escaping, inert import preview, merge/undo interaction, storage failures.      |
-| 13–18 Markdown              | [Markdown expansion tests](../tests/desktop-markdown-expansion.spec.ts) | Selection-aware formatting, scoped shortcuts, confirmed imports, literal replacement, outline navigation, escaped HTML export.              |
-| 19–24 Library               | [Library expansion tests](../tests/desktop-library-expansion.spec.ts)   | Bidirectional sorting, remembered choices, favorites/recents, history navigation, inspector copying and fallback, lazy-load races.          |
-| 25–30 Settings              | [Settings expansion tests](../tests/desktop-settings-expansion.spec.ts) | Immediate and restored appearance, palette contrast, intact readers, mobile text/touch controls, malformed and blocked storage.             |
-| 31–36 Window tools          | [Window expansion tests](../tests/desktop-windows-expansion.spec.ts)    | Overview actions, focus restoration, recently used order, pins across reload, minimized and off-desktop windows, reopening, phone controls. |
-| 37–42 Virtual desktops      | [Spaces expansion tests](../tests/desktop-spaces-expansion.spec.ts)     | Isolation, moving and removing desktops, persistence, shortcuts, capacity, existing minimization, unreadable storage.                       |
-| 43–48 Activity and launcher | [Activity expansion tests](../tests/desktop-activity-expansion.spec.ts) | History, unread state, DND, filters, favorites, recent apps, storage bounds, inert notification text, accessible toast behavior.            |
-| 49–54 Data Center           | [Backup expansion tests](../tests/desktop-backup-expansion.spec.ts)     | Allowlisted full/selected exports, validation, preview, confirmed restore/reset, write rollback, layout restoration, credential exclusions. |
-| 55–60 Agenda                | [Agenda expansion tests](../tests/desktop-agenda-expansion.spec.ts)     | Calendar indicators and CRUD, upcoming search, ICS escaping/folding, local-time and daylight-saving cases, reminders and persisted markers. |
+These browser tests were removed in November 2026, when the test suite was cut
+down to a quick smoke test (`tests/smoke.spec.ts`). The table records what they
+checked at release.
 
-Cross-cutting coverage includes [storage failures and future records](../tests/desktop-storage-expansion.spec.ts),
-[all-app loading](../tests/desktop-collection.spec.ts),
-[phone layouts](../tests/desktop-mobile-collection.spec.ts),
-[accessibility](../tests/desktop-accessibility-collection.spec.ts),
-[keyboard and lifecycle](../tests/desktop-keyboard-expansion.spec.ts), and
-[bundle isolation and budgets](../tests/desktop-performance.spec.ts), alongside the
+| Features                    | Coverage                 | Important cases                                                                                                                             |
+| --------------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| 01–06 Notes                 | Notes expansion tests    | Search, pins, independent duplicates, text and notebook imports, merge conflicts, undo, unreadable storage, narrow windows.                 |
+| 07–12 Tasks                 | Tasks expansion tests    | Combined filters, priorities and dates, exports, CSV formula escaping, inert import preview, merge/undo interaction, storage failures.      |
+| 13–18 Markdown              | Markdown expansion tests | Selection-aware formatting, scoped shortcuts, confirmed imports, literal replacement, outline navigation, escaped HTML export.              |
+| 19–24 Library               | Library expansion tests  | Bidirectional sorting, remembered choices, favorites/recents, history navigation, inspector copying and fallback, lazy-load races.          |
+| 25–30 Settings              | Settings expansion tests | Immediate and restored appearance, palette contrast, intact readers, mobile text/touch controls, malformed and blocked storage.             |
+| 31–36 Window tools          | Window expansion tests   | Overview actions, focus restoration, recently used order, pins across reload, minimized and off-desktop windows, reopening, phone controls. |
+| 37–42 Virtual desktops      | Spaces expansion tests   | Isolation, moving and removing desktops, persistence, shortcuts, capacity, existing minimization, unreadable storage.                       |
+| 43–48 Activity and launcher | Activity expansion tests | History, unread state, DND, filters, favorites, recent apps, storage bounds, inert notification text, accessible toast behavior.            |
+| 49–54 Data Center           | Backup expansion tests   | Allowlisted full/selected exports, validation, preview, confirmed restore/reset, write rollback, layout restoration, credential exclusions. |
+| 55–60 Agenda                | Agenda expansion tests   | Calendar indicators and CRUD, upcoming search, ICS escaping/folding, local-time and daylight-saving cases, reminders and persisted markers. |
+
+Cross-cutting coverage includes storage failures and future records,
+all-app loading,
+phone layouts,
+accessibility,
+keyboard and lifecycle, and
+bundle isolation and budgets, alongside the
 existing window, reader, terminal, Arcade, and blog regression tests.
 
 The manual walkthrough exercised writing a note, creating a named desktop,

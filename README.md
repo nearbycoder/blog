@@ -100,8 +100,7 @@ The Vite build emits font subsets as separate cacheable files instead of inlinin
 small WOFF subsets in shared CSS. Rolldown's entry-aware chunk grouping keeps
 the desktop shell, app registry and lazy apps from pulling in unrelated code;
 the Activity store is separate from its shell UI, and task-backup CSS loads
-only with backup tools. `tests/desktop-performance.spec.ts` checks these
-boundaries along with the existing (unchanged) JS/CSS budgets.
+only with backup tools.
 
 ## Local development
 
@@ -152,7 +151,7 @@ Window arrangements, named virtual desktops, and supported app data are saved in
 
 **Settings** controls appearance and readability. **Activity** holds notifications, Do Not Disturb, launcher favorites, and recent apps. **Data Center** previews local backups and restores selected categories with confirmation and a reload; terminal credentials are excluded. **Agenda** keeps local events, exports ICS calendars, and reminds you while its window remains open. Notes, Tasks, Markdown Pad, and Library have expanded editing and organization tools. See the [60-feature ledger](docs/desktop-expansion-2026-10.md) and [desktop guide](docs/desktop.md).
 
-Without JavaScript, Library still provides ordinary links to every indexed page. Run `npm run verify` for the production build and regression suite. During development, `PLAYWRIGHT_BASE_URL=http://localhost:4323 npm test -- tests/desktop-notes-expansion.spec.ts` can target an existing dev server; final checks use the built preview.
+Without JavaScript, Library still provides ordinary links to every indexed page. Run `npm run verify` for type checks, the production build and the smoke test.
 
 ### Arcade and desktop secrets
 
@@ -160,11 +159,9 @@ Open **Arcade** from the desktop shortcut or the gamepad in the dock. **Memory**
 
 **Snake**, **Pong**, and **15 Puzzle** are also available in Arcade and launcher search. Snake uses arrow keys or direction buttons; Pong uses up/down keys or held buttons and ends at seven points. Start explicitly, use Space or Pause to pause, and choose New game to reset. Both pause when their activity or window becomes hidden/inactive, the tab is hidden, or the browser loses focus. The sliding puzzle supports tap/click, arrow keys to move the gap, undo, and solvable shuffled deals. These three games run locally without downloads from external services.
 
-Loading stays inside `/desktop`: its route script dynamically imports Arcade when the window opens, then imports Snake, Pong, 15 Puzzle, or the DOOM player only when selected. DOOM's emulator and shareware still wait for Play. Keep game imports out of shared layouts and site-wide scripts. `tests/desktop-classics.spec.ts` checks all built regular pages, browser network requests, loading failures/races, game rules, controls, and mobile accessibility. Game CSS belongs to the desktop route too.
+Loading stays inside `/desktop`: its route script dynamically imports Arcade when the window opens, then imports Snake, Pong, 15 Puzzle, or the DOOM player only when selected. DOOM's emulator and shareware still wait for Play. Keep game imports out of shared layouts and site-wide scripts. Game CSS belongs to the desktop route too.
 
 The **Terminal** is a pretend shell: it never runs system commands or sends input anywhere. Try `help`, `sudo make coffee`, `cat README.txt`, `42`, or `party`. The last command toggles the after-hours wallpaper. The classic **↑ ↑ ↓ ↓ ← → ← → B A** sequence also toggles it on the desktop, outside inputs and games. The terminal’s expandable hint makes the surprises available to touch and assistive-technology users too. Memory, Bug Sweep, and the terminal secrets use no sound, flashing effects, or background game loops.
-
-Run `npx playwright test tests/desktop-arcade.spec.ts tests/desktop-classics.spec.ts tests/desktop-doom.spec.ts tests/desktop.spec.ts` after a build to check game rules, complete Memory play, restart/minimize behavior, the secrets, keyboard controls, and both-theme mobile accessibility.
 
 ### Content
 
@@ -179,7 +176,7 @@ npx playwright install chromium
 npm run verify
 ```
 
-`verify` runs Astro type checks, a production build, and browser regression tests against the built site. `npm test` expects an existing production build. Images are optimized automatically before development and production builds.
+`verify` runs Astro type checks, a production build, and a smoke test against the built site. `npm test` expects an existing production build and finishes in a few seconds. The smoke test, [`tests/smoke.spec.ts`](tests/smoke.spec.ts), checks that every built page has one heading, a social card and local links and images that resolve. It also loads one page of each kind in Chromium at desktop and phone widths and checks for script errors, failed requests and horizontal overflow. It doesn't test interactive behavior, such as the desktop apps, so check those by hand. Images are optimized automatically before development and production builds.
 
 The current look is [the Nearby Building theme](docs/nearby-building-theme.md): an Art Deco tower in Tulsa, limestone by day and neon at night. See [the earlier redesign notes and screenshot gallery](docs/redesign.md) for the visual direction, route coverage, accessibility scope, and measured performance.
 
@@ -189,7 +186,7 @@ Open **Arcade → DOOM → Play DOOM**, or search **DOOM** in the desktop launch
 
 Arrow keys move/turn, Ctrl fires, Space opens doors, Shift runs, 1–7 select weapons, and Escape opens the game menu. On-screen buttons support touch controls. Sound starts muted and can be enabled with **Sound on**. Switching activities, minimizing, switching windows, or hiding the browser tab pauses the game; **Resume** continues. **Stop game**, closing Arcade, or reloading discards the game session and releases the emulator. In-game saves are limited to that session.
 
-Source, credits, release checksum, and reproduction notes are in [`public/games/doom/README.txt`](public/games/doom/README.txt). Existing desktop tests cover lazy loading, retries, controls, and lifecycle through a stubbed emulator; actual emulator boot and gameplay are also checked manually in-browser before release.
+Source, credits, release checksum, and reproduction notes are in [`public/games/doom/README.txt`](public/games/doom/README.txt). Check emulator boot, gameplay, controls and lifecycle by hand in a browser before release.
 
 ### Connected Ghostty terminal
 
