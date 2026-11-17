@@ -19,11 +19,16 @@ const newGames = [
   "gravewake",
   "cinderwake",
 ];
-// Games added in November 2026, with README screenshots and a trailer that
-// streams from the game's own GitHub Pages site instead of the media CDN.
-const siteTrailerGames = ["elderglen"];
-// Games with screenshots and a trailer, wherever the trailer is hosted.
-const showcasedGames = [...newGames, ...siteTrailerGames];
+// Games added in November 2026, with screenshots and a trailer that streams
+// from the game's own GitHub Pages site instead of the media CDN.
+const siteTrailerGames = ["elderglen", "dusk-station"];
+// Games added in November 2026 whose repositories have screenshots but no
+// trailer, so their pages have no video.
+const screenshotGames = ["dusk-patrol", "dusk-circuit"];
+// Games with a trailer, wherever it's hosted.
+const trailerGames = [...newGames, ...siteTrailerGames];
+// Games whose pages show real screenshots.
+const showcasedGames = [...trailerGames, ...screenshotGames];
 // Games that used to live in the projects archive.
 const movedGames = [
   "flip-flop-cheer",
@@ -55,7 +60,7 @@ test("games have their own archive, and projects no longer list them", async ({
   expect(created).toEqual(
     [...created].sort((a, b) => Date.parse(b!) - Date.parse(a!)),
   );
-  expect(hrefs[0]).toBe("/games/elderglen");
+  expect(hrefs[0]).toBe("/games/dusk-patrol");
 
   await page.goto("/projects/");
   const projectHrefs = await page
@@ -114,6 +119,10 @@ test("game pages show details, real screenshots, and user-started trailers witho
     }
 
     const video = page.locator(".project-demos video");
+    if (!trailerGames.includes(slug)) {
+      await expect(video, slug).toHaveCount(0);
+      continue;
+    }
     await expect(video, slug).toHaveCount(1);
     await expect(video).toHaveAttribute("controls", "");
     await expect(video).toHaveAttribute("preload", "none");
