@@ -137,11 +137,12 @@ const octagon = (size) =>
 function towerPanel() {
   return cachedPanel("tower", () => sharp(Buffer.from(panelSvg())).png().toBuffer());
 }
+const PORTRAIT = "/images/portrait.webp";
 function portraitPanel() {
   return cachedPanel("portrait", async () => {
     const size = 236;
     const photo = await sharp(
-      readFileSync(new URL("../../public/images/portrait.webp", import.meta.url)),
+      readFileSync(new URL(`../../public${PORTRAIT}`, import.meta.url)),
     )
       .resize(size - 16, size - 16, { fit: "cover" })
       .composite([{ input: octagon(size - 16), blend: "dest-in" }])
@@ -300,11 +301,17 @@ const CREAM = "#f4e9d6",
   NEON = "#ff5c7f",
   MUTED = "#bcb0c2";
 
-/** @type {import("astro-opengraph-images").RenderFunction} */
-export async function renderNearbycoderOg({ title, description, pathname }) {
-  const path =
-    "/" + (pathname || "").replace(/^\/+/, "").replace(/index\.html$/, "");
-  const home = path === "/";
+/** A card's path, from a page's pathname as the build reports it. */
+const cardPath = (pathname) =>
+  "/" + (pathname || "").replace(/^\/+/, "").replace(/index\.html$/, "");
+
+/**
+ * The local art a page's card embeds: the kind of panel and the public images
+ * it's drawn from. The build's card cache (src/lib/social-card-cache.js) keys
+ * on this, so every image a card reads must be in `srcs`.
+ */
+export function cardArt(pathname) {
+  const path = cardPath(pathname);
   const articleId = path.match(/^\/articles\/([^/]+)\/?$/)?.[1];
   const articleArt = articleId
     ? artwork[decodeURIComponent(articleId)]
@@ -313,18 +320,31 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
   const shots = gameId ? gameImages(decodeURIComponent(gameId)) : [];
   const projectId = path.match(/^\/projects\/([^/]+)\/?$/)?.[1];
   const projectShot = projectId ? projectCover(decodeURIComponent(projectId)) : undefined;
-  const art =
-    path === "/games/"
-      ? await mosaicData(newestGameCovers(8), 2)
-      : shots.length > 1
-        ? await mosaicData(shots.slice(0, 2), 1)
-        : shots[0] || articleArt
-          ? await coverData(shots[0] ?? articleArt.src)
-          : projectShot
-            ? await vitrinePanel(projectShot)
-            : home || path.startsWith("/about")
-              ? await portraitPanel()
-              : await towerPanel();
+  if (path === "/games/")
+    return { kind: "mosaic", columns: 2, srcs: newestGameCovers(8) };
+  if (shots.length > 1)
+    return { kind: "mosaic", columns: 1, srcs: shots.slice(0, 2) };
+  if (shots[0] || articleArt)
+    return { kind: "cover", srcs: [shots[0] ?? articleArt.src] };
+  if (projectShot) return { kind: "vitrine", srcs: [projectShot] };
+  if (path === "/" || path.startsWith("/about"))
+    return { kind: "portrait", srcs: [PORTRAIT] };
+  return { kind: "tower", srcs: [] };
+}
+
+function artData({ kind, columns, srcs }) {
+  if (kind === "mosaic") return mosaicData(srcs, columns);
+  if (kind === "cover") return coverData(srcs[0]);
+  if (kind === "vitrine") return vitrinePanel(srcs[0]);
+  if (kind === "portrait") return portraitPanel();
+  return towerPanel();
+}
+
+/** @type {import("astro-opengraph-images").RenderFunction} */
+export async function renderNearbycoderOg({ title, description, pathname }) {
+  const path = cardPath(pathname);
+  const home = path === "/";
+  const art = await artData(cardArt(pathname));
   const [background, frame, mark] = await Promise.all([
     ornament("background", backgroundSvg),
     ornament("frame", frameSvg),

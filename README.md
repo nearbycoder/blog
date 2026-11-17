@@ -96,6 +96,16 @@ pinned by `tw-to-css`; revisit them as upstream releases fixes. Social-card
 generation is batched because the integration otherwise renders all pages
 concurrently and can exhaust build memory.
 
+Drawing and compressing about 500 social cards used to be nearly all of the
+build time, so cards are cached in `node_modules/.cache/social-cards`. Each card
+is stored under a hash of everything it's drawn from: the page's path, title and
+summary, the images it embeds, the renderer and its data, the config and fonts,
+and the locked dependency versions. A build then draws only the cards whose
+inputs changed. Vercel keeps `node_modules` between builds, so the cache carries
+over from one deploy to the next. To draw every card again, delete that folder,
+or redeploy on Vercel without the build cache. See
+[`src/lib/social-card-cache.js`](src/lib/social-card-cache.js).
+
 The Vite build emits font subsets as separate cacheable files instead of inlining
 small WOFF subsets in shared CSS. Rolldown's entry-aware chunk grouping keeps
 the desktop shell, app registry and lazy apps from pulling in unrelated code;
