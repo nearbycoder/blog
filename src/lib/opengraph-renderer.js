@@ -395,6 +395,10 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
             width: 810,
             height: H,
             padding: "52px 62px 50px",
+            // Satori sizes boxes as content-box; without this the padding is
+            // added to 810 × 630, so text runs into the divider and the footer
+            // is pushed off the bottom of the card.
+            boxSizing: "border-box",
             display: "flex",
             flexDirection: "column",
           },
