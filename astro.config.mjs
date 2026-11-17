@@ -1,62 +1,11 @@
 // @ts-check
 import { defineConfig } from "astro/config";
-import { readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import sharp from "sharp";
+import { readFileSync } from "node:fs";
 
 import tailwindcss from "@tailwindcss/vite";
 import opengraphImages from "astro-opengraph-images";
 import { renderNearbycoderOg } from "./src/lib/opengraph-renderer.js";
-
-// The integration renders every page concurrently, which can exhaust build memory.
-// Run its unchanged build hook on small batches; all pages still get cards.
-/** @param {import("astro").AstroIntegration} integration */
-function batchSocialCards(integration) {
-  const hook = integration.hooks["astro:build:done"];
-  if (!hook) throw new Error("Social-card build hook is missing");
-  return {
-    ...integration,
-    hooks: {
-      ...integration.hooks,
-      /** @param {Parameters<NonNullable<import("astro").AstroIntegration["hooks"]["astro:build:done"]>>[0]} context */
-      "astro:build:done": async (context) => {
-        for (let i = 0; i < context.pages.length; i += 4) {
-          await hook({ ...context, pages: context.pages.slice(i, i + 4) });
-        }
-      },
-    },
-  };
-}
-
-// The generated social cards are full-color PNGs; a palette keeps them about
-// 70% smaller with no visible change. Runs after astro-opengraph-images.
-/** @type {import("astro").AstroIntegration} */
-const compressSocialCards = {
-  name: "compress-social-cards",
-  hooks: {
-    "astro:build:done": async ({ dir, logger }) => {
-      const root = fileURLToPath(dir);
-      const cards = readdirSync(root, { recursive: true })
-        .map(String)
-        .filter((file) => file === "index.png" || file.endsWith("/index.png"));
-      let before = 0;
-      let after = 0;
-      for (const file of cards) {
-        const path = `${root}${file}`;
-        const source = readFileSync(path);
-        const output = await sharp(source)
-          .png({ palette: true, quality: 85, effort: 10 })
-          .toBuffer();
-        before += source.length;
-        if (output.length < source.length) writeFileSync(path, output);
-        after += Math.min(output.length, source.length);
-      }
-      logger.info(
-        `Compressed ${cards.length} social cards: ${(before / 1048576).toFixed(1)} MB → ${(after / 1048576).toFixed(1)} MB`,
-      );
-    },
-  },
-};
+import { cachedSocialCards } from "./src/lib/social-card-cache.js";
 
 // https://astro.build/config
 export default defineConfig({
@@ -65,7 +14,8 @@ export default defineConfig({
   devToolbar: { enabled: false },
   site: "https://nearbycoder.com",
   integrations: [
-    batchSocialCards(
+    // Only cards whose inputs changed are drawn; see src/lib/social-card-cache.js.
+    cachedSocialCards(
       opengraphImages({
         options: {
           width: 1200,
@@ -116,7 +66,6 @@ export default defineConfig({
         render: renderNearbycoderOg,
       }),
     ),
-    compressSocialCards,
   ],
   vite: {
     plugins: [tailwindcss()],
