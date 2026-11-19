@@ -36,7 +36,7 @@ draft: false
 
 Pointer puts a giant cartoon glove on a telescoping pole over everything on your Mac. The fingertip sits exactly on your cursor, and the system cursor hides while the glove is out. Click and the glass ripples with a pop. Tap five times quickly, or hold a press still, and a dial winds up around the fingertip until the glass cracks with a crash and tinkling shards. Hotkeys switch to a spotlight, a laser trail, a pen or a focus box, each with its own sound. It's made for presenting: the overlays show up in screen shares and recordings, so the people watching see the glove too.
 
-It's a native macOS app written in Rust on [Rune](https://github.com/anomalyco/rune), a pre-release, GPU-rendered Rust UI framework, with its own WGSL shaders for the pointer and its effects. It's free and open source under the MIT license, runs on macOS 13 or later on Apple silicon and Intel, and the download is signed with a Developer ID and notarized by Apple. Pointer lives in the menu bar rather than the Dock, and it asks for no permissions: there's no Accessibility or Screen Recording prompt. Version 1.0.0 was released on the day the repository was created.
+It's a native macOS app written in Rust on [Rune](https://github.com/anomalyco/rune), a pre-release, GPU-rendered Rust UI framework, with its own WGSL shaders for the pointer and its effects. It's free and open source under the MIT license, runs on macOS 13 or later on Apple silicon and Intel, and the download is signed with a Developer ID and notarized by Apple. Pointer lives in the menu bar and shows a Dock icon only while Settings is open. It asks for no permissions: there's no Accessibility or Screen Recording prompt. Version 1.0.0 was released on the day the repository was created.
 
 ## Five tools
 
@@ -51,7 +51,7 @@ It's a native macOS app written in Rust on [Rune](https://github.com/anomalyco/r
 
 ⌃⌥1 to ⌃⌥5 switch tools while you talk:
 
-- **Pointer** (⌃⌥1): every click sends out a ripple, and quick taps or a press held still crack the glass. ⌃⌥X smashes it on cue.
+- **Pointer** (⌃⌥1): every left click sends out a ripple, and quick taps or a press held still crack the glass. ⌃⌥X smashes it on cue.
 - **Spotlight** (⌃⌥2): everything dims except a circle around the fingertip.
 - **Laser** (⌃⌥3): the fingertip leaves a glowing trail that fades within about half a second.
 - **Pen** (⌃⌥4): drag to draw on the screen.
@@ -63,11 +63,11 @@ Pointer, Spotlight and Laser pass every click through to the app underneath, so 
 
 A click that comes within 0.55 seconds of the last one adds to a charge, so the fifth quick tap breaks the glass. Holding the button still for about a third of a second starts the dial filling instead, and the glass cracks a little under a second later. Stop, and the charge drains away.
 
-Each crack is generated, not drawn from an image. Between 13 and 15 jagged spokes wander outward from the impact and sometimes branch, rings of chords join neighboring spokes, and a core of short splinters fills the middle. Every segment records its distance from the impact, so the crack runs outward over about a quarter of a second. A crack holds for 3.4 seconds and then fades over about a second, and the glove jolts back along its pole when the glass gives.
+Each crack is generated, not drawn from an image. Between 13 and 15 jagged spokes wander outward from the impact and sometimes branch, rings of chords join neighboring spokes, and a core of short splinters fills the middle. Every segment records how far along the crack its two ends are from the impact, so the crack runs outward over about a quarter of a second. A crack holds for 3.4 seconds and then fades over about a second, and the glove jolts back along its pole when the glass gives.
 
 <figure>
   <picture><source srcset="/images/projects/pointer-crack-code-dark.webp" media="(prefers-color-scheme: dark)" data-theme-dark /><img src="/images/projects/pointer-crack-code.webp" alt="Lines 636 to 678 of pointer/src/fx.rs: crack_pattern, documented as a spider-web fracture of jagged spokes with branches, a few rings of chords between them and a shattered core. It sets the number of spokes and their reach from the power, walks each spoke out from the impact at evenly spread, jittered angles, then for up to three rings at 0.2, 0.43 and 0.7 of the reach joins each spoke to the next through a jittered midpoint, skipping about one in five, and finally scatters 8 plus 12 times the power short splinters near the center, returning the segments and the reach." width="1440" height="1380" loading="lazy" /></picture>
-  <figcaption>The crack pattern in <code>src/fx.rs</code>. The <code>d0</code> and <code>d1</code> on each segment are its distance from the impact, which the drawing code uses to grow the crack outward.</figcaption>
+  <figcaption>The crack pattern in <code>src/fx.rs</code>. The <code>d0</code> and <code>d1</code> on each segment are how far along the crack its ends lie from the impact. The drawing code uses them to grow the crack outward.</figcaption>
 </figure>
 
 ## Five pointers
@@ -93,13 +93,13 @@ The sword lights the page around its blade and leaves an afterimage when it swin
 
 The fingertip stays on the cursor, and the rest of the rig follows it on springs. The pole's base trails behind on a slow spring, like a hand holding the stick from below the screen. The middle of the pole is a damped mass, so the pole bends and wobbles when you move fast. The glove turns with the pole, rolls a little as you move sideways, and dips toward the screen when you press. The springs are sub-stepped at 600 Hz, so the motion looks the same at any frame rate. The glove is about a ninth of the display's height, and ⌃⌥] and ⌃⌥[ make it bigger or smaller.
 
-The glove, the chicken and the mallet's head are raymarched in 3D in the fragment shader, with soft wrap lighting, ambient occlusion and a dark rim that keeps them readable on white pages and dark ones. The pole is drawn as five chrome sections with a collar at each joint, a chrome ferrule and a rubber grip, and the pointer casts soft shadows onto the screen. With several displays, the pointer lives on whichever one has the cursor: it retracts from the display you leave and extends on the one you enter, and effects stay where they happened.
+The glove, the chicken and the mallet's head are raymarched in 3D in the fragment shader, with soft wrap lighting and ambient occlusion, and a soft dark rim keeps them readable on a white page. The pole is drawn as five chrome sections with a collar at each joint, a chrome ferrule and a rubber grip, and the pointer casts soft shadows onto the screen. With several displays, the pointer lives on whichever one has the cursor: it retracts from the display you leave and extends on the one you enter, and effects stay where they happened.
 
 ## Sound
 
-Every sound is synthesized as it plays, from oscillators, noise, filters and envelopes, so there are no audio files. A tap sounds a few milliseconds after the click, because the mix goes straight to a Core Audio output unit with about 10 ms of latency instead of through a media player. The pole sliding out makes a rising rush with a click for each section. The charge dial ticks as it fills, over a whine that climbs and crackles. The glass breaks with a thump, a snap, crackle running outward, tinkling shards and a whoosh. Spotlight clunks on like a stage light, the laser hums and sizzles louder the faster you move, and the pen sounds like felt tip on glass.
+Every sound is synthesized as it plays, from oscillators, noise, filters and envelopes, so there are no audio files. A tap sounds as it lands, because the mix goes straight to a Core Audio output unit. Rune's own audio player goes through AVPlayer, whose start-up delay is too long for a click. The pole sliding out makes a rising rush with a click for each section. The charge dial ticks as it fills, over a whine that climbs and crackles. The glass breaks with a thump, a snap, crackle running outward, tinkling shards and a whoosh. Spotlight clunks on like a stage light, the laser hums and sizzles louder the faster you move, and the pen sounds like felt tip on glass.
 
-Sounds pan toward the side of the screen they happen on, and only the display with the cursor makes them. ⌃⌥M turns them off. When nothing is sounding, the output stops after a few seconds, so an idle pointer costs no CPU.
+Sounds pan toward the side of the screen they happen on, and only the display with the cursor makes them. ⌃⌥M turns them off. When nothing is sounding, the audio output stops after a few seconds, so sound costs nothing while the pointer is idle.
 
 ## Settings, updates and the menu bar
 
@@ -118,11 +118,11 @@ Each display gets its own Rune overlay: transparent, full-screen and click-throu
 
 Rune draws the small HUD: the toast when a tool changes, the hotkey card and the frame-rate readout. Pointer's compositor draws the rest with its own wgpu pipelines at two effect slots in Rune's view, the glass under the HUD and the pointer over it, so a toast never covers the glove. Each frame is built on the CPU as instanced quads, which the fragment shader fills with signed-distance shapes, and triangle ribbons for the pole, trails and ink, so a translucent stroke never blends twice where its pieces meet. The shaders are 662 lines of WGSL, and the app is 6,757 lines of Rust in 22 files.
 
-The cursor's position and button come from Core Graphics' system-wide state, and the hotkeys are Carbon hotkeys registered through Rune, which is why there's no permission prompt. Hiding the cursor while another app is in front uses WindowServer's private `SetsCursorInBackground` switch, the same one Rune's `macos-background-cursor` feature uses, and macOS shows the cursor again if the process dies. Rune has no macOS menu bar item yet, so that part is a little AppKit through the `objc2` crates, and Open at login uses `SMAppService`. Rust 1.99.1 and Rune's Git revision are pinned, and `cargo test` runs 21 tests covering the physics, the effects, the sound and more.
+The cursor's position and button come from Core Graphics' system-wide state, and the hotkeys are Carbon hotkeys registered through Rune, which is why there's no permission prompt. Hiding the cursor while another app is in front uses WindowServer's private `SetsCursorInBackground` switch, the same one Rune's `macos-background-cursor` feature uses, and macOS shows the cursor again if the process dies. Rune has no macOS menu bar item yet, so that part is a little AppKit through the `objc2` crates, and Open at login uses `SMAppService`. Rust 1.99.1 and Rune's Git revision are pinned, and `cargo test` runs 20 tests covering the physics, the effects, the sound and more.
 
 The README reports measurements on an M4 Max. A live overlay on a 4K display held a steady 60 presents a second on its 60 Hz panel, with no failed or skipped frames and 0.10 to 0.19 ms of CPU per frame. A headless render of the full demo at 3840×2160 and 120 fps ran at 126 frames a second, including reading back and H.264-encoding every frame.
 
-`scripts/bundle.sh` builds the release: a universal binary for Apple silicon and Intel, signed with a Developer ID and the hardened runtime, notarized and stapled with `notarytool`, then packed as `Pointer.zip` for the updater and `Pointer.dmg` for the website. The website is a static page in `docs/`, served by GitHub Pages.
+`scripts/bundle.sh` builds the release: a universal binary for Apple silicon and Intel, signed with a Developer ID and the hardened runtime, notarized with `notarytool` and stapled, then packed as `Pointer.zip` for the updater and `Pointer.dmg` for the website. The website is a static page in `docs/`, served by GitHub Pages.
 
 ## Made by the app
 
