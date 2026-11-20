@@ -3,6 +3,7 @@ export const technologySlug = (name: string) =>
   name
     .toLowerCase()
     .replace(/#/g, "-sharp")
+    .replace(/\+/g, "-plus")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 export async function getTechnologies() {
