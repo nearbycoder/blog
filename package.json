@@ -27,18 +27,18 @@
     "@fontsource/newsreader": "^5.3.0",
     "@tabler/icons": "^3.52.0",
     "@tailwindcss/vite": "^4.3.5",
-    "astro": "^7.4.12",
+    "astro": "^7.4.13",
     "astro-opengraph-images": "^1.20.4",
     "ghostty-web": "0.4.0",
     "react": "^19.3.1",
-    "resend": "^6.38.1",
+    "resend": "^6.39.0",
     "sharp": "^0.35.5",
     "tailwindcss": "^4.3.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
     "@playwright/test": "^1.65.1",
-    "@types/node": "^26.4.1",
+    "@types/node": "^24.19.2",
     "prettier": "^3.10.1",
     "prettier-plugin-astro": "^1.1.2",
     "typescript": "^6.0.3"
@@ -48,7 +48,7 @@
   },
   "overrides": {
     "fflate": "^0.7.5",
-    "postcss": "^8.5.32",
+    "postcss": "^8.5.33",
     "postcss-selector-parser": "^6.1.5"
   }
 }
