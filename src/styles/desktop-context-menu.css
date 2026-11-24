@@ -4,15 +4,17 @@
   min-width: min(218px, var(--desktop-context-max-width, 218px));
   width: max-content;
   overflow: auto;
-  padding: 5px;
-  border: 1px solid var(--desk-gilt-soft, var(--desk-line));
-  border-top: 3px double var(--desk-gilt, var(--desk-line));
-  border-radius: 6px;
-  background: var(--desk-paper);
+  padding: 6px;
+  border: 1px solid var(--desk-line);
+  border-radius: 14px;
+  background: var(--desk-panel);
+  backdrop-filter: blur(26px) saturate(1.4);
+  -webkit-backdrop-filter: blur(26px) saturate(1.4);
   color: var(--desk-ink);
   box-shadow:
-    0 12px 32px var(--desk-shadow),
-    0 2px 5px var(--desk-shadow-soft);
+    inset 0 1px 0 var(--desk-specular, transparent),
+    0 18px 46px var(--desk-shadow),
+    0 2px 6px var(--desk-shadow-soft);
   user-select: none;
   overscroll-behavior: contain;
 }

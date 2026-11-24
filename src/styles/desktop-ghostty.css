@@ -109,9 +109,9 @@
   flex: 1;
   min-width: 0;
   min-height: 0;
-  background: #0a171d;
+  background: #07080d;
   border: 1px solid var(--desk-line);
-  border-radius: 6px;
+  border-radius: 10px;
   overflow: hidden;
 }
 .ghostty-pane[data-active="true"] {

@@ -13,17 +13,16 @@ import Icon from "./Icon.astro";
   >
   <div
     id="theme-options"
-    class="absolute right-0 z-40 mt-2 w-44 rounded-lg border p-1"
-    style="border-color:var(--border);background:var(--surface);box-shadow:0 10px 35px #0002"
+    class="theme-popover absolute right-0 z-40 mt-2 w-44 rounded-xl border p-1.5"
     data-theme-menu
     hidden
   >
     <div role="group" aria-label="Color theme">
       {
-        ["light", "dark", "system"].map((theme) => (
+        ["dark", "light", "system"].map((theme) => (
           <button
             type="button"
-            class="flex w-full rounded px-3 py-3 text-sm"
+            class="theme-option flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm"
             data-theme-option={theme}
             aria-pressed="false"
           >
@@ -51,9 +50,9 @@ import Icon from "./Icon.astro";
     options.forEach((button) => {
       const active =
         button.dataset.themeOption ===
-        (document.documentElement.dataset.theme || "system");
+        (document.documentElement.dataset.theme || "dark");
       button.style.background = active ? "var(--accent-soft)" : "";
-      button.style.color = active ? "var(--accent)" : "";
+      button.style.color = active ? "var(--accent-ink)" : "";
       button.setAttribute("aria-pressed", String(active));
     });
   trigger.addEventListener("click", () => {

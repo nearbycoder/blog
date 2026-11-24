@@ -1,129 +1,152 @@
-@import "@fontsource/jetbrains-mono/400.css";
+@import "./fonts.css";
 /*
  * Shared foundation for every page, including /desktop: Tailwind's reset,
- * theme tokens, and element defaults. The blog's Nearby Building (Art Deco) theme lives in
- * global.css, which only blog pages load (via SiteHeader).
+ * Volcanic Ink & Liquid Glass (dark-first) + Alabaster & Frosted Quartz (light)
+ * design tokens, and base element defaults.
  */
 @layer theme, base, components, utilities;
 @import "tailwindcss/preflight.css" layer(base);
 
 :root {
-  color-scheme: light;
-  --bg: #efe6d4;
-  --bg-alt: #e6dbc4;
-  --surface: #f7f1e4;
-  --surface-2: #ddd0b4;
-  --fg: #1b1714;
-  --fg-muted: #574c41;
-  --fg-dim: #675b4e;
-  --border: #c9b791;
-  --border-dim: #dccfb3;
-  --accent: #b03d24;
-  --accent-ink: #b03d24;
-  --accent-fg: #fff7ea;
-  --accent-soft: #f2d6c6;
-  --jade: #1d6b5b;
-  --jade-soft: #cfe1d6;
-  --brass: #a87b2a;
-  --brass-ink: #82601a;
-  --lacquer: #17131f;
-  --water: var(--jade);
-  --moss: var(--brass-ink);
-  --contour: var(--brass);
-  --contour-strength: 0.5;
-  --ink-shadow: #2a1d1033;
-  --paper-grain: 0.07;
-  --glow-accent: none;
-  --glow-jade: none;
-  --glow-brass: none;
-  --bulb-off: #d8c8a6;
-  --bulb-on: #f6c25a;
-  --rule: 1px;
-  --rule-heavy: 2px;
-  --radius: 3px;
-  --blaze-read: var(--accent);
-  --blaze-workshop: var(--jade);
-  --blaze-about: var(--brass-ink);
-  --font-body: "Jost Variable", "Futura", "Century Gothic", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Big Shoulders Display Variable", "Bebas Neue", "Arial Narrow", Impact, sans-serif;
-  --font-serif: "Newsreader Variable", "Iowan Old Style", Georgia, serif;
-  --font-deco: "Limelight", "Big Shoulders Display Variable", Georgia, serif;
-  --font-mono: "JetBrains Mono", monospace;
-}
-:root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0d0b18;
-  --bg-alt: #13101f;
-  --surface: #1a1628;
-  --surface-2: #241f36;
-  --fg: #f4e9d6;
-  --fg-muted: #bcb0c2;
-  --fg-dim: #a99db0;
-  --border: #3b3252;
-  --border-dim: #29223d;
-  --accent: #ff5c7f;
-  --accent-ink: #ff6f8e;
-  --accent-fg: #1a0610;
-  --accent-soft: #3a1628;
-  --jade: #3fe6c8;
-  --jade-soft: #0f302f;
-  --brass: #ffc35a;
-  --brass-ink: #ffc96b;
-  --lacquer: #07060d;
-  --water: var(--jade);
-  --moss: var(--brass-ink);
-  --contour: var(--brass);
-  --contour-strength: 0.32;
-  --ink-shadow: #00000080;
-  --paper-grain: 0.05;
-  --glow-accent: 0 0 2px #fff6, 0 0 10px #ff5c7f99, 0 0 28px #ff2d6366;
-  --glow-jade: 0 0 2px #fff5, 0 0 10px #3fe6c888, 0 0 26px #1fc7aa55;
-  --glow-brass: 0 0 2px #fff6, 0 0 10px #ffc35a88, 0 0 26px #ff9f1c55;
-  --bulb-off: #3a3150;
-  --bulb-on: #ffd27a;
+  /* Volcanic Ink & Liquid Glass — dark-first default */
+  --bg: #050608;
+  --bg-alt: #0b0c11;
+  --surface: rgba(18, 20, 27, 0.72);
+  --surface-solid: #11131a;
+  --surface-2: rgba(28, 31, 42, 0.78);
+  --fg: #f5f2eb;
+  --fg-muted: #a6a39c;
+  --fg-dim: #7f7c75;
+  --border: rgba(255, 255, 255, 0.11);
+  --border-dim: rgba(255, 255, 255, 0.065);
+  --border-strong: rgba(255, 255, 255, 0.22);
+  --specular: rgba(255, 255, 255, 0.18);
+  --accent: #c9ff3b;
+  --accent-ink: #c9ff3b;
+  --accent-fg: #050608;
+  --accent-soft: rgba(201, 255, 59, 0.12);
+  --opal: #9c88ff;
+  --opal-soft: rgba(156, 136, 255, 0.14);
+  --amber: #e8dcc8;
+  /* Semantic compatibility aliases for existing component utilities */
+  --jade: var(--opal);
+  --jade-soft: var(--opal-soft);
+  --brass: rgba(255, 255, 255, 0.16);
+  --brass-ink: var(--accent-ink);
+  --lacquer: #030406;
+  --water: var(--opal);
+  --moss: var(--accent-ink);
+  --contour: var(--border);
+  --ink-shadow: rgba(0, 0, 0, 0.65);
+  --glass-blur: blur(22px) saturate(1.35);
+  --glow-accent: 0 0 28px rgba(201, 255, 59, 0.32);
+  --glow-opal: 0 0 28px rgba(156, 136, 255, 0.28);
+  --rule: 1px;
+  --rule-heavy: 1.5px;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --radius-pill: 999px;
+  --blaze-read: #c9ff3b;
+  --blaze-workshop: #9c88ff;
+  --blaze-about: #e8dcc8;
+  --font-body:
+    "Jost Variable", "Jost Fallback", ui-sans-serif, system-ui, -apple-system,
+    sans-serif;
+  --font-display:
+    "Newsreader Variable", "Newsreader Fallback", "Iowan Old Style", Georgia,
+    serif;
+  --font-serif:
+    "Newsreader Variable", "Newsreader Fallback", "Iowan Old Style", Georgia,
+    serif;
+  --font-deco:
+    "Newsreader Variable", "Newsreader Fallback", "Iowan Old Style", Georgia,
+    serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
-@media (prefers-color-scheme: dark) {
+
+/* Alabaster & Frosted Quartz — explicit light mode */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f2ec;
+  --bg-alt: #ebe7de;
+  --surface: rgba(255, 254, 250, 0.78);
+  --surface-solid: #faf8f3;
+  --surface-2: rgba(235, 231, 222, 0.85);
+  --fg: #141413;
+  --fg-muted: #58544c;
+  --fg-dim: #736f66;
+  --border: rgba(20, 20, 19, 0.11);
+  --border-dim: rgba(20, 20, 19, 0.065);
+  --border-strong: rgba(20, 20, 19, 0.24);
+  --specular: rgba(255, 255, 255, 0.88);
+  --accent: #c9ff3b;
+  --accent-ink: #476800;
+  --accent-fg: #0c1200;
+  --accent-soft: rgba(163, 217, 41, 0.22);
+  --opal: #5b47c2;
+  --opal-soft: rgba(91, 71, 194, 0.12);
+  --amber: #6d5c42;
+  --jade: var(--opal);
+  --jade-soft: var(--opal-soft);
+  --brass: rgba(20, 20, 19, 0.14);
+  --brass-ink: var(--accent-ink);
+  --lacquer: #141413;
+  --ink-shadow: rgba(20, 18, 14, 0.14);
+  --glow-accent: 0 4px 20px rgba(130, 184, 14, 0.28);
+  --glow-opal: 0 4px 20px rgba(91, 71, 194, 0.18);
+  --blaze-read: #476800;
+  --blaze-workshop: #5b47c2;
+  --blaze-about: #6d5c42;
+}
+
+@media (prefers-color-scheme: light) {
   :root[data-theme="system"] {
-    color-scheme: dark;
-    --bg: #0d0b18;
-    --bg-alt: #13101f;
-    --surface: #1a1628;
-    --surface-2: #241f36;
-    --fg: #f4e9d6;
-    --fg-muted: #bcb0c2;
-    --fg-dim: #a99db0;
-    --border: #3b3252;
-    --border-dim: #29223d;
-    --accent: #ff5c7f;
-    --accent-ink: #ff6f8e;
-    --accent-fg: #1a0610;
-    --accent-soft: #3a1628;
-    --jade: #3fe6c8;
-    --jade-soft: #0f302f;
-    --brass: #ffc35a;
-    --brass-ink: #ffc96b;
-    --lacquer: #07060d;
-    --water: var(--jade);
-    --moss: var(--brass-ink);
-    --contour: var(--brass);
-    --contour-strength: 0.32;
-    --ink-shadow: #00000080;
-    --paper-grain: 0.05;
-    --glow-accent: 0 0 2px #fff6, 0 0 10px #ff5c7f99, 0 0 28px #ff2d6366;
-    --glow-jade: 0 0 2px #fff5, 0 0 10px #3fe6c888, 0 0 26px #1fc7aa55;
-    --glow-brass: 0 0 2px #fff6, 0 0 10px #ffc35a88, 0 0 26px #ff9f1c55;
-    --bulb-off: #3a3150;
-    --bulb-on: #ffd27a;
+    color-scheme: light;
+    --bg: #f4f2ec;
+    --bg-alt: #ebe7de;
+    --surface: rgba(255, 254, 250, 0.78);
+    --surface-solid: #faf8f3;
+    --surface-2: rgba(235, 231, 222, 0.85);
+    --fg: #141413;
+    --fg-muted: #58544c;
+    --fg-dim: #736f66;
+    --border: rgba(20, 20, 19, 0.11);
+    --border-dim: rgba(20, 20, 19, 0.065);
+    --border-strong: rgba(20, 20, 19, 0.24);
+    --specular: rgba(255, 255, 255, 0.88);
+    --accent: #c9ff3b;
+    --accent-ink: #476800;
+    --accent-fg: #0c1200;
+    --accent-soft: rgba(163, 217, 41, 0.22);
+    --opal: #5b47c2;
+    --opal-soft: rgba(91, 71, 194, 0.12);
+    --amber: #6d5c42;
+    --jade: var(--opal);
+    --jade-soft: var(--opal-soft);
+    --brass: rgba(20, 20, 19, 0.14);
+    --brass-ink: var(--accent-ink);
+    --lacquer: #141413;
+    --ink-shadow: rgba(20, 18, 14, 0.14);
+    --glow-accent: 0 4px 20px rgba(130, 184, 14, 0.28);
+    --glow-opal: 0 4px 20px rgba(91, 71, 194, 0.18);
+    --blaze-read: #476800;
+    --blaze-workshop: #5b47c2;
+    --blaze-about: #6d5c42;
   }
 }
+
 * {
   box-sizing: border-box;
 }
 html {
   background: var(--bg);
   scroll-behavior: smooth;
-  scroll-padding-top: 100px;
-  scrollbar-color: var(--border) transparent;
+  scroll-padding-top: 104px;
+  scrollbar-color: var(--border-strong) transparent;
+}
+html:has(body:not(.desktop-shell)) {
+  scrollbar-gutter: stable;
 }
 body {
   margin: 0;
@@ -133,6 +156,7 @@ body {
   font-family: var(--font-body);
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 ::selection {
   background: var(--accent);
@@ -164,9 +188,9 @@ button:disabled {
   cursor: default;
 }
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--accent-ink);
   outline-offset: 4px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 .hidden,
 [hidden] {
@@ -174,14 +198,16 @@ button:disabled {
 }
 .skip-link {
   position: fixed;
-  top: 12px;
-  left: 12px;
-  transform: translateY(-200%);
-  z-index: 60;
+  top: 14px;
+  left: 14px;
+  transform: translateY(-220%);
+  z-index: 80;
   background: var(--accent);
   color: var(--accent-fg);
-  padding: 12px 18px;
-  border-radius: var(--radius);
+  font-weight: 600;
+  padding: 11px 18px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--glow-accent);
 }
 .skip-link:focus {
   transform: none;

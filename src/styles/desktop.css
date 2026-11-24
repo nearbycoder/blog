@@ -7,53 +7,70 @@
   min-height: 0;
 }
 .desktop-environment {
-  /* The Penthouse: lacquer and brass after dark, over a neon skyline. */
-  --desk-font-ui: "Jost Variable", "Jost", system-ui, sans-serif;
-  --desk-font-display:
-    "Big Shoulders Display Variable", "Jost Variable", system-ui, sans-serif;
-  --desk-font-brand: "Limelight", "Big Shoulders Display Variable", serif;
-  --desk-paper: #1a1628;
-  --desk-sidebar: #141120;
-  --desk-line: #3a3150;
-  --desk-ink: #f4e9d6;
-  --desk-muted: #b9adbf;
-  --desk-selected: #3b2e24;
-  --desk-accent: #ffc35a;
-  --desk-panel: #120f1def;
-  --desk-hover: #f4e9d60b;
-  --desk-radius: 6px;
-  --desk-gilt: #c9a35a;
-  --desk-gilt-soft: #c9a35a59;
-  --desk-rose: #ff5c7f;
-  --desk-teal: #3fe6c8;
-  --desk-terracotta: #e0694d;
-  --desk-titlebar: linear-gradient(180deg, #221c33, #18142a);
-  --desk-titlebar-active: linear-gradient(180deg, #2a2138, #1b162b);
-  --desk-close-hover: #c2412f;
-  --desk-wallpaper: url("/images/desktop/deco-skyline-night.svg");
+  /* Obsidian Atelier OS: volcanic obsidian ink, smoked refractive glass, and molten chartreuse. */
+  --desk-font-ui: "Jost Variable", "Jost Fallback", system-ui, -apple-system, sans-serif;
+  --desk-font-display: "Newsreader Variable", "Newsreader Fallback", "Iowan Old Style", Georgia, serif;
+  --desk-font-brand: "Newsreader Variable", "Newsreader Fallback", "Iowan Old Style", Georgia, serif;
+  --desk-paper: rgba(14, 16, 22, 0.95);
+  --desk-paper-solid: #0e1016;
+  --desk-sidebar: rgba(10, 12, 17, 0.96);
+  --desk-line: rgba(255, 255, 255, 0.11);
+  --desk-specular: rgba(255, 255, 255, 0.19);
+  --desk-ink: #f5f2eb;
+  --desk-muted: #9f9c95;
+  --desk-selected: rgba(201, 255, 59, 0.14);
+  --desk-accent: #c9ff3b;
+  --desk-accent-fg: #050608;
+  --desk-panel: rgba(16, 18, 25, 0.74);
+  --desk-hover: rgba(255, 255, 255, 0.055);
+  --desk-radius: 14px;
+  --desk-gilt: rgba(255, 255, 255, 0.2);
+  --desk-gilt-soft: rgba(255, 255, 255, 0.11);
+  --desk-rose: #ff6b8b;
+  --desk-teal: #c9ff3b;
+  --desk-opal: #9c88ff;
+  --desk-terracotta: #ff6b6b;
+  --desk-titlebar: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.015)
+  );
+  --desk-titlebar-active: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.025)
+  );
+  --desk-close-hover: #d94646;
+  --desk-wallpaper: url("/images/desktop/obsidian-silk-dark.webp");
   --desk-wallpaper-glass: url("/images/desktop/emerald-glass.webp");
   --desk-wallpaper-position: center;
-  --desk-wallpaper-base: #120d2e;
-  --desk-wallpaper-ink: #f2cf8c;
-  --desk-shortcut-ink: #f9f0e1;
-  --desk-shortcut-text-shadow: 0 1px 2px #000, 0 0 8px #0a0716;
-  --desk-shortcut-label: #0d0b18b3;
-  --desk-shortcut-hover: #ffc35a1f;
-  --desk-shortcut-outline: #ffc35a73;
-  --desk-icon-tile: linear-gradient(160deg, #2b2340f2, #120e20f5);
-  --desk-icon-frame: linear-gradient(160deg, #f0cf86, #8e6a2c 55%, #d8b56a);
-  --desk-icon-shadow: 0 6px 14px #0007;
-  --desk-icon-files: #3fe6c8;
-  --desk-icon-files-fill: #124a44;
-  --desk-icon-projects: #ff8aa3;
-  --desk-icon-lab: #ffc35a;
-  --desk-icon-pages: #efe2cc;
-  --desk-icon-arcade: #ff5c7f;
-  --desk-icon-arcade-fill: #4f1a33;
-  --desk-icon-terminal: #8fd9ff;
-  --desk-shadow: #000a;
-  --desk-shadow-soft: #0006;
-  --desk-party-ink: #3fe6c8;
+  --desk-wallpaper-base: #050608;
+  --desk-wallpaper-ink: rgba(245, 242, 235, 0.72);
+  --desk-shortcut-ink: #f5f2eb;
+  --desk-shortcut-text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85);
+  --desk-shortcut-label: rgba(8, 10, 14, 0.62);
+  --desk-shortcut-hover: rgba(201, 255, 59, 0.1);
+  --desk-shortcut-outline: rgba(201, 255, 59, 0.42);
+  --desk-icon-tile: linear-gradient(
+    160deg,
+    rgba(30, 33, 44, 0.76),
+    rgba(12, 14, 19, 0.84)
+  );
+  --desk-icon-frame: rgba(255, 255, 255, 0.14);
+  --desk-icon-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 12px 26px rgba(0, 0, 0, 0.52);
+  --desk-icon-files: #c9ff3b;
+  --desk-icon-files-fill: rgba(201, 255, 59, 0.14);
+  --desk-icon-projects: #c9ff3b;
+  --desk-icon-lab: #b2a1ff;
+  --desk-icon-pages: #f5f2eb;
+  --desk-icon-arcade: #c9ff3b;
+  --desk-icon-arcade-fill: rgba(201, 255, 59, 0.14);
+  --desk-icon-terminal: #c2b5ff;
+  --desk-shadow: rgba(0, 0, 0, 0.72);
+  --desk-shadow-soft: rgba(0, 0, 0, 0.46);
+  --desk-party-ink: #c9ff3b;
   color-scheme: dark;
   height: 100%;
   position: relative;
@@ -74,47 +91,65 @@
     no-repeat;
 }
 :root[data-theme="light"] .desktop-environment {
-  /* Daylight on the limestone facade: ivory, gilt, terracotta and jade. */
-  --desk-paper: #fbf7ee;
-  --desk-sidebar: #f3ebdb;
-  --desk-line: #d9c9a6;
-  --desk-ink: #1b1714;
-  --desk-muted: #5b5045;
-  --desk-selected: #f3e4c2;
-  --desk-accent: #845414;
-  --desk-panel: #f7f1e4f2;
-  --desk-hover: #1b17140a;
-  --desk-gilt: #a87b2a;
-  --desk-gilt-soft: #a87b2a66;
-  --desk-rose: #b23f26;
-  --desk-teal: #1d6b5b;
-  --desk-terracotta: #b23f26;
-  --desk-titlebar: linear-gradient(180deg, #f8f2e5, #efe5d1);
-  --desk-titlebar-active: linear-gradient(180deg, #fbf6ea, #f1e6cf);
-  --desk-close-hover: #b23f26;
-  --desk-wallpaper: url("/images/desktop/deco-skyline-day.svg");
+  /* Alabaster & Frosted Quartz: luminous frosted daylight surfaces. */
+  --desk-paper: rgba(252, 250, 246, 0.96);
+  --desk-paper-solid: #faf8f3;
+  --desk-sidebar: rgba(244, 241, 234, 0.97);
+  --desk-line: rgba(20, 20, 19, 0.11);
+  --desk-specular: rgba(255, 255, 255, 0.92);
+  --desk-ink: #141413;
+  --desk-muted: #5a564e;
+  --desk-selected: rgba(145, 198, 22, 0.22);
+  --desk-accent: #4c6f00;
+  --desk-accent-fg: #f8faef;
+  --desk-panel: rgba(250, 248, 243, 0.78);
+  --desk-hover: rgba(20, 20, 19, 0.045);
+  --desk-gilt: rgba(20, 20, 19, 0.18);
+  --desk-gilt-soft: rgba(20, 20, 19, 0.1);
+  --desk-rose: #b83a4b;
+  --desk-teal: #4c6f00;
+  --desk-opal: #5c48c4;
+  --desk-terracotta: #b83a4b;
+  --desk-titlebar: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.7),
+    rgba(245, 242, 235, 0.4)
+  );
+  --desk-titlebar-active: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.92),
+    rgba(247, 244, 238, 0.65)
+  );
+  --desk-close-hover: #c53b3b;
+  --desk-wallpaper: url("/images/desktop/obsidian-silk-light.webp");
   --desk-wallpaper-glass: url("/images/desktop/emerald-glass-light.webp");
-  --desk-wallpaper-base: #f2dfc2;
-  --desk-wallpaper-ink: #8c6418;
-  --desk-shortcut-ink: #1b1714;
-  --desk-shortcut-text-shadow: 0 1px 1px #fff8ea, 0 0 6px #fff8eacc;
-  --desk-shortcut-label: #fbf6ecd9;
-  --desk-shortcut-hover: #fff8ea99;
-  --desk-shortcut-outline: #a87b2a80;
-  --desk-icon-tile: linear-gradient(160deg, #fffaf0, #f1e5cd);
-  --desk-icon-frame: linear-gradient(160deg, #d9b56a, #8c6418 55%, #c79a45);
-  --desk-icon-shadow: 0 5px 12px #5a3a1a29;
-  --desk-icon-files: #1d6b5b;
-  --desk-icon-files-fill: #cfe5da;
-  --desk-icon-projects: #b23f26;
-  --desk-icon-lab: #8c6418;
-  --desk-icon-pages: #4f4338;
-  --desk-icon-arcade: #9b2f55;
-  --desk-icon-arcade-fill: #f4d6de;
-  --desk-icon-terminal: #2f5e7a;
-  --desk-shadow: #4a301635;
-  --desk-shadow-soft: #4a30161c;
-  --desk-party-ink: #1d6b5b;
+  --desk-wallpaper-base: #f4f2ec;
+  --desk-wallpaper-ink: rgba(20, 20, 19, 0.65);
+  --desk-shortcut-ink: #141413;
+  --desk-shortcut-text-shadow: 0 1px 4px rgba(255, 255, 255, 0.9);
+  --desk-shortcut-label: rgba(255, 254, 250, 0.78);
+  --desk-shortcut-hover: rgba(145, 198, 22, 0.16);
+  --desk-shortcut-outline: rgba(76, 111, 0, 0.35);
+  --desk-icon-tile: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.88),
+    rgba(242, 239, 231, 0.84)
+  );
+  --desk-icon-frame: rgba(20, 20, 19, 0.11);
+  --desk-icon-shadow:
+    inset 0 1px 0 #ffffff,
+    0 8px 20px rgba(20, 18, 14, 0.12);
+  --desk-icon-files: #4c6f00;
+  --desk-icon-files-fill: rgba(145, 198, 22, 0.22);
+  --desk-icon-projects: #4c6f00;
+  --desk-icon-lab: #5c48c4;
+  --desk-icon-pages: #2a2926;
+  --desk-icon-arcade: #4c6f00;
+  --desk-icon-arcade-fill: rgba(145, 198, 22, 0.22);
+  --desk-icon-terminal: #5c48c4;
+  --desk-shadow: rgba(20, 18, 14, 0.18);
+  --desk-shadow-soft: rgba(20, 18, 14, 0.1);
+  --desk-party-ink: #4c6f00;
   color-scheme: light;
 }
 .desktop-environment button,
@@ -327,78 +362,26 @@
   color: var(--desk-icon-pages);
 }
 
-/* A small lobby plaque: floor medallion, brand, and the floor's name. */
+/* Subtle italic editorial watermark in lower-right. */
 .desktop-wallpaper-copy {
   position: absolute;
-  bottom: 30px;
-  right: 34px;
-  display: grid;
-  justify-items: center;
-  min-width: 136px;
-  padding: 18px 18px 10px;
+  bottom: 26px;
+  right: 32px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
   color: var(--desk-wallpaper-ink);
   pointer-events: none;
-  text-align: center;
-  border: 3px double color-mix(in srgb, currentColor 60%, transparent);
-  border-radius: 2px;
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, currentColor 8%, transparent),
-      transparent 60%
-    ),
-    var(--desk-panel);
-  box-shadow: 0 10px 30px var(--desk-shadow-soft);
-}
-.desktop-wallpaper-copy .plaque-floor {
-  display: grid;
-  place-items: center;
-  position: absolute;
-  top: -15px;
-  left: 50%;
-  translate: -50% 0;
-  width: 28px;
-  height: 28px;
-  font: 700 11px/1 var(--desk-font-display);
-  letter-spacing: 0.08em;
-  color: var(--desk-wallpaper-base);
-  background: var(--desk-wallpaper-ink);
-  clip-path: polygon(
-    30% 0,
-    70% 0,
-    100% 30%,
-    100% 70%,
-    70% 100%,
-    30% 100%,
-    0 70%,
-    0 30%
-  );
+  user-select: none;
 }
 .desktop-wallpaper-copy strong {
-  display: block;
-  font: 400 26px/1.05 var(--desk-font-brand);
-  letter-spacing: 0.02em;
+  font: italic 400 22px/1 var(--desk-font-brand);
+  letter-spacing: -0.01em;
 }
 .desktop-wallpaper-copy .plaque-caption {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 5px;
-  font: 600 10px/1.4 var(--desk-font-display);
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-}
-.desktop-wallpaper-copy .plaque-caption::before,
-.desktop-wallpaper-copy .plaque-caption::after {
-  content: "";
-  width: 12px;
-  height: 5px;
-  background: repeating-linear-gradient(
-    180deg,
-    currentColor 0 1px,
-    transparent 1px 2px
-  );
-  opacity: 0.7;
+  font: italic 380 22px/1 var(--desk-font-brand);
+  color: var(--desk-accent);
+  opacity: 0.9;
 }
 .has-desktop-js .library-window:not([data-opened]) {
   display: none;
@@ -422,18 +405,25 @@
   flex-direction: column;
   overflow: hidden;
   resize: none;
-  border: 1px solid color-mix(in srgb, var(--desk-gilt) 22%, var(--desk-line));
-  border-radius: 6px;
+  border: 1px solid var(--desk-line);
+  border-radius: 16px;
   background: var(--desk-paper);
+  backdrop-filter: blur(26px) saturate(1.4);
+  -webkit-backdrop-filter: blur(26px) saturate(1.4);
   box-shadow:
-    0 18px 50px var(--desk-shadow-soft),
-    0 2px 6px var(--desk-shadow-soft);
+    inset 0 1px 0 var(--desk-specular),
+    0 22px 54px var(--desk-shadow-soft),
+    0 2px 8px var(--desk-shadow-soft);
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.25s ease;
 }
 .desktop-window.is-active {
-  border-color: color-mix(in srgb, var(--desk-gilt) 60%, var(--desk-line));
+  border-color: color-mix(in srgb, var(--desk-accent) 42%, var(--desk-line));
   box-shadow:
-    0 24px 70px var(--desk-shadow),
-    0 3px 10px var(--desk-shadow-soft);
+    inset 0 1px 0 var(--desk-specular),
+    0 28px 76px var(--desk-shadow),
+    0 0 0 1px color-mix(in srgb, var(--desk-accent) 18%, transparent);
 }
 /* Window geometry must be available before a restored app downloads its CSS. */
 .utility-window {
@@ -454,7 +444,7 @@
   height: calc(100% - 16px) !important;
   resize: none;
 }
-/* Deco title bar: centred, tracked signage between triple speed lines. */
+/* Smoked-glass Atelier title bar: clean Newsreader title, subtle glass controls. */
 .window-titlebar {
   display: grid;
   grid-template-columns:
@@ -463,17 +453,16 @@
   align-items: center;
   gap: 10px;
   padding-left: 14px;
-  height: 42px;
-  min-height: 42px;
+  height: 44px;
+  min-height: 44px;
   background: var(--desk-titlebar);
   user-select: none;
   touch-action: none;
   cursor: grab;
-  border-bottom: 3px double var(--desk-gilt-soft);
+  border-bottom: 1px solid var(--desk-line);
 }
 .desktop-window.is-active .window-titlebar {
   background: var(--desk-titlebar-active);
-  border-bottom-color: color-mix(in srgb, var(--desk-gilt) 75%, transparent);
 }
 .window-title {
   grid-column: 2;
@@ -482,39 +471,15 @@
   justify-content: center;
   gap: 8px;
   font-family: var(--desk-font-display);
-  font-size: 14px;
-  font-weight: 650;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
+  font-size: 15.5px;
+  font-weight: 460;
+  letter-spacing: -0.01em;
   overflow: hidden;
   white-space: nowrap;
   min-width: 0;
 }
-.window-title::before,
-.window-title::after {
-  content: "";
-  /* A definite width gives the lines an intrinsic size; they yield first. */
-  flex: 0 1000 auto;
-  width: 56px;
-  min-width: 0;
-  height: 7px;
-  background: repeating-linear-gradient(
-    180deg,
-    var(--desk-gilt) 0 1px,
-    transparent 1px 3px
-  );
-  opacity: 0.55;
-}
-.window-title::before {
-  margin-right: 4px;
-  mask-image: linear-gradient(90deg, transparent, #000);
-}
-.window-title::after {
-  margin-left: 4px;
-  mask-image: linear-gradient(270deg, transparent, #000);
-}
 .desktop-window:not(.is-active) .window-title {
-  color: color-mix(in srgb, var(--desk-ink) 78%, var(--desk-muted));
+  color: color-mix(in srgb, var(--desk-ink) 74%, var(--desk-muted));
 }
 .window-title > .desktop-icon,
 .window-title > [data-app-icon] {
@@ -535,7 +500,9 @@
 }
 .window-subtitle {
   color: var(--desk-muted);
-  font-weight: 500;
+  font-family: var(--desk-font-ui);
+  font-size: 12px;
+  font-weight: 400;
   overflow: hidden;
   text-overflow: ellipsis;
   flex-shrink: 2;
@@ -1581,7 +1548,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .desktop-window,
   .shell-popup {
-    animation: desktop-open 0.12s ease-out;
+    animation: desktop-open 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .desktop-window[data-restored] {
     animation: none;
@@ -1589,11 +1556,11 @@
   @keyframes desktop-open {
     from {
       opacity: 0;
-      transform: translateY(3px);
+      transform: translateY(10px) scale(0.97);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: none;
     }
   }
 }
@@ -1786,84 +1753,51 @@
 }
 
 /* ------------------------------------------------------------------
-   The Penthouse: top floor of the Nearby Building.
-   Lacquer and brass at night, limestone and gilt by day. Everything
-   below is ornament on the shared --desk-* tokens; geometry above.
+   Obsidian Atelier OS: Volcanic Ink & Liquid Glass desktop skin.
+   Smoked refractive glass chrome, rounded frosted shortcut squircles,
+   floating glass pill dock with spring lift, and molten chartreuse accents.
    ------------------------------------------------------------------ */
-.desktop-environment {
-  --desk-octagon: polygon(
-    29% 0,
-    71% 0,
-    100% 29%,
-    100% 71%,
-    71% 100%,
-    29% 100%,
-    0 71%,
-    0 29%
-  );
-  --desk-brass-fill: radial-gradient(
-    circle at 50% 28%,
-    #ffe7ac,
-    #e2aa45 55%,
-    #9c6d1c
-  );
-  --desk-brass-ink: #2a1a06;
-}
-:root[data-theme="light"] .desktop-environment {
-  --desk-brass-fill: radial-gradient(
-    circle at 50% 28%,
-    #f6dc9a,
-    #c9993f 55%,
-    #8c6418
-  );
-}
 @media (max-width: 760px) {
   .desktop-environment {
-    /* Keep the skyline's hero tower in view on portrait phones. */
-    --desk-wallpaper-position: 68% center;
+    --desk-wallpaper-position: 72% center;
   }
 }
 
-/* Desktop shortcuts: octagonal medallions framed in brass. */
+/* Desktop shortcuts: translucent smoked-glass squircles with specular rims. */
 .desktop-shortcuts button {
-  gap: 6px;
-  padding: 4px 2px;
-  border-radius: 4px;
+  gap: 7px;
+  padding: 5px 2px;
+  border-radius: 12px;
   text-shadow: var(--desk-shortcut-text-shadow);
+  transition:
+    background 0.2s ease,
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .desktop-shortcuts button > span:not(.shortcut-art) {
   max-width: calc(100% + 4px);
-  padding: 1px 5px;
-  border-radius: 3px;
+  padding: 2px 7px;
+  border-radius: 999px;
   background: var(--desk-shortcut-label);
-  font-weight: 500;
+  backdrop-filter: blur(10px);
+  font-weight: 460;
   letter-spacing: 0.01em;
-  line-height: 1.45;
+  line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .shortcut-art {
   position: relative;
-  border-radius: 0;
-  background: var(--desk-icon-frame);
-  box-shadow: none;
-  clip-path: var(--desk-octagon);
-}
-.shortcut-art::before {
-  content: "";
-  position: absolute;
-  inset: 2px;
+  border-radius: 14px;
+  border: 1px solid var(--desk-icon-frame);
   background: var(--desk-icon-tile);
-  clip-path: var(--desk-octagon);
-}
-.shortcut-art::after {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  border: 1px solid var(--desk-gilt-soft);
-  clip-path: var(--desk-octagon);
-  opacity: 0.6;
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  box-shadow: var(--desk-icon-shadow);
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
 }
 .shortcut-art .desktop-icon {
   position: relative;
@@ -1877,97 +1811,91 @@
 }
 .desktop-shortcuts button:hover .shortcut-art,
 .desktop-shortcuts button:focus-visible .shortcut-art {
-  background: linear-gradient(160deg, #fff3cf, var(--desk-accent) 60%);
+  transform: translateY(-3px) scale(1.04);
+  border-color: color-mix(in srgb, var(--desk-accent) 60%, transparent);
+  box-shadow:
+    inset 0 1px 0 var(--desk-specular),
+    0 12px 28px var(--desk-shadow),
+    0 0 18px color-mix(in srgb, var(--desk-accent) 22%, transparent);
 }
 
-/* Session tools: a brass-railed lift panel. */
+/* Session tools: floating smoked-glass pill in upper-right. */
 .desktop-session-tools {
-  border-radius: 4px;
-  border-color: var(--desk-gilt-soft);
+  border-radius: 999px;
+  padding: 4px 6px;
+  border-color: var(--desk-line);
   box-shadow:
-    inset 0 1px color-mix(in srgb, var(--desk-gilt) 30%, transparent),
-    0 6px 18px var(--desk-shadow-soft);
-  backdrop-filter: blur(18px);
+    inset 0 1px 0 var(--desk-specular),
+    0 12px 32px var(--desk-shadow-soft);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
 }
 .desktop-session-tools button {
-  border-radius: 3px;
-  font-weight: 500;
+  border-radius: 999px;
+  font-weight: 480;
+  padding: 5px 10px;
+  transition: background 0.18s ease, color 0.18s ease;
 }
 .desktop-session-tools [data-active-space-label] {
-  font-family: var(--desk-font-display);
-  font-size: 13px;
-  font-weight: 650;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.desktop-session-tools > button + button {
-  position: relative;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 [data-activity-unread] {
   font-weight: 600;
-  color: var(--desk-brass-ink);
+  color: var(--desk-accent-fg);
 }
 
-/* Bottom panel: the elevator-lobby control strip with a brass top rule. */
+/* Bottom dock: centered floating smoked-glass pill with elastic hover lift. */
 .desktop-dock {
-  border-radius: 6px;
-  border-color: var(--desk-line);
-  border-top: 3px double var(--desk-gilt);
-  background:
-    linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--desk-gilt) 9%, transparent),
-      transparent 55%
-    ),
-    var(--desk-panel);
-  box-shadow: 0 8px 26px var(--desk-shadow-soft);
+  width: min(980px, calc(100% - 24px));
+  margin: 0 auto 14px;
+  border-radius: 20px;
+  padding: 6px 12px;
+  border: 1px solid var(--desk-line);
+  background: var(--desk-panel);
+  backdrop-filter: blur(26px) saturate(1.45);
+  -webkit-backdrop-filter: blur(26px) saturate(1.45);
+  box-shadow:
+    inset 0 1px 0 var(--desk-specular),
+    0 18px 46px var(--desk-shadow);
 }
 .desktop-dock > button,
 .panel-tray > button,
 .panel-tray > a {
-  border-radius: 4px;
+  border-radius: 12px;
+  transition:
+    transform 0.24s cubic-bezier(0.2, 1.35, 0.4, 1),
+    background 0.18s ease,
+    color 0.18s ease;
+}
+@media (min-width: 761px) and (pointer: fine) {
+  .desktop-dock > button:not(.panel-show-desktop):hover {
+    transform: translateY(-4px) scale(1.1);
+  }
 }
 .desktop-dock .panel-launcher {
   position: relative;
-  color: var(--desk-brass-ink);
-  width: 42px;
-  background: transparent;
-}
-.desktop-dock .panel-launcher::before {
-  content: "";
-  position: absolute;
-  inset: 1px 2px;
-  background: var(--desk-brass-fill);
-  clip-path: var(--desk-octagon);
-  transition: filter 0.15s;
+  color: var(--desk-accent-fg);
+  width: 40px;
+  background: var(--desk-accent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--desk-accent) 34%, transparent);
 }
 .desktop-dock .panel-launcher:hover,
 .panel-launcher[aria-expanded="true"] {
-  background: transparent;
-}
-.desktop-dock .panel-launcher:hover::before {
-  filter: brightness(1.08) saturate(1.1);
-}
-.panel-launcher[aria-expanded="true"]::before {
-  filter: brightness(1.12);
-  box-shadow: inset 0 0 0 2px var(--desk-brass-ink);
-}
-.panel-launcher .desktop-icon {
-  position: relative;
+  background: color-mix(in srgb, var(--desk-accent) 90%, #ffffff);
+  color: var(--desk-accent-fg);
 }
 .panel-launcher svg {
-  width: 26px;
-  height: 26px;
-  stroke-width: 1.7;
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.8;
 }
 .dock-divider {
-  width: 7px;
-  height: 26px;
-  background: repeating-linear-gradient(
-    90deg,
-    var(--desk-gilt-soft) 0 1px,
-    transparent 1px 3px
-  );
+  width: 1px;
+  height: 22px;
+  background: var(--desk-line);
+  margin: 0 4px;
 }
 .app-terminal {
   color: var(--desk-icon-terminal);
@@ -1980,46 +1908,61 @@
   content: "";
   position: absolute;
   left: 50%;
-  bottom: 1px;
-  width: 6px;
-  height: 6px;
+  bottom: 2px;
+  width: 5px;
+  height: 5px;
   translate: -50% 0;
-  rotate: 45deg;
+  border-radius: 50%;
   background: var(--desk-accent);
+  box-shadow: 0 0 8px var(--desk-accent);
 }
 .desktop-tasks button {
-  border-radius: 4px;
-  font-weight: 500;
+  border-radius: 11px;
+  font-weight: 480;
+  transition: background 0.16s ease, color 0.16s ease;
 }
 .desktop-tasks button[aria-pressed="true"] {
   box-shadow:
-    inset 0 -2px var(--desk-accent),
-    inset 0 0 0 1px var(--desk-gilt-soft);
+    inset 0 0 0 1px color-mix(in srgb, var(--desk-accent) 42%, transparent);
+  color: var(--desk-accent);
 }
 .panel-clock time {
-  font-family: var(--desk-font-display);
-  font-size: 17px;
-  font-weight: 650;
-  letter-spacing: 0.06em;
-  line-height: 1.1;
+  font-size: 13.5px;
+  font-weight: 540;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
 }
 .panel-clock span {
-  font-size: 9px;
-  letter-spacing: 0.14em;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+.desktop-dock .panel-show-desktop {
+  border-radius: 0 12px 12px 0;
+}
+@media (max-width: 760px) {
+  .desktop-dock {
+    width: calc(100% - 10px);
+    margin: 0 5px 5px;
+    border-radius: 14px;
+  }
+}
 
-/* Popups: lacquered panels with a brass top rule. */
+/* Popups: smoked-glass floating panels with specular rim light. */
 .shell-popup {
-  border-radius: 6px;
-  border-color: var(--desk-gilt-soft);
-  border-top: 3px double var(--desk-gilt);
+  border-radius: 18px;
+  border: 1px solid var(--desk-line);
+  box-shadow:
+    inset 0 1px 0 var(--desk-specular),
+    0 24px 64px var(--desk-shadow);
+  backdrop-filter: blur(28px) saturate(1.45);
+  -webkit-backdrop-filter: blur(28px) saturate(1.45);
 }
 .launcher-heading {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  border-bottom: 1px solid var(--desk-gilt-soft);
+  border-bottom: 1px solid var(--desk-line);
   margin-bottom: 16px;
 }
 .launcher-heading::before {
@@ -2027,135 +1970,127 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: repeating-conic-gradient(
-    from -90deg at 82% 150%,
-    var(--desk-gilt-soft) 0 2.5deg,
-    transparent 2.5deg 9deg
+  background: radial-gradient(
+    ellipse 60% 100% at 88% 20%,
+    color-mix(in srgb, var(--desk-accent) 16%, transparent),
+    transparent 70%
   );
-  mask-image: linear-gradient(90deg, transparent 15%, #000 85%);
-  opacity: 0.6;
 }
 .user-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 0;
-  clip-path: var(--desk-octagon);
-  background: var(--desk-brass-fill);
-  color: var(--desk-brass-ink);
-  font: 400 22px/1 var(--desk-font-brand);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: var(--desk-accent);
+  color: var(--desk-accent-fg);
+  font: italic 500 22px/1 var(--desk-font-brand);
 }
 .launcher-heading strong {
   font-family: var(--desk-font-display);
-  font-size: 19px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 480;
+  letter-spacing: -0.015em;
 }
 .launcher-heading div > span {
-  font-size: 11px;
-  letter-spacing: 0.04em;
+  font-size: 11.5px;
 }
 .launcher-search,
 .desktop-search {
-  border-radius: 4px;
+  border-radius: 10px;
 }
 .launcher-section-label {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-size: 10px;
+  font-weight: 560;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 .launcher-section-label::after {
   content: "";
   flex: 1;
-  height: 3px;
-  border-block: 1px solid var(--desk-gilt-soft);
-  opacity: 0.8;
+  height: 1px;
+  background: var(--desk-line);
 }
 .launcher-categories button {
   border: 1px solid transparent;
-  border-radius: 3px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  border-radius: 999px;
+  padding: 6px 11px;
+  font-weight: 480;
 }
 .launcher-categories button:hover {
   color: var(--desk-ink);
   background: var(--desk-hover);
 }
 .launcher-categories button[aria-pressed="true"] {
-  border-color: var(--desk-gilt-soft);
+  border-color: color-mix(in srgb, var(--desk-accent) 45%, transparent);
 }
 .launcher-apps button {
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: 12px;
+  transition: background 0.16s ease, border-color 0.16s ease;
 }
 .launcher-apps button:hover {
-  border-color: var(--desk-gilt-soft);
+  border-color: color-mix(in srgb, var(--desk-accent) 35%, var(--desk-line));
 }
 .launcher-places button,
 .launcher-results button {
-  border-radius: 4px;
+  border-radius: 10px;
 }
 .launcher-footer {
-  border-top: 3px double var(--desk-gilt-soft);
+  border-top: 1px solid var(--desk-line);
   font-size: 11px;
 }
 .desktop-calendar header h2 {
   font-family: var(--desk-font-display);
-  font-size: 17px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 460;
 }
 .calendar-weekdays {
-  font-weight: 600;
-  letter-spacing: 0.12em;
+  font-weight: 540;
+  letter-spacing: 0.1em;
 }
 .calendar-days time {
-  border-radius: 3px;
+  border-radius: 999px;
 }
 .calendar-days [aria-current="date"] {
-  color: var(--desk-brass-ink);
-  background: var(--desk-brass-fill);
-  box-shadow: none;
-  clip-path: var(--desk-octagon);
+  color: var(--desk-accent-fg);
+  background: var(--desk-accent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--desk-accent) 40%, transparent);
   font-weight: 600;
 }
 .desktop-calendar .calendar-today {
-  border-color: var(--desk-gilt-soft);
-  letter-spacing: 0.06em;
+  border-radius: 999px;
+  border-color: var(--desk-line);
 }
 
-/* Library: signage headings and gilt-ruled lists. */
+/* Library: editorial headings and clean glass lists. */
 .library-intro h1 {
   font-family: var(--desk-font-display);
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 24px;
+  font-weight: 440;
+  letter-spacing: -0.02em;
 }
 .library-sidebar > p,
 .file-list-head,
 .desktop-eyebrow {
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 540;
 }
 .file-list-head {
   font-size: 10px;
-  border-block-color: var(--desk-gilt-soft);
+  background: var(--desk-paper-solid);
 }
 .library-sidebar button,
 .desktop-files a,
 .toolbar-home,
 .file-view-controls button {
-  border-radius: 4px;
+  border-radius: 9px;
 }
 .library-sidebar button[aria-pressed="true"] {
   box-shadow: inset 2px 0 var(--desk-accent);
+  color: var(--desk-accent);
 }
 .file-icon-projects {
   color: var(--desk-icon-projects);
@@ -2167,22 +2102,27 @@
   color: var(--desk-icon-pages);
 }
 .desktop-snap-preview {
-  border-radius: 6px;
+  border-radius: 16px;
   font-family: var(--desk-font-display);
+  backdrop-filter: blur(12px);
 }
-/* Notifications: a brass-ruled card (overrides the activity service's base). */
+
+/* Notifications: smoked-glass pill toast. */
 .desktop-environment[data-desktop] .desktop-notification {
-  border-color: var(--desk-gilt-soft);
-  border-top: 3px double var(--desk-gilt);
-  border-radius: 6px;
+  border: 1px solid var(--desk-line);
+  border-radius: 14px;
   background: var(--desk-panel);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow:
+    inset 0 1px 0 var(--desk-specular),
+    0 16px 40px var(--desk-shadow);
 }
 .desktop-environment[data-desktop] .desktop-notification small {
   color: var(--desk-accent);
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-weight: 560;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 .desktop-environment[data-desktop] .desktop-notification button {

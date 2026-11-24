@@ -1,12 +1,23 @@
 ---
+import CustomSelect from "../../components/CustomSelect.astro";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
+import Icon from "../../components/Icon.astro";
 import { getCollection } from "astro:content";
 import { compareWorkByDate } from "../../lib/work";
 
 const games = (await getCollection("games"))
   .filter((entry) => !entry.data.draft)
   .sort(compareWorkByDate);
+
+const engines = [
+  { label: "All games", value: "" },
+  { label: "Unity", value: "unity" },
+  { label: "Three.js", value: "three" },
+  { label: "WebGL & Canvas", value: "canvas" },
+  { label: "Unreal", value: "unreal" },
+  { label: "Rust & Godot", value: "rust-godot" },
+];
 ---
 
 <BlogLayout
@@ -15,22 +26,233 @@ const games = (await getCollection("games"))
 >
   <section class="page-shell space-y-8">
     <header class="page-intro">
-      <p class="paper-strip">Games / {games.length} builds</p>
+      <p class="paper-strip">Games · {games.length} builds</p>
       <h1 class="display">Made to be<br /><em>played.</em></h1>
       <p style="color:var(--fg-muted)">
-        Browser toys, cozy puzzle games, and the occasional gothic shooter,
-        newest first. Every game has its own page covering how it plays, what it
-        was built with, and how it was made.
+        Browser toys, cozy puzzle games, and the occasional gothic shooter.
+        Every game has its own page covering how it plays, what it was built
+        with, and how it was made.
       </p>
     </header>
-
-    <a class="text-link" href="/projects">Looking for projects? →</a>
-    <div class="project-grid">
+    <nav class="signposts" aria-label="Other ways to explore games">
+      <p class="label">Other ways in</p>
+      <ul>
+        <li><a href="/projects">Looking for projects?</a></li>
+        <li><a href="/technologies/">Explore by technology</a></li>
+      </ul>
+    </nav>
+    <div class="search-toolbar">
+      <Icon name="search" /><label for="game-search" class="sr-only"
+        >Search games</label
+      ><input
+        id="game-search"
+        type="search"
+        placeholder="Search by title, genre, engine, or platform…"
+      /><span class="label shrink-0" id="game-count" aria-live="polite"
+        >{games.length} games</span
+      >
+    </div>
+    <div class="filter-bar" role="group" aria-label="Filter by engine">
+      {
+        engines.map((item, index) => (
+          <button
+            type="button"
+            class="filter-button"
+            data-engine-filter={item.value}
+            aria-pressed={index === 0 ? "true" : "false"}
+          >
+            {item.label}
+          </button>
+        ))
+      }
+    </div>
+    <div class="reader-controls">
+      <CustomSelect
+        id="game-platform"
+        label="Platform"
+        options={[
+          { value: "", label: "All platforms" },
+          { value: "download", label: "With desktop download" },
+          { value: "macos", label: "macOS" },
+          { value: "windows", label: "Windows" },
+          { value: "linux", label: "Linux" },
+          { value: "web-only", label: "Web only" },
+        ]}
+      />
+      <CustomSelect
+        id="game-sort"
+        label="Sort games"
+        options={[
+          { value: "newest", label: "Newest first" },
+          { value: "oldest", label: "Oldest first" },
+          { value: "featured", label: "Featured first" },
+          { value: "title", label: "Title A–Z" },
+          { value: "title-desc", label: "Title Z–A" },
+        ]}
+      />
+    </div>
+    <div id="games-empty" class="empty-state" hidden>
+      <p>No games match those filters.</p><button
+        type="button"
+        id="clear-game-filters"
+        class="btn">Clear filters</button
+      >
+    </div>
+    <div id="games-grid" class="project-grid">
       {
         games.map((game, index) => (
-          <ProjectCard project={game} index={index} heading="h2" />
+          <div
+            data-game
+            data-title={game.data.title}
+            data-engine={game.data.engine}
+            data-platforms={game.data.platforms.join("|").toLowerCase()}
+            data-download={String(Boolean(game.data.download))}
+            data-featured={String(Boolean(game.data.featured))}
+            data-search={`${game.data.title} ${game.data.summary} ${game.data.genre} ${game.data.engine} ${game.data.platforms.join(" ")} ${game.data.stack.join(" ")}`}
+          >
+            <ProjectCard project={game} index={index} heading="h2" />
+          </div>
         ))
       }
     </div>
   </section>
 </BlogLayout>
+<script>
+  import "../../lib/custom-select";
+  import type { CustomSelectElement } from "../../lib/custom-select";
+
+  const input = document.querySelector<HTMLInputElement>("#game-search")!;
+  const items = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-game]"),
+  );
+  const buttons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-engine-filter]"),
+  );
+  const platform =
+    document.querySelector<CustomSelectElement>("#game-platform")!;
+  const sort = document.querySelector<CustomSelectElement>("#game-sort")!;
+  const grid = document.querySelector<HTMLElement>("#games-grid")!;
+  let engine = "";
+
+  const validEngines = ["", "unity", "three", "canvas", "unreal", "rust-godot"];
+  const validPlatforms = ["", "download", "macos", "windows", "linux", "web-only"];
+  const validSorts = ["newest", "oldest", "featured", "title", "title-desc"];
+
+  function restore() {
+    const params = new URLSearchParams(location.search);
+    input.value = (params.get("q") ?? "").slice(0, 200);
+    const paramEngine = params.get("engine") ?? "";
+    engine = validEngines.includes(paramEngine) ? paramEngine : "";
+    const paramPlatform = params.get("platform") ?? "";
+    platform.value = validPlatforms.includes(paramPlatform)
+      ? paramPlatform
+      : "";
+    const paramSort = params.get("sort") ?? "";
+    sort.value = validSorts.includes(paramSort) ? paramSort : "newest";
+  }
+
+  restore();
+
+  const matchesEngine = (value: string) => {
+    if (!engine) return true;
+    const lower = value.toLowerCase();
+    if (engine === "unity") return /unity/.test(lower);
+    if (engine === "three") return /three/.test(lower);
+    if (engine === "canvas") return /webgl|canvas/.test(lower);
+    if (engine === "unreal") return /unreal/.test(lower);
+    return /rust|godot|macroquad/.test(lower);
+  };
+
+  const matchesPlatform = (item: HTMLElement) => {
+    if (!platform.value) return true;
+    if (platform.value === "download") return item.dataset.download === "true";
+    const list = (item.dataset.platforms ?? "").split("|").filter(Boolean);
+    if (platform.value === "web-only") {
+      return list.length === 1 && list[0] === "web";
+    }
+    return list.includes(platform.value);
+  };
+
+  const filter = () => {
+    const query = input.value.toLowerCase().trim();
+    let count = 0;
+    items.forEach((item) => {
+      item.hidden = !(
+        item.dataset.search!.toLowerCase().includes(query) &&
+        matchesEngine(item.dataset.engine ?? "") &&
+        matchesPlatform(item)
+      );
+      if (!item.hidden) count++;
+    });
+
+    document.getElementById("games-empty")!.hidden = count !== 0;
+    document.getElementById("game-count")!.textContent =
+      `${count} ${count === 1 ? "game" : "games"}`;
+
+    const ordered = [...items].sort((a, b) => {
+      if (sort.value === "oldest") {
+        return items.indexOf(b) - items.indexOf(a);
+      }
+      if (sort.value === "featured") {
+        return (
+          (b.dataset.featured === "true" ? 1 : 0) -
+            (a.dataset.featured === "true" ? 1 : 0) ||
+          items.indexOf(a) - items.indexOf(b)
+        );
+      }
+      if (sort.value === "title") {
+        return a.dataset.title!.localeCompare(b.dataset.title!);
+      }
+      if (sort.value === "title-desc") {
+        return b.dataset.title!.localeCompare(a.dataset.title!);
+      }
+      return items.indexOf(a) - items.indexOf(b);
+    });
+
+    grid.append(...ordered);
+    grid.dispatchEvent(new CustomEvent("atelier:grid-updated", { bubbles: true }));
+
+    const params = new URLSearchParams();
+    if (input.value.trim()) params.set("q", input.value.trim());
+    if (engine) params.set("engine", engine);
+    if (platform.value) params.set("platform", platform.value);
+    if (sort.value !== "newest") params.set("sort", sort.value);
+    history.replaceState(
+      null,
+      "",
+      location.pathname + (params.size ? "?" + params : ""),
+    );
+
+    buttons.forEach((button) =>
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.engineFilter === engine),
+      ),
+    );
+  };
+
+  platform.addEventListener("change", filter);
+  sort.addEventListener("change", filter);
+  window.addEventListener("popstate", () => {
+    restore();
+    filter();
+  });
+  filter();
+  input.addEventListener("input", filter);
+  buttons.forEach((button) =>
+    button.addEventListener("click", () => {
+      engine = button.dataset.engineFilter!;
+      filter();
+    }),
+  );
+  document
+    .getElementById("clear-game-filters")
+    ?.addEventListener("click", () => {
+      engine = "";
+      platform.value = "";
+      sort.value = "newest";
+      input.value = "";
+      filter();
+      input.focus();
+    });
+</script>

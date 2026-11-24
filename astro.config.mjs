@@ -22,11 +22,35 @@ export default defineConfig({
           height: 630,
           fonts: [
             {
-              name: "Big Shoulders Display",
-              weight: 800,
+              name: "Newsreader",
+              weight: 400,
               style: "normal",
               data: readFileSync(
-                "node_modules/@fontsource/big-shoulders-display/files/big-shoulders-display-latin-800-normal.woff",
+                "node_modules/@fontsource/newsreader/files/newsreader-latin-400-normal.woff",
+              ),
+            },
+            {
+              name: "Newsreader",
+              weight: 500,
+              style: "normal",
+              data: readFileSync(
+                "node_modules/@fontsource/newsreader/files/newsreader-latin-500-normal.woff",
+              ),
+            },
+            {
+              name: "Newsreader",
+              weight: 400,
+              style: "italic",
+              data: readFileSync(
+                "node_modules/@fontsource/newsreader/files/newsreader-latin-400-italic.woff",
+              ),
+            },
+            {
+              name: "Jost",
+              weight: 400,
+              style: "normal",
+              data: readFileSync(
+                "node_modules/@fontsource/jost/files/jost-latin-400-normal.woff",
               ),
             },
             {
@@ -43,22 +67,6 @@ export default defineConfig({
               style: "normal",
               data: readFileSync(
                 "node_modules/@fontsource/jost/files/jost-latin-600-normal.woff",
-              ),
-            },
-            {
-              name: "Newsreader",
-              weight: 400,
-              style: "italic",
-              data: readFileSync(
-                "node_modules/@fontsource/newsreader/files/newsreader-latin-400-italic.woff",
-              ),
-            },
-            {
-              name: "Limelight",
-              weight: 400,
-              style: "normal",
-              data: readFileSync(
-                "node_modules/@fontsource/limelight/files/limelight-latin-400-normal.woff",
               ),
             },
           ],

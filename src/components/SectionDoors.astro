@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import Icon from "./Icon.astro";
-import FloorDial from "./FloorDial.astro";
 import { sections } from "../lib/sections";
 import { isArticlePublished } from "../lib/articles";
 import { getReadingPaths } from "../lib/discovery";
@@ -37,7 +36,6 @@ const facts: Record<string, string[]> = {
   ],
   about: [`Now · updated ${formatDate(now.updated)}`],
 };
-// The three most useful ways into each section; the rest live in the menus.
 const shortcuts: Record<string, string[]> = {
   read: ["/start-here", "/topics/", "/discover/"],
   workshop: ["/layoff", "/lab", "/postmortems"],
@@ -56,15 +54,15 @@ const doors = sections.map((section) => ({
 <section class="home-section section-doors" aria-labelledby="doors-heading">
   <header class="section-head">
     <h2 id="doors-heading">Three ways in</h2>
-    <p class="label">Take the elevator</p>
+    <p class="label">Explore the archive</p>
   </header>
   <ol class="door-grid">
     {
       doors.map((door) => (
         <li class="door" data-section={door.id}>
           <div class="door-transom" aria-hidden="true">
-            <FloorDial floor={door.number} class="door-dial" />
-            <p class="door-number">Floor {door.number}</p>
+            <span class="door-orb" />
+            <p class="door-number">Collection {door.number}</p>
           </div>
           <h3>{door.label}</h3>
           <p class="door-title">{door.title}</p>

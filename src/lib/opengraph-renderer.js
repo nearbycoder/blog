@@ -5,14 +5,13 @@ import artwork from "../data/article-artwork.json" with { type: "json" };
 import projectImages from "../data/project-images.json" with { type: "json" };
 
 const h = React.createElement;
-// Embedded local art keeps builds deterministic and independent of external image hosts.
 const artCache = new Map();
 async function coverData(src) {
   if (!artCache.has(src)) {
     artCache.set(
       src,
       sharp(readFileSync(new URL(`../../public${src}`, import.meta.url)))
-        .resize(480, 630, { fit: "cover" })
+        .resize(440, 630, { fit: "cover" })
         .png()
         .toBuffer()
         .then((buffer) => `data:image/png;base64,${buffer.toString("base64")}`),
@@ -21,9 +20,7 @@ async function coverData(src) {
   return artCache.get(src);
 }
 
-// Games get real screenshots instead of editorial art: a mosaic of the newest
-// covers for the archive, and a game's own screenshots for its page.
-const PANEL = { width: 390, height: 630, gap: 6, background: "#0b0914" };
+const PANEL = { width: 410, height: 630, gap: 6, background: "#050608" };
 const gamesDir = new URL("../../src/content/games/", import.meta.url);
 function gameImages(slug) {
   const source = readFileSync(new URL(`${slug}.md`, gamesDir), "utf8");
@@ -52,7 +49,6 @@ function newestGameCovers(count) {
     .map((game) => game.cover);
 }
 const mosaicCache = new Map();
-/** Tile screenshots into the card's art panel, `columns` across. */
 function mosaicData(srcs, columns) {
   const key = `${columns}:${srcs.join("|")}`;
   if (!mosaicCache.has(key)) {
@@ -89,36 +85,32 @@ function mosaicData(srcs, columns) {
   return mosaicCache.get(key);
 }
 
-// Pages without their own artwork get a Deco panel: a sunburst over the
-// Nearby Building (or Josh's portrait in an octagonal medallion), and project
-// pages show their screenshot in a gilt vitrine on the same sunburst.
-const PW = 390,
+// Volcanic Ink & Liquid Glass right panel compositions
+const PW = 410,
   PH = 630;
-function panelSvg({ tower = true, rayY = 470 } = {}) {
-  const rays = Array.from({ length: 40 }, (_, i) => {
-    const a = (i * Math.PI * 2) / 40;
-    return `<path d="M195 ${rayY}L${(195 + 700 * Math.cos(a)).toFixed(1)} ${(rayY + 700 * Math.sin(a)).toFixed(1)}"/>`;
-  }).join("");
-  const building = tower
-    ? `<path d="M120 630V420h22v-60h22v-62h18V170h26v128h18v62h22v60h22v210Z" fill="#f4e9d6"/>
-       <g fill="#0b0914">${Array.from({ length: 6 }, (_, row) =>
-         [150, 172, 194, 216, 238].map((x) => `<rect x="${x - 4}" y="${440 + row * 30}" width="8" height="16"/>`).join(""),
-       ).join("")}<rect x="190" y="310" width="10" height="40"/><rect x="190" y="370" width="10" height="40"/></g>
-       <rect x="192.5" y="120" width="5" height="52" fill="#f4e9d6"/>
-       <circle cx="195" cy="114" r="9" fill="#ff5c7f"/>
-       <circle cx="195" cy="114" r="22" fill="#ff5c7f" fill-opacity=".18"/>`
-    : "";
+function causticPanelSvg() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${PW}" height="${PH}">
   <defs>
-    <linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1f45"/><stop offset="1" stop-color="#0b0914"/></linearGradient>
-    <radialGradient id="g" cx="195" cy="${rayY}" r="330" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ffc35a" stop-opacity=".45"/><stop offset="1" stop-color="#ffc35a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="c1" cx="72%" cy="32%" r="60%">
+      <stop offset="0%" stop-color="#c9ff3b" stop-opacity="0.34"/>
+      <stop offset="55%" stop-color="#9c88ff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="c2" cx="28%" cy="76%" r="55%">
+      <stop offset="0%" stop-color="#9c88ff" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ribbon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c9ff3b" stop-opacity="0.72"/>
+      <stop offset="50%" stop-color="#9c88ff" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.12"/>
+    </linearGradient>
   </defs>
-  <rect width="${PW}" height="${PH}" fill="url(#s)"/>
-  <rect width="${PW}" height="${PH}" fill="url(#g)"/>
-  <g stroke="#ffc35a" stroke-width="3" stroke-opacity=".5">${rays}</g>
-  ${building}
-  <rect y="600" width="${PW}" height="30" fill="#b03d24"/>
-  <rect y="596" width="${PW}" height="3" fill="#ffc35a"/>
+  <rect width="${PW}" height="${PH}" fill="#07080d"/>
+  <rect width="${PW}" height="${PH}" fill="url(#c1)"/>
+  <rect width="${PW}" height="${PH}" fill="url(#c2)"/>
+  <path d="M350 -20 C 120 120, 390 280, 150 450 C 40 530, 180 610, 310 660" fill="none" stroke="url(#ribbon)" stroke-width="58" stroke-opacity="0.22" stroke-linecap="round"/>
+  <path d="M365 -20 C 145 125, 405 280, 165 455 C 55 535, 195 610, 325 660" fill="none" stroke="#c9ff3b" stroke-width="2.2" stroke-opacity="0.72"/>
 </svg>`;
 }
 const panelCache = new Map();
@@ -130,34 +122,35 @@ function cachedPanel(key, make) {
     );
   return panelCache.get(key);
 }
-const octagon = (size) =>
+const circleMask = (size) =>
   Buffer.from(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><path d="M${size * 0.293} 0H${size * 0.707}L${size} ${size * 0.293}V${size * 0.707}L${size * 0.707} ${size}H${size * 0.293}L0 ${size * 0.707}V${size * 0.293}Z"/></svg>`,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}"/></svg>`,
   );
-function towerPanel() {
-  return cachedPanel("tower", () => sharp(Buffer.from(panelSvg())).png().toBuffer());
+function silkPanel() {
+  return cachedPanel("silk", () =>
+    sharp(Buffer.from(causticPanelSvg())).png().toBuffer(),
+  );
 }
 const PORTRAIT = "/images/portrait.webp";
 function portraitPanel() {
   return cachedPanel("portrait", async () => {
-    const size = 236;
+    const size = 248;
     const photo = await sharp(
       readFileSync(new URL(`../../public${PORTRAIT}`, import.meta.url)),
     )
-      .resize(size - 16, size - 16, { fit: "cover" })
-      .composite([{ input: octagon(size - 16), blend: "dest-in" }])
+      .resize(size - 12, size - 12, { fit: "cover" })
+      .composite([{ input: circleMask(size - 12), blend: "dest-in" }])
       .png()
       .toBuffer();
-    const frame = await sharp({
-      create: { width: size, height: size, channels: 4, background: "#ffc35a" },
-    })
-      .composite([{ input: octagon(size), blend: "dest-in" }])
-      .png()
-      .toBuffer();
-    return sharp(Buffer.from(panelSvg({ tower: false, rayY: 300 })))
+    const ring = Buffer.from(
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
+        <circle cx="${size / 2}" cy="${size / 2}" r="${size / 2 - 2}" fill="none" stroke="#c9ff3b" stroke-opacity="0.75" stroke-width="2.5"/>
+      </svg>`,
+    );
+    return sharp(Buffer.from(causticPanelSvg()))
       .composite([
-        { input: frame, left: 195 - size / 2, top: 300 - size / 2 },
-        { input: photo, left: 195 - size / 2 + 8, top: 300 - size / 2 + 8 },
+        { input: photo, left: Math.round(PW / 2 - (size - 12) / 2), top: Math.round(PH / 2 - (size - 12) / 2) },
+        { input: ring, left: Math.round(PW / 2 - size / 2), top: Math.round(PH / 2 - size / 2) },
       ])
       .png()
       .toBuffer();
@@ -166,22 +159,27 @@ function portraitPanel() {
 function vitrinePanel(src) {
   return cachedPanel(`vitrine:${src}`, async () => {
     const shot = await sharp(readFileSync(new URL(`../../public${src}`, import.meta.url)))
-      .resize(318, 420, { fit: "inside" })
+      .resize(336, 430, { fit: "inside" })
       .png()
       .toBuffer();
     const { width, height } = await sharp(shot).metadata();
     const framed = await sharp({
-      create: { width: width + 12, height: height + 12, channels: 4, background: "#ffc35a" },
+      create: {
+        width: width + 14,
+        height: height + 14,
+        channels: 4,
+        background: { r: 24, g: 27, b: 36, alpha: 0.92 },
+      },
     })
-      .composite([{ input: shot, left: 6, top: 6 }])
+      .composite([{ input: shot, left: 7, top: 7 }])
       .png()
       .toBuffer();
-    return sharp(Buffer.from(panelSvg({ tower: false, rayY: 330 })))
+    return sharp(Buffer.from(causticPanelSvg()))
       .composite([
         {
           input: framed,
-          left: Math.round(195 - (width + 12) / 2),
-          top: Math.round(310 - (height + 12) / 2),
+          left: Math.round(PW / 2 - (width + 14) / 2),
+          top: Math.round(PH / 2 - (height + 14) / 2),
         },
       ])
       .png()
@@ -196,75 +194,44 @@ function projectCover(slug) {
     if (image && !image.endsWith(".svg")) return image;
     const mapped = projectImages[slug];
     if (mapped)
-      return mapped.replace("/images/", "/images/optimized/").replace(/\.(png|jpe?g)$/, ".webp");
+      return mapped
+        .replace("/images/", "/images/optimized/")
+        .replace(/\.(png|jpe?g)$/, ".webp");
   } catch {}
   return undefined;
 }
 
-// Night-edition ornament for the card: midnight sky, a gold sunburst rising
-// behind the title, and a gilt double frame with stepped Deco corners. The
-// background sits under the art panel; the frame is drawn over it.
 const W = 1200,
   H = 630;
-function steppedFrame(inset, step) {
-  const a = inset,
-    b = W - inset,
-    c = H - inset;
-  return `M${a} ${a + step * 2}h${step}v${-step}h${step}v${-step}H${b - step * 2}v${step}h${step}v${step}h${step}V${c - step * 2}h${-step}v${step}h${-step}v${step}H${a + step * 2}v${-step}h${-step}v${-step}h${-step}Z`;
-}
-const backgroundSvg = () => {
-  const rays = Array.from({ length: 34 }, (_, i) => {
-    const angle = Math.PI + (i * Math.PI) / 33;
-    const x = 405 + 900 * Math.cos(angle);
-    const y = 700 + 900 * Math.sin(angle);
-    return `<path d="M405 700 L${x.toFixed(1)} ${y.toFixed(1)}" />`;
-  }).join("");
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+const backgroundSvg = () => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
   <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1b1430"/>
-      <stop offset="1" stop-color="#0b0914"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="405" cy="700" r="520" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#ffc35a" stop-opacity=".22"/>
-      <stop offset="1" stop-color="#ffc35a" stop-opacity="0"/>
+    <radialGradient id="g1" cx="68%" cy="18%" r="54%">
+      <stop offset="0%" stop-color="#c9ff3b" stop-opacity="0.16"/>
+      <stop offset="55%" stop-color="#9c88ff" stop-opacity="0.11"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="fade" cx="405" cy="700" r="760" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#fff" stop-opacity=".9"/>
-      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    <radialGradient id="g2" cx="12%" cy="92%" r="48%">
+      <stop offset="0%" stop-color="#9c88ff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
     </radialGradient>
-    <mask id="m"><rect width="${W}" height="${H}" fill="url(#fade)"/></mask>
   </defs>
-  <rect width="${W}" height="${H}" fill="url(#sky)"/>
-  <rect width="${W}" height="${H}" fill="url(#glow)"/>
-  <g stroke="#ffc35a" stroke-opacity=".16" stroke-width="2.2" mask="url(#m)">${rays}</g>
-  <g fill="none" stroke="#ffffff" stroke-opacity=".035">
-    ${Array.from({ length: 160 }, (_, i) => `<path d="M${i * 5 + 0.5} 0V${H}"/>`).join("")}
-  </g>
+  <rect width="${W}" height="${H}" fill="#050608"/>
+  <rect width="${W}" height="${H}" fill="url(#g1)"/>
+  <rect width="${W}" height="${H}" fill="url(#g2)"/>
 </svg>`;
-};
+
 const frameSvg = () => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
-  <path d="${steppedFrame(16, 10)}" fill="none" stroke="#ffc35a" stroke-width="2"/>
-  <path d="${steppedFrame(24, 10)}" fill="none" stroke="#ffc35a" stroke-opacity=".55" stroke-width="1"/>
-  <path d="M810 0V${H}" stroke="#ffc35a" stroke-width="6"/>
-  <path d="M818 0V${H}" stroke="#0b0914" stroke-width="4"/>
-  <path d="M822 0V${H}" stroke="#ffc35a" stroke-width="1.5"/>
-  <path d="M0 0h${W}v${H}H0Z${steppedFrame(16, 10)}" fill="#0b0914" fill-rule="evenodd"/>
-  <path d="${steppedFrame(16, 10)}" fill="none" stroke="#ffc35a" stroke-width="2"/>
+  <rect x="20" y="20" width="${W - 40}" height="${H - 40}" rx="24" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="1.5"/>
+  <line x1="790" y1="20" x2="790" y2="${H - 20}" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
 </svg>`;
-const markSvg = () => {
-  const rays = Array.from({ length: 9 }, (_, i) => {
-    const a = Math.PI + (i * Math.PI) / 8;
-    const p = (r) => `${(16 + r * Math.cos(a)).toFixed(2)} ${(29 + r * Math.sin(a)).toFixed(2)}`;
-    return `M${p(7.5)}L${p(14.5)}`;
-  }).join("");
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="128" height="128">
-  <path d="${rays}" stroke="#ffc35a" stroke-width="1.5" stroke-linecap="round"/>
-  <path d="M10 30V19h2v-4h2v-4h1.2V4h1.6v7H18v4h2v4h2v11Z" fill="#f4e9d6"/>
-  <path d="M15.2 15h1.6v3h-1.6zM15.2 21h1.6v6h-1.6z" fill="#0b0914"/>
-  <circle cx="16" cy="3.2" r="1.6" fill="#ff5c7f"/>
+
+const markSvg = () => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="96" height="96">
+  <rect x="2.5" y="2.5" width="27" height="27" rx="8" fill="#11131a" stroke="#ffffff" stroke-opacity="0.22" stroke-width="1.2"/>
+  <path d="M9.5 23.5V9.2c0-.7.8-1 1.3-.5l11.4 12.6c.5.5 1.3.2 1.3-.5V8.5" fill="none" stroke="#f5f2eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M9.5 23.5C13.5 19.2 18.5 12.8 22.5 8.5" fill="none" stroke="#c9ff3b" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="22.5" cy="8.5" r="2.2" fill="#c9ff3b"/>
 </svg>`;
-};
+
 const ornaments = {};
 function ornament(name, svg) {
   ornaments[name] ??= sharp(Buffer.from(svg()))
@@ -274,14 +241,13 @@ function ornament(name, svg) {
   return ornaments[name];
 }
 
-// Each part of the site is a floor of the Nearby Building.
-function floorFor(path) {
-  if (path === "/") return "The Lobby · Tulsa, Oklahoma";
+function sectionFor(path) {
+  if (path === "/") return "Nearby Atelier · Tulsa, Oklahoma";
   const read = ["/articles", "/start-here", "/topics", "/archive", "/discover", "/search", "/reading-list", "/glossary"];
   const workshop = ["/projects", "/games", "/layoff", "/lab", "/postmortems", "/technologies"];
   const about = ["/about", "/now", "/uses", "/subscribe", "/feeds"];
   const label = path.startsWith("/articles/")
-    ? "Articles"
+    ? "Essays"
     : path.startsWith("/projects/")
       ? "Projects"
       : path.startsWith("/games/")
@@ -290,26 +256,19 @@ function floorFor(path) {
           ? "Layoff Log"
           : undefined;
   const on = (list) => list.some((root) => path === root || path.startsWith(`${root}/`));
-  if (on(read)) return `Floor 01 · Read${label ? ` · ${label}` : ""}`;
-  if (on(workshop)) return `Floor 02 · Workshop${label ? ` · ${label}` : ""}`;
-  if (on(about)) return "Floor 03 · About";
-  return "The Nearby Building";
+  if (on(read)) return `01 · Read${label ? ` · ${label}` : ""}`;
+  if (on(workshop)) return `02 · Workshop${label ? ` · ${label}` : ""}`;
+  if (on(about)) return "03 · About";
+  return "Nearby Atelier";
 }
 
-const CREAM = "#f4e9d6",
-  GOLD = "#ffc35a",
-  NEON = "#ff5c7f",
-  MUTED = "#bcb0c2";
+const IVORY = "#f5f2eb",
+  CHARTREUSE = "#c9ff3b",
+  MUTED = "#a6a39c";
 
-/** A card's path, from a page's pathname as the build reports it. */
 const cardPath = (pathname) =>
   "/" + (pathname || "").replace(/^\/+/, "").replace(/index\.html$/, "");
 
-/**
- * The local art a page's card embeds: the kind of panel and the public images
- * it's drawn from. The build's card cache (src/lib/social-card-cache.js) keys
- * on this, so every image a card reads must be in `srcs`.
- */
 export function cardArt(pathname) {
   const path = cardPath(pathname);
   const articleId = path.match(/^\/articles\/([^/]+)\/?$/)?.[1];
@@ -319,7 +278,9 @@ export function cardArt(pathname) {
   const gameId = path.match(/^\/games\/([^/]+)\/?$/)?.[1];
   const shots = gameId ? gameImages(decodeURIComponent(gameId)) : [];
   const projectId = path.match(/^\/projects\/([^/]+)\/?$/)?.[1];
-  const projectShot = projectId ? projectCover(decodeURIComponent(projectId)) : undefined;
+  const projectShot = projectId
+    ? projectCover(decodeURIComponent(projectId))
+    : undefined;
   if (path === "/games/")
     return { kind: "mosaic", columns: 2, srcs: newestGameCovers(8) };
   if (shots.length > 1)
@@ -329,7 +290,7 @@ export function cardArt(pathname) {
   if (projectShot) return { kind: "vitrine", srcs: [projectShot] };
   if (path === "/" || path.startsWith("/about"))
     return { kind: "portrait", srcs: [PORTRAIT] };
-  return { kind: "tower", srcs: [] };
+  return { kind: "silk", srcs: [] };
 }
 
 function artData({ kind, columns, srcs }) {
@@ -337,7 +298,7 @@ function artData({ kind, columns, srcs }) {
   if (kind === "cover") return coverData(srcs[0]);
   if (kind === "vitrine") return vitrinePanel(srcs[0]);
   if (kind === "portrait") return portraitPanel();
-  return towerPanel();
+  return silkPanel();
 }
 
 /** @type {import("astro-opengraph-images").RenderFunction} */
@@ -353,22 +314,22 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
   const displayTitle = home
     ? "Always curious."
     : title.replace(/ · Josh Hamilton$/, "");
-  // Big Shoulders is condensed, so long titles still fit without truncation.
   const size =
-    displayTitle.length > 105
-      ? 54
-      : displayTitle.length > 78
-        ? 60
-        : displayTitle.length > 52
-          ? 68
-          : displayTitle.length > 28
-            ? 84
-            : 104;
+    displayTitle.length > 95
+      ? 42
+      : displayTitle.length > 68
+        ? 48
+        : displayTitle.length > 42
+          ? 56
+          : displayTitle.length > 24
+            ? 64
+            : 78;
   const deck = home
     ? "Engineering, AI, and the human side of making software."
     : description?.length > 112
       ? description.slice(0, 110).trimEnd() + "…"
       : description;
+
   return h(
     "div",
     {
@@ -377,8 +338,8 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
         height: "100%",
         display: "flex",
         position: "relative",
-        background: "#0b0914",
-        color: CREAM,
+        background: "#050608",
+        color: IVORY,
         fontFamily: "Jost",
       },
     },
@@ -393,9 +354,9 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
       h("img", {
         key: "art",
         src: art,
-        width: 390,
+        width: 410,
         height: 630,
-        style: { position: "absolute", left: 810, top: 0, objectFit: "cover" },
+        style: { position: "absolute", left: 790, top: 0, objectFit: "cover" },
       }),
       h("img", {
         key: "frame",
@@ -412,12 +373,9 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
             position: "absolute",
             left: 0,
             top: 0,
-            width: 810,
+            width: 790,
             height: H,
-            padding: "52px 62px 50px",
-            // Satori sizes boxes as content-box; without this the padding is
-            // added to 810 × 630, so text runs into the divider and the footer
-            // is pushed off the bottom of the card.
+            padding: "54px 62px 52px",
             boxSizing: "border-box",
             display: "flex",
             flexDirection: "column",
@@ -434,15 +392,15 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
               h("img", {
                 key: "mark",
                 src: mark,
-                width: 44,
-                height: 44,
+                width: 40,
+                height: 40,
                 style: { marginRight: 14 },
               }),
               h(
                 "span",
                 {
                   key: "word",
-                  style: { fontFamily: "Limelight", fontSize: 30 },
+                  style: { fontFamily: "Newsreader", fontSize: 30, fontWeight: 500 },
                 },
                 "Nearby",
               ),
@@ -450,7 +408,12 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                 "span",
                 {
                   key: "coder",
-                  style: { fontFamily: "Limelight", fontSize: 30, color: NEON },
+                  style: {
+                    fontFamily: "Newsreader",
+                    fontStyle: "italic",
+                    fontSize: 30,
+                    color: CHARTREUSE,
+                  },
                 },
                 "coder",
               ),
@@ -459,22 +422,24 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
           h(
             "div",
             {
-              key: "floor",
+              key: "pill",
               style: {
                 display: "flex",
                 alignSelf: "flex-start",
                 flexShrink: 0,
-                marginTop: 30,
-                padding: "7px 16px 8px",
-                border: `1.5px solid ${GOLD}`,
-                color: GOLD,
-                fontSize: 16,
-                fontWeight: 600,
-                letterSpacing: "4px",
+                marginTop: 28,
+                padding: "7px 16px",
+                borderRadius: 999,
+                border: "1px solid rgba(201, 255, 59, 0.4)",
+                background: "rgba(201, 255, 59, 0.1)",
+                color: CHARTREUSE,
+                fontSize: 14,
+                fontWeight: 500,
+                letterSpacing: "2.5px",
                 textTransform: "uppercase",
               },
             },
-            floorFor(path),
+            sectionFor(path),
           ),
           h(
             "div",
@@ -483,14 +448,14 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
               style: {
                 display: "flex",
                 flexDirection: "column",
-                marginTop: 22,
-                fontFamily: "Big Shoulders Display",
-                fontWeight: 800,
-                fontSize: home ? 104 : size,
+                marginTop: 24,
+                fontFamily: "Newsreader",
+                fontWeight: 400,
+                fontSize: home ? 86 : size,
                 flexShrink: 0,
-                lineHeight: 0.92,
-                textTransform: home ? "uppercase" : "none",
-                color: home ? "#ffe2b8" : CREAM,
+                lineHeight: 1.02,
+                letterSpacing: "-2px",
+                color: IVORY,
               },
             },
             home
@@ -501,8 +466,8 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                     {
                       key: "b",
                       style: {
-                        color: "#fff3f5",
-                        textShadow: `0 0 12px ${NEON}, 0 0 30px ${NEON}`,
+                        fontStyle: "italic",
+                        color: CHARTREUSE,
                       },
                     },
                     "Still building.",
@@ -516,27 +481,17 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
               key: "description",
               style: {
                 display: "flex",
-                marginTop: 18,
+                marginTop: 20,
                 flexShrink: 0,
-                fontFamily: "Newsreader",
-                fontStyle: "italic",
-                fontSize: 25,
-                lineHeight: 1.35,
+                fontFamily: "Jost",
+                fontWeight: 400,
+                fontSize: 22,
+                lineHeight: 1.45,
                 color: MUTED,
               },
             },
             deck,
           ),
-          h("div", {
-            key: "rule",
-            style: {
-              display: "flex",
-              marginTop: "auto",
-              height: 1,
-              background: GOLD,
-              opacity: 0.6,
-            },
-          }),
           h(
             "div",
             {
@@ -545,19 +500,19 @@ export async function renderNearbycoderOg({ title, description, pathname }) {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginTop: 3,
-                paddingTop: 16,
-                borderTop: `2px solid ${GOLD}`,
-                fontSize: 17,
+                marginTop: "auto",
+                paddingTop: 18,
+                borderTop: "1px solid rgba(255, 255, 255, 0.14)",
+                fontSize: 15,
                 fontWeight: 500,
-                letterSpacing: "3px",
+                letterSpacing: "2.2px",
                 textTransform: "uppercase",
-                color: CREAM,
+                color: MUTED,
               },
             },
             [
-              h("span", { key: "author" }, "Josh Hamilton"),
-              h("span", { key: "url", style: { color: GOLD } }, "nearbycoder.com"),
+              h("span", { key: "author", style: { color: IVORY } }, "Josh Hamilton"),
+              h("span", { key: "url", style: { color: CHARTREUSE } }, "nearbycoder.com"),
             ],
           ),
         ],
