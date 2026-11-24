@@ -89,7 +89,7 @@ const { id, label, options } = Astro.props;
   }
   .custom-select-trigger:hover,
   .custom-select-trigger[aria-expanded="true"] {
-    border-color: var(--accent);
+    border-color: var(--accent-ink);
   }
   .custom-select-trigger:disabled {
     cursor: default;
@@ -104,7 +104,7 @@ const { id, label, options } = Astro.props;
   }
   .custom-select-trigger[aria-expanded="true"] > :global(.icon) {
     transform: rotate(180deg);
-    color: var(--accent);
+    color: var(--accent-ink);
   }
   .custom-select-menu {
     position: fixed;
@@ -117,10 +117,12 @@ const { id, label, options } = Astro.props;
     scrollbar-width: thin;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: var(--surface);
+    background: color-mix(in srgb, var(--surface-solid) 95%, transparent);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
     color: var(--fg);
     z-index: 200;
-    box-shadow: 0 12px 32px color-mix(in srgb, var(--fg) 12%, transparent);
+    box-shadow: var(--glass-shadow);
   }
   .custom-select-menu[hidden] {
     display: none;
@@ -140,12 +142,12 @@ const { id, label, options } = Astro.props;
   }
   .custom-select-option[data-active="true"] {
     background: var(--accent-soft);
-    color: var(--accent);
-    outline: 1px solid var(--accent);
+    color: var(--accent-ink);
+    outline: 1px solid color-mix(in srgb, var(--accent-ink) 55%, transparent);
     outline-offset: -1px;
   }
   .custom-select-option[aria-selected="true"] {
-    color: var(--accent);
+    color: var(--accent-ink);
     font-weight: 600;
   }
   .custom-select-option > :global(.icon) {

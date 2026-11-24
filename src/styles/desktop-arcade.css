@@ -183,9 +183,10 @@
   color: var(--desk-muted);
 }
 .pocket-terminal {
-  background: #111d26;
-  color: #b9e8cd;
-  border-radius: 7px;
+  background: #07080d;
+  color: #dff5b0;
+  border: 1px solid var(--desk-line);
+  border-radius: 10px;
   overflow: hidden;
   font: 12px/1.7 var(--font-mono);
 }

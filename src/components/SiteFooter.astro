@@ -5,7 +5,7 @@ import Icon from "./Icon.astro";
 import BrandMark from "./BrandMark.astro";
 // The intro already links to /subscribe, so the About group skips it.
 const groups = sections.map((section) => ({
-  title: `Floor ${section.number} · ${section.label}`,
+  title: `${section.number} · ${section.label}`,
   links: section.links.filter((link) => link.href !== "/subscribe"),
 }));
 ---
@@ -20,7 +20,7 @@ const groups = sections.map((section) => ({
             <span>with <em>curiosity.</em></span>
           </p>
           <p class="footer-coords">
-            <BrandMark class="footer-mark" /> The Nearby Building · Tulsa, OK
+            <BrandMark class="footer-mark" /> Nearby Atelier · Tulsa, OK
           </p>
         </div><a href="/subscribe" class="text-link mt-5"
           ><Icon name="rss" /> Follow along</a
@@ -75,7 +75,7 @@ const groups = sections.map((section) => ({
     </div>
     <div class="footer-bottom">
       <p>© {new Date().getFullYear()} Josh Hamilton</p><p>
-        Built floor by floor in Tulsa, Oklahoma.
+        Crafted in Tulsa, Oklahoma.
       </p><div class="footer-utilities">
         <button class="text-link" type="button" data-keyboard-help
           >Keyboard shortcuts</button

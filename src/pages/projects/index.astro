@@ -1,13 +1,15 @@
 ---
+import CustomSelect from "../../components/CustomSelect.astro";
 import BlogLayout from "../../layouts/BlogLayout.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
+import Icon from "../../components/Icon.astro";
 import { getCollection } from "astro:content";
 
-const projects = (await getCollection("projects")) as any[];
+const projects = await getCollection("projects");
 const bottomProjectSlug = "easyaccessqr-com";
 const sortedProjects = projects
-  .filter((entry: any) => !entry.data.draft)
-  .sort((a: any, b: any) => {
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => {
     const aIsBottom = a.id === bottomProjectSlug;
     const bIsBottom = b.id === bottomProjectSlug;
 
@@ -20,30 +22,261 @@ const sortedProjects = projects
       a.data.title.localeCompare(b.data.title)
     );
   });
+
+const filters = [
+  { label: "All projects", value: "" },
+  { label: "Live sites", value: "live" },
+  { label: "TypeScript", value: "typescript" },
+  { label: "React", value: "react" },
+  { label: "Node & APIs", value: "node" },
+  { label: "With demos", value: "demos" },
+];
+
+const projectYear = (entry: (typeof sortedProjects)[number]) => {
+  const fromDate = Number(entry.data.createdAt?.slice(0, 4));
+  if (fromDate) return fromDate;
+  const fromYear = Number(entry.data.year);
+  return Number.isFinite(fromYear) && fromYear > 0 ? fromYear : 0;
+};
 ---
 
 <BlogLayout title="Projects">
   <section class="page-shell space-y-8">
     <header class="page-intro">
-      <p class="paper-strip">Projects / {sortedProjects.length} builds</p>
+      <p class="paper-strip">Projects · {sortedProjects.length} builds</p>
       <h1 class="display">Less talking.<br /><em>More making.</em></h1>
       <p style="color:var(--fg-muted)">
         Side projects, useful tools, and ideas that made it out of the notes
         app. Built to learn, built to use, built to share.
       </p>
     </header>
-
-    <p class="flex flex-wrap gap-x-6 gap-y-2">
-      <a class="text-link" href="/technologies/"
-        >Explore projects by technology →</a
-      ><a class="text-link" href="/games">Games have their own shelf →</a>
-    </p>
-    <div class="project-grid">
+    <nav class="signposts" aria-label="Other ways to explore projects">
+      <p class="label">Other ways in</p>
+      <ul>
+        <li><a href="/technologies/">Explore projects by technology</a></li>
+        <li><a href="/games">Games have their own shelf</a></li>
+      </ul>
+    </nav>
+    <div class="search-toolbar">
+      <Icon name="search" /><label for="project-search" class="sr-only"
+        >Search projects</label
+      ><input
+        id="project-search"
+        type="search"
+        placeholder="Search by name, stack, summary, or role…"
+      /><span class="label shrink-0" id="project-count" aria-live="polite"
+        >{sortedProjects.length} projects</span
+      >
+    </div>
+    <div class="filter-bar" role="group" aria-label="Filter projects">
       {
-        sortedProjects.map((project: any, index: number) => (
-          <ProjectCard project={project} index={index} heading="h2" />
+        filters.map((item, index) => (
+          <button
+            type="button"
+            class="filter-button"
+            data-project-filter={item.value}
+            aria-pressed={index === 0 ? "true" : "false"}
+          >
+            {item.label}
+          </button>
+        ))
+      }
+    </div>
+    <div class="reader-controls">
+      <CustomSelect
+        id="project-era"
+        label="Built in"
+        options={[
+          { value: "", label: "Any year" },
+          { value: "ongoing", label: "Ongoing" },
+          { value: "2026", label: "2026" },
+          { value: "2025", label: "2025" },
+          { value: "2020-2024", label: "2020–2024" },
+          { value: "2015-2019", label: "2015–2019" },
+        ]}
+      />
+      <CustomSelect
+        id="project-sort"
+        label="Sort projects"
+        options={[
+          { value: "newest", label: "Newest first" },
+          { value: "oldest", label: "Oldest first" },
+          { value: "featured", label: "Featured first" },
+          { value: "title", label: "Title A–Z" },
+          { value: "title-desc", label: "Title Z–A" },
+        ]}
+      />
+    </div>
+    <div id="projects-empty" class="empty-state" hidden>
+      <p>No projects match those filters.</p><button
+        type="button"
+        id="clear-project-filters"
+        class="btn">Clear filters</button
+      >
+    </div>
+    <div id="projects-grid" class="project-grid">
+      {
+        sortedProjects.map((project, index) => (
+          <div
+            data-project
+            data-title={project.data.title}
+            data-date={project.data.createdAt ?? ""}
+            data-year={projectYear(project)}
+            data-ongoing={String(project.data.year.toLowerCase() === "ongoing")}
+            data-live={String(Boolean(project.data.link))}
+            data-demos={String(project.data.demoVideos.length > 0)}
+            data-featured={String(Boolean(project.data.featured))}
+            data-stack={project.data.stack.join(" ")}
+            data-search={`${project.data.title} ${project.data.summary} ${project.data.role} ${project.data.year} ${project.data.stack.join(" ")}`}
+          >
+            <ProjectCard project={project} index={index} heading="h2" />
+          </div>
         ))
       }
     </div>
   </section>
 </BlogLayout>
+<script>
+  import "../../lib/custom-select";
+  import type { CustomSelectElement } from "../../lib/custom-select";
+
+  const input = document.querySelector<HTMLInputElement>("#project-search")!;
+  const items = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-project]"),
+  );
+  const buttons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-project-filter]"),
+  );
+  const era = document.querySelector<CustomSelectElement>("#project-era")!;
+  const sort = document.querySelector<CustomSelectElement>("#project-sort")!;
+  const grid = document.querySelector<HTMLElement>("#projects-grid")!;
+  let activeFilter = "";
+
+  const validFilters = ["", "live", "typescript", "react", "node", "demos"];
+  const validEras = ["", "ongoing", "2026", "2025", "2020-2024", "2015-2019"];
+  const validSorts = ["newest", "oldest", "featured", "title", "title-desc"];
+
+  function restore() {
+    const params = new URLSearchParams(location.search);
+    input.value = (params.get("q") ?? "").slice(0, 200);
+    const paramFilter = params.get("filter") ?? "";
+    activeFilter = validFilters.includes(paramFilter) ? paramFilter : "";
+    const paramEra = params.get("era") ?? "";
+    era.value = validEras.includes(paramEra) ? paramEra : "";
+    const paramSort = params.get("sort") ?? "";
+    sort.value = validSorts.includes(paramSort) ? paramSort : "newest";
+  }
+
+  restore();
+
+  const matchesFilter = (item: HTMLElement) => {
+    if (!activeFilter) return true;
+    const stack = (item.dataset.stack ?? "").toLowerCase();
+    if (activeFilter === "live") return item.dataset.live === "true";
+    if (activeFilter === "demos") return item.dataset.demos === "true";
+    if (activeFilter === "typescript") return /typescript/.test(stack);
+    if (activeFilter === "react") return /\breact\b/.test(stack);
+    return /node\.js|sqlite|postgresql|graphql|websocket|express|cloudflare|redis|supabase|better auth/.test(
+      stack,
+    );
+  };
+
+  const matchesEra = (item: HTMLElement) => {
+    if (!era.value) return true;
+    if (era.value === "ongoing") return item.dataset.ongoing === "true";
+    const year = Number(item.dataset.year);
+    if (era.value === "2026") return year >= 2026;
+    if (era.value === "2025") return year === 2025;
+    if (era.value === "2020-2024") return year >= 2020 && year <= 2024;
+    if (era.value === "2015-2019") return year >= 2015 && year <= 2019;
+    return true;
+  };
+
+  const filter = () => {
+    const query = input.value.toLowerCase().trim();
+    let count = 0;
+    items.forEach((item) => {
+      item.hidden = !(
+        item.dataset.search!.toLowerCase().includes(query) &&
+        matchesFilter(item) &&
+        matchesEra(item)
+      );
+      if (!item.hidden) count++;
+    });
+
+    document.getElementById("projects-empty")!.hidden = count !== 0;
+    document.getElementById("project-count")!.textContent =
+      `${count} ${count === 1 ? "project" : "projects"}`;
+
+    const ordered = [...items].sort((a, b) => {
+      if (sort.value === "oldest") {
+        const dateA = a.dataset.date || "9999";
+        const dateB = b.dataset.date || "9999";
+        return (
+          dateA.localeCompare(dateB) ||
+          a.dataset.title!.localeCompare(b.dataset.title!)
+        );
+      }
+      if (sort.value === "featured") {
+        return (
+          (b.dataset.featured === "true" ? 1 : 0) -
+            (a.dataset.featured === "true" ? 1 : 0) ||
+          items.indexOf(a) - items.indexOf(b)
+        );
+      }
+      if (sort.value === "title") {
+        return a.dataset.title!.localeCompare(b.dataset.title!);
+      }
+      if (sort.value === "title-desc") {
+        return b.dataset.title!.localeCompare(a.dataset.title!);
+      }
+      return items.indexOf(a) - items.indexOf(b);
+    });
+
+    grid.append(...ordered);
+    grid.dispatchEvent(new CustomEvent("atelier:grid-updated", { bubbles: true }));
+
+    const params = new URLSearchParams();
+    if (input.value.trim()) params.set("q", input.value.trim());
+    if (activeFilter) params.set("filter", activeFilter);
+    if (era.value) params.set("era", era.value);
+    if (sort.value !== "newest") params.set("sort", sort.value);
+    history.replaceState(
+      null,
+      "",
+      location.pathname + (params.size ? "?" + params : ""),
+    );
+
+    buttons.forEach((button) =>
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.projectFilter === activeFilter),
+      ),
+    );
+  };
+
+  era.addEventListener("change", filter);
+  sort.addEventListener("change", filter);
+  window.addEventListener("popstate", () => {
+    restore();
+    filter();
+  });
+  filter();
+  input.addEventListener("input", filter);
+  buttons.forEach((button) =>
+    button.addEventListener("click", () => {
+      activeFilter = button.dataset.projectFilter!;
+      filter();
+    }),
+  );
+  document
+    .getElementById("clear-project-filters")
+    ?.addEventListener("click", () => {
+      activeFilter = "";
+      era.value = "";
+      sort.value = "newest";
+      input.value = "";
+      filter();
+      input.focus();
+    });
+</script>

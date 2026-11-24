@@ -7,14 +7,14 @@
   zoom: var(--custom-content-scale, 1);
 }
 .desktop-environment .desktop-window {
-  border-radius: var(--custom-corner-radius, 8px);
+  border-radius: var(--custom-corner-radius, 16px);
 }
 .desktop-environment[data-custom-shadows="false"] .desktop-window {
   box-shadow: none;
 }
 .desktop-environment .window-titlebar {
-  min-height: var(--custom-title-size, 42px);
-  height: var(--custom-title-size, 42px);
+  min-height: var(--custom-title-size, 44px);
+  height: var(--custom-title-size, 44px);
 }
 .desktop-environment[data-custom-branding="false"] .desktop-wallpaper-copy {
   visibility: hidden;

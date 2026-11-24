@@ -1,14 +1,12 @@
 ---
 import { site } from "../data/site";
-// Each job is a floor of the building, newest at the top. Upper floors step
-// back like a Deco setback tower, so the list reads as a skyline.
 const total = site.work.length;
 ---
 
 <div class="tower">
   <div class="tower-crown" aria-hidden="true">
-    <span class="tower-spire"></span>
     <span class="tower-beacon"></span>
+    <span class="tower-status">Currently shipping</span>
   </div>
   <ol class="timeline" reversed>
     {
@@ -25,6 +23,6 @@ const total = site.work.length;
     }
   </ol>
   <div class="tower-base" aria-hidden="true">
-    <span>Ground floor · 2013</span>
+    <span>Archive origin · 2013</span>
   </div>
 </div>

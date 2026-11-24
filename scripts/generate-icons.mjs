@@ -1,39 +1,39 @@
-// Draws the Nearby Building favicon set: a stepped Deco tower in front of a
-// gold sunburst on a lacquer tile. Run with `node scripts/generate-icons.mjs`.
+// Draws the Nearby Atelier favicon set: folded smoked-glass monogram with a
+// molten chartreuse spark on volcanic obsidian. Run with `node scripts/generate-icons.mjs`.
 import { writeFileSync } from "node:fs";
 import sharp from "sharp";
 
-const rays = (count, inner, outer, cx = 32, cy = 58) =>
-  Array.from({ length: count }, (_, i) => {
-    const a = Math.PI + (i * Math.PI) / (count - 1);
-    const p = (r) => `${(cx + r * Math.cos(a)).toFixed(2)} ${(cy + r * Math.sin(a)).toFixed(2)}`;
-    return `M${p(inner)}L${p(outer)}`;
-  }).join("");
-
-// 64-unit artboard. `small` thickens strokes for 16–32px rendering.
 function icon({ small = false, padded = false } = {}) {
-  const ray = small ? 4.2 : 3;
-  const inset = padded ? 6 : 0;
+  const stroke = small ? 5.6 : 4.4;
+  const inset = padded ? 5 : 0;
   const size = 64 - inset * 2;
-  const r = padded ? 12 : 14;
+  const r = padded ? 14 : 16;
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#241b3a"/>
-      <stop offset="1" stop-color="#0b0914"/>
+    <radialGradient id="caustic" cx="76%" cy="22%" r="65%">
+      <stop offset="0%" stop-color="#c9ff3b" stop-opacity="0.34"/>
+      <stop offset="48%" stop-color="#9c88ff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#050608" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14161e"/>
+      <stop offset="100%" stop-color="#050608"/>
+    </linearGradient>
+    <linearGradient id="ribbon" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c9ff3b"/>
+      <stop offset="55%" stop-color="#9c88ff"/>
+      <stop offset="100%" stop-color="#f5f2eb" stop-opacity="0.35"/>
     </linearGradient>
     <clipPath id="tile"><rect x="${inset}" y="${inset}" width="${size}" height="${size}" rx="${r}"/></clipPath>
   </defs>
   <g clip-path="url(#tile)">
-    <rect width="64" height="64" fill="url(#sky)"/>
-    <path d="${rays(small ? 7 : 13, small ? 22 : 21, 60)}" stroke="#ffc35a" stroke-width="${ray}" stroke-linecap="round"/>
-    <path d="M19 58V37h4v-8h4v-8h3V9h4v12h3v8h4v8h4v21Z" fill="#f4e9d6"/>
-    <path d="M30.6 29h2.8v5h-2.8zM30.6 40h2.8v12h-2.8z" fill="#0b0914"/>
-    <circle cx="32" cy="7.2" r="${small ? 3.6 : 3}" fill="#ff5c7f"/>
-    <rect y="56" width="64" height="8" fill="#b03d24"/>
-    <rect y="55" width="64" height="1.4" fill="#ffc35a"/>
+    <rect width="64" height="64" fill="url(#bg)"/>
+    <rect width="64" height="64" fill="url(#caustic)"/>
+    <path d="M18 46V18.5c0-1.1 1.4-1.7 2.2-.8L43.8 45.3c.8.9 2.2.3 2.2-.8V18" fill="none" stroke="#f5f2eb" stroke-opacity="0.9" stroke-width="${stroke}" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M18 46C26 37 38 27 46 18" fill="none" stroke="url(#ribbon)" stroke-width="${stroke}" stroke-linecap="round"/>
+    <circle cx="46" cy="18" r="${small ? 4.8 : 4.2}" fill="#c9ff3b"/>
   </g>
-  ${small ? "" : `<rect x="${inset + 3}" y="${inset + 3}" width="${size - 6}" height="${size - 6}" rx="${r - 2.5}" fill="none" stroke="#ffc35a" stroke-opacity=".5" stroke-width="1.2"/>`}
+  ${small ? "" : `<rect x="${inset + 1.5}" y="${inset + 1.5}" width="${size - 3}" height="${size - 3}" rx="${r - 1.5}" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.4"/>`}
 </svg>
 `;
 }
@@ -42,11 +42,16 @@ writeFileSync("public/favicon.svg", icon());
 const small = Buffer.from(icon({ small: true }));
 const big = Buffer.from(icon());
 const touch = Buffer.from(icon({ padded: true }));
-const png = (svg, size) => sharp(svg, { density: 72 * (size / 64) * 2 }).resize(size, size).png().toBuffer();
+const png = (svg, size) =>
+  sharp(svg, { density: 72 * (size / 64) * 2 })
+    .resize(size, size)
+    .png()
+    .toBuffer();
 
 const sizes = { 16: small, 32: small, 48: small };
-const pngs = await Promise.all(Object.entries(sizes).map(([s, svg]) => png(svg, +s)));
-// A PNG-in-ICO container (supported by every current browser).
+const pngs = await Promise.all(
+  Object.entries(sizes).map(([s, svg]) => png(svg, +s)),
+);
 const header = Buffer.alloc(6 + 16 * pngs.length);
 header.writeUInt16LE(0, 0);
 header.writeUInt16LE(1, 2);
@@ -77,14 +82,21 @@ writeFileSync(
       icons: [
         { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
         { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
-        { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
+        {
+          src: "/icon-512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "maskable",
+        },
       ],
-      theme_color: "#0d0b18",
-      background_color: "#0d0b18",
+      theme_color: "#050608",
+      background_color: "#050608",
       display: "browser",
     },
     null,
     2,
   ) + "\n",
 );
-console.log("Wrote favicon.svg, favicon.ico, favicon.png, favicon-32.png, apple-touch-icon.png, icon-192/512.png, site.webmanifest");
+console.log(
+  "Wrote Nearby Atelier favicon.svg, favicon.ico, favicon.png, favicon-32.png, apple-touch-icon.png, icon-192/512.png, site.webmanifest",
+);

@@ -1,21 +1,25 @@
 ---
 import Icon from "./Icon.astro";
-import FloorDial from "./FloorDial.astro";
 import { site } from "../data/site";
 import { sections } from "../lib/sections";
 ---
 
 <section class="hero reveal">
   <div class="hero-rays" aria-hidden="true"></div>
+  <div class="hero-caustic" aria-hidden="true"></div>
   <p class="hero-kicker">
-    <span class="hero-plaque">The Nearby Building</span>
+    <span class="hero-plaque">Nearby Atelier</span>
     <span class="hero-kicker-meta">Est. 2013 · {site.location}</span>
   </p>
   <div class="hero-grid">
     <div class="hero-main">
       <h1>
-        <span class="hero-line">Always curious.</span>
-        <span class="hero-sign">Still building.</span>
+        <span class="hero-mask"
+          ><span class="hero-line">Always curious.</span></span
+        >
+        <span class="hero-mask"
+          ><span class="hero-sign">Still building.</span></span
+        >
       </h1>
       <p class="hero-copy">
         Notes on engineering, making things with AI, and the human side of
@@ -24,7 +28,9 @@ import { sections } from "../lib/sections";
       <div class="hero-actions">
         <a href="/articles" class="btn btn-accent"
           >Explore the writing <Icon name="arrow" /></a
-        ><a href="/projects" class="btn">Browse projects</a>
+        >
+        <a href="/desktop" class="btn" target="_top">Enter Desktop</a>
+        <a href="/projects" class="btn btn-ghost">Browse projects</a>
       </div>
     </div>
     <aside class="hero-profile">
@@ -54,9 +60,8 @@ import { sections } from "../lib/sections";
   </div>
   <div class="hero-bottom">
     <div class="hero-directory">
-      <FloorDial floor="L" class="hero-dial" />
       <div>
-        <p class="label">You’re in the lobby</p>
+        <p class="label">Index</p>
         <ul class="hero-floors">
           {
             sections.map((section) => (
@@ -73,11 +78,11 @@ import { sections } from "../lib/sections";
     </div>
     <dl class="hero-legend">
       <div>
-        <dt>Built in</dt>
+        <dt>Studio</dt>
         <dd>{site.location}</dd>
       </div>
       <div>
-        <dt>On the Mother Road</dt>
+        <dt>Coordinates</dt>
         <dd>36.154° N · 95.993° W</dd>
       </div>
     </dl>

@@ -1,5 +1,9 @@
 ---
 import "../styles/base.css";
+import newsreaderNormalUrl from "@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2?url";
+import newsreaderItalicUrl from "@fontsource-variable/newsreader/files/newsreader-latin-opsz-italic.woff2?url";
+import jostNormalUrl from "@fontsource-variable/jost/files/jost-latin-wght-normal.woff2?url";
+import jetbrainsMonoUrl from "@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff2?url";
 import KeyboardHelp from "../components/KeyboardHelp.astro";
 import { labs } from "../data/labs";
 import { getReadingPaths } from "../lib/discovery";
@@ -152,10 +156,38 @@ const searchItems = [
 ---
 
 <!doctype html>
-<html lang="en" data-theme="system">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={newsreaderNormalUrl}
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={newsreaderItalicUrl}
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={jostNormalUrl}
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href={jetbrainsMonoUrl}
+      crossorigin
+    />
     <script is:inline>
       (() => {
         try {
@@ -178,7 +210,7 @@ const searchItems = [
           const theme =
             stored === "light" || stored === "dark" || stored === "system"
               ? stored
-              : "system";
+              : "dark";
           document.documentElement.setAttribute("data-theme", theme);
         } catch {}
       })();
@@ -220,12 +252,12 @@ const searchItems = [
     <link rel="manifest" href="/site.webmanifest" />
     <meta
       name="theme-color"
-      content="#efe6d4"
+      content="#f4f2ec"
       media="(prefers-color-scheme: light)"
     />
     <meta
       name="theme-color"
-      content="#0d0b18"
+      content="#050608"
       media="(prefers-color-scheme: dark)"
     />
     <script

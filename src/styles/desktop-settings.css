@@ -4,11 +4,10 @@
 }
 [data-desktop] .settings-heading h2 {
   font-family: var(--desk-font-display, inherit);
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 26px;
+  font-weight: 440;
   margin: 0 0 6px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: -0.02em;
 }
 [data-desktop] .settings-heading p,
 [data-desktop] .settings-options fieldset > p {
@@ -65,7 +64,7 @@
   box-shadow: 0 0 0 1px #0002;
 }
 [data-desktop] [data-palette="brass"] {
-  --swatch-color: #d9a441;
+  --swatch-color: #c9ff3b;
 }
 [data-desktop] [data-palette="emerald"] {
   --swatch-color: #3bac86;

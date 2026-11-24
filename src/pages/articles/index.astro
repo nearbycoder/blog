@@ -191,7 +191,9 @@ const topics = [
             ? a.dataset.title!.localeCompare(b.dataset.title!)
             : items.indexOf(a) - items.indexOf(b),
     );
-    document.querySelector("#articles-grid")!.append(...ordered);
+    const grid = document.querySelector("#articles-grid")!;
+    grid.append(...ordered);
+    grid.dispatchEvent(new CustomEvent("atelier:grid-updated", { bubbles: true }));
     const params = new URLSearchParams();
     if (input.value.trim()) params.set("q", input.value.trim());
     if (topic) params.set("topic", topic);

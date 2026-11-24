@@ -1,8 +1,13 @@
 ---
-// Blog pages carry the Field Survey theme. /desktop uses BaseLayout directly,
-// so the theme's CSS and fonts never ship with the desktop shell.
+// Blog pages carry the Volcanic Ink & Liquid Glass (Nearby Atelier) theme.
+// /desktop uses BaseLayout directly, keeping blog CSS and scripts separate.
 import BaseLayout from "./BaseLayout.astro";
 import "../styles/global.css";
 ---
 
-<BaseLayout {...Astro.props}><slot /></BaseLayout>
+<BaseLayout {...Astro.props}>
+  <slot />
+  <script>
+    import "../scripts/atelier-motion";
+  </script>
+</BaseLayout>

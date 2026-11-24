@@ -64,9 +64,10 @@
   scroll-behavior: auto !important;
 }
 [data-desktop][data-desktop-reduce-transparency="true"]
-  :is(.desktop-dock, .shell-popup, .desktop-session-tools) {
-  background: var(--desk-sidebar);
+  :is(.desktop-dock, .shell-popup, .desktop-session-tools, .desktop-window) {
+  background: var(--desk-paper-solid, var(--desk-sidebar));
   backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 [data-desktop][data-desktop-reduce-transparency="true"] .shortcut-art {
   background: var(--desk-sidebar);

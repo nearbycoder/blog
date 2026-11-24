@@ -2,7 +2,6 @@
 import ThemeToggle from "./ThemeToggle.astro";
 import Icon from "./Icon.astro";
 import BrandMark from "./BrandMark.astro";
-import FloorDial from "./FloorDial.astro";
 import { sections, locate } from "../lib/sections";
 const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
 const here = locate(pathname);
@@ -20,7 +19,6 @@ const linkState = (href: string) => {
       <span class="brand-word">Nearby<em>coder</em></span>
     </a>
     <nav class="desktop-nav" aria-label="Main navigation">
-      <FloorDial floor={here?.section.number ?? "L"} class="header-dial" />
       <ul class="section-menus">
         {
           sections.map((section) => (
@@ -72,6 +70,7 @@ const linkState = (href: string) => {
           ))
         }
       </ul>
+      <a href="/desktop" class="header-desktop-link" target="_top">Desktop</a>
     </nav>
     <div class="header-actions">
       <button
@@ -119,7 +118,7 @@ const linkState = (href: string) => {
       ))
     }
     <a href="/desktop" class="nav-link mobile-nav-desktop" target="_top"
-      >Desktop (experimental)</a
+      >Desktop OS ↗</a
     >
   </nav>
 </header>
@@ -182,7 +181,6 @@ const linkState = (href: string) => {
     item.trigger.addEventListener("click", () =>
       setOpen(item.panel.hidden ? item : undefined),
     );
-    // Tabbing out of an open menu closes it; clicks are handled below.
     item.menu.addEventListener("focusout", (event) => {
       const next = event.relatedTarget as Node | null;
       if (next && !item.menu.contains(next) && !item.panel.hidden)
@@ -210,7 +208,6 @@ const linkState = (href: string) => {
     else setOpen(undefined);
   });
 
-  // Keep the current page visible in the scrollable section strip on phones.
   const current = document.querySelector<HTMLElement>(
     ".section-nav [aria-current]",
   );
